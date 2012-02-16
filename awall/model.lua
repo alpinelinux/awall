@@ -150,9 +150,7 @@ function Rule:zoneoptfrags()
       for i = 1,math.max(1, table.maxn(self.out)) do
 	 ozone = self.out[i]
 	 if izone ~= ozone or not izone then
-	    for i, ofrags in ipairs(zonepair(izone, ozone)) do
-	       table.insert(res, ofrags)
-	    end
+	    util.extend(res, zonepair(izone, ozone))
 	 end
       end
    end
@@ -183,9 +181,7 @@ function Rule:servoptfrags()
 
 	    if new or ports[sdef.proto][1] then
 	       if sdef.port then
-		  for i, port in util.listpairs(sdef.port) do
-		     table.insert(ports[sdef.proto], port)
-		  end
+		  util.extend(ports[sdef.proto], sdef.port)
 	       else ports[sdef.proto] = {} end
 	    end
 
@@ -329,9 +325,7 @@ function Rule:trules()
       end      
    end
 
-   for i, ofrag in ipairs(ffilter(self:extraoptfrags())) do
-      table.insert(res, ofrag)
-   end
+   util.extend(res, ffilter(self:extraoptfrags()))
 
    tag(res, 'table', self:table(), false)
    
