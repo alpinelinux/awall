@@ -1,0 +1,15 @@
+{
+  "service": {
+    "dns": [
+      { "proto": "udp", "port": 53 },
+      { "proto": "tcp", "port": 53 }
+    ],
+    "gre": { "proto": "gre" },
+    "icmp": { "proto": "icmp" },
+    "ipsec": [
+      { "proto": "esp" },
+      { "proto": "udp", "port": [ 500, 4500 ] }
+    ],
+    "ssh": { "proto": "tcp", "port": 22 }
+  }
+}

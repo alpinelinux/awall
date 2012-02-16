@@ -7,6 +7,7 @@ Licensed under the terms of GPL2
 module(..., package.seeall)
 
 require 'json'
+require 'lfs'
 
 require 'awall.iptables'
 require 'awall.util'
@@ -14,7 +15,9 @@ require 'awall.util'
 
 local modules = {}
 
-local modpath = arg[0] == '/usr/sbin/awall' and '/usr/share/lua/5.1' or '.'
+local testmode = arg[0] ~= '/usr/sbin/awall'
+
+local modpath = testmode and '.' or '/usr/share/lua/5.1'
 for line in io.popen('cd '..modpath..' && ls awall/model.lua awall/modules/*.lua'):lines() do
    local name = string.gsub(string.sub(line, 1, -5), '/', '.')
    require(name)
@@ -24,9 +27,28 @@ end
 
 function translate()
 
-   local data = ''
-   for line in io.lines('config.json') do data = data..line end
-   config = json.decode(data)
+   config = {}
+
+   local confdirs = testmode and {'config'} or {'/usr/share/awall',
+						'/etc/awall'}
+
+   for i, dir in ipairs(confdirs) do
+      for fname in lfs.dir(dir) do
+	 if string.sub(fname, 1, 1) ~= '.' then
+	    local data = ''
+	    for line in io.lines(dir..'/'..fname) do data = data..line end
+	    data = json.decode(data)
+	    
+	    for cls, objs in pairs(data) do
+	       if not config[cls] then config[cls] = objs
+	       elseif objs[1] then util.extend(config[cls], objs)
+	       else
+		  for k, v in pairs(objs) do config[cls][k] = v end
+	       end
+	    end
+	 end
+      end
+   end
 
    function insertrule(trule)
       local t = awall.iptables.config[trule.family][trule.table][trule.chain]
