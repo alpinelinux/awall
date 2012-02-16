@@ -8,20 +8,25 @@ module(..., package.seeall)
 
 require 'json'
 require 'lfs'
+require 'stringy'
 
 require 'awall.iptables'
+require 'awall.model'
 require 'awall.util'
 
 
-local modules = {}
-
 local testmode = arg[0] ~= '/usr/sbin/awall'
 
+
+local modules = {package.loaded['awall.model']}
+
 local modpath = testmode and '.' or '/usr/share/lua/5.1'
-for line in io.popen('cd '..modpath..' && ls awall/model.lua awall/modules/*.lua'):lines() do
-   local name = string.gsub(string.sub(line, 1, -5), '/', '.')
-   require(name)
-   table.insert(modules, package.loaded[name])
+for modfile in lfs.dir(modpath..'/awall/modules') do
+   if stringy.endswith(modfile, '.lua') then
+      local name = 'awall.modules.'..string.sub(modfile, 1, -5)
+      require(name)
+      table.insert(modules, package.loaded[name])
+   end
 end
 
 
