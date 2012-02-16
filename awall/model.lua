@@ -16,13 +16,6 @@ local util = awall.util
 local combinations = awall.optfrag.combinations
 
 
-local lastid = -1
-function newchain()
-   lastid = lastid + 1
-   return 'awall-'..lastid
-end
-
-
 function class(base)
    local cls = {}
    local mt = {__index = cls}
@@ -88,6 +81,7 @@ Rule = class(Object)
 
 function Rule:init()
    local config = awall.config
+
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and util.maplist(self[prop],
 					       function(z)
@@ -96,7 +90,9 @@ function Rule:init()
 						     error('Invalid zone: '..z)
 					       end) or self:defaultzones()
    end
+
    if self.service then
+      if type(self.service) == 'string' then self.label = self.service end
       self.service = util.maplist(self.service,
 				  function(s)
 				     return config.service[s] or error('Invalid service: '..s)
@@ -307,7 +303,7 @@ function Rule:trules()
 
    local target
    if addrchain then
-      target = newchain()
+      target = self:newchain('address')
    else
       target = self:target()
       if addrofrags then res = combinations(res, addrofrags) end
@@ -333,6 +329,14 @@ function Rule:trules()
 end
 
 function Rule:extraoptfrags() return {} end
+
+local lastid = {}
+function Rule:newchain(base)
+   if self.label then base = base..'-'..self.label end
+   if not lastid[base] then lastid[base] = -1 end
+   lastid[base] = lastid[base] + 1
+   return base..'-'..lastid[base]
+end
 
 
 classmap = {zone=Zone}
