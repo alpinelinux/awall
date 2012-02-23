@@ -84,6 +84,6 @@ function translate()
       end
    end
 
-   awall.iptables.dump()
+   awall.iptables.dump(testmode and 'output' or '/etc/iptables')
 
 end

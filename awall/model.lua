@@ -277,8 +277,8 @@ function Rule:trules()
 
    local res = self:zoneoptfrags()
 
-   if self.ipsec == 'true' then
-      res = combinations(res, {{opts='-m policy --pol ipsec'}})
+   if self.ipsec then
+      res = combinations(res, {{opts='-m policy --pol ipsec --dir '..self.ipsec}})
    end
 
    res = combinations(res, self:servoptfrags())
