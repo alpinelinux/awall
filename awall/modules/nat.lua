@@ -76,8 +76,8 @@ end
 
 classmap = {dnat=DNATRule, snat=SNATRule}
 
-defrules = {}
-
--- TODO configuration of _nat ipset via config.json
---defrules = {{family='ip4', table='nat', chain='POSTROUTING',
---	     opts='-m set --match-set _nat src ! --match-set _nat dst -j MASQUERADE'}}
+-- TODO configuration of the ipset via JSON config
+defrules = {{family='ip4', table='nat', chain='POSTROUTING',
+	     opts='-m set --match-set awall-masquerade src -j awall-masquerade'},
+	    {family='ip4', table='nat', chain='awall-masquerade',
+	     opts='-m set ! --match-set awall-masquerade dst -j MASQUERADE'}}
