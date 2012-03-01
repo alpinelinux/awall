@@ -55,6 +55,36 @@ function translate()
       end
    end
 
+
+   function expandvars(obj)
+      for k, v in pairs(obj) do
+	 if type(v) == 'table' then
+	    expandvars(v)
+
+	 else
+	    local visited = {}
+	    local val = v
+
+	    while type(val) == 'string' and string.sub(val, 1, 1) == '$' do
+	       local name = string.sub(val, 2, -1)
+		  
+	       if util.contains(visited, name) then
+		  error('Circular variable definition: '..name)
+	       end
+	       table.insert(visited, name)
+		  
+	       val = config.variable[name]
+	       if not val then error('Invalid variable reference: '..name) end
+	    end
+
+	    obj[k] = val
+	 end
+      end
+   end
+
+   expandvars(config)
+
+
    function insertrule(trule)
       local t = awall.iptables.config[trule.family][trule.table][trule.chain]
       if trule.position == 'prepend' then
