@@ -1,0 +1,8 @@
+{
+  "ipset": {
+    "awall-masquerade": {
+      "family": "inet",
+      "type": "hash:net"
+    }
+  }
+}
