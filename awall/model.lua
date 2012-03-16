@@ -51,8 +51,6 @@ function Zone:optfrags(dir)
       iopt, aopt, iprop, aprop = 'o', 'd', 'out', 'dest'
    else assert(false) end
 
-   -- TODO support for externally controlled ipsets
-
    local aopts = {}
    for i, hostdef in util.listpairs(self.addr) do
       for i, addr in ipairs(awall.host.resolve(hostdef)) do
@@ -276,6 +274,22 @@ function Rule:trules()
    end
 
    local res = self:zoneoptfrags()
+
+   if self.ipset then
+      if not self.ipset.name then error('Set name not defined') end
+      if not self.ipset.args then
+	 error('Set direction arguments not defined')
+      end
+
+      local setopts = '-m set --match-set '..self.ipset.name..' '
+      for i, arg in util.listpairs(self.ipset.args) do
+	 if i > 1 then setopts = setopts..',' end
+	 if arg == 'in' then setopts = setopts..'src'
+	 elseif arg == 'out' then setopts = setopts..'dst'
+	 else error('Invalid set direction argument') end
+      end
+      res = combinations(res, {{opts=setopts}})
+   end
 
    if self.ipsec then
       res = combinations(res, {{opts='-m policy --pol ipsec --dir '..self.ipsec}})
