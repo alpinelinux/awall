@@ -120,4 +120,13 @@ function translate()
 
    awall.iptables.dump(testmode and 'output' or '/etc/iptables')
 
+   ipsfile = io.output(testmode and 'output/ipset' or '/etc/ipset.d/awall')
+   for name, params in pairs(config.ipset) do
+      if not params.type then error('Type not defined for set '..name) end
+      local line = 'create '..name..' '..params.type
+      if params.family then line = line..' family '..params.family end
+      ipsfile:write(line..'\n')
+   end
+   ipsfile:close()
+
 end
