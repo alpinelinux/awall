@@ -21,7 +21,6 @@ ipsfile = '/etc/ipset.d/awall'
 
 
 local modules = {package.loaded['awall.model']}
-local loaded = false
 
 function loadmodules(path)
    for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
