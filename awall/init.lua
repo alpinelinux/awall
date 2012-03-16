@@ -38,7 +38,11 @@ function translate()
 						'/etc/awall'}
 
    for i, dir in ipairs(confdirs) do
-      for fname in lfs.dir(dir) do
+      local fnames = {}
+      for fname in lfs.dir(dir) do table.insert(fnames, fname) end
+      table.sort(fnames)
+
+      for i, fname in ipairs(fnames) do
 	 if string.sub(fname, 1, 1) ~= '.' then
 	    local data = ''
 	    for line in io.lines(dir..'/'..fname) do data = data..line end
