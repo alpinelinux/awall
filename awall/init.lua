@@ -34,7 +34,8 @@ function translate()
 
    config = {}
 
-   local confdirs = testmode and {'config'} or {'/usr/share/awall',
+   local confdirs = testmode and {'json',
+				  'config'} or {'/usr/share/awall',
 						'/etc/awall'}
 
    for i, dir in ipairs(confdirs) do
