@@ -276,19 +276,23 @@ function Rule:trules()
    local res = self:zoneoptfrags()
 
    if self.ipset then
-      if not self.ipset.name then error('Set name not defined') end
-      if not self.ipset.args then
-	 error('Set direction arguments not defined')
-      end
+      local ipsetofrags = {}
+      for i, ipset in util.listpairs(self.ipset) do
+	 if not ipset.name then error('Set name not defined') end
+	 if not ipset.args then
+	    error('Set direction arguments not defined')
+	 end
 
-      local setopts = '-m set --match-set '..self.ipset.name..' '
-      for i, arg in util.listpairs(self.ipset.args) do
-	 if i > 1 then setopts = setopts..',' end
-	 if arg == 'in' then setopts = setopts..'src'
-	 elseif arg == 'out' then setopts = setopts..'dst'
-	 else error('Invalid set direction argument') end
+	 local setopts = '-m set --match-set '..ipset.name..' '
+	 for i, arg in util.listpairs(ipset.args) do
+	    if i > 1 then setopts = setopts..',' end
+	    if arg == 'in' then setopts = setopts..'src'
+	    elseif arg == 'out' then setopts = setopts..'dst'
+	    else error('Invalid set direction argument') end
+	 end
+	 table.insert(ipsetofrags, {opts=setopts})
       end
-      res = combinations(res, {{opts=setopts}})
+      res = combinations(res, ipsetofrags)
    end
 
    if self.ipsec then
