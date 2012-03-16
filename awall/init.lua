@@ -15,17 +15,21 @@ require 'awall.model'
 require 'awall.util'
 
 
-local testmode = arg[0] ~= '/usr/sbin/awall'
+confdirs = {'/usr/share/awall', '/etc/awall'}
+iptdir = '/etc/iptables'
+ipsfile = '/etc/ipset.d/awall'
 
 
 local modules = {package.loaded['awall.model']}
+local loaded = false
 
-local modpath = testmode and '.' or '/usr/share/lua/5.1'
-for modfile in lfs.dir(modpath..'/awall/modules') do
-   if stringy.endswith(modfile, '.lua') then
-      local name = 'awall.modules.'..string.sub(modfile, 1, -5)
-      require(name)
-      table.insert(modules, package.loaded[name])
+function loadmodules(path)
+   for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
+      if stringy.endswith(modfile, '.lua') then
+	 local name = 'awall.modules.'..string.sub(modfile, 1, -5)
+	 require(name)
+	 table.insert(modules, package.loaded[name])
+      end
    end
 end
 
@@ -33,10 +37,6 @@ end
 function translate()
 
    config = {}
-
-   local confdirs = testmode and {'json',
-				  'config'} or {'/usr/share/awall',
-						'/etc/awall'}
 
    for i, dir in ipairs(confdirs) do
       local fnames = {}
@@ -119,17 +119,17 @@ function translate()
       end
    end
 
-   awall.iptables.dump(testmode and 'output' or '/etc/iptables')
+   awall.iptables.dump(iptdir)
 
    if config.ipset then
-      ipsfile = io.output(testmode and 'output/ipset' or '/etc/ipset.d/awall')
+      local ips = io.output(ipsfile)
       for name, params in pairs(config.ipset) do
 	 if not params.type then error('Type not defined for set '..name) end
 	 local line = 'create '..name..' '..params.type
 	 if params.family then line = line..' family '..params.family end
-	 ipsfile:write(line..'\n')
+	 ips:write(line..'\n')
       end
-      ipsfile:close()
+      ips:close()
    end
 
 end

@@ -6,7 +6,23 @@ Copyright (C) 2012 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
+require 'lfs'
+require 'stringy'
+
+testmode = stringy.endswith(arg[0], '/awall-cli')
+
+if testmode then
+   path = string.sub(arg[0], 1, -11)
+   lfs.chdir(path)
+end
 
 require 'awall'
+awall.loadmodules(testmode and '.')
+
+if testmode then
+   awall.confdirs = {'json', 'input'}
+   awall.iptdir = 'output'
+   awall.ipsfile = 'output/ipset'
+end
 
 awall.translate()
