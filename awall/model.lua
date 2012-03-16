@@ -188,10 +188,10 @@ function Rule:servoptfrags()
 	       -- TODO multiple ICMP types per rule
 	       local oname
 	       if util.contains({1, 'icmp'}, sdef.proto) then
-		  family = 'ip4'
+		  family = 'inet'
 		  oname = 'icmp-type'
 	       elseif util.contains({58, 'ipv6-icmp', 'icmpv6'}, sdef.proto) then
-		  family = 'ip6'
+		  family = 'inet6'
 		  oname = 'icmpv6-type'
 	       else error('Type specification not valid with '..sdef.proto) end
 	       opts = opts..' --'..oname..' '..sdef.type
@@ -347,7 +347,7 @@ function Rule:trules()
 
    tag(res, 'table', self:table(), false)
    
-   return combinations(res, ffilter({{family='ip4'}, {family='ip6'}}))
+   return combinations(res, ffilter({{family='inet'}, {family='inet6'}}))
 end
 
 function Rule:extraoptfrags() return {} end

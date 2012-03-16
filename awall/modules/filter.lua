@@ -61,7 +61,7 @@ function Policy:servoptfrags() return nil end
 classmap = {policy=Policy, filter=Filter}
 
 defrules = {}
-for i, family in ipairs({'ip4', 'ip6'}) do
+for i, family in ipairs({'inet', 'inet6'}) do
    for i, target in ipairs({'DROP', 'REJECT'}) do
       for i, opts in ipairs({'-m limit --limit 1/second -j LOG', '-j '..target}) do
 	 table.insert(defrules,

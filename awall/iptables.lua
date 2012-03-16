@@ -12,8 +12,8 @@ require 'lpc'
 require 'awall.util'
 contains = awall.util.contains
 
-local families = {ip4={cmd='iptables-restore', file='rules-save'},
-		  ip6={cmd='ip6tables-restore', file='rules6-save'}}
+local families = {inet={cmd='iptables-restore', file='rules-save'},
+		  inet6={cmd='ip6tables-restore', file='rules6-save'}}
 
 local builtin = {'INPUT', 'FORWARD', 'OUTPUT',
 		 'PREROUTING', 'POSTROUTING'}

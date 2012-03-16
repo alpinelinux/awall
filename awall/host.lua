@@ -7,8 +7,8 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
-local familypatterns = {ip4='%d[%.%d/]+',
-			ip6='[:%x/]+',
+local familypatterns = {inet='%d[%.%d/]+',
+			inet6='[:%x/]+',
 			domain='[%a-][%.%w-]*'}
 
 local function getfamily(addr)
@@ -32,8 +32,8 @@ function resolve(host)
 	       string.match(rec, '^('..familypatterns.domain..')\t+%d+\t+IN\t+(A+)\t+(.+)')
 
 	    if name and string.sub(name, 1, string.len(host) + 1) == host..'.' then
-	       if rtype == 'A' then family = 'ip4'
-	       elseif rtype == 'AAAA' then family = 'ip6'
+	       if rtype == 'A' then family = 'inet'
+	       elseif rtype == 'AAAA' then family = 'inet6'
 	       else family = nil end
 
 	       if family then

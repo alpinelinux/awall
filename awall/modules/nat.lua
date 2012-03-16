@@ -34,7 +34,7 @@ end
 function NATRule:trules()
    local res = {}
    for i, ofrags in ipairs(model.Rule.trules(self)) do
-      if ofrags.family == 'ip4' then table.insert(res, ofrags) end
+      if ofrags.family == 'inet' then table.insert(res, ofrags) end
    end
    return res
 end
@@ -77,7 +77,7 @@ end
 classmap = {dnat=DNATRule, snat=SNATRule}
 
 -- TODO configuration of the ipset via JSON config
-defrules = {{family='ip4', table='nat', chain='POSTROUTING',
+defrules = {{family='inet', table='nat', chain='POSTROUTING',
 	     opts='-m set --match-set awall-masquerade src -j awall-masquerade'},
-	    {family='ip4', table='nat', chain='awall-masquerade',
+	    {family='inet', table='nat', chain='awall-masquerade',
 	     opts='-m set ! --match-set awall-masquerade dst -j MASQUERADE'}}
