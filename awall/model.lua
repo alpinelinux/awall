@@ -279,6 +279,10 @@ function Rule:trules()
       local ipsetofrags = {}
       for i, ipset in util.listpairs(self.ipset) do
 	 if not ipset.name then error('Set name not defined') end
+
+	 local setdef = awall.config.ipset and awall.config.ipset[ipset.name]
+	 if not setdef then error('Invalid set name') end
+
 	 if not ipset.args then
 	    error('Set direction arguments not defined')
 	 end
@@ -290,7 +294,7 @@ function Rule:trules()
 	    elseif arg == 'out' then setopts = setopts..'dst'
 	    else error('Invalid set direction argument') end
 	 end
-	 table.insert(ipsetofrags, {opts=setopts})
+	 table.insert(ipsetofrags, {family=setdef.family, opts=setopts})
       end
       res = combinations(res, ipsetofrags)
    end
