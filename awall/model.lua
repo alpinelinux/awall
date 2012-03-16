@@ -360,6 +360,10 @@ function Rule:newchain(base)
    return base..'-'..lastid[base]
 end
 
+function reset()
+   lastid = {}
+end
+
 
 classmap = {zone=Zone}
 

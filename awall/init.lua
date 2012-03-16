@@ -10,6 +10,7 @@ require 'json'
 require 'lfs'
 require 'stringy'
 
+require 'awall.ipset'
 require 'awall.iptables'
 require 'awall.model'
 require 'awall.util'
@@ -33,9 +34,11 @@ function loadmodules(path)
 end
 
 
-function translate()
+local function readconfig()
 
    config = {}
+   awall.model.reset()
+   awall.iptables.reset()
 
    for i, dir in ipairs(confdirs) do
       local fnames = {}
@@ -117,18 +120,16 @@ function translate()
 	 for i, trule in ipairs(rule:trules()) do insertrule(trule) end
       end
    end
+end
 
+function dump()
+   readconfig()
+   awall.ipset.dump(ipsfile)
    awall.iptables.dump(iptdir)
+end
 
-   if config.ipset then
-      local ips = io.output(ipsfile)
-      for name, params in pairs(config.ipset) do
-	 if not params.type then error('Type not defined for set '..name) end
-	 local line = 'create '..name..' '..params.type
-	 if params.family then line = line..' family '..params.family end
-	 ips:write(line..'\n')
-      end
-      ips:close()
-   end
-
+function test()
+   readconfig()
+   awall.ipset.create()
+   awall.iptables.test()
 end

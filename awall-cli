@@ -25,4 +25,5 @@ if testmode then
    awall.ipsfile = 'output/ipset'
 end
 
-awall.translate()
+awall.test()
+awall.dump()
