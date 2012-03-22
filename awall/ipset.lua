@@ -7,13 +7,11 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
-local IPSet = {}
+require 'awall.object'
 
-function new(config)
-   local res = {config=config}
-   setmetatable(res, {__index=IPSet})
-   return res
-end
+IPSet = awall.object.class(awall.object.Object)
+
+function IPSet:init(config) self.config = config end
 
 function IPSet:commands()
    local res = {}

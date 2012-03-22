@@ -119,7 +119,7 @@ function Config:init(confdirs)
       end
    end
 
-   self.ipset = awall.ipset.new(self.input.ipset)
+   self.ipset = awall.ipset.IPSet.new(self.input.ipset)
 end
 
 function Config:dump(iptdir, ipsfile)
