@@ -9,29 +9,47 @@ module(..., package.seeall)
 
 require 'lpc'
 
+require 'awall.object'
 require 'awall.util'
-contains = awall.util.contains
 
-local families = {inet={cmd='iptables-restore', file='rules-save'},
-		  inet6={cmd='ip6tables-restore', file='rules6-save'}}
+local class = awall.object.class
+local contains = awall.util.contains
+
+
+local families = {inet={cmd='iptables', file='rules-save'},
+		  inet6={cmd='ip6tables', file='rules6-save'}}
 
 local builtin = {'INPUT', 'FORWARD', 'OUTPUT',
 		 'PREROUTING', 'POSTROUTING'}
 
-local IPTables = {}
 
-function new()
-   local config = {}
-   setmetatable(config,
+local BaseIPTables = class(awall.object.Object)
+
+function BaseIPTables:restore(...)
+   for family, params in pairs(families) do
+      local pid, stdin, stdout = lpc.run(params.cmd..'-restore', unpack(arg))
+      stdout:close()
+      self:dumpfile(family, stdin)
+      stdin:close()
+      assert(lpc.wait(pid) == 0)
+   end
+end
+
+function BaseIPTables:activate() self:restore() end
+
+function BaseIPTables:test() self:restore('-t') end
+
+
+IPTables = class(BaseIPTables)
+
+function IPTables:init()
+   self.config = {}
+   setmetatable(self.config,
 		{__index=function(t, k)
 			    t[k] = {}
 			    setmetatable(t[k], getmetatable(t))
 			    return t[k]
 			 end})
-
-   local res = {config=config}
-   setmetatable(res, {__index=IPTables})
-   return res
 end
 
 function IPTables:dumpfile(family, iptfile)
@@ -51,17 +69,27 @@ function IPTables:dumpfile(family, iptfile)
    end
 end
 
-function IPTables:test()
-   for family, tbls in pairs(self.config) do
-      local pid, stdin = lpc.run(families[family].cmd, '-t')
-      self:dumpfile(family, stdin)
-      stdin:close()
-      assert(lpc.wait(pid) == 0)
-   end
-end
-
 function IPTables:dump(dir)
    for family, tbls in pairs(self.config) do
       self:dumpfile(family, io.output(dir..'/'..families[family].file))
    end
+end
+
+
+Backup = class(BaseIPTables)
+
+function Backup:init()
+   for family, params in pairs(families) do
+      self[family] = io.tmpfile()
+      local pid, stdin, stdout = lpc.run(params.cmd..'-save')
+      stdin:close()
+      for line in stdout:lines() do self[family]:write(line..'\n') end
+      stdout:close()
+      assert(lpc.wait(pid) == 0)
+   end
+end
+
+function Backup:dumpfile(family, iptfile)
+   self[family]:seek('set')
+   for line in self[family]:lines() do iptfile:write(line..'\n') end
 end

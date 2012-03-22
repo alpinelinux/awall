@@ -35,7 +35,7 @@ Config = awall.object.class(awall.object.Object)
 function Config:init(confdirs)
 
    self.input = {}
-   self.iptables = awall.iptables.new()
+   self.iptables = awall.iptables.IPTables.new()
 
    for i, dir in ipairs(confdirs or {'/usr/share/awall', '/etc/awall'}) do
       local fnames = {}
