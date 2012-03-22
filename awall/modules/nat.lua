@@ -16,8 +16,8 @@ local util = awall.util
 
 local NATRule = model.class(model.Rule)
 
-function NATRule:init()
-   model.Rule.init(self)
+function NATRule:init(context)
+   model.Rule.init(self, context)
    if util.contains({self['in'], self.out}, fwzone) then
       error('NAT rules not allowed for firewall zone')
    end
@@ -53,8 +53,8 @@ end
 
 local DNATRule = model.class(NATRule)
 
-function DNATRule:init()
-   NATRule.init(self)
+function DNATRule:init(context)
+   NATRule.init(self, context)
    self.params = {forbidif='out', subject='destination',
 		  chain='PREROUTING', target='DNAT'}
 end
@@ -62,8 +62,8 @@ end
 
 local SNATRule = model.class(NATRule)
 
-function SNATRule:init()
-   NATRule.init(self)
+function SNATRule:init(context)
+   NATRule.init(self, context)
    self.params = {forbidif='in', subject='source',
 		  chain='POSTROUTING', target='SNAT'}
 end

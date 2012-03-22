@@ -10,44 +10,28 @@ module(..., package.seeall)
 require 'awall'
 require 'awall.host'
 require 'awall.util'
+require 'awall.object'
 require 'awall.optfrag'
 
 local util = awall.util
 local combinations = awall.optfrag.combinations
 
+class = awall.object.class
 
-function class(base)
-   local cls = {}
-   local mt = {__index = cls}
 
-   if base then setmetatable(cls, {__index = base}) end
+ConfigObject = class(awall.object.Object)
 
-   function cls.new(...)
-      local inst = arg[1] and arg[1] or {}
-      cls.morph(inst)
-      return inst
+function ConfigObject:init(context)
+   if context then
+      self.context = context
+      self.root = context.input
    end
-
-   function cls:morph(context)
-      setmetatable(self, mt)
-
-      if context then
-	 self.context = context
-	 self.root = context.input
-      end
-
-      self:init()
-   end
-
-   return cls
 end
 
-Object = class()
-function Object:init() end
-function Object:trules() return {} end
+function ConfigObject:trules() return {} end
 
 
-Zone = class(Object)
+Zone = class(ConfigObject)
 
 function Zone:optfrags(dir)
    local iopt, aopt, iprop, aprop
@@ -80,10 +64,12 @@ end
 fwzone = Zone.new()
 
 
-Rule = class(Object)
+Rule = class(ConfigObject)
 
 
-function Rule:init()
+function Rule:init(context)
+   ConfigObject.init(self, context)
+
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and util.maplist(self[prop],
 					       function(z)
