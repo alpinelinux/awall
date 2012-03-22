@@ -20,6 +20,9 @@ require 'awall.util'
 local modules = {package.loaded['awall.model']}
 
 function loadmodules(path)
+   local cdir = lfs.currentdir()
+   if path then lfs.chdir(path) end
+
    for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
       if stringy.endswith(modfile, '.lua') then
 	 local name = 'awall.modules.'..string.sub(modfile, 1, -5)
@@ -27,6 +30,8 @@ function loadmodules(path)
 	 table.insert(modules, package.loaded[name])
       end
    end
+
+   lfs.chdir(cdir)
 end
 
 

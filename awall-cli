@@ -6,19 +6,33 @@ Copyright (C) 2012 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
+require 'alt_getopt'
 require 'lfs'
 require 'stringy'
 
-testmode = stringy.endswith(arg[0], '/awall-cli')
+short_opts = 'o:'
+long_opts = {['output-dir']='o'}
 
-if testmode then
-   path = string.sub(arg[0], 1, -11)
-   lfs.chdir(path)
+if stringy.endswith(arg[0], '/awall-cli') then
+   basedir = string.sub(arg[0], 1, -11)
+   input = {basedir..'/json'}
+
+   short_opts = short_opts..'i:'
+   long_opts['input-dir'] = 'i'
 end
 
-require 'awall'
-awall.loadmodules(testmode and '.')
+for switch, value in pairs(alt_getopt.get_opts(arg, short_opts, long_opts)) do
+   if switch == 'i' then table.insert(input, value)
+   elseif switch == 'o' then
+      iptdir = value
+      ipsfile = value..'/ipset'
+   else assert(false) end
+end
 
-config = awall.Config.new(testmode and {'json', 'input'})
+
+require 'awall'
+awall.loadmodules(basedir)
+
+config = awall.Config.new(input)
 config:test()
-config:dump(testmode and 'output', testmode and 'output/ipset')
+config:dump(iptdir, ipsfile)
