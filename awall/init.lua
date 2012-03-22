@@ -17,11 +17,6 @@ require 'awall.object'
 require 'awall.util'
 
 
-confdirs = {'/usr/share/awall', '/etc/awall'}
-iptdir = '/etc/iptables'
-ipsfile = '/etc/ipset.d/awall'
-
-
 local modules = {package.loaded['awall.model']}
 
 function loadmodules(path)
@@ -37,12 +32,12 @@ end
 
 Config = awall.object.class(awall.object.Object)
 
-function Config:init()
+function Config:init(confdirs)
 
    self.input = {}
    self.iptables = awall.iptables.new()
 
-   for i, dir in ipairs(confdirs) do
+   for i, dir in ipairs(confdirs or {'/usr/share/awall', '/etc/awall'}) do
       local fnames = {}
       for fname in lfs.dir(dir) do table.insert(fnames, fname) end
       table.sort(fnames)
@@ -127,9 +122,9 @@ function Config:init()
    self.ipset = awall.ipset.new(self.input.ipset)
 end
 
-function Config:dump()
-   self.ipset:dump(ipsfile)
-   self.iptables:dump(iptdir)
+function Config:dump(iptdir, ipsfile)
+   self.ipset:dump(ipsfile or '/etc/ipset.d/awall')
+   self.iptables:dump(iptdir or '/etc/iptables')
 end
 
 function Config:test()

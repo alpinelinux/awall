@@ -19,12 +19,6 @@ end
 require 'awall'
 awall.loadmodules(testmode and '.')
 
-if testmode then
-   awall.confdirs = {'json', 'input'}
-   awall.iptdir = 'output'
-   awall.ipsfile = 'output/ipset'
-end
-
-config = awall.Config.new()
+config = awall.Config.new(testmode and {'json', 'input'})
 config:test()
-config:dump()
+config:dump(testmode and 'output', testmode and 'output/ipset')
