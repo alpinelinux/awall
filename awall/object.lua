@@ -13,15 +13,12 @@ function class(base)
 
    if base then setmetatable(cls, {__index = base}) end
 
-   function cls.new(...)
-      local inst = arg[1] and arg[1] or {}
-      cls.morph(inst)
-      return inst
-   end
+   function cls.new(...) return cls.morph({}, unpack(arg)) end
 
    function cls:morph(...)
       setmetatable(self, mt)
       self:init(unpack(arg))
+      return self
    end
 
    return cls

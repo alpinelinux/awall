@@ -298,8 +298,8 @@ function Rule:trules()
    setfamilies(res)
    tag(res, 'chain', self:chain())
 
-   local addrofrags = combinations(Zone.new({addr=self.src}):optfrags('in'),
-				   Zone.new({addr=self.dest}):optfrags('out'))
+   local addrofrags = combinations(Zone.morph({addr=self.src}):optfrags('in'),
+				   Zone.morph({addr=self.dest}):optfrags('out'))
 
    if addrofrags then
       addrofrags = ffilter(addrofrags)
