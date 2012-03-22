@@ -10,8 +10,9 @@ require 'alt_getopt'
 require 'lfs'
 require 'stringy'
 
-short_opts = 'o:'
-long_opts = {['output-dir']='o'}
+short_opts = 'o:V'
+long_opts = {['output-dir']='o',
+	     verify='V'}
 
 if stringy.endswith(arg[0], '/awall-cli') then
    basedir = string.sub(arg[0], 1, -11)
@@ -26,6 +27,7 @@ for switch, value in pairs(alt_getopt.get_opts(arg, short_opts, long_opts)) do
    elseif switch == 'o' then
       iptdir = value
       ipsfile = value..'/ipset'
+   elseif switch == 'V' then verify = true
    else assert(false) end
 end
 
@@ -34,5 +36,5 @@ require 'awall'
 awall.loadmodules(basedir)
 
 config = awall.Config.new(input)
-config:test()
+if verify then config:test() end
 config:dump(iptdir, ipsfile)
