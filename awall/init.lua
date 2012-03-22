@@ -13,6 +13,7 @@ require 'stringy'
 require 'awall.ipset'
 require 'awall.iptables'
 require 'awall.model'
+require 'awall.object'
 require 'awall.util'
 
 
@@ -34,11 +35,12 @@ function loadmodules(path)
 end
 
 
-local function readconfig()
+Config = awall.object.class(awall.object.Object)
 
-   local config = {}
-   local iptables = awall.iptables.new()
-   local context = {input=config, iptables=iptables}
+function Config:init()
+
+   self.input = {}
+   self.iptables = awall.iptables.new()
 
    for i, dir in ipairs(confdirs) do
       local fnames = {}
@@ -52,10 +54,10 @@ local function readconfig()
 	    data = json.decode(data)
 	    
 	    for cls, objs in pairs(data) do
-	       if not config[cls] then config[cls] = objs
-	       elseif objs[1] then util.extend(config[cls], objs)
+	       if not self.input[cls] then self.input[cls] = objs
+	       elseif objs[1] then util.extend(self.input[cls], objs)
 	       else
-		  for k, v in pairs(objs) do config[cls][k] = v end
+		  for k, v in pairs(objs) do self.input[cls][k] = v end
 	       end
 	    end
 	 end
@@ -80,7 +82,7 @@ local function readconfig()
 	       end
 	       table.insert(visited, name)
 		  
-	       val = config.variable[name]
+	       val = self.input.variable[name]
 	       if not val then error('Invalid variable reference: '..name) end
 	    end
 
@@ -89,11 +91,11 @@ local function readconfig()
       end
    end
 
-   expandvars(config)
+   expandvars(self.input)
 
 
    function insertrule(trule)
-      local t = iptables.config[trule.family][trule.table][trule.chain]
+      local t = self.iptables.config[trule.family][trule.table][trule.chain]
       if trule.position == 'prepend' then
 	 table.insert(t, 1, trule.opts)
       else
@@ -105,10 +107,10 @@ local function readconfig()
 
    for i, mod in ipairs(modules) do
       for path, cls in pairs(mod.classmap) do
-	 if config[path] then	    
-	    awall.util.map(config[path],
-			   function(obj) return cls.morph(obj, context) end)
-	    table.insert(locations, config[path])
+	 if self.input[path] then	    
+	    awall.util.map(self.input[path],
+			   function(obj) return cls.morph(obj, self) end)
+	    table.insert(locations, self.input[path])
 	 end
       end
 
@@ -122,19 +124,15 @@ local function readconfig()
       end
    end
 
-   context.ipset = awall.ipset.new(config.ipset)
-
-   return context
+   self.ipset = awall.ipset.new(self.input.ipset)
 end
 
-function dump()
-   local context = readconfig()
-   context.ipset:dump(ipsfile)
-   context.iptables:dump(iptdir)
+function Config:dump()
+   self.ipset:dump(ipsfile)
+   self.iptables:dump(iptdir)
 end
 
-function test()
-   local context = readconfig()
-   context.ipset:create()
-   context.iptables:test()
+function Config:test()
+   self.ipset:create()
+   self.iptables:test()
 end

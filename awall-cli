@@ -25,5 +25,6 @@ if testmode then
    awall.ipsfile = 'output/ipset'
 end
 
-awall.test()
-awall.dump()
+config = awall.Config.new()
+config:test()
+config:dump()
