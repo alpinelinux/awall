@@ -7,11 +7,18 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
-local function commands()
-   local config = awall.config
+local IPSet = {}
+
+function new(config)
+   local res = {config=config}
+   setmetatable(res, {__index=IPSet})
+   return res
+end
+
+function IPSet:commands()
    local res = {}
-   if config.ipset then
-      for name, params in pairs(config.ipset) do
+   if self.config then
+      for name, params in pairs(self.config) do
 	 if not params.type then error('Type not defined for set '..name) end
 	 local line = 'create '..name..' '..params.type
 	 if params.family then line = line..' family '..params.family end
@@ -21,8 +28,8 @@ local function commands()
    return res
 end
 
-function create()
-   for i, line in ipairs(commands()) do
+function IPSet:create()
+   for i, line in ipairs(self:commands()) do
       local pid, stdin = lpc.run('ipset', '-!', 'restore')
       stdin:write(line)
       stdin:close()
@@ -32,8 +39,8 @@ function create()
    end
 end
 
-function dump(ipsfile)
+function IPSet:dump(ipsfile)
    local file = io.output(ipsfile)
-   for i, line in ipairs(commands()) do file:write(line) end
+   for i, line in ipairs(self:commands()) do file:write(line) end
    file:close()
 end

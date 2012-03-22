@@ -36,9 +36,9 @@ end
 
 local function readconfig()
 
-   config = {}
-   awall.model.reset()
-   awall.iptables.reset()
+   local config = {}
+   local iptables = awall.iptables.new()
+   local context = {input=config, iptables=iptables}
 
    for i, dir in ipairs(confdirs) do
       local fnames = {}
@@ -93,7 +93,7 @@ local function readconfig()
 
 
    function insertrule(trule)
-      local t = awall.iptables.config[trule.family][trule.table][trule.chain]
+      local t = iptables.config[trule.family][trule.table][trule.chain]
       if trule.position == 'prepend' then
 	 table.insert(t, 1, trule.opts)
       else
@@ -106,7 +106,8 @@ local function readconfig()
    for i, mod in ipairs(modules) do
       for path, cls in pairs(mod.classmap) do
 	 if config[path] then	    
-	    awall.util.map(config[path], cls.morph)
+	    awall.util.map(config[path],
+			   function(obj) return cls.morph(obj, context) end)
 	    table.insert(locations, config[path])
 	 end
       end
@@ -120,16 +121,20 @@ local function readconfig()
 	 for i, trule in ipairs(rule:trules()) do insertrule(trule) end
       end
    end
+
+   context.ipset = awall.ipset.new(config.ipset)
+
+   return context
 end
 
 function dump()
-   readconfig()
-   awall.ipset.dump(ipsfile)
-   awall.iptables.dump(iptdir)
+   local context = readconfig()
+   context.ipset:dump(ipsfile)
+   context.iptables:dump(iptdir)
 end
 
 function test()
-   readconfig()
-   awall.ipset.create()
-   awall.iptables.test()
+   local context = readconfig()
+   context.ipset:create()
+   context.iptables:test()
 end

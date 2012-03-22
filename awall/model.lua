@@ -28,8 +28,14 @@ function class(base)
       return inst
    end
 
-   function cls:morph()
+   function cls:morph(context)
       setmetatable(self, mt)
+
+      if context then
+	 self.context = context
+	 self.root = context.input
+      end
+
       self:init()
    end
 
@@ -78,13 +84,11 @@ Rule = class(Object)
 
 
 function Rule:init()
-   local config = awall.config
-
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and util.maplist(self[prop],
 					       function(z)
 						  return z == '_fw' and fwzone or
-						     config.zone[z] or
+						     self.root.zone[z] or
 						     error('Invalid zone: '..z)
 					       end) or self:defaultzones()
    end
@@ -93,7 +97,7 @@ function Rule:init()
       if type(self.service) == 'string' then self.label = self.service end
       self.service = util.maplist(self.service,
 				  function(s)
-				     return config.service[s] or error('Invalid service: '..s)
+				     return self.root.service[s] or error('Invalid service: '..s)
 				  end)
    end
 end
@@ -280,7 +284,7 @@ function Rule:trules()
       for i, ipset in util.listpairs(self.ipset) do
 	 if not ipset.name then error('Set name not defined') end
 
-	 local setdef = awall.config.ipset and awall.config.ipset[ipset.name]
+	 local setdef = self.root.ipset and self.root.ipset[ipset.name]
 	 if not setdef then error('Invalid set name') end
 
 	 if not ipset.args then
@@ -352,16 +356,14 @@ end
 
 function Rule:extraoptfrags() return {} end
 
-local lastid = {}
 function Rule:newchain(base)
+   if not self.context.lastid then self.context.lastid = {} end
+   local lastid = self.context.lastid
+
    if self.label then base = base..'-'..self.label end
    if not lastid[base] then lastid[base] = -1 end
    lastid[base] = lastid[base] + 1
    return base..'-'..lastid[base]
-end
-
-function reset()
-   lastid = {}
 end
 
 
