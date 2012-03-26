@@ -22,8 +22,18 @@ local families = {inet={cmd='iptables', file='rules-save'},
 local builtin = {'INPUT', 'FORWARD', 'OUTPUT',
 		 'PREROUTING', 'POSTROUTING'}
 
+local backupdir = '/var/run/awall'
+
 
 local BaseIPTables = class(awall.object.Object)
+
+function BaseIPTables:dump(dir)
+   for family, tbls in pairs(families) do
+      local file = io.output(dir..'/'..families[family].file)
+      self:dumpfile(family, file)
+      file:close()
+   end
+end
 
 function BaseIPTables:restore(...)
    for family, params in pairs(families) do
@@ -69,27 +79,31 @@ function IPTables:dumpfile(family, iptfile)
    end
 end
 
-function IPTables:dump(dir)
-   for family, tbls in pairs(self.config) do
-      self:dumpfile(family, io.output(dir..'/'..families[family].file))
-   end
+
+local Current = class(BaseIPTables)
+
+function Current:dumpfile(family, iptfile)
+   local pid, stdin, stdout = lpc.run(families[family].cmd..'-save')
+   stdin:close()
+   for line in stdout:lines() do iptfile:write(line..'\n') end
+   stdout:close()
+   assert(lpc.wait(pid) == 0)
 end
 
 
-Backup = class(BaseIPTables)
-
-function Backup:init()
-   for family, params in pairs(families) do
-      self[family] = io.tmpfile()
-      local pid, stdin, stdout = lpc.run(params.cmd..'-save')
-      stdin:close()
-      for line in stdout:lines() do self[family]:write(line..'\n') end
-      stdout:close()
-      assert(lpc.wait(pid) == 0)
-   end
-end
+local Backup = class(BaseIPTables)
 
 function Backup:dumpfile(family, iptfile)
-   self[family]:seek('set')
-   for line in self[family]:lines() do iptfile:write(line..'\n') end
+   for line in io.lines(backupdir..'/'..families[family].file) do
+      iptfile:write(line..'\n')
+   end
+end
+
+
+function backup()
+   Current.new():dump(backupdir)
+end
+
+function revert()
+   Backup.new():activate()
 end
