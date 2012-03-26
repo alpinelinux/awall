@@ -1,15 +1,25 @@
 {
   "service": {
+    "babel": { "proto": "tcp", "port": 6697 },  	     
     "dns": [
       { "proto": "udp", "port": 53 },
       { "proto": "tcp", "port": 53 }
     ],
     "gre": { "proto": "gre" },
+    "http": { "proto": "tcp", "port": 80 },
+    "https": { "proto": "tcp", "port": 443 },
     "icmp": { "proto": "icmp" },
+    "igmp": { "proto": "igmp" },
     "ipsec": [
       { "proto": "esp" },
       { "proto": "udp", "port": [ 500, 4500 ] }
     ],
+    "irc": { "proto": "tcp", "port": 6667 },
+    "ntp": { "proto": "udp", "port": 123 },
+    "ping": { "proto": "icmp", "type": 8 },
+    "sip": { "proto": "udp", "port": 5060 },
+    "smtp": { "proto": "tcp", "port": 25 },
+    "snmp": { "proto": "udp", "port": 161 },
     "ssh": { "proto": "tcp", "port": 22 }
   }
 }
