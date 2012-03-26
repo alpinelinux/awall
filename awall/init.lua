@@ -74,16 +74,25 @@ function Config:init(confdirs)
 	    local visited = {}
 	    local val = v
 
-	    while type(val) == 'string' and string.sub(val, 1, 1) == '$' do
-	       local name = string.sub(val, 2, -1)
+	    local pattern = '%$(%a[%w_]*)'
+
+	    while type(val) == 'string' and string.find(val, pattern) do
+	       local si, ei, name = string.find(val, pattern)
 		  
 	       if util.contains(visited, name) then
 		  error('Circular variable definition: '..name)
 	       end
 	       table.insert(visited, name)
-		  
-	       val = self.input.variable[name]
-	       if not val then error('Invalid variable reference: '..name) end
+
+	       local var = self.input.variable[name]
+	       if not var then error('Invalid variable reference: '..name) end
+
+	       if si == 1 and ei == string.len(val) then val = var
+	       elseif util.contains({'number', 'string'}, type(var)) then
+		  val = string.sub(val, 1, si - 1)..var..string.sub(val, ei + 1, -1)
+	       else
+		  error('Attempted to concatenate complex variable: '..name)
+	       end
 	    end
 
 	    obj[k] = val
