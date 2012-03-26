@@ -8,10 +8,12 @@ Licensed under the terms of GPL2
 
 require 'alt_getopt'
 require 'lfs'
+require 'signal'
 require 'stringy'
 
-short_opts = 'o:V'
-long_opts = {['output-dir']='o',
+short_opts = 'aFo:V'
+long_opts = {activate='a',
+	     ['output-dir']='o',
 	     verify='V'}
 
 if stringy.endswith(arg[0], '/awall-cli') then
@@ -23,7 +25,9 @@ if stringy.endswith(arg[0], '/awall-cli') then
 end
 
 for switch, value in pairs(alt_getopt.get_opts(arg, short_opts, long_opts)) do
-   if switch == 'i' then table.insert(input, value)
+   if switch == 'a' then activate = true
+   elseif switch == 'F' then fallback = true
+   elseif switch == 'i' then table.insert(input, value)
    elseif switch == 'o' then
       iptdir = value
       ipsfile = value..'/ipset'
@@ -33,8 +37,60 @@ end
 
 
 require 'awall'
+require 'awall.iptables'
 awall.loadmodules(basedir)
 
 config = awall.Config.new(input)
-if verify then config:test() end
-config:dump(iptdir, ipsfile)
+
+
+if activate then
+
+   awall.iptables.backup()
+
+   signal.signal('SIGCHLD',
+		 function() if pid and lpc.wait(pid, 1) then os.exit(2) end end)
+   for i, sig in ipairs({'INT', 'TERM'}) do
+      signal.signal('SIG'..sig, function()
+				   interrupted = true
+				   io.stdin:close()
+				end)
+   end
+
+   require 'lpc'
+   pid, stdio, stdout = lpc.run(arg[0], '-F')
+   stdio:close()
+   stdout:close()
+   
+   config:activate()
+
+   io.stderr:write('New firewall configuration activated\n')
+   io.stderr:write('Press RETURN to commit changes permanently: ')
+   io.read()
+
+   signal.signal('SIGCHLD', 'default')
+   signal.kill(pid, 'SIGTERM')
+   lpc.wait(pid)
+
+   if interrupted then
+      io.stderr:write('\nActivation canceled, reverting to the old configuration\n')
+      awall.iptables.revert()
+
+   else config:dump() end
+
+
+elseif fallback then
+
+   for i, sig in ipairs({'HUP', 'PIPE'}) do
+      signal.signal('SIG'..sig, function() end)
+   end
+
+   require 'lsleep'
+   lsleep.sleep(10)
+
+   io.stderr:write('\nTimeout, reverting to the old configuration\n')
+   awall.iptables.revert()
+
+else
+   if verify then config:test() end
+   config:dump(iptdir, ipsfile)
+end

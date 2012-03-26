@@ -136,3 +136,8 @@ function Config:test()
    self.ipset:create()
    self.iptables:test()
 end
+
+function Config:activate()
+   self:test()
+   self.iptables:activate()
+end
