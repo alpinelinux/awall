@@ -1,6 +1,7 @@
 {
   "service": {
     "babel": { "proto": "tcp", "port": 6697 },  	     
+    "bgp": { "proto": "tcp", "port": 179 },
     "dns": [
       { "proto": "udp", "port": 53 },
       { "proto": "tcp", "port": 53 }
