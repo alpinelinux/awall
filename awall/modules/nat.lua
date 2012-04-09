@@ -18,8 +18,10 @@ local NATRule = model.class(model.Rule)
 
 function NATRule:init(context)
    model.Rule.init(self, context)
-   if util.contains({self['in'], self.out}, fwzone) then
-      error('NAT rules not allowed for firewall zone')
+   for i, dir in ipairs({'in', 'out'}) do
+      if util.contains(self[dir], model.fwzone) then
+	 error('NAT rules not allowed for firewall zone')
+      end
    end
 end
 
