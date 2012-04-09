@@ -19,15 +19,18 @@ long_opts = {activate='a',
 if stringy.endswith(arg[0], '/awall-cli') then
    basedir = string.sub(arg[0], 1, -11)
    input = {basedir..'/json'}
+   import = {}
 
-   short_opts = short_opts..'i:'
+   short_opts = short_opts..'i:I:'
    long_opts['input-dir'] = 'i'
+   long_opts['import-path'] = 'I'
 end
 
 for switch, value in pairs(alt_getopt.get_opts(arg, short_opts, long_opts)) do
    if switch == 'a' then activate = true
    elseif switch == 'F' then fallback = true
    elseif switch == 'i' then table.insert(input, value)
+   elseif switch == 'I' then table.insert(import, value)
    elseif switch == 'o' then
       iptdir = value
       ipsfile = value..'/ipset'
@@ -40,7 +43,7 @@ require 'awall'
 require 'awall.iptables'
 awall.loadmodules(basedir)
 
-config = awall.Config.new(input)
+config = awall.Config.new(input, import)
 
 
 if activate then

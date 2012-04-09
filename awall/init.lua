@@ -37,31 +37,63 @@ end
 
 Config = awall.object.class(awall.object.Object)
 
-function Config:init(confdirs)
+function Config:init(confdirs, importdirs)
 
    self.input = {}
    self.iptables = awall.iptables.IPTables.new()
 
-   for i, dir in ipairs(confdirs or {'/usr/share/awall', '/etc/awall'}) do
-      local fnames = {}
-      for fname in lfs.dir(dir) do table.insert(fnames, fname) end
-      table.sort(fnames)
+   local required = {}
+   local imported = {}
 
-      for i, fname in ipairs(fnames) do
-	 if string.sub(fname, 1, 1) ~= '.' then
-	    local data = ''
-	    for line in io.lines(dir..'/'..fname) do data = data..line end
-	    data = json.decode(data)
-	    
-	    for cls, objs in pairs(data) do
-	       if not self.input[cls] then self.input[cls] = objs
-	       elseif objs[1] then util.extend(self.input[cls], objs)
-	       else
-		  for k, v in pairs(objs) do self.input[cls][k] = v end
-	       end
+   function import(name, fname)
+      local file
+      if fname then
+	 file = io.open(fname)
+      else
+	 for i, dir in ipairs(importdirs or {'/usr/share/awall/optional'}) do
+	    file = io.open(dir..'/'..name..'.json')
+	    if file then break end
+	 end
+      end
+      if not file then error('Import failed: '..name) end
+
+      local data = ''
+      for line in file:lines() do data = data..line end
+      file:close()
+      data = json.decode(data)
+
+      table.insert(required, name)
+      for i, iname in util.listpairs(data.import) do
+	 if not util.contains(imported, iname) then
+	    if util.contains(required, iname) then
+	       error('Circular import: ' + iname)
+	    end
+	    import(iname)
+	 end
+      end
+      table.insert(imported, name)
+      
+      for cls, objs in pairs(data) do
+	 if cls ~= 'import' then
+	    if not self.input[cls] then self.input[cls] = objs
+	    elseif objs[1] then util.extend(self.input[cls], objs)
+	    else
+	       for k, v in pairs(objs) do self.input[cls][k] = v end
 	    end
 	 end
       end
+   end
+   
+   for i, dir in ipairs(confdirs or
+			{'/usr/share/awall/mandatory', '/etc/awall'}) do
+      local names = {}
+      for fname in lfs.dir(dir) do
+	 local si, ei, name = string.find(fname, '^([%w-]+)%.json$')
+	 if name then table.insert(names, name) end
+      end
+      table.sort(names)
+
+      for i, name in ipairs(names) do import(name, dir..'/'..name..'.json') end
    end
 
 
