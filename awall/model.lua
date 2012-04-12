@@ -73,6 +73,7 @@ function Rule:init(context)
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and util.maplist(self[prop],
 					       function(z)
+						  if type(z) ~= 'string' then return z end
 						  return z == '_fw' and fwzone or
 						     self.root.zone[z] or
 						     error('Invalid zone: '..z)
@@ -83,6 +84,7 @@ function Rule:init(context)
       if type(self.service) == 'string' then self.label = self.service end
       self.service = util.maplist(self.service,
 				  function(s)
+				     if type(s) ~= 'string' then return s end
 				     return self.root.service[s] or error('Invalid service: '..s)
 				  end)
    end
@@ -212,6 +214,10 @@ function Rule:servoptfrags()
    return res
 end
 
+function Rule:destoptfrags()
+   return Zone.morph({addr=self.dest}):optfrags('out')
+end
+
 function Rule:table() return 'filter' end
 
 function Rule:chain() return nil end
@@ -299,7 +305,7 @@ function Rule:trules()
    tag(res, 'chain', self:chain())
 
    local addrofrags = combinations(Zone.morph({addr=self.src}):optfrags('in'),
-				   Zone.morph({addr=self.dest}):optfrags('out'))
+				   self:destoptfrags())
 
    if addrofrags then
       addrofrags = ffilter(addrofrags)
