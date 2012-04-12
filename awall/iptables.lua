@@ -13,7 +13,6 @@ require 'awall.object'
 require 'awall.util'
 
 local class = awall.object.class
-local contains = awall.util.contains
 
 
 local families = {inet={cmd='iptables', file='rules-save'},
@@ -67,7 +66,8 @@ function IPTables:dumpfile(family, iptfile)
    for tbl, chains in pairs(self.config[family]) do
       iptfile:write('*'..tbl..'\n')
       for chain, rules in pairs(chains) do
-	 iptfile:write(':'..chain..' '..(contains(builtin, chain) and
+	 iptfile:write(':'..chain..' '..(awall.util.contains(builtin,
+							     chain) and
 				      'DROP' or '-')..' [0:0]\n')
       end
       for chain, rules in pairs(chains) do

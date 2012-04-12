@@ -11,7 +11,6 @@ require 'awall.model'
 require 'awall.util'
 
 local model = awall.model
-local util = awall.util
 
 
 local NATRule = model.class(model.Rule)
@@ -19,7 +18,7 @@ local NATRule = model.class(model.Rule)
 function NATRule:init(context)
    model.Rule.init(self, context)
    for i, dir in ipairs({'in', 'out'}) do
-      if util.contains(self[dir], model.fwzone) then
+      if awall.util.contains(self[dir], model.fwzone) then
 	 error('NAT rules not allowed for firewall zone')
       end
    end

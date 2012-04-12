@@ -35,12 +35,12 @@ function loadmodules(path)
 end
 
 
-Config = awall.object.class(awall.object.Object)
+Config = object.class(object.Object)
 
 function Config:init(confdirs, importdirs)
 
    self.input = {}
-   self.iptables = awall.iptables.IPTables.new()
+   self.iptables = iptables.IPTables.new()
 
    local required = {}
    local imported = {}
@@ -149,8 +149,8 @@ function Config:init(confdirs, importdirs)
    for i, mod in ipairs(modules) do
       for path, cls in pairs(mod.classmap) do
 	 if self.input[path] then	    
-	    awall.util.map(self.input[path],
-			   function(obj) return cls.morph(obj, self) end)
+	    util.map(self.input[path],
+		     function(obj) return cls.morph(obj, self) end)
 	    table.insert(locations, self.input[path])
 	 end
       end
@@ -165,7 +165,7 @@ function Config:init(confdirs, importdirs)
       end
    end
 
-   self.ipset = awall.ipset.IPSet.new(self.input.ipset)
+   self.ipset = ipset.IPSet.new(self.input.ipset)
 end
 
 function Config:dump(iptdir, ipsfile)
