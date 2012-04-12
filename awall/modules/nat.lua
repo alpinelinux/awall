@@ -75,7 +75,8 @@ function SNATRule:target()
 end
 
 
-classmap = {dnat=DNATRule, snat=SNATRule}
+classes = {{'dnat', DNATRule},
+	   {'snat', SNATRule}}
 
 -- TODO configuration of the ipset via JSON config
 defrules = {{family='inet', table='nat', chain='POSTROUTING',

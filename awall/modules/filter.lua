@@ -58,7 +58,8 @@ local Policy = model.class(Filter)
 function Policy:servoptfrags() return nil end
 
 
-classmap = {policy=Policy, filter=Filter}
+classes = {{'filter', Filter},
+	   {'policy', Policy}}
 
 defrules = {}
 for i, family in ipairs({'inet', 'inet6'}) do

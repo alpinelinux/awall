@@ -17,9 +17,25 @@ require 'awall.object'
 require 'awall.util'
 
 
-local modules = {package.loaded['awall.model']}
+local procorder
+local defrules
 
 function loadmodules(path)
+   classmap = {}
+   procorder = {}
+   defrules = {}
+
+   local function readmetadata(mod)
+      for i, clsdef in ipairs(mod.classes) do
+	 local path, cls = unpack(clsdef)
+	 classmap[path] = cls
+	 table.insert(procorder, path)
+      end
+      util.extend(defrules, mod.defrules)
+   end
+
+   readmetadata(model)
+
    local cdir = lfs.currentdir()
    if path then lfs.chdir(path) end
 
@@ -27,7 +43,7 @@ function loadmodules(path)
       if stringy.endswith(modfile, '.lua') then
 	 local name = 'awall.modules.'..string.sub(modfile, 1, -5)
 	 require(name)
-	 table.insert(modules, package.loaded[name])
+	 readmetadata(package.loaded[name])
       end
    end
 
@@ -146,18 +162,15 @@ function Config:init(confdirs, importdirs)
 
    local locations = {}
 
-   for i, mod in ipairs(modules) do
-      for path, cls in pairs(mod.classmap) do
-	 if self.input[path] then	    
-	    util.map(self.input[path],
-		     function(obj) return cls.morph(obj, self) end)
-	    table.insert(locations, self.input[path])
-	 end
+   for i, path in ipairs(procorder) do
+      if self.input[path] then
+	 util.map(self.input[path],
+		  function(obj) return classmap[path].morph(obj, self) end)
+	 table.insert(locations, self.input[path])
       end
-
-      for i, rule in ipairs(mod.defrules) do insertrule(rule) end
    end
 
+   for i, rule in ipairs(defrules) do insertrule(rule) end
 
    for i, location in ipairs(locations) do
       for i, rule in ipairs(location) do

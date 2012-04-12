@@ -353,6 +353,5 @@ function Rule:newchain(base)
 end
 
 
-classmap = {zone=Zone}
-
+classes = {{'zone', Zone}}
 defrules = {}
