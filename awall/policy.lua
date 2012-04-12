@@ -27,6 +27,12 @@ local function open(name, dirs)
    end
 end
 
+local function find(name, dirs)
+   local file, path = open(name, dirs)
+   if file then file:close() end
+   return path
+end
+
 local function list(dirs)
    local allnames = {}
    local res = {}
@@ -106,4 +112,48 @@ function PolicySet:load()
    for i, pol in ipairs(list(self.autodirs)) do import(unpack(pol)) end
 
    return input, imported
+end
+
+
+function PolicySet:findsymlink(name)
+   local symlink = find(name, {self.confdir})
+   if symlink and lfs.symlinkattributes(symlink).mode ~= 'link' then
+      error('Not an optional policy: '..name)
+   end
+   return symlink
+end
+
+function PolicySet:enable(name)
+   if self:findsymlink(name) then error('Policy already enabled: '..name)
+   else
+      local target = find(name, self.importdirs)
+      if not target then error('Policy not found: '..name) end
+      if string.sub(target, 1, 1) ~= '/' then
+	 target = lfs.currentdir()..'/'..target
+      end
+
+      pid, stdin, stdout = lpc.run('ln', '-s', target, self.confdir)
+      stdin:close()
+      stdout:close()
+      assert(lpc.wait(pid) == 0)
+   end
+end
+
+function PolicySet:disable(name)
+   local symlink = self:findsymlink(name)
+   if not symlink then error('Policy not enabled: '..name) end
+   assert(os.remove(symlink))
+end
+
+function PolicySet:list()
+   local input, imported = self:load()
+   local pols = list(self.importdirs)
+   local i = 0
+
+   return function()
+	     i = i + 1
+	     if i > #pols then return end
+	     local name = pols[i][1]
+	     return name, self:findsymlink(name) and 'enabled' or util.contains(imported, name) and 'required'or 'disabled'
+	  end
 end
