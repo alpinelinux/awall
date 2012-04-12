@@ -143,12 +143,14 @@ function Config:init(confdirs, importdirs)
 	       end
 	    end
 
-	    obj[k] = val
+	    obj[k] = val ~= '' and val or nil
 	 end
       end
    end
 
-   expandvars(self.input)
+   for k, v in pairs(self.input) do
+      if k ~= 'variable' then expandvars(v) end
+   end
 
 
    local function insertrule(trule)
