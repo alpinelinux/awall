@@ -45,7 +45,7 @@ function Config:init(confdirs, importdirs)
    local required = {}
    local imported = {}
 
-   function import(name, fname)
+   local function import(name, fname)
       local file
       if fname then
 	 file = io.open(fname)
@@ -97,7 +97,7 @@ function Config:init(confdirs, importdirs)
    end
 
 
-   function expandvars(obj)
+   local function expandvars(obj)
       for k, v in pairs(obj) do
 	 if type(v) == 'table' then
 	    expandvars(v)
@@ -135,7 +135,7 @@ function Config:init(confdirs, importdirs)
    expandvars(self.input)
 
 
-   function insertrule(trule)
+   local function insertrule(trule)
       local t = self.iptables.config[trule.family][trule.table][trule.chain]
       if trule.position == 'prepend' then
 	 table.insert(t, 1, trule.opts)

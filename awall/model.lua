@@ -96,10 +96,10 @@ function Rule:checkzoneoptfrag(ofrag) end
 
 function Rule:zoneoptfrags()
 
-   function zonepair(zin, zout)
+   local function zonepair(zin, zout)
       assert(zin ~= zout or not zin)
 
-      function zofs(zone, dir)
+      local function zofs(zone, dir)
 	 if not zone then return zone end
 	 local ofrags = zone:optfrags(dir)
 	 util.map(ofrags, function(x) self:checkzoneoptfrag(x) end)
@@ -147,7 +147,7 @@ function Rule:servoptfrags()
 
    if not self.service then return end
 
-   function containskey(tbl, key)
+   local function containskey(tbl, key)
       for k, v in pairs(tbl) do if k == key then return true end end
       return false
    end
@@ -226,7 +226,7 @@ end
 
 function Rule:trules()
 
-   function tag(ofrags, tag, value)
+   local function tag(ofrags, tag, value)
       for i, ofrag in ipairs(ofrags) do
 	 assert(not ofrag[tag])
 	 ofrag[tag] = value
@@ -235,7 +235,7 @@ function Rule:trules()
 
    local families
 
-   function setfamilies(ofrags)
+   local function setfamilies(ofrags)
       if ofrags then
 	 families = {}
 	 for i, ofrag in ipairs(ofrags) do
@@ -248,7 +248,7 @@ function Rule:trules()
       else families = nil end
    end
 
-   function ffilter(ofrags)
+   local function ffilter(ofrags)
       if not ofrags or not ofrags[1] or not families then return ofrags end
       local res = {}
       for i, ofrag in util.listpairs(ofrags) do
@@ -259,7 +259,7 @@ function Rule:trules()
       return res
    end
 
-   function appendtarget(ofrag, target)
+   local function appendtarget(ofrag, target)
       ofrag.opts = (ofrag.opts and ofrag.opts..' ' or '')..'-j '..target
    end
 
