@@ -51,11 +51,14 @@ function loadmodules(path)
 end
 
 
+PolicySet = policy.PolicySet
+
+
 Config = object.class(object.Object)
 
-function Config:init(confdirs, importdirs)
+function Config:init(policyset)
 
-   self.input = policy.PolicySet.new(confdirs, importdirs):load()
+   self.input = policyset:load()
    self.iptables = iptables.IPTables.new()
 
    local function expandvars(obj)

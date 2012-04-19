@@ -46,30 +46,28 @@ for switch, value in pairs(alt_getopt.get_opts(arg, short_opts, long_opts)) do
 end
 
 
-require 'awall.policy'
+require 'awall'
+
+policyset = awall.PolicySet.new(params.i, params.I)
 
 for i, action in ipairs({'disable', 'enable'}) do
    for i, policy in ipairs(params[string.sub(action, 1, 1)]) do
-      policyset = policyset or awall.policy.PolicySet.new(params.i, params.I)
       policyset[action](policyset, policy, confdir, import)
+      exit = true
    end
 end
-if policyset then os.exit() end
+if exit then os.exit() end
 
 if mode == 'l' then
-   for name, status in awall.policy.PolicySet.new(params.i,
-						  params.I):list() do
-      print(name, status)
-   end
+   for name, status in policyset:list() do print(name, status) end
    os.exit()
 end
 
 
-require 'awall'
 require 'awall.iptables'
 awall.loadmodules(basedir)
 
-config = awall.Config.new(params.i, params.I)
+config = awall.Config.new(policyset)
 
 
 if mode == 'a' then
