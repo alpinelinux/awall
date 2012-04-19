@@ -154,6 +154,12 @@ function PolicySet:list()
 	     i = i + 1
 	     if i > #pols then return end
 	     local name = pols[i][1]
-	     return name, self:findsymlink(name) and 'enabled' or util.contains(imported, name) and 'required'or 'disabled'
+
+	     local status
+	     if self:findsymlink(name) then status = 'enabled'
+	     elseif util.contains(imported, name) then status = 'required'
+	     else status = 'disabled' end
+
+	     return name, status
 	  end
 end
