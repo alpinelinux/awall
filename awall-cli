@@ -92,7 +92,7 @@ if mode == 'a' then
 
    io.stderr:write('New firewall configuration activated\n')
    io.stderr:write('Press RETURN to commit changes permanently: ')
-   io.read()
+   interrupted = not io.read()
 
    signal.signal('SIGCHLD', 'default')
    signal.kill(pid, 'SIGTERM')
