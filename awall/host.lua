@@ -26,8 +26,7 @@ function resolve(host)
 
       if not dnscache[host] then
 	 dnscache[host] = {}
-	 -- TODO use default server
-	 for rec in io.popen('dig @8.8.8.8 '..host..' ANY'):lines() do
+	 for rec in io.popen('dig '..host..' ANY'):lines() do
 	    local name, rtype, addr =
 	       string.match(rec, '^('..familypatterns.domain..')\t+%d+\t+IN\t+(A+)\t+(.+)')
 
