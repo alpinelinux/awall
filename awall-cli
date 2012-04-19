@@ -36,7 +36,7 @@ require 'awall.util'
 for switch, value in pairs(alt_getopt.get_opts(arg, short_opts, long_opts)) do
    if awall.util.contains({'a', 'l'}, switch) then mode = switch
    elseif awall.util.contains({'d', 'e', 'i', 'I'}, switch) then
-      table.insert(awall.util.params[switch], value)
+      table.insert(params[switch], value)
    elseif switch == 'F' then fallback = true
    elseif switch == 'o' then
       iptdir = value

@@ -132,7 +132,7 @@ function PolicySet:enable(name)
 	 target = lfs.currentdir()..'/'..target
       end
 
-      pid, stdin, stdout = lpc.run('ln', '-s', target, self.confdir)
+      local pid, stdin, stdout = lpc.run('ln', '-s', target, self.confdir)
       stdin:close()
       stdout:close()
       assert(lpc.wait(pid) == 0)
