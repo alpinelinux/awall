@@ -1,4 +1,6 @@
 {
+  "description": "Sample awall policy; copy to /etc/awall to use",
+
   "variable": { "internet_if": "eth0" },
 
   "zone": {

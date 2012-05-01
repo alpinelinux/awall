@@ -73,6 +73,17 @@ function PolicySet:init(confdirs, importdirs)
 end
 
 
+function PolicySet:loadJSON(name, fname)
+   local file = fname and io.open(fname) or open(name, self.importdirs)
+   if not file then error('Import failed: '..name) end
+
+   local data = ''
+   for line in file:lines() do data = data..line end
+   file:close()
+   return json.decode(data)
+end
+
+
 function PolicySet:load()
    
    local input = {}
@@ -86,20 +97,15 @@ function PolicySet:load()
 	 error('Circular import: '..name)
       end
 
-      local file = fname and io.open(fname) or open(name, self.importdirs)
-      if not file then error('Import failed: '..name) end
-
-      local data = ''
-      for line in file:lines() do data = data..line end
-      file:close()
-      data = json.decode(data)
+      local data = self:loadJSON(name, fname)
 
       table.insert(required, name)
       for i, iname in util.listpairs(data.import) do import(iname) end
       table.insert(imported, name)
       
       for cls, objs in pairs(data) do
-	 if cls ~= 'import' then
+	 if not util.contains({'description', 'import'},
+			      cls) then
 	    if not input[cls] then input[cls] = objs
 	    elseif objs[1] then util.extend(input[cls], objs)
 	    else
@@ -160,6 +166,6 @@ function PolicySet:list()
 	     elseif util.contains(imported, name) then status = 'required'
 	     else status = 'disabled' end
 
-	     return name, status
+	     return name, status, self:loadJSON(name, pols[i][2]).description
 	  end
 end
