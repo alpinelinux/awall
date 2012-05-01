@@ -17,7 +17,10 @@
     ],
     "irc": { "proto": "tcp", "port": 6667 },
     "ntp": { "proto": "udp", "port": 123 },
-    "ping": { "proto": "icmp", "type": 8 },
+    "ping": [
+      { "proto": "icmp", "type": 8 },
+      { "proto": "icmpv6", "type": 128 }
+    ],
     "sip": { "proto": "udp", "port": 5060 },
     "smtp": { "proto": "tcp", "port": 25 },
     "snmp": { "proto": "udp", "port": 161 },
