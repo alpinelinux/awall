@@ -11,15 +11,15 @@ require 'lfs'
 require 'signal'
 require 'stringy'
 
-short_opts = 'ad:e:Flo:V'
-long_opts = {activate='a',
-	     disable='d',
-	     enable='e',
-	     list='l',
-	     ['output-dir']='o',
-	     verify='V'}
+short_opts = 'o:V'
+long_opts = {['output-dir']='o', verify='V'}
 
-params = {d = {}, e = {}}
+function fail()
+   io.stderr:write('Syntax error\n')
+   os.exit()
+end
+
+params = {}
 
 if stringy.endswith(arg[0], '/awall-cli') then
    basedir = string.sub(arg[0], 1, -11)
@@ -31,35 +31,50 @@ if stringy.endswith(arg[0], '/awall-cli') then
    long_opts['import-path'] = 'I'
 end
 
-require 'awall.util'
+if not arg[1] then fail() end
 
-for switch, value in pairs(alt_getopt.get_opts(arg, short_opts, long_opts)) do
-   if awall.util.contains({'a', 'l'}, switch) then mode = switch
-   elseif awall.util.contains({'d', 'e', 'i', 'I'}, switch) then
-      table.insert(params[switch], value)
-   elseif switch == 'F' then fallback = true
+if not stringy.startswith(arg[1], '-') then
+   mode = arg[1]
+   table.remove(arg, 1)
+end
+
+opts, opind = alt_getopt.get_opts(arg, short_opts, long_opts)
+for switch, value in pairs(opts) do
+   if switch == 'V' then verify = true
    elseif switch == 'o' then
       iptdir = value
       ipsfile = value..'/ipset'
-   elseif switch == 'V' then verify = true
-   else assert(false) end
+   else table.insert(params[switch], value) end
 end
+
+if not mode then
+   mode = arg[opind]
+   opind = opind + 1
+end
+
+
+require 'awall.util'
+
+if not awall.util.contains({'translate', 'activate', 'fallback',
+			    'enable', 'disable', 'list'},
+			   mode) then fail() end
 
 
 require 'awall'
 
 policyset = awall.PolicySet.new(params.i, params.I)
 
-for i, action in ipairs({'disable', 'enable'}) do
-   for i, policy in ipairs(params[string.sub(action, 1, 1)]) do
-      policyset[action](policyset, policy, confdir, import)
-      exit = true
-   end
-end
-if exit then os.exit() end
-
-if mode == 'l' then
+if mode == 'list' then
    for name, status in policyset:list() do print(name, status) end
+   os.exit()
+end
+
+if awall.util.contains({'disable', 'enable'}, mode) then
+   if opind > #arg then fail() end
+   repeat
+      policyset[mode](policyset, arg[opind])
+      opind = opind + 1
+   until opind > #arg
    os.exit()
 end
 
@@ -69,8 +84,11 @@ awall.loadmodules(basedir)
 
 config = awall.Config.new(policyset)
 
-
-if mode == 'a' then
+if mode == 'translate' then
+   if verify then config:test() end
+   config:dump(iptdir, ipsfile)      
+   
+elseif mode == 'activate' then
 
    awall.iptables.backup()
 
@@ -84,7 +102,7 @@ if mode == 'a' then
    end
 
    require 'lpc'
-   pid, stdio, stdout = lpc.run(arg[0], '-F')
+   pid, stdio, stdout = lpc.run(arg[0], 'fallback')
    stdio:close()
    stdout:close()
    
@@ -105,7 +123,7 @@ if mode == 'a' then
    else config:dump() end
 
 
-elseif fallback then
+elseif mode == 'fallback' then
 
    for i, sig in ipairs({'HUP', 'PIPE'}) do
       signal.signal('SIG'..sig, function() end)
@@ -117,7 +135,4 @@ elseif fallback then
    io.stderr:write('\nTimeout, reverting to the old configuration\n')
    awall.iptables.revert()
 
-else
-   if verify then config:test() end
-   config:dump(iptdir, ipsfile)
-end
+else assert(false) end
