@@ -14,8 +14,43 @@ require 'stringy'
 short_opts = 'o:V'
 long_opts = {['output-dir']='o', verify='V'}
 
-function fail()
-   io.stderr:write('Syntax error\n')
+function help()
+   io.stderr:write([[
+Alpine Wall usage
+
+Translate policy files to firewall configuration files:
+    awall translate [--output <dir>] [--verify]
+
+    The --verify option makes awall verify the configuration using the
+    test mode of iptables-restore before overwriting the old files.
+
+    Specifying the output directory allows testing awall policies
+    without overwriting the current iptables and ipset configuration
+    files. By default, awall generates the configuration to
+    /etc/iptables and /etc/ipset.d, which are read by the init
+    scripts.
+
+Run-time activation of new firewall configuration:
+    awall activate
+
+    This function genereates firewall configuration from the policy
+    files and enables it. If the user confirms the new configuration
+    by hitting RETURN within 10 seconds, the configuration is saved
+    to the files. Otherwise, the old configuration is restored.
+
+Enable/disable optional policies:
+    awall {enable|disable} <policy>...
+
+List optional policies:
+    awall list
+
+    The 'enabled' status means that the policy has been enabled by the
+    user. The 'disabled' status means that the policy is not in
+    use. The 'required' status means that the policy has not been
+    enabled by the user but is in use because it is required by
+    another policy which is in use.
+
+]])
    os.exit()
 end
 
@@ -31,7 +66,7 @@ if stringy.endswith(arg[0], '/awall-cli') then
    long_opts['import-path'] = 'I'
 end
 
-if not arg[1] then fail() end
+if not arg[1] then help() end
 
 if not stringy.startswith(arg[1], '-') then
    mode = arg[1]
@@ -57,7 +92,7 @@ require 'awall.util'
 
 if not awall.util.contains({'translate', 'activate', 'fallback',
 			    'enable', 'disable', 'list'},
-			   mode) then fail() end
+			   mode) then help() end
 
 
 require 'awall'
@@ -70,7 +105,7 @@ if mode == 'list' then
 end
 
 if awall.util.contains({'disable', 'enable'}, mode) then
-   if opind > #arg then fail() end
+   if opind > #arg then help() end
    repeat
       policyset[mode](policyset, arg[opind])
       opind = opind + 1
