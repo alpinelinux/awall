@@ -1,0 +1,40 @@
+{
+  "variable": { "internet_if": "eth0" },
+
+  "zone": {
+    "internet": { "iface": "$internet_if" }
+  },
+
+  "policy": [
+    { "in": "internet", "action": "drop" },
+    { "action": "reject" }
+  ]
+
+  "filter": [
+    {
+      "in": "internet",
+      "service": "ping",
+      "action": "accept",
+      "flow-limit": { "count": 10, "interval": 6 }
+    },
+    {
+      "in": "internet",
+      "out": "_fw",
+      "service": "ssh",
+      "action": "accept",
+      "conn-limit": { "count": 3, "interval": 60 }
+    },
+
+    {
+      "in": "_fw",
+      "out": "internet",
+      "service": [ "dns", "http", "ntp" ],
+      "action": "accept"
+    },
+    {
+      "in": "_fw",
+      "service": [ "ping", "ssh" ],
+      "action": "accept"
+    }
+  ]
+}
