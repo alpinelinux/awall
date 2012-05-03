@@ -19,7 +19,7 @@ function help()
 Alpine Wall usage
 
 Translate policy files to firewall configuration files:
-    awall translate [--output <dir>] [--verify]
+    awall translate [-o|--output <dir>] [-V|--verify]
 
     The --verify option makes awall verify the configuration using the
     test mode of iptables-restore before overwriting the old files.
@@ -33,10 +33,10 @@ Translate policy files to firewall configuration files:
 Run-time activation of new firewall configuration:
     awall activate
 
-    This function genereates firewall configuration from the policy
+    This command genereates firewall configuration from the policy
     files and enables it. If the user confirms the new configuration
-    by hitting RETURN within 10 seconds, the configuration is saved
-    to the files. Otherwise, the old configuration is restored.
+    by hitting RETURN within 10 seconds, the configuration is saved to
+    the files. Otherwise, the old configuration is restored.
 
 Enable/disable optional policies:
     awall {enable|disable} <policy>...
