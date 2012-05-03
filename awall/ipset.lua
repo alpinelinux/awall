@@ -18,9 +18,9 @@ function IPSet:commands()
    if self.config then
       for name, params in pairs(self.config) do
 	 if not params.type then error('Type not defined for set '..name) end
-	 local line = 'create '..name..' '..params.type
-	 if params.family then line = line..' family '..params.family end
-	 table.insert(res, line..'\n')
+	 if not params.family then error('Family not defined for set '..name) end
+	 table.insert(res,
+		      'create '..name..' '..params.type..' family '..params.family..'\n')
       end
    end
    return res
