@@ -74,13 +74,21 @@ end
 
 
 function PolicySet:loadJSON(name, fname)
-   local file = fname and io.open(fname) or open(name, self.importdirs)
+   local file
+   if fname then
+      file = io.open(fname)
+   else
+      file, fname = open(name, self.importdirs)
+   end
    if not file then error('Import failed: '..name) end
 
    local data = ''
    for line in file:lines() do data = data..line end
    file:close()
-   return json.decode(data)
+
+   local success, res = pcall(json.decode, data)
+   if success then return res end
+   error(res..' while parsing '..fname)
 end
 
 
