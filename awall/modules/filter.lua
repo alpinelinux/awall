@@ -137,7 +137,7 @@ for i, family in ipairs({'inet', 'inet6'}) do
 		       opts=opts})
       end
    end
-   for i, chain in ipairs({'FORWARD', 'INPUT'}) do
+   for i, chain in ipairs({'FORWARD', 'INPUT', 'OUTPUT'}) do
       table.insert(defrules,
 		   {family=family,
 		    table='filter',
