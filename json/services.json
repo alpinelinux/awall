@@ -1,11 +1,12 @@
 {
   "service": {
-    "babel": { "proto": "tcp", "port": 6697 },  	     
+    "babel": { "proto": "tcp", "port": 6697 },
     "bgp": { "proto": "tcp", "port": 179 },
     "dns": [
       { "proto": "udp", "port": 53 },
       { "proto": "tcp", "port": 53 }
     ],
+    "dhcp": { "proto": "udp", "port": [ 67, 68 ] },
     "gre": { "proto": "gre" },
     "http": { "proto": "tcp", "port": 80 },
     "https": { "proto": "tcp", "port": 443 },
