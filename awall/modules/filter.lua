@@ -126,7 +126,8 @@ function Policy:servoptfrags() return nil end
 classes = {{'filter', Filter},
 	   {'policy', Policy}}
 
-defrules = {pre={}}
+defrules = {pre={}, ['post-filter']={}}
+
 for i, family in ipairs({'inet', 'inet6'}) do
    for i, target in ipairs({'DROP', 'REJECT'}) do
       for i, opts in ipairs({'-m limit --limit 1/second -j LOG', '-j '..target}) do
@@ -153,4 +154,12 @@ for i, family in ipairs({'inet', 'inet6'}) do
 		    chain=chain,
 		    opts='-'..string.lower(string.sub(chain, 1, 1))..' lo -j ACCEPT'})
    end
+end
+
+for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
+   table.insert(defrules['post-filter'],
+		{family='inet6',
+		 table='filter',
+		 chain=chain,
+		 opts='-p icmpv6 -j ACCEPT'})
 end
