@@ -31,7 +31,10 @@ function loadmodules(path)
 	 classmap[path] = cls
 	 table.insert(procorder, path)
       end
-      util.extend(defrules, mod.defrules)
+      for phase, rules in pairs(mod.defrules) do
+	 if not defrules[phase] then defrules[phase] = {} end
+	 util.extend(defrules[phase], rules)
+      end
    end
 
    readmetadata(model)
@@ -101,31 +104,37 @@ function Config:init(policyset)
    end
 
 
-   local function insertrule(trule)
-      local t = self.iptables.config[trule.family][trule.table][trule.chain]
-      if trule.position == 'prepend' then
-	 table.insert(t, 1, trule.opts)
-      else
-	 table.insert(t, trule.opts)
+   local function insertrules(trules)
+      for i, trule in ipairs(trules) do
+	 local t = self.iptables.config[trule.family][trule.table][trule.chain]
+	 if trule.position == 'prepend' then
+	    table.insert(t, 1, trule.opts)
+	 else
+	    table.insert(t, trule.opts)
+	 end
       end
    end
 
-   local locations = {}
+   local function insertdefrules(phase)
+      if defrules[phase] then insertrules(defrules[phase]) end
+   end
 
    for i, path in ipairs(procorder) do
       if self.input[path] then
 	 util.map(self.input[path],
 		  function(obj) return classmap[path].morph(obj, self) end)
-	 table.insert(locations, self.input[path])
       end
    end
 
-   for i, rule in ipairs(defrules) do insertrule(rule) end
+   insertdefrules('pre')
 
-   for i, location in ipairs(locations) do
-      for i, rule in ipairs(location) do
-	 for i, trule in ipairs(rule:trules()) do insertrule(trule) end
+   for i, path in ipairs(procorder) do
+      if self.input[path] then
+	 for i, rule in ipairs(self.input[path]) do
+	    insertrules(rule:trules())
+	 end
       end
+      insertdefrules('post-'..path)
    end
 
    self.ipset = ipset.IPSet.new(self.input.ipset)

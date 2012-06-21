@@ -126,11 +126,11 @@ function Policy:servoptfrags() return nil end
 classes = {{'filter', Filter},
 	   {'policy', Policy}}
 
-defrules = {}
+defrules = {pre={}}
 for i, family in ipairs({'inet', 'inet6'}) do
    for i, target in ipairs({'DROP', 'REJECT'}) do
       for i, opts in ipairs({'-m limit --limit 1/second -j LOG', '-j '..target}) do
-	 table.insert(defrules,
+	 table.insert(defrules.pre,
 		      {family=family,
 		       table='filter',
 		       chain='LOG'..target,
@@ -139,7 +139,7 @@ for i, family in ipairs({'inet', 'inet6'}) do
    end
 
    for i, chain in ipairs({'FORWARD', 'INPUT', 'OUTPUT'}) do
-      table.insert(defrules,
+      table.insert(defrules.pre,
 		   {family=family,
 		    table='filter',
 		    chain=chain,
@@ -147,7 +147,7 @@ for i, family in ipairs({'inet', 'inet6'}) do
    end
 
    for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
-      table.insert(defrules,
+      table.insert(defrules.pre,
 		   {family=family,
 		    table='filter',
 		    chain=chain,
