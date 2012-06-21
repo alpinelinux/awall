@@ -176,18 +176,18 @@ function Rule:servoptfrags()
 	    local opts = '-p '..sdef.proto
 	    local family = nil
 
-	    if sdef.type then
-	       -- TODO multiple ICMP types per rule
-	       local oname
-	       if util.contains({1, 'icmp'}, sdef.proto) then
-		  family = 'inet'
-		  oname = 'icmp-type'
-	       elseif util.contains({58, 'ipv6-icmp', 'icmpv6'}, sdef.proto) then
-		  family = 'inet6'
-		  oname = 'icmpv6-type'
-	       else error('Type specification not valid with '..sdef.proto) end
-	       opts = opts..' --'..oname..' '..sdef.type
+	    -- TODO multiple ICMP types per rule
+	    local oname
+	    if util.contains({1, 'icmp'}, sdef.proto) then
+	       family = 'inet'
+	       oname = 'icmp-type'
+	    elseif util.contains({58, 'ipv6-icmp', 'icmpv6'}, sdef.proto) then
+	       family = 'inet6'
+	       oname = 'icmpv6-type'
+	    elseif sdef.type then
+	       error('Type specification not valid with '..sdef.proto)
 	    end
+	    if sdef.type then opts = opts..' --'..oname..' '..sdef.type end
 
 	    table.insert(res, {family=family, opts=opts})
 	 end
