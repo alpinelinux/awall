@@ -66,9 +66,11 @@ function IPTables:dumpfile(family, iptfile)
    for tbl, chains in pairs(self.config[family]) do
       iptfile:write('*'..tbl..'\n')
       for chain, rules in pairs(chains) do
-	 iptfile:write(':'..chain..' '..(awall.util.contains(builtin,
-							     chain) and
-				      'DROP' or '-')..' [0:0]\n')
+	 local policy = '-'
+	 if awall.util.contains(builtin, chain) then
+	    policy = tbl == 'filter' and 'DROP' or 'ACCEPT'
+	 end
+	 iptfile:write(':'..chain..' '..policy..' [0:0]\n')
       end
       for chain, rules in pairs(chains) do
 	 for i, rule in ipairs(rules) do
