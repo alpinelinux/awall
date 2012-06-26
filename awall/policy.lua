@@ -13,7 +13,58 @@ require 'lpc'
 require 'awall.object'
 require 'awall.util'
 
+local object = awall.object
 local util = awall.util
+
+
+local PolicyConfig = object.class(object.Object)
+
+function PolicyConfig:init(data)
+   self.data = data
+end
+
+function PolicyConfig:eval(value)
+   local visited = {}
+   local pattern = '%$(%a[%w_]*)'
+	 
+   while type(value) == 'string' and string.find(value, pattern) do
+      local si, ei, name = string.find(value, pattern)
+	    
+      if util.contains(visited, name) then
+	 error('Circular variable definition: '..name)
+      end
+      table.insert(visited, name)
+	    
+      local var = self.data.variable[name]
+      if not var then error('Invalid variable reference: '..name) end
+	    
+      if si == 1 and ei == string.len(value) then value = var
+      elseif util.contains({'number', 'string'}, type(var)) then
+	 value = string.sub(value, 1, si - 1)..var..string.sub(value, ei + 1, -1)
+      else
+	 error('Attempted to concatenate complex variable: '..name)
+      end
+   end
+   
+   return value ~= '' and value or nil
+end
+
+function PolicyConfig:expand()
+
+   local function expand(obj)
+      for k, v in pairs(obj) do
+	 if type(v) == 'table' then expand(v)
+	 else obj[k] = self:eval(v) end
+      end
+   end
+   
+   for k, v in pairs(self.data) do
+      if k ~= 'variable' then expand(v) end
+   end
+
+   return self.data
+end
+
 
 
 local function open(name, dirs)
@@ -64,7 +115,7 @@ local function list(dirs)
 end
 
 
-PolicySet = awall.object.class(awall.object.Object)
+PolicySet = object.class(object.Object)
 
 function PolicySet:init(confdirs, importdirs)
    self.autodirs = confdirs or {'/usr/share/awall/mandatory', '/etc/awall'}
@@ -125,7 +176,7 @@ function PolicySet:load()
 
    for i, pol in ipairs(list(self.autodirs)) do import(unpack(pol)) end
 
-   return input, imported
+   return PolicyConfig.new(input), imported
 end
 
 
@@ -160,7 +211,7 @@ function PolicySet:disable(name)
 end
 
 function PolicySet:list()
-   local input, imported = self:load()
+   local config, imported = self:load()
    local pols = list(self.importdirs)
    local i = 0
 

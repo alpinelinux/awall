@@ -59,50 +59,10 @@ PolicySet = policy.PolicySet
 
 Config = object.class(object.Object)
 
-function Config:init(policyset)
+function Config:init(policyconfig)
 
-   self.input = policyset:load()
+   self.input = policyconfig:expand()
    self.iptables = iptables.IPTables.new()
-
-   local function expandvars(obj)
-      for k, v in pairs(obj) do
-	 if type(v) == 'table' then
-	    expandvars(v)
-
-	 else
-	    local visited = {}
-	    local val = v
-
-	    local pattern = '%$(%a[%w_]*)'
-
-	    while type(val) == 'string' and string.find(val, pattern) do
-	       local si, ei, name = string.find(val, pattern)
-		  
-	       if util.contains(visited, name) then
-		  error('Circular variable definition: '..name)
-	       end
-	       table.insert(visited, name)
-
-	       local var = self.input.variable[name]
-	       if not var then error('Invalid variable reference: '..name) end
-
-	       if si == 1 and ei == string.len(val) then val = var
-	       elseif util.contains({'number', 'string'}, type(var)) then
-		  val = string.sub(val, 1, si - 1)..var..string.sub(val, ei + 1, -1)
-	       else
-		  error('Attempted to concatenate complex variable: '..name)
-	       end
-	    end
-
-	    obj[k] = val ~= '' and val or nil
-	 end
-      end
-   end
-
-   for k, v in pairs(self.input) do
-      if k ~= 'variable' then expandvars(v) end
-   end
-
 
    local function insertrules(trules)
       for i, trule in ipairs(trules) do

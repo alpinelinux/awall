@@ -115,11 +115,13 @@ if awall.util.contains({'disable', 'enable'}, mode) then
    os.exit()
 end
 
+config = policyset:load()
+
 
 require 'awall.iptables'
 awall.loadmodules(basedir)
 
-config = awall.Config.new(policyset)
+config = awall.Config.new(config)
 
 if mode == 'translate' then
    if verify then config:test() end
