@@ -50,6 +50,9 @@ List optional policies:
     enabled by the user but is in use because it is required by
     another policy which is in use.
 
+Dump variable and zone definitions:
+    awall dump
+
 ]])
    os.exit()
 end
@@ -91,7 +94,7 @@ end
 require 'awall.util'
 
 if not awall.util.contains({'translate', 'activate', 'fallback',
-			    'enable', 'disable', 'list'},
+			    'enable', 'disable', 'list', 'dump'},
 			   mode) then help() end
 
 
@@ -115,7 +118,29 @@ if awall.util.contains({'disable', 'enable'}, mode) then
    os.exit()
 end
 
+
 config = policyset:load()
+
+if mode == 'dump' then
+   require 'json'
+
+   function dump(title, data)
+      print(title..':')
+      local lines = {}
+      for k, v in pairs(data) do
+	 table.insert(lines, k..' = '..json.encode(v))
+      end
+      table.sort(lines)
+      for i, line in ipairs(lines) do print(line) end
+      print()
+   end
+
+   dump('Variables', config:variables())
+   config = config:expand()
+   dump('Zones', config.zone)
+
+   os.exit()
+end
 
 
 require 'awall.iptables'

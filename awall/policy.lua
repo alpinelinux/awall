@@ -49,6 +49,14 @@ function PolicyConfig:eval(value)
    return value ~= '' and value or nil
 end
 
+function PolicyConfig:variables()
+   local res = {}
+   for name, value in pairs(self.data.variable or {}) do
+      res[name] = self:eval('$'..name)
+   end
+   return res
+end
+
 function PolicyConfig:expand()
 
    local function expand(obj)
