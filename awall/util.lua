@@ -37,3 +37,20 @@ end
 function extend(tbl1, tbl2)
    for i, var in listpairs(tbl2) do table.insert(tbl1, var) end
 end
+
+function printtabular(tbl)
+   local colwidth = {}
+   for i, row in ipairs(tbl) do
+      for j, col in ipairs(row) do
+	 colwidth[j] = math.max(colwidth[j] or 0, string.len(col))
+      end
+   end
+   for i, row in ipairs(tbl) do
+      for j, col in ipairs(row) do
+	 if j > 1 then io.write('  ') end
+	 io.write(col)
+	 for k = 1,colwidth[j] - string.len(col) do io.write(' ') end
+      end
+      io.write('\n')
+   end
+end

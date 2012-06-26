@@ -103,9 +103,7 @@ require 'awall'
 policyset = awall.PolicySet.new(params.i, params.I)
 
 if mode == 'list' then
-   for name, status, desc in policyset:list() do
-       print(name, status, desc)
-   end
+   awall.util.printtabular(policyset:list())
    os.exit()
 end
 

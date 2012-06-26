@@ -220,19 +220,19 @@ end
 
 function PolicySet:list()
    local config, imported = self:load()
-   local pols = list(self.importdirs)
-   local i = 0
+   local res = {}
 
-   return function()
-	     i = i + 1
-	     if i > #pols then return end
-	     local name = pols[i][1]
+   for i, pol in ipairs(list(self.importdirs)) do
+      local name = pol[1]
 
-	     local status
-	     if self:findsymlink(name) then status = 'enabled'
-	     elseif util.contains(imported, name) then status = 'required'
-	     else status = 'disabled' end
+      local status
+      if self:findsymlink(name) then status = 'enabled'
+      elseif util.contains(imported, name) then status = 'required'
+      else status = 'disabled' end
 
-	     return name, status, self:loadJSON(name, pols[i][2]).description
-	  end
+      table.insert(res,
+		   {name, status, self:loadJSON(name, pol[2]).description})
+   end
+
+   return res
 end
