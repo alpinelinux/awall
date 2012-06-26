@@ -15,8 +15,12 @@ require 'awall.util'
 local class = awall.object.class
 
 
-local families = {inet={cmd='iptables', file='rules-save'},
-		  inet6={cmd='ip6tables', file='rules6-save'}}
+local families = {inet={cmd='iptables',
+			file='rules-save',
+			procfile='/proc/net/ip_tables_names'},
+		  inet6={cmd='ip6tables',
+			 file='rules6-save',
+			 procfile='/proc/net/ip6_tables_names'}}
 
 local builtin = {'INPUT', 'FORWARD', 'OUTPUT',
 		 'PREROUTING', 'POSTROUTING'}
@@ -34,19 +38,34 @@ function BaseIPTables:dump(dir)
    end
 end
 
-function BaseIPTables:restore(...)
+function BaseIPTables:restore(test)
+   local disabled = true
+
    for family, params in pairs(families) do
-      local pid, stdin, stdout = lpc.run(params.cmd..'-restore', unpack(arg))
-      stdout:close()
-      self:dumpfile(family, stdin)
-      stdin:close()
-      assert(lpc.wait(pid) == 0)
+      local file = io.open(params.procfile)
+      if file then
+	 io.close(file)
+
+	 local pid, stdin, stdout = lpc.run(params.cmd..'-restore',
+					    unpack({test and '-t' or nil}))
+	 stdout:close()
+	 self:dumpfile(family, stdin)
+	 stdin:close()
+	 assert(lpc.wait(pid) == 0)
+
+	 disabled = false
+
+      elseif test then
+	 io.stderr:write('Warning: '..family..' rules not tested\n')
+      end
    end
+
+   if disabled then error('Firewall not enabled in kernel') end
 end
 
-function BaseIPTables:activate() self:restore() end
+function BaseIPTables:activate() self:restore(false) end
 
-function BaseIPTables:test() self:restore('-t') end
+function BaseIPTables:test() self:restore(true) end
 
 
 IPTables = class(BaseIPTables)
