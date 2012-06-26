@@ -44,5 +44,5 @@ function combinations(of1, of2)
       end
    end
 
-   return res[1] and res or nil
+   return res
 end

@@ -41,16 +41,18 @@ function Zone:optfrags(dir)
       iopt, aopt, iprop, aprop = 'o', 'd', 'out', 'dest'
    else assert(false) end
 
-   local aopts = {}
-   for i, hostdef in util.listpairs(self.addr) do
-      for i, addr in ipairs(awall.host.resolve(hostdef)) do
-	 table.insert(aopts,
-		      {family=addr[1],
-		       [aprop]=addr[2],
-		       opts='-'..aopt..' '..addr[2]})
+   local aopts = nil
+   if self.addr then
+      aopts = {}
+      for i, hostdef in util.listpairs(self.addr) do
+	 for i, addr in ipairs(awall.host.resolve(hostdef)) do
+	    table.insert(aopts,
+			 {family=addr[1],
+			  [aprop]=addr[2],
+			  opts='-'..aopt..' '..addr[2]})
+	 end
       end
    end
-   if not aopts[1] then aopts = nil end
 
    return combinations(util.maplist(self.iface,
 				    function(x)
@@ -324,7 +326,7 @@ function Rule:trules()
       target = self:newchain('address')
    else
       target = self:target()
-      if addrofrags then res = combinations(res, addrofrags) end
+      res = combinations(res, addrofrags)
    end
 
    tag(res, 'position', self:position())

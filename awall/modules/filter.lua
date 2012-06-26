@@ -25,7 +25,7 @@ function Filter:destoptfrags()
    local ofrags = model.Rule.destoptfrags(self)
    if not self.dnat then return ofrags end
 
-   ofrags = awall.optfrag.combinations(ofrags, {{family='inet6'}}) or {}
+   ofrags = awall.optfrag.combinations(ofrags, {{family='inet6'}})
    local natof = model.Zone.morph({addr=self.dnat}):optfrags('out')
    assert(#natof == 1)
    table.insert(ofrags, natof[1])
