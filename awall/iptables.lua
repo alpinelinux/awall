@@ -22,8 +22,12 @@ local families = {inet={cmd='iptables',
 			 file='rules6-save',
 			 procfile='/proc/net/ip6_tables_names'}}
 
-local builtin = {'INPUT', 'FORWARD', 'OUTPUT',
-		 'PREROUTING', 'POSTROUTING'}
+local builtin = {filter={'FORWARD', 'INPUT', 'OUTPUT'},
+		 mangle={'FORWARD', 'INPUT', 'OUTPUT', 'POSTROUTING',
+			 'PREROUTING'},
+		 nat={'INPUT', 'OUTPUT', 'POSTROUTING', 'PREROUTING'},
+		 raw={'OUTPUT', 'PREROUTING'},
+		 security={'FORWARD', 'INPUT', 'OUTPUT'}}
 
 local backupdir = '/var/run/awall'
 
@@ -63,7 +67,21 @@ function BaseIPTables:restore(test)
    if disabled then error('Firewall not enabled in kernel') end
 end
 
-function BaseIPTables:activate() self:restore(false) end
+function BaseIPTables:activate()
+   local empty = IPTables.new()
+   for family, params in pairs(families) do
+      local success, lines = pcall(io.lines, params.procfile)
+      if success then
+	 for tbl in lines do
+	    for i, chain in ipairs(builtin[tbl]) do
+	       empty.config[family][tbl][chain] = {}
+	    end
+	 end
+      end
+   end
+   empty:restore(false)
+   self:restore(false)
+end
 
 function BaseIPTables:test() self:restore(true) end
 
@@ -86,7 +104,7 @@ function IPTables:dumpfile(family, iptfile)
       iptfile:write('*'..tbl..'\n')
       for chain, rules in pairs(chains) do
 	 local policy = '-'
-	 if awall.util.contains(builtin, chain) then
+	 if awall.util.contains(builtin[tbl], chain) then
 	    policy = tbl == 'filter' and 'DROP' or 'ACCEPT'
 	 end
 	 iptfile:write(':'..chain..' '..policy..' [0:0]\n')
