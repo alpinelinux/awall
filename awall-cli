@@ -92,10 +92,11 @@ end
 
 
 require 'awall.util'
+util = awall.util
 
-if not awall.util.contains({'translate', 'activate', 'fallback',
-			    'enable', 'disable', 'list', 'dump'},
-			   mode) then help() end
+if not util.contains({'translate', 'activate', 'fallback',
+		      'enable', 'disable', 'list', 'dump'},
+		     mode) then help() end
 
 
 require 'awall'
@@ -103,11 +104,11 @@ require 'awall'
 policyset = awall.PolicySet.new(params.i, params.I)
 
 if mode == 'list' then
-   awall.util.printtabular(policyset:list())
+   util.printtabular(policyset:list())
    os.exit()
 end
 
-if awall.util.contains({'disable', 'enable'}, mode) then
+if util.contains({'disable', 'enable'}, mode) then
    if opind > #arg then help() end
    repeat
       policyset[mode](policyset, arg[opind])
