@@ -131,7 +131,7 @@ if mode == 'dump' then
 	    def = json.encode(v)
 	    exp = json.encode(expconfig[section][k])
 	    if exp ~= def then def = def..' = '..exp end
-	    table.insert(lines, k..' = '..def)
+	    table.insert(lines, k..' = '..def..' ('..config.source[section][k]..')')
 	 end
 	 table.sort(lines)
 	 for i, line in ipairs(lines) do print(line) end

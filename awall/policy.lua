@@ -19,8 +19,9 @@ local util = awall.util
 
 local PolicyConfig = object.class(object.Object)
 
-function PolicyConfig:init(data, policies)
+function PolicyConfig:init(data, source, policies)
    self.data = data
+   self.source = source
    self.policies = policies
 end
 
@@ -138,6 +139,7 @@ end
 function PolicySet:load()
    
    local input = {}
+   local source = {}
    local required = {}
    local imported = {}
 
@@ -157,10 +159,22 @@ function PolicySet:load()
       for cls, objs in pairs(data) do
 	 if not util.contains({'description', 'import'},
 			      cls) then
-	    if not input[cls] then input[cls] = objs
-	    elseif objs[1] then util.extend(input[cls], objs)
+	    if not source[cls] then source[cls] = {} end
+
+	    if not input[cls] then
+	       input[cls] = objs
+	       for k, v in pairs(objs) do source[cls][k] = name end
+
+	    elseif objs[1] then
+	       local last = #input[cls]
+	       util.extend(input[cls], objs)
+	       for i = 1,#objs do source[cls][last + i] = name end
+
 	    else
-	       for k, v in pairs(objs) do input[cls][k] = v end
+	       for k, v in pairs(objs) do
+		  input[cls][k] = v
+		  source[cls][k] = name
+	       end
 	    end
 	 end
       end
@@ -168,7 +182,7 @@ function PolicySet:load()
 
    for i, pol in ipairs(list(self.autodirs)) do import(unpack(pol)) end
 
-   return PolicyConfig.new(input, imported)
+   return PolicyConfig.new(input, source, imported)
 end
 
 
