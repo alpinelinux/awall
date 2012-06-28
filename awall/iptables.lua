@@ -68,18 +68,7 @@ function BaseIPTables:restore(test)
 end
 
 function BaseIPTables:activate()
-   local empty = IPTables.new()
-   for family, params in pairs(families) do
-      local success, lines = pcall(io.lines, params.procfile)
-      if success then
-	 for tbl in lines do
-	    for i, chain in ipairs(builtin[tbl]) do
-	       empty.config[family][tbl][chain] = {}
-	    end
-	 end
-      end
-   end
-   empty:restore(false)
+   flush()
    self:restore(false)
 end
 
@@ -145,4 +134,19 @@ end
 
 function revert()
    Backup.new():activate()
+end
+
+function flush()
+   local empty = IPTables.new()
+   for family, params in pairs(families) do
+      local success, lines = pcall(io.lines, params.procfile)
+      if success then
+	 for tbl in lines do
+	    for i, chain in ipairs(builtin[tbl]) do
+	       empty.config[family][tbl][chain] = {}
+	    end
+	 end
+      end
+   end
+   empty:restore(false)
 end

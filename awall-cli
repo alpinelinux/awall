@@ -38,6 +38,12 @@ Run-time activation of new firewall configuration:
     by hitting RETURN within 10 seconds, the configuration is saved to
     the files. Otherwise, the old configuration is restored.
 
+Flush firewall configuration:
+    awall flush
+
+    This command deletes all firewall rules and configures it to drop
+    all packets.
+
 Enable/disable optional policies:
     awall {enable|disable} <policy>...
 
@@ -96,7 +102,7 @@ end
 require 'awall.util'
 util = awall.util
 
-if not util.contains({'translate', 'activate', 'fallback',
+if not util.contains({'translate', 'activate', 'fallback', 'flush',
 		      'enable', 'disable', 'list', 'dump'},
 		     mode) then help() end
 
@@ -221,5 +227,7 @@ elseif mode == 'fallback' then
 
    io.stderr:write('\nTimeout, reverting to the old configuration\n')
    awall.iptables.revert()
+
+elseif mode == 'flush' then awall.iptables.flush()
 
 else assert(false) end
