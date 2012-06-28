@@ -60,17 +60,10 @@ end
 function PolicyConfig:expand()
 
    local function expand(obj)
-      for k, v in pairs(obj) do
-	 if type(v) == 'table' then expand(v)
-	 else obj[k] = self:eval(v) end
-      end
-   end
-   
-   for k, v in pairs(self.data) do
-      if k ~= 'variable' then expand(v) end
+      return type(obj) == 'table' and util.map(obj, expand) or self:eval(obj)
    end
 
-   return self.data
+   return expand(self.data)
 end
 
 
