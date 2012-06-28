@@ -19,8 +19,9 @@ local util = awall.util
 
 local PolicyConfig = object.class(object.Object)
 
-function PolicyConfig:init(data)
+function PolicyConfig:init(data, policies)
    self.data = data
+   self.policies = policies
 end
 
 function PolicyConfig:expand()
@@ -167,7 +168,7 @@ function PolicySet:load()
 
    for i, pol in ipairs(list(self.autodirs)) do import(unpack(pol)) end
 
-   return PolicyConfig.new(input), imported
+   return PolicyConfig.new(input, imported)
 end
 
 
@@ -202,7 +203,7 @@ function PolicySet:disable(name)
 end
 
 function PolicySet:list()
-   local config, imported = self:load()
+   local imported = self:load().policies
    local res = {}
 
    for i, pol in ipairs(list(self.importdirs)) do
