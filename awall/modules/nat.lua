@@ -28,7 +28,7 @@ function NATRule:defaultzones() return {nil} end
 
 function NATRule:checkzoneoptfrag(ofrag)
    if ofrag[self.params.forbidif] then
-      error('Cannot specify '..self.params.forbidif..'bound interface for '..target..' rule')
+      error('Cannot specify '..self.params.forbidif..'bound interface for '..self.params.target..' rule')
    end
 end
 
