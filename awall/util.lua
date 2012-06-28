@@ -38,19 +38,44 @@ function extend(tbl1, tbl2)
    for i, var in listpairs(tbl2) do table.insert(tbl1, var) end
 end
 
-function printtabular(tbl)
+function compare(a, b)
+   local t = type(a)
+   if t ~= type(b) then return false end
+   if t ~= 'table' then return a == b end
+
+   local keys = {}
+   for k, v in pairs(a) do
+      if not compare(v, b[k]) then return false end
+      table.insert(keys, k)
+   end
+   for k, v in pairs(b) do
+      if not contains(keys, k) then return false end
+   end
+   return true
+end
+
+function printtabulars(tables)
    local colwidth = {}
-   for i, row in ipairs(tbl) do
-      for j, col in ipairs(row) do
-	 colwidth[j] = math.max(colwidth[j] or 0, string.len(col))
+   for i, tbl in ipairs(tables) do
+      for j, row in ipairs(tbl) do
+	 for k, col in ipairs(row) do
+	    colwidth[k] = math.max(colwidth[k] or 0, string.len(col))
+	 end
       end
    end
-   for i, row in ipairs(tbl) do
-      for j, col in ipairs(row) do
-	 if j > 1 then io.write('  ') end
-	 io.write(col)
-	 for k = 1,colwidth[j] - string.len(col) do io.write(' ') end
+   for i, tbl in ipairs(tables) do
+      for j, row in ipairs(tbl) do
+	 for k = 1,#row do
+	    if k > 1 then io.write('  ') end
+	    io.write(row[k])
+	    if k < #row then
+	       for l = 1,colwidth[k] - string.len(row[k]) do io.write(' ') end
+	    end
+	 end
+	 io.write('\n')
       end
       io.write('\n')
    end
 end
+
+function printtabular(tbl) printtabulars({tbl}) end
