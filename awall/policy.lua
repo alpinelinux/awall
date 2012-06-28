@@ -23,44 +23,34 @@ function PolicyConfig:init(data)
    self.data = data
 end
 
-function PolicyConfig:eval(value)
-   local visited = {}
-   local pattern = '%$(%a[%w_]*)'
-	 
-   while type(value) == 'string' and string.find(value, pattern) do
-      local si, ei, name = string.find(value, pattern)
-	    
-      if util.contains(visited, name) then
-	 error('Circular variable definition: '..name)
-      end
-      table.insert(visited, name)
-	    
-      local var = self.data.variable[name]
-      if not var then error('Invalid variable reference: '..name) end
-	    
-      if si == 1 and ei == string.len(value) then value = var
-      elseif util.contains({'number', 'string'}, type(var)) then
-	 value = string.sub(value, 1, si - 1)..var..string.sub(value, ei + 1, -1)
-      else
-	 error('Attempted to concatenate complex variable: '..name)
-      end
-   end
-   
-   return value ~= '' and value or nil
-end
-
-function PolicyConfig:variables()
-   local res = {}
-   for name, value in pairs(self.data.variable or {}) do
-      res[name] = self:eval('$'..name)
-   end
-   return res
-end
-
 function PolicyConfig:expand()
 
-   local function expand(obj)
-      return type(obj) == 'table' and util.map(obj, expand) or self:eval(obj)
+   local function expand(value)
+      if type(value) == 'table' then return util.map(value, expand) end
+
+      local visited = {}
+      local pattern = '%$(%a[%w_]*)'
+      
+      while type(value) == 'string' and string.find(value, pattern) do
+	 local si, ei, name = string.find(value, pattern)
+	 
+	 if util.contains(visited, name) then
+	    error('Circular variable definition: '..name)
+	 end
+	 table.insert(visited, name)
+	 
+	 local var = self.data.variable[name]
+	 if not var then error('Invalid variable reference: '..name) end
+	 
+	 if si == 1 and ei == string.len(value) then value = var
+	 elseif util.contains({'number', 'string'}, type(var)) then
+	    value = string.sub(value, 1, si - 1)..var..string.sub(value, ei + 1, -1)
+	 else
+	    error('Attempted to concatenate complex variable: '..name)
+	 end
+      end
+
+      return value ~= '' and value or nil
    end
 
    return expand(self.data)

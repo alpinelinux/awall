@@ -121,21 +121,23 @@ config = policyset:load()
 
 if mode == 'dump' then
    require 'json'
+   expconfig = config:expand()
 
-   function dump(title, data)
-      print(title..':')
-      local lines = {}
-      for k, v in pairs(data) do
-	 table.insert(lines, k..' = '..json.encode(v))
+   for i, section in ipairs({'variable', 'zone'}) do
+      if config.data[section] then
+	 print(string.upper(string.sub(section, 1, 1))..string.sub(section, 2, -1)..'s:')
+	 lines = {}
+	 for k, v in pairs(config.data[section]) do
+	    def = json.encode(v)
+	    exp = json.encode(expconfig[section][k])
+	    if exp ~= def then def = def..' = '..exp end
+	    table.insert(lines, k..' = '..def)
+	 end
+	 table.sort(lines)
+	 for i, line in ipairs(lines) do print(line) end
+	 print()
       end
-      table.sort(lines)
-      for i, line in ipairs(lines) do print(line) end
-      print()
    end
-
-   dump('Variables', config:variables())
-   config = config:expand()
-   dump('Zones', config.zone)
 
    os.exit()
 end
