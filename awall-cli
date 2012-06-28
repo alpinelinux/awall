@@ -11,8 +11,8 @@ require 'lfs'
 require 'signal'
 require 'stringy'
 
-short_opts = 'o:V'
-long_opts = {['output-dir']='o', verify='V'}
+short_opts = 'fo:V'
+long_opts = {force='f', ['output-dir']='o', verify='V'}
 
 function help()
    io.stderr:write([[
@@ -31,12 +31,13 @@ Translate policy files to firewall configuration files:
     scripts.
 
 Run-time activation of new firewall configuration:
-    awall activate
+    awall activate [-f|--force]
 
     This command genereates firewall configuration from the policy
     files and enables it. If the user confirms the new configuration
-    by hitting RETURN within 10 seconds, the configuration is saved to
-    the files. Otherwise, the old configuration is restored.
+    by hitting RETURN within 10 seconds or the --force option is used,
+    the configuration is saved to the files. Otherwise, the old
+    configuration is restored.
 
 Flush firewall configuration:
     awall flush
@@ -86,7 +87,8 @@ end
 
 opts, opind = alt_getopt.get_opts(arg, short_opts, long_opts)
 for switch, value in pairs(opts) do
-   if switch == 'V' then verify = true
+   if switch == 'f' then force = true
+   elseif switch == 'V' then verify = true
    elseif switch == 'o' then
       iptdir = value
       ipsfile = value..'/ipset'
@@ -183,31 +185,37 @@ if mode == 'translate' then
    
 elseif mode == 'activate' then
 
-   awall.iptables.backup()
+   if not force then
+      awall.iptables.backup()
 
-   signal.signal('SIGCHLD',
-		 function() if pid and lpc.wait(pid, 1) then os.exit(2) end end)
-   for i, sig in ipairs({'INT', 'TERM'}) do
-      signal.signal('SIG'..sig, function()
-				   interrupted = true
-				   io.stdin:close()
-				end)
+      signal.signal('SIGCHLD',
+		    function()
+		       if pid and lpc.wait(pid, 1) then os.exit(2) end
+		    end)
+      for i, sig in ipairs({'INT', 'TERM'}) do
+	 signal.signal('SIG'..sig, function()
+				      interrupted = true
+				      io.stdin:close()
+				   end)
+      end
+
+      require 'lpc'
+      pid, stdio, stdout = lpc.run(arg[0], 'fallback')
+      stdio:close()
+      stdout:close()
    end
-
-   require 'lpc'
-   pid, stdio, stdout = lpc.run(arg[0], 'fallback')
-   stdio:close()
-   stdout:close()
    
    config:activate()
 
-   io.stderr:write('New firewall configuration activated\n')
-   io.stderr:write('Press RETURN to commit changes permanently: ')
-   interrupted = not io.read()
+   if not force then
+      io.stderr:write('New firewall configuration activated\n')
+      io.stderr:write('Press RETURN to commit changes permanently: ')
+      interrupted = not io.read()
 
-   signal.signal('SIGCHLD', 'default')
-   signal.kill(pid, 'SIGTERM')
-   lpc.wait(pid)
+      signal.signal('SIGCHLD', 'default')
+      signal.kill(pid, 'SIGTERM')
+      lpc.wait(pid)
+   end
 
    if interrupted then
       io.stderr:write('\nActivation canceled, reverting to the old configuration\n')
