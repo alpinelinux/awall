@@ -26,7 +26,7 @@ function Filter:destoptfrags()
    if not self.dnat then return ofrags end
 
    ofrags = awall.optfrag.combinations(ofrags, {{family='inet6'}})
-   local natof = model.Zone.morph({addr=self.dnat}):optfrags('out')
+   local natof = self:create(model.Zone, {addr=self.dnat}):optfrags('out')
    assert(#natof == 1)
    table.insert(ofrags, natof[1])
    return ofrags
@@ -37,28 +37,28 @@ function Filter:trules()
 
    if self.dnat then
       if not self.dest then
-	 error('Destination address must be specified with DNAT')
+	 self:error('Destination address must be specified with DNAT')
       end
       if string.find(self.dnat, '/') then
-	 error('DNAT target cannot be a network address')
+	 self:error('DNAT target cannot be a network address')
       end
       for i, attr in ipairs({'ipsec', 'ipset'}) do
 	 if self[attr] then
-	    error('dnat and '..attr..' options cannot be used simultaneously')
+	    self:error('dnat and '..attr..' options cannot be used simultaneously')
 	 end
       end
 
       local dnataddr
-      for i, addr in ipairs(awall.host.resolve(self.dnat)) do
+      for i, addr in ipairs(awall.host.resolve(self.dnat, self)) do
 	 if addr[1] == 'inet' then
 	    if dnataddr then
-	       error(self.dnat..' resolves to multiple IPv4 addresses')
+	       self:error(self.dnat..' resolves to multiple IPv4 addresses')
 	    end
 	    dnataddr = addr[2]
 	 end
       end
       if not dnataddr then
-	 error(self.dnat..' does not resolve to any IPv4 address')
+	 self:error(self.dnat..' does not resolve to any IPv4 address')
       end
 
       local dnat = {['ip-range']=dnataddr}
@@ -66,10 +66,9 @@ function Filter:trules()
 	 dnat[attr] = self[attr]
       end
 
-      if not awall.classmap.dnat then error('NAT module not installed') end
+      if not awall.classmap.dnat then self:error('NAT module not installed') end
 
-      awall.util.extend(res, awall.classmap.dnat.morph(dnat,
-						       self.context):trules())
+      awall.util.extend(res, self:create(awall.classmap.dnat, dnat):trules())
    end
 
    awall.util.extend(res, model.Rule.trules(self))
@@ -82,7 +81,7 @@ function Filter:limit()
    for i, limit in ipairs({'conn-limit', 'flow-limit'}) do
       if self[limit] then
 	 if res then
-	    error('Cannot specify multiple limits for a single filter rule')
+	    self:error('Cannot specify multiple limits for a single filter rule')
 	 end
 	 res = limit
       end
@@ -105,7 +104,7 @@ function Filter:extraoptfrags()
    local limit = self:limit()
    if limit then
       if self.action ~= 'accept' then
-	 error('Cannot specify limit for '..self.action..' filter')
+	 self:error('Cannot specify limit for '..self.action..' filter')
       end
       local optbase = '-m recent --name '..self:target()
       table.insert(res, {chain=self:target(),

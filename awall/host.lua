@@ -11,17 +11,17 @@ local familypatterns = {inet='%d[%.%d/]+',
 			inet6='[:%x/]+',
 			domain='[%a-][%.%w-]*'}
 
-local function getfamily(addr)
+local function getfamily(addr, context)
    for k, v in pairs(familypatterns) do
       if string.match(addr, '^'..v..'$') then return k end
    end
-   error('Malformed host specification: '..addr)
+   context:error('Malformed host specification: '..addr)
 end
 
 local dnscache = {}
 
-function resolve(host)
-   local family = getfamily(host)
+function resolve(host, context)
+   local family = getfamily(host, context)
    if family == 'domain' then
 
       if not dnscache[host] then
@@ -36,12 +36,14 @@ function resolve(host)
 	       else family = nil end
 
 	       if family then
-		  assert(getfamily(addr) == family)
+		  assert(getfamily(addr, context) == family)
 		  table.insert(dnscache[host], {family, addr})
 	       end
 	    end
 	 end
-	 if not dnscache[host][1] then error('Invalid host name: '..host) end
+	 if not dnscache[host][1] then
+	    context:error('Invalid host name: '..host)
+	 end
       end
 
       return dnscache[host]

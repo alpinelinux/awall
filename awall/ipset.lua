@@ -16,11 +16,11 @@ function IPSet:init(config) self.config = config end
 function IPSet:commands()
    local res = {}
    if self.config then
-      for name, params in pairs(self.config) do
-	 if not params.type then error('Type not defined for set '..name) end
-	 if not params.family then error('Family not defined for set '..name) end
+      for name, ipset in pairs(self.config) do
+	 if not ipset.type then ipset:error('Type not defined') end
+	 if not ipset.family then ipset:error('Family not defined') end
 	 table.insert(res,
-		      'create '..name..' '..params.type..' family '..params.family..'\n')
+		      'create '..name..' '..ipset.type..' family '..ipset.family..'\n')
       end
    end
    return res

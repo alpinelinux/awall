@@ -15,11 +15,11 @@ local model = awall.model
 
 local NoTrackRule = model.class(model.Rule)
 
-function NoTrackRule:init(context)
-   model.Rule.init(self, context)
+function NoTrackRule:init(...)
+   model.Rule.init(self, unpack(arg))
    for i, dir in ipairs({'in', 'out'}) do
       if awall.util.contains(self[dir], model.fwzone) then
-	 error('Connection tracking bypass rules not allowed for firewall zone')
+	 self:error('Connection tracking bypass rules not allowed for firewall zone')
       end
    end
 end
@@ -28,7 +28,7 @@ function NoTrackRule:defaultzones() return {nil} end
 
 function NoTrackRule:checkzoneoptfrag(ofrag)
    if ofrag.out then
-      error('Cannot specify outbound interface for connection tracking bypass rule')
+      self:error('Cannot specify outbound interface for connection tracking bypass rule')
    end
 end
 

@@ -21,12 +21,19 @@ class = awall.object.class
 
 ConfigObject = class(awall.object.Object)
 
-function ConfigObject:init(context)
+function ConfigObject:init(context, location)
    if context then
       self.context = context
       self.root = context.input
    end
+   self.location = location
 end
+
+function ConfigObject:create(cls, params)
+   return cls.morph(params, self.context, self.location)
+end
+
+function ConfigObject:error(msg) error(self.location..': '..msg) end
 
 function ConfigObject:trules() return {} end
 
@@ -45,7 +52,7 @@ function Zone:optfrags(dir)
    if self.addr then
       aopts = {}
       for i, hostdef in util.listpairs(self.addr) do
-	 for i, addr in ipairs(awall.host.resolve(hostdef)) do
+	 for i, addr in ipairs(awall.host.resolve(hostdef, self)) do
 	    table.insert(aopts,
 			 {family=addr[1],
 			  [aprop]=addr[2],
@@ -69,8 +76,8 @@ fwzone = Zone.new()
 Rule = class(ConfigObject)
 
 
-function Rule:init(context)
-   ConfigObject.init(self, context)
+function Rule:init(...)
+   ConfigObject.init(self, unpack(arg))
 
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and util.maplist(self[prop],
@@ -78,7 +85,7 @@ function Rule:init(context)
 						  if type(z) ~= 'string' then return z end
 						  return z == '_fw' and fwzone or
 						     self.root.zone[z] or
-						     error('Invalid zone: '..z)
+						     self:error('Invalid zone: '..z)
 					       end) or self:defaultzones()
    end
 
@@ -87,7 +94,7 @@ function Rule:init(context)
       self.service = util.maplist(self.service,
 				  function(s)
 				     if type(s) ~= 'string' then return s end
-				     return self.root.service[s] or error('Invalid service: '..s)
+				     return self.root.service[s] or self:error('Invalid service: '..s)
 				  end)
    end
 end
@@ -161,7 +168,7 @@ function Rule:servoptfrags()
 
    for i, serv in ipairs(self.service) do
       for i, sdef in util.listpairs(serv) do
-	 if not sdef.proto then error('Protocol not defined') end
+	 if not sdef.proto then self:error('Protocol not defined') end
 
 	 if util.contains({6, 'tcp', 17, 'udp'}, sdef.proto) then
 	    local new = not containskey(ports, sdef.proto)
@@ -187,7 +194,7 @@ function Rule:servoptfrags()
 	       family = 'inet6'
 	       oname = 'icmpv6-type'
 	    elseif sdef.type then
-	       error('Type specification not valid with '..sdef.proto)
+	       self:error('Type specification not valid with '..sdef.proto)
 	    end
 	    if sdef.type then opts = opts..' --'..oname..' '..sdef.type end
 
@@ -217,7 +224,7 @@ function Rule:servoptfrags()
 end
 
 function Rule:destoptfrags()
-   return Zone.morph({addr=self.dest}):optfrags('out')
+   return self:create(Zone, {addr=self.dest}):optfrags('out')
 end
 
 function Rule:table() return 'filter' end
@@ -227,7 +234,7 @@ function Rule:chain() return nil end
 function Rule:position() return 'append' end
 
 function Rule:target()
-   if not self.action then error('Action not defined') end
+   if not self.action then self:error('Action not defined') end
    return string.upper(self.action)
 end
 
@@ -276,13 +283,13 @@ function Rule:trules()
    if self.ipset then
       local ipsetofrags = {}
       for i, ipset in util.listpairs(self.ipset) do
-	 if not ipset.name then error('Set name not defined') end
+	 if not ipset.name then self:error('Set name not defined') end
 
 	 local setdef = self.root.ipset and self.root.ipset[ipset.name]
-	 if not setdef then error('Invalid set name') end
+	 if not setdef then self:error('Invalid set name') end
 
 	 if not ipset.args then
-	    error('Set direction arguments not defined')
+	    self:error('Set direction arguments not defined')
 	 end
 
 	 local setopts = '-m set --match-set '..ipset.name..' '
@@ -290,7 +297,7 @@ function Rule:trules()
 	    if i > 1 then setopts = setopts..',' end
 	    if arg == 'in' then setopts = setopts..'src'
 	    elseif arg == 'out' then setopts = setopts..'dst'
-	    else error('Invalid set direction argument') end
+	    else self:error('Invalid set direction argument') end
 	 end
 	 table.insert(ipsetofrags, {family=setdef.family, opts=setopts})
       end
@@ -306,7 +313,7 @@ function Rule:trules()
    setfamilies(res)
    tag(res, 'chain', self:chain())
 
-   local addrofrags = combinations(Zone.morph({addr=self.src}):optfrags('in'),
+   local addrofrags = combinations(self:create(Zone, {addr=self.src}):optfrags('in'),
 				   self:destoptfrags())
 
    if addrofrags then
