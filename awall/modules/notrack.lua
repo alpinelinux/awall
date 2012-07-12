@@ -42,6 +42,6 @@ function NoTrackRule:target()
 end
 
 
-classes = {{'notrack', NoTrackRule}}
+classes = {{'no-track', NoTrackRule}}
 
 defrules = {}
