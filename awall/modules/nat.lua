@@ -46,8 +46,12 @@ function NATRule:chain() return self.params.chain end
 
 function NATRule:target()
    if self.action then return model.Rule.target(self) end
-   if not self['ip-range'] then self:error('IP range not defined for NAT rule') end
-   local target = self.params.target..' --to-'..self.params.subject..' '..self['ip-range']
+
+   local target
+   if self['ip-range'] then
+      target = self.params.target..' --to-'..self.params.subject..' '..self['ip-range']
+   else target = self.params.deftarget end
+
    if self['port-range'] then target = target..':'..self['port-range'] end
    return target
 end
@@ -58,7 +62,7 @@ local DNATRule = model.class(NATRule)
 function DNATRule:init(...)
    NATRule.init(self, unpack(arg))
    self.params = {forbidif='out', subject='destination',
-		  chain='PREROUTING', target='DNAT'}
+		  chain='PREROUTING', target='DNAT', deftarget='REDIRECT'}
 end
 
 
@@ -67,12 +71,7 @@ local SNATRule = model.class(NATRule)
 function SNATRule:init(...)
    NATRule.init(self, unpack(arg))
    self.params = {forbidif='in', subject='source',
-		  chain='POSTROUTING', target='SNAT'}
-end
-
-function SNATRule:target()
-   if self.action or self['ip-range'] then return NATRule.target(self) end
-   return 'MASQUERADE'..(self['port-range'] and ' --to-ports '..self['port-range'] or '')
+		  chain='POSTROUTING', target='SNAT', deftarget='MASQUERADE'}
 end
 
 
