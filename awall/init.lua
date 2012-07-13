@@ -33,7 +33,7 @@ function loadmodules(path)
       end
       for phase, rules in pairs(mod.defrules) do
 	 if not defrules[phase] then defrules[phase] = {} end
-	 util.extend(defrules[phase], rules)
+	 table.insert(defrules[phase], rules)
       end
    end
 
@@ -87,7 +87,11 @@ function Config:init(policyconfig)
    end
 
    local function insertdefrules(phase)
-      if defrules[phase] then insertrules(defrules[phase]) end
+      for i, rulegroup in ipairs(defrules[phase] or {}) do
+	 if type(rulegroup) == 'function' then
+	    insertrules(rulegroup(self.input))
+	 else insertrules(rulegroup) end
+      end
    end
 
    for i, path in ipairs(procorder) do morph(path, classmap[path]) end
