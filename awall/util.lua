@@ -7,7 +7,7 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
-local function list(var)
+function list(var)
    if not var then return {} end
    if type(var) ~= 'table' then return {var} end
    if not next(var) then return {} end
