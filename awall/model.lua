@@ -108,7 +108,6 @@ function Rule:checkzoneoptfrag(ofrag) end
 function Rule:zoneoptfrags()
 
    local function zonepair(zin, zout)
-      assert(zin ~= zout or not zin)
 
       local function zofs(zone, dir)
 	 if not zone then return zone end
@@ -120,6 +119,7 @@ function Rule:zoneoptfrags()
       local chain, ofrags
 
       if zin == fwzone or zout == fwzone then
+	 if zin == zout then return {} end
 	 local dir, z = 'in', zin
 	 if zin == fwzone then dir, z = 'out', zout end
 	 chain = string.upper(dir)..'PUT'
@@ -127,8 +127,15 @@ function Rule:zoneoptfrags()
 
       else
 	 chain = 'FORWARD'
-	 ofrags = combinations(zofs(zin, 'in'),
-			       zofs(zout, 'out'))
+	 ofrags = combinations(zofs(zin, 'in'), zofs(zout, 'out'))
+
+	 if ofrags then
+	    ofrags = util.filter(ofrags,
+				 function(of)
+				    return not (of['in'] and of.out and
+						of['in'] == of.out)
+				 end)
+	 end
       end
 
       if not ofrags then ofrags = {{}} end
@@ -141,12 +148,8 @@ function Rule:zoneoptfrags()
    local res = {}
 
    for i = 1,math.max(1, table.maxn(self['in'])) do
-      izone = self['in'][i]
-      for i = 1,math.max(1, table.maxn(self.out)) do
-	 ozone = self.out[i]
-	 if izone ~= ozone or not izone then
-	    util.extend(res, zonepair(izone, ozone))
-	 end
+      for j = 1,math.max(1, table.maxn(self.out)) do
+	 util.extend(res, zonepair(self['in'][i], self.out[j]))
       end
    end
 
