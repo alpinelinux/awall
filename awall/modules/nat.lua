@@ -8,33 +8,22 @@ Licensed under the terms of GPL2
 module(..., package.seeall)
 
 require 'awall.model'
-require 'awall.util'
 
 local model = awall.model
 
 
-local NATRule = model.class(model.Rule)
-
-function NATRule:init(...)
-   model.Rule.init(self, unpack(arg))
-   for i, dir in ipairs({'in', 'out'}) do
-      if awall.util.contains(self[dir], model.fwzone) then
-	 self:error('NAT rules not allowed for firewall zone')
-      end
-   end
-end
-
-function NATRule:defaultzones() return {nil} end
+local NATRule = model.class(model.ForwardOnlyRule)
 
 function NATRule:checkzoneoptfrag(ofrag)
-   if ofrag[self.params.forbidif] then
-      self:error('Cannot specify '..self.params.forbidif..'bound interface for '..self.params.target..' rule')
+   local iface = ofrag[self.params.forbidif]
+   if iface then
+      self:error('Cannot specify '..self.params.forbidif..'bound interface ('..iface..')')
    end
 end
 
 function NATRule:trules()
    local res = {}
-   for i, ofrags in ipairs(model.Rule.trules(self)) do
+   for i, ofrags in ipairs(model.ForwardOnlyRule.trules(self)) do
       if ofrags.family == 'inet' then table.insert(res, ofrags) end
    end
    return res
@@ -45,7 +34,7 @@ function NATRule:table() return 'nat' end
 function NATRule:chain() return self.params.chain end
 
 function NATRule:target()
-   if self.action then return model.Rule.target(self) end
+   if self.action then return model.ForwardOnlyRule.target(self) end
 
    local target
    if self['ip-range'] then

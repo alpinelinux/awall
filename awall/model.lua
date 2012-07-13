@@ -369,5 +369,27 @@ function Rule:newchain(base)
 end
 
 
+ForwardOnlyRule = class(Rule)
+
+function ForwardOnlyRule:init(...)
+   Rule.init(self, unpack(arg))
+   for i, dir in ipairs({'in', 'out'}) do
+      if util.contains(self[dir], fwzone) then
+	 self:error('Not applicable to the firewall zone')
+      end
+   end
+end
+
+function ForwardOnlyRule:defaultzones() return {nil} end
+
+function ForwardOnlyRule:checkzoneoptfrag(ofrag)
+   if ofrag.out then
+      self:error('Cannot specify outbound interface ('..ofrag.out..')')
+   end
+end
+
+function ForwardOnlyRule:chain() return 'PREROUTING' end
+
+
 classes = {{'zone', Zone}}
 defrules = {}
