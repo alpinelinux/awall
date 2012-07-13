@@ -60,7 +60,7 @@ List optional policies:
 Dump variable and zone definitions:
     awall dump [level]
 
-    Verbosity level is an integer in range 0-4 and defaults to 0.
+    Verbosity level is an integer in range 0-5 and defaults to 0.
 
 ]])
    os.exit()
@@ -128,19 +128,27 @@ if util.contains({'disable', 'enable'}, mode) then
 end
 
 
-config = policyset:load()
+input = policyset:load()
+
+if mode == 'dump' then level = 0 + (arg[opind] or 0) end
+
+if mode ~= 'dump' or level > 3 then
+   awall.loadmodules(basedir)
+   config = awall.Config.new(input)
+end
+
+
+require 'awall.iptables'
 
 if mode == 'dump' then
-   level = 0 + (arg[opind] or 0)
-
    require 'json'
-   expconfig = config:expand()
+   expinput = input:expand()
 
    function capitalize(cls)
       return string.upper(string.sub(cls, 1, 1))..string.sub(cls, 2, -1)
    end
 
-   for cls, objs in pairs(config.data) do
+   for cls, objs in pairs(input.data) do
       if level > 2 or (level == 2 and cls ~= 'service') or util.contains({'variable',
 									  'zone'},
 									 cls) then
@@ -148,15 +156,25 @@ if mode == 'dump' then
 	 
 	 items = {}
 	 for k, v in pairs(objs) do
-	    exp = expconfig[cls][k]
+	    exp = expinput[cls][k]
 	    expj = json.encode(exp)
-	    src = config.source[cls][k]
+	    src = input.source[cls][k]
+
 	    if level == 0 then table.insert(items, {k, expj, src})
+
 	    else
-	       table.insert(items,
-			    {k, {{capitalize(cls)..' '..k, json.encode(v)},
-				 {'('..src..')',
-				  util.compare(exp, v) and '' or '-> '..expj}}})
+	       data = {{capitalize(cls)..' '..k, json.encode(v)},
+		       {'('..src..')',
+			util.compare(exp, v) and '' or '-> '..expj}}
+
+	       if level > 3 then
+		  obj = config.objects[cls][k]
+		  if type(obj) == 'table' and obj.info then
+		     util.extend(data, obj:info())
+		  end
+	       end
+
+	       table.insert(items, {k, data})
 	    end
 	 end
 	 table.sort(items, function(a, b) return a[1] < b[1] end)
@@ -170,18 +188,7 @@ if mode == 'dump' then
       end
    end
 
-   if level < 4 then os.exit() end
-end
-
-
-require 'awall.iptables'
-awall.loadmodules(basedir)
-
-config = awall.Config.new(config)
-
-
-if mode == 'dump' then
-   config:print()
+   if level > 4 then config:print() end
 
 elseif mode == 'translate' then
    if verify then config:test() end

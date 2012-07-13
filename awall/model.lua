@@ -37,6 +37,16 @@ function ConfigObject:error(msg) error(self.location..': '..msg) end
 
 function ConfigObject:trules() return {} end
 
+function ConfigObject:info()
+   local res = {}
+   for i, trule in ipairs(self:trules()) do
+      table.insert(res,
+		   {'  '..trule.family..'/'..trule.table..'/'..trule.chain,
+		    trule.opts})
+   end
+   return res
+end
+
 
 Zone = class(ConfigObject)
 
