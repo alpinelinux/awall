@@ -61,11 +61,11 @@ Config = object.class(object.Object)
 
 function Config:init(policyconfig)
 
-   self.input = policyconfig:expand()
+   self.objects = policyconfig:expand()
    self.iptables = iptables.IPTables.new()
 
    local function morph(path, cls)
-      local objs = self.input[path]
+      local objs = self.objects[path]
       if objs then
 	 for k, v in pairs(objs) do
 	    objs[k] = cls.morph(v,
@@ -89,7 +89,7 @@ function Config:init(policyconfig)
    local function insertdefrules(phase)
       for i, rulegroup in ipairs(defrules[phase] or {}) do
 	 if type(rulegroup) == 'function' then
-	    insertrules(rulegroup(self.input))
+	    insertrules(rulegroup(self.objects))
 	 else insertrules(rulegroup) end
       end
    end
@@ -99,8 +99,8 @@ function Config:init(policyconfig)
    insertdefrules('pre')
 
    for i, path in ipairs(procorder) do
-      if self.input[path] then
-	 for i, rule in ipairs(self.input[path]) do
+      if self.objects[path] then
+	 for i, rule in ipairs(self.objects[path]) do
 	    insertrules(rule:trules())
 	 end
       end
@@ -108,7 +108,7 @@ function Config:init(policyconfig)
    end
 
    morph('ipset', awall.model.ConfigObject)
-   self.ipset = ipset.IPSet.new(self.input.ipset)
+   self.ipset = ipset.IPSet.new(self.objects.ipset)
 end
 
 function Config:print()

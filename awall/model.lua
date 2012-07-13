@@ -24,7 +24,7 @@ ConfigObject = class(awall.object.Object)
 function ConfigObject:init(context, location)
    if context then
       self.context = context
-      self.root = context.input
+      self.root = context.objects
    end
    self.location = location
 end
