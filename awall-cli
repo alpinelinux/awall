@@ -60,7 +60,7 @@ List optional policies:
 Dump variable and zone definitions:
     awall dump [level]
 
-    Verbosity level is an integer in range 0-3 and defaults to 0.
+    Verbosity level is an integer in range 0-4 and defaults to 0.
 
 ]])
    os.exit()
@@ -170,7 +170,7 @@ if mode == 'dump' then
       end
    end
 
-   os.exit()
+   if level < 4 then os.exit() end
 end
 
 
@@ -179,7 +179,11 @@ awall.loadmodules(basedir)
 
 config = awall.Config.new(config)
 
-if mode == 'translate' then
+
+if mode == 'dump' then
+   config:print()
+
+elseif mode == 'translate' then
    if verify then config:test() end
    config:dump(iptdir, ipsfile)      
    

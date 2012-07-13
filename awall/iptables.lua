@@ -34,6 +34,13 @@ local backupdir = '/var/run/awall'
 
 local BaseIPTables = class(awall.object.Object)
 
+function BaseIPTables:print()
+   for family, tbls in pairs(families) do
+      self:dumpfile(family, io.stdout)
+      print()
+   end
+end
+
 function BaseIPTables:dump(dir)
    for family, tbls in pairs(families) do
       local file = io.output(dir..'/'..families[family].file)

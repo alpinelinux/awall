@@ -111,6 +111,12 @@ function Config:init(policyconfig)
    self.ipset = ipset.IPSet.new(self.input.ipset)
 end
 
+function Config:print()
+   self.ipset:print()
+   print()
+   self.iptables:print()
+end
+
 function Config:dump(iptdir, ipsfile)
    self.ipset:dump(ipsfile or '/etc/ipset.d/awall')
    self.iptables:dump(iptdir or '/etc/iptables')
