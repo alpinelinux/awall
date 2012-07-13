@@ -265,13 +265,11 @@ function Rule:trules()
 
    local function ffilter(ofrags)
       if not ofrags or not ofrags[1] or not families then return ofrags end
-      local res = {}
-      for i, ofrag in util.listpairs(ofrags) do
-	 if not ofrag.family or util.contains(families, ofrag.family) then
-	    table.insert(res, ofrag)
-	 end
-      end
-      return res
+      return util.filter(ofrags,
+			 function(of)
+			    return not of.family or util.contains(families,
+								  of.family)
+			 end)
    end
 
    local function appendtarget(ofrag, target)

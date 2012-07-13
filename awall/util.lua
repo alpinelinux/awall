@@ -18,6 +18,12 @@ function listpairs(var)
    return ipairs(list(var))
 end
 
+function filter(var, func)
+   local res = {}
+   for i, v in ipairs(var) do if func(v) then table.insert(res, v) end end
+   return res
+end
+
 function map(var, func)
    local res = {}
    for k, v in pairs(var) do res[k] = func(v) end
