@@ -26,12 +26,7 @@ end
 
 local RouteTrackRule = model.class(MarkRule)
 
-function RouteTrackRule:target()
-   if not self['mark-target'] then
-      self['mark-target'] = self:newchain('mark')
-   end
-   return self['mark-target']
-end
+function RouteTrackRule:target() return self:newchain('mark') end
 
 function RouteTrackRule:servoptfrags()
    return awall.optfrag.combinations(MarkRule.servoptfrags(self),

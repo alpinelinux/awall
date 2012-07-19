@@ -89,6 +89,8 @@ Rule = class(ConfigObject)
 function Rule:init(...)
    ConfigObject.init(self, unpack(arg))
 
+   self.newchains = {}
+
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and util.maplist(self[prop],
 					       function(z)
@@ -368,14 +370,20 @@ end
 
 function Rule:extraoptfrags() return {} end
 
-function Rule:newchain(base)
+function Rule:newchain(key)
+   if self.newchains[key] then return self.newchains[key] end
+
    if not self.context.lastid then self.context.lastid = {} end
    local lastid = self.context.lastid
 
-   if self.label then base = base..'-'..self.label end
-   if not lastid[base] then lastid[base] = -1 end
-   lastid[base] = lastid[base] + 1
-   return base..'-'..lastid[base]
+   local res = key
+   if self.label then res = res..'-'..self.label end
+   if not lastid[res] then lastid[res] = -1 end
+   lastid[res] = lastid[res] + 1
+   res = res..'-'..lastid[res]
+
+   self.newchains[key] = res
+   return res
 end
 
 

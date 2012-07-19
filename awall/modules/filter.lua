@@ -95,8 +95,7 @@ end
 
 function Filter:target()
    if not self:limit() then return model.Rule.target(self) end
-   if not self['limit-target'] then self['limit-target'] = self:newchain('limit') end
-   return self['limit-target']
+   return self:newchain('limit')
 end
 
 function Filter:extraoptfrags()
