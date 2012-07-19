@@ -22,7 +22,14 @@
       { "proto": "icmp", "type": 8 },
       { "proto": "icmpv6", "type": 128 }
     ],
-    "sip": { "proto": "udp", "port": 5060 },
+    "sip": [
+    	{ "proto": "udp", "port": 5060 },
+    	{ "proto": "tcp", "port": 5060 }
+    ],
+    "sip-tls": [
+      { "proto": "udp", "port": 5061 },
+      { "proto": "tcp", "port": 5061 }
+    ],
     "smtp": { "proto": "tcp", "port": 25 },
     "snmp": { "proto": "udp", "port": 161 },
     "ssh": { "proto": "tcp", "port": 22 }
