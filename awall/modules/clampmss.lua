@@ -14,12 +14,6 @@ local model = awall.model
 
 local ClampMSSRule = model.class(model.ForwardOnlyRule)
 
-function ClampMSSRule:checkzoneoptfrag(ofrag)
-   if ofrag['in'] then
-      self:error('Cannot specify inbound interface ('..ofrag['in']..')')
-   end
-end
-
 function ClampMSSRule:table() return 'mangle' end
 
 function ClampMSSRule:chain() return 'POSTROUTING' end

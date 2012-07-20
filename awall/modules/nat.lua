@@ -14,13 +14,6 @@ local model = awall.model
 
 local NATRule = model.class(model.ForwardOnlyRule)
 
-function NATRule:checkzoneoptfrag(ofrag)
-   local iface = ofrag[self.params.forbidif]
-   if iface then
-      self:error('Cannot specify '..self.params.forbidif..'bound interface ('..iface..')')
-   end
-end
-
 function NATRule:trules()
    local res = {}
    for i, ofrags in ipairs(model.ForwardOnlyRule.trules(self)) do

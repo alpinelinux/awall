@@ -114,18 +114,13 @@ end
 function Rule:defaultzones() return {nil, fwzone} end
 
 
-function Rule:checkzoneoptfrag(ofrag) end
-
-
 function Rule:zoneoptfrags()
 
    local function zonepair(zin, zout)
 
       local function zofs(zone, dir)
 	 if not zone then return zone end
-	 local ofrags = zone:optfrags(dir)
-	 util.map(ofrags, function(x) self:checkzoneoptfrag(x) end)
-	 return ofrags
+	 return zone:optfrags(dir)
       end
 
       local chain, ofrags
@@ -364,6 +359,17 @@ function Rule:trules()
    util.extend(res, ffilter(self:extraoptfrags()))
 
    tag(res, 'table', self:table(), false)
+
+   local function checkzof(ofrag, dir, chains)
+      if ofrag[dir] and util.contains(chains, ofrag.chain) then
+	 self:error('Cannot specify '..dir..'bound interface ('..ofrag[dir]..')')
+      end
+   end
+
+   for i, ofrag in ipairs(res) do
+      checkzof(ofrag, 'in', {'OUTPUT', 'POSTROUTING'})
+      checkzof(ofrag, 'out', {'INPUT', 'PREROUTING'})
+   end
    
    return combinations(res, ffilter({{family='inet'}, {family='inet6'}}))
 end
@@ -399,12 +405,6 @@ function ForwardOnlyRule:init(...)
 end
 
 function ForwardOnlyRule:defaultzones() return {nil} end
-
-function ForwardOnlyRule:checkzoneoptfrag(ofrag)
-   if ofrag.out then
-      self:error('Cannot specify outbound interface ('..ofrag.out..')')
-   end
-end
 
 function ForwardOnlyRule:chain() return 'PREROUTING' end
 
