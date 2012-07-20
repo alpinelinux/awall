@@ -36,6 +36,9 @@ function Filter:trules()
    local res = {}
 
    if self.dnat then
+      if self.action ~= 'accept' then
+	 self:error('dnat option not allowed with '..self.action..' action')
+      end
       if not self.dest then
 	 self:error('Destination address must be specified with DNAT')
       end
