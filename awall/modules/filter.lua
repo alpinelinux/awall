@@ -35,6 +35,16 @@ end
 function Filter:trules()
    local res = {}
 
+   local function extrarules(cls, extra)
+      local params = {}
+      for i, attr in ipairs({'in', 'out', 'src', 'dest',
+			     'ipset', 'ipsec', 'service'}) do
+	 params[attr] = self[attr]
+      end
+      if extra then for k, v in pairs(extra) do params[k] = v end end
+      return awall.util.extend(res, self:create(cls, params):trules())
+   end
+
    if self.dnat then
       if self.action ~= 'accept' then
 	 self:error('dnat option not allowed with '..self.action..' action')
@@ -64,12 +74,7 @@ function Filter:trules()
 	 self:error(self.dnat..' does not resolve to any IPv4 address')
       end
 
-      local dnat = {['ip-range']=dnataddr}
-      for i, attr in ipairs({'in', 'src', 'dest', 'service'}) do
-	 dnat[attr] = self[attr]
-      end
-
-      awall.util.extend(res, self:create('dnat', dnat):trules())
+      extrarules('dnat', {['ip-range']=dnataddr, out=nil})
    end
 
    awall.util.extend(res, model.Rule.trules(self))
