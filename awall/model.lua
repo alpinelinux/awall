@@ -105,7 +105,7 @@ function Rule:init(...)
 						  return z == '_fw' and fwzone or
 						     self.root.zone[z] or
 						     self:error('Invalid zone: '..z)
-					       end) or self:defaultzones()
+					       end)
    end
 
    if self.service then
@@ -160,10 +160,12 @@ function Rule:zoneoptfrags()
    end
 
    local res = {}
+   local izones = self['in'] or self:defaultzones()
+   local ozones = self.out or self:defaultzones()
 
-   for i = 1,math.max(1, table.maxn(self['in'])) do
-      for j = 1,math.max(1, table.maxn(self.out)) do
-	 util.extend(res, zonepair(self['in'][i], self.out[j]))
+   for i = 1,math.max(1, table.maxn(izones)) do
+      for j = 1,math.max(1, table.maxn(ozones)) do
+	 util.extend(res, zonepair(izones[i], ozones[j]))
       end
    end
 
@@ -408,7 +410,7 @@ ForwardOnlyRule = class(Rule)
 function ForwardOnlyRule:init(...)
    Rule.init(self, unpack(arg))
    for i, dir in ipairs({'in', 'out'}) do
-      if util.contains(self[dir], fwzone) then
+      if self[dir] and util.contains(self[dir], fwzone) then
 	 self:error('Not applicable to the firewall zone')
       end
    end
