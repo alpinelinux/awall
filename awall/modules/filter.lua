@@ -69,9 +69,7 @@ function Filter:trules()
 	 dnat[attr] = self[attr]
       end
 
-      if not awall.classmap.dnat then self:error('NAT module not installed') end
-
-      awall.util.extend(res, self:create(awall.classmap.dnat, dnat):trules())
+      awall.util.extend(res, self:create('dnat', dnat):trules())
    end
 
    awall.util.extend(res, model.Rule.trules(self))

@@ -30,6 +30,13 @@ function ConfigObject:init(context, location)
 end
 
 function ConfigObject:create(cls, params)
+   if type(cls) == 'string' then
+      local name = cls
+      cls = awall.classmap[cls]
+      if not cls then
+	 self:error('Support for '..name..' objects not installed')
+      end
+   end
    return cls.morph(params, self.context, self.location)
 end
 
