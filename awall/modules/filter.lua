@@ -77,6 +77,8 @@ function Filter:trules()
       extrarules('dnat', {['ip-range']=dnataddr, out=nil})
    end
 
+   if self.action == 'tarpit' then extrarules('no-track') end
+
    awall.util.extend(res, model.Rule.trules(self))
 
    return res
@@ -132,16 +134,22 @@ classes = {{'filter', Filter},
 
 defrules = {pre={}, ['post-filter']={}}
 
+local limitedlog = '-m limit --limit 1/second -j LOG'
+
 for i, family in ipairs({'inet', 'inet6'}) do
    for i, target in ipairs({'drop', 'reject'}) do
-      for i, opts in ipairs({'-m limit --limit 1/second -j LOG',
-	    '-j '..string.upper(target)}) do
+      for i, opts in ipairs({limitedlog, '-j '..string.upper(target)}) do
 	 table.insert(defrules.pre,
 		      {family=family,
 		       table='filter',
 		       chain='log'..target,
 		       opts=opts})
       end
+   end
+
+   for i, opts in ipairs({limitedlog, '-p tcp -j TARPIT', '-j DROP'}) do
+      table.insert(defrules.pre,
+		   {family=family, table='filter', chain='tarpit', opts=opts})
    end
 
    for i, chain in ipairs({'FORWARD', 'INPUT', 'OUTPUT'}) do
