@@ -108,7 +108,7 @@ function Filter:extraoptfrags()
       end
       local optbase = '-m recent --name '..self:target()
       table.insert(res, {chain=self:target(),
-			 opts=optbase..' --update --hitcount '..self[limit].count..' --seconds '..self[limit].interval..' -j LOGDROP'})
+			 opts=optbase..' --update --hitcount '..self[limit].count..' --seconds '..self[limit].interval..' -j logdrop'})
       table.insert(res, {chain=self:target(),
 			 opts=optbase..' --set -j ACCEPT'})
    end
@@ -128,12 +128,13 @@ classes = {{'filter', Filter},
 defrules = {pre={}, ['post-filter']={}}
 
 for i, family in ipairs({'inet', 'inet6'}) do
-   for i, target in ipairs({'DROP', 'REJECT'}) do
-      for i, opts in ipairs({'-m limit --limit 1/second -j LOG', '-j '..target}) do
+   for i, target in ipairs({'drop', 'reject'}) do
+      for i, opts in ipairs({'-m limit --limit 1/second -j LOG',
+	    '-j '..string.upper(target)}) do
 	 table.insert(defrules.pre,
 		      {family=family,
 		       table='filter',
-		       chain='LOG'..target,
+		       chain='log'..target,
 		       opts=opts})
       end
    end
