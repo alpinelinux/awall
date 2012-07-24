@@ -17,6 +17,8 @@
     "https": { "proto": "tcp", "port": 443 },
     "icmp": { "proto": "icmp" },
     "igmp": { "proto": "igmp" },
+    "imap": { "proto": "tcp", "port": 143 },
+    "imaps": { "proto": "tcp", "port": 993 },
     "ipsec": [
       { "proto": "esp" },
       { "proto": "udp", "port": [ 500, 4500 ] }
