@@ -7,6 +7,10 @@
       { "proto": "tcp", "port": 53 }
     ],
     "dhcp": { "proto": "udp", "port": [ 67, 68 ] },
+    "epmap": [
+      { "proto": "tcp", "port": 135 },
+      { "proto": "udp", "port": 135 }
+    ],
     "gre": { "proto": "gre" },
     "http": { "proto": "tcp", "port": 80 },
     "http-alt": { "proto": "tcp", "port": 8080 },
@@ -18,6 +22,22 @@
       { "proto": "udp", "port": [ 500, 4500 ] }
     ],
     "irc": { "proto": "tcp", "port": 6667 },
+    "kerberos": [
+      { "proto": "tcp", "port": 88 },
+      { "proto": "udp", "port": 88 }
+    ],
+    "ldap": [
+      { "proto": "tcp", "port": 389 },
+      { "proto": "udp", "port": 389 }
+    ],
+    "microsoft-ds": [
+      { "proto": "tcp", "port": 445 },
+      { "proto": "udp", "port": 445 }
+    ],
+    "netbios-ssn": [
+      { "proto": "tcp", "port": 139 },
+      { "proto": "udp", "port": 139 }
+    ],
     "ntp": { "proto": "udp", "port": 123 },
     "pgsql": { "proto": "tcp", "port": 5432 },
     "ping": [
