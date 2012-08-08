@@ -26,9 +26,9 @@ function resolve(host, context)
 
       if not dnscache[host] then
 	 dnscache[host] = {}
-	 for rec in io.popen('dig '..host..' ANY'):lines() do
+	 for rec in io.popen('dig -t ANY '..host):lines() do
 	    local name, rtype, addr =
-	       string.match(rec, '^('..familypatterns.domain..')\t+%d+\t+IN\t+(A+)\t+(.+)')
+	       string.match(rec, '^('..familypatterns.domain..')%s+%d+%s+IN%s+(A+)%s+(.+)')
 
 	    if name and string.sub(name, 1, string.len(host) + 1) == host..'.' then
 	       if rtype == 'A' then family = 'inet'
