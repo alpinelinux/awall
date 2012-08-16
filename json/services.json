@@ -1,6 +1,9 @@
 {
   "service": {
     "babel": { "proto": "tcp", "port": 6697 },
+    "bacula-dir": { "proto": "tcp", "port": 9101 }, 
+    "bacula-fd": { "proto": "tcp", "port": 9102 }, 
+    "bacula-sd": { "proto": "tcp", "port": 9103 }, 
     "bgp": { "proto": "tcp", "port": 179 },
     "dns": [
       { "proto": "udp", "port": 53 },
@@ -12,6 +15,7 @@
       { "proto": "udp", "port": 135 }
     ],
     "gre": { "proto": "gre" },
+    "hp-pdl": { "proto": "tcp", "port": 9100 },
     "http": { "proto": "tcp", "port": 80 },
     "http-alt": { "proto": "tcp", "port": 8080 },
     "https": { "proto": "tcp", "port": 443 },
@@ -28,13 +32,39 @@
       { "proto": "tcp", "port": 88 },
       { "proto": "udp", "port": 88 }
     ],
+     "kpasswd": [
+      { "proto": "tcp", "port": 464 },
+      { "proto": "udp", "port": 464 }
+    ],
     "ldap": [
       { "proto": "tcp", "port": 389 },
       { "proto": "udp", "port": 389 }
     ],
+    "ldaps": [
+      { "proto": "tcp", "port": 636 },
+      { "proto": "udp", "port": 636 }
+    ],
     "microsoft-ds": [
       { "proto": "tcp", "port": 445 },
       { "proto": "udp", "port": 445 }
+    ],
+    "ms-sql-s": { "proto": "tcp", "port": 1433 },
+    "ms-sql-m": { "proto": "tcp", "port": 1434 },
+    "msft-gc": [
+      { "proto": "tcp", "port": 3268 },
+      { "proto": "udp", "port": 3268 }
+    ],
+    "msft-gc-ssl": [
+      { "proto": "tcp", "port": 3269 },
+      { "proto": "udp", "port": 3269 }
+    ],
+    "netbios-ns": [
+      { "proto": "tcp", "port": 137 },
+      { "proto": "udp", "port": 137 }
+    ],
+    "netbios-ds": [
+      { "proto": "tcp", "port": 138 },
+      { "proto": "udp", "port": 138 }
     ],
     "netbios-ssn": [
       { "proto": "tcp", "port": 139 },
@@ -46,6 +76,14 @@
     "ping": [
       { "proto": "icmp", "type": 8 },
       { "proto": "icmpv6", "type": 128 }
+    ],
+    "radius": [
+      { "proto": "udp", "port": 1812 },
+      { "proto": "tcp", "port": 1812 },
+    ],
+    "radius-acct": [
+      { "proto": "udp", "port": 1813 },
+      { "proto": "tcp", "port": 1813 },
     ],
     "rdp": { "proto": "tcp", "port": 3389 },
     "sip": [
