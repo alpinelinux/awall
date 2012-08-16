@@ -41,6 +41,7 @@
       { "proto": "udp", "port": 139 }
     ],
     "ntp": { "proto": "udp", "port": 123 },
+    "ospf": { "proto": "ospf" },
     "pgsql": { "proto": "tcp", "port": 5432 },
     "ping": [
       { "proto": "icmp", "type": 8 },
