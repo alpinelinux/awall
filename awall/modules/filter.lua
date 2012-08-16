@@ -14,6 +14,7 @@ require 'awall.optfrag'
 require 'awall.util'
 
 local model = awall.model
+local combinations = awall.optfrag.combinations
 
 local Filter = model.class(model.Rule)
 
@@ -25,7 +26,7 @@ function Filter:destoptfrags()
    local ofrags = model.Rule.destoptfrags(self)
    if not self.dnat then return ofrags end
 
-   ofrags = awall.optfrag.combinations(ofrags, {{family='inet6'}})
+   ofrags = combinations(ofrags, {{family='inet6'}})
    local natof = self:create(model.Zone, {addr=self.dnat}):optfrags('out')
    assert(#natof == 1)
    table.insert(ofrags, natof[1])
@@ -115,9 +116,11 @@ function Filter:extraoptfrags()
       end
       local optbase = '-m recent --name '..self:target()
       table.insert(res, {chain=self:target(),
-			 opts=optbase..' --update --hitcount '..self[limit].count..' --seconds '..self[limit].interval..' -j logdrop'})
+			 opts=optbase..' --update --hitcount '..self[limit].count..' --seconds '..self[limit].interval,
+			 target='logdrop'})
       table.insert(res, {chain=self:target(),
-			 opts=optbase..' --set -j ACCEPT'})
+			 opts=optbase..' --set',
+			 target='ACCEPT'})
    end
    return res
 end
@@ -132,47 +135,37 @@ function Policy:servoptfrags() return nil end
 classes = {{'filter', Filter},
 	   {'policy', Policy}}
 
-defrules = {pre={}, ['post-filter']={}}
 
-local limitedlog = '-m limit --limit 1/second -j LOG'
+defrules = {}
 
-for i, family in ipairs({'inet', 'inet6'}) do
-   for i, target in ipairs({'drop', 'reject'}) do
-      for i, opts in ipairs({limitedlog, '-j '..string.upper(target)}) do
-	 table.insert(defrules.pre,
-		      {family=family,
-		       table='filter',
-		       chain='log'..target,
-		       opts=opts})
-      end
-   end
-
-   for i, opts in ipairs({limitedlog, '-p tcp -j TARPIT', '-j DROP'}) do
-      table.insert(defrules.pre,
-		   {family=family, table='filter', chain='tarpit', opts=opts})
-   end
-
-   for i, chain in ipairs({'FORWARD', 'INPUT', 'OUTPUT'}) do
-      table.insert(defrules.pre,
-		   {family=family,
-		    table='filter',
-		    chain=chain,
-		    opts='-m state --state RELATED,ESTABLISHED -j ACCEPT'})
-   end
-
-   for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
-      table.insert(defrules.pre,
-		   {family=family,
-		    table='filter',
-		    chain=chain,
-		    opts='-'..string.lower(string.sub(chain, 1, 1))..' lo -j ACCEPT'})
-   end
-end
-
+local dar = combinations({{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}},
+			 {{opts='-m state --state RELATED,ESTABLISHED'}})
 for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
-   table.insert(defrules['post-filter'],
-		{family='inet6',
-		 table='filter',
-		 chain=chain,
-		 opts='-p icmpv6 -j ACCEPT'})
+   table.insert(dar,
+		{chain=chain,
+		 opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'})
 end
+defrules.pre = combinations(combinations(dar,
+					 {{table='filter', target='ACCEPT'}}),
+			    {{family='inet'}, {family='inet6'}})
+
+defrules['post-filter'] = combinations({{family='inet6',
+					 table='filter',
+					 opts='-p icmpv6',
+					 target='ACCEPT'}},
+				       {{chain='INPUT'}, {chain='OUTPUT'}})
+
+
+achains = {}
+
+local limitedlog = {opts='-m limit --limit 1/second', target='LOG'}
+for i, target in ipairs({'drop', 'reject'}) do
+   util.extend(achains,
+	       combinations({{chain='log'..target}},
+			    {limitedlog, {target=string.upper(target)}}))
+end
+util.extend(achains,
+	    combinations({{chain='tarpit'}},
+			 {limitedlog,
+			  {opts='-p tcp', target='TARPIT'},
+			  {target='DROP'}}))

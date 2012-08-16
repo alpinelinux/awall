@@ -48,8 +48,8 @@ function ConfigObject:info()
    local res = {}
    for i, trule in ipairs(self:trules()) do
       table.insert(res,
-		   {'  '..trule.family..'/'..trule.table..'/'..trule.chain,
-		    trule.opts})
+		   {'  '..awall.optfrag.location(trule),
+		    (trule.opts and trule.opts..' ' or '')..'-j '..trule.target})
    end
    return res
 end
@@ -294,10 +294,6 @@ function Rule:trules()
 			 end)
    end
 
-   local function appendtarget(ofrag, target)
-      ofrag.opts = (ofrag.opts and ofrag.opts..' ' or '')..'-j '..target
-   end
-
    local res = self:zoneoptfrags()
 
    if self.ipset then
@@ -358,12 +354,12 @@ function Rule:trules()
 
    tag(res, 'position', self:position())
 
-   for i, ofrag in ipairs(res) do appendtarget(ofrag, target) end
+   res = combinations(res, {{target=target}})
 
    if addrchain then
       for i, ofrag in ipairs(addrofrags) do
 	 ofrag.chain = target
-	 appendtarget(ofrag, self:target())
+	 ofrag.target = self:target()
 	 table.insert(res, ofrag)
       end      
    end

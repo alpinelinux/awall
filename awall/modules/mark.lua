@@ -34,8 +34,8 @@ function RouteTrackRule:servoptfrags()
 end
 
 function RouteTrackRule:extraoptfrags()
-   return {{chain=self:target(), opts='-j '..MarkRule.target(self)},
-	   {chain=self:target(), opts='-j CONNMARK --save-mark'}}
+   return {{chain=self:target(), target=MarkRule.target(self)},
+	   {chain=self:target(), target='CONNMARK --save-mark'}}
 end
 
 
@@ -53,7 +53,8 @@ function defrules.pre(config)
 			 {family=family,
 			  table='mangle',
 			  chain=chain,
-			  opts='-m connmark ! --mark 0 -j CONNMARK --restore-mark'})
+			  opts='-m connmark ! --mark 0',
+			  target='CONNMARK --restore-mark'})
 	 end
       end
    end

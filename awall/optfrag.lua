@@ -46,3 +46,5 @@ function combinations(of1, of2)
 
    return res
 end
+
+function location(of) return of.family..'/'..of.table..'/'..of.chain end

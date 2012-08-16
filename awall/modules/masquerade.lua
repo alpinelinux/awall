@@ -10,7 +10,9 @@ module(..., package.seeall)
 -- TODO configuration of the ipset via JSON config
 defrules = {['post-snat']={{family='inet', table='nat',
 			    chain='POSTROUTING',
-			    opts='-m set --match-set awall-masquerade src -j awall-masquerade'},
+			    opts='-m set --match-set awall-masquerade src',
+			    target='awall-masquerade'},
 			   {family='inet', table='nat',
 			    chain='awall-masquerade',
-			    opts='-m set ! --match-set awall-masquerade dst -j MASQUERADE'}}}
+			    opts='-m set ! --match-set awall-masquerade dst',
+			    target='MASQUERADE'}}}

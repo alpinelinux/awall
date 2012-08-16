@@ -13,8 +13,11 @@ require 'awall.ipset'
 require 'awall.iptables'
 require 'awall.model'
 require 'awall.object'
+require 'awall.optfrag'
 require 'awall.policy'
 require 'awall.util'
+
+local optfrag = awall.optfrag
 
 
 local procorder
@@ -24,6 +27,7 @@ function loadmodules(path)
    classmap = {}
    procorder = {}
    defrules = {}
+   achains = {}
 
    local function readmetadata(mod)
       for i, clsdef in ipairs(mod.classes or {}) do
@@ -34,6 +38,10 @@ function loadmodules(path)
       for phase, rules in pairs(mod.defrules or {}) do
 	 if not defrules[phase] then defrules[phase] = {} end
 	 table.insert(defrules[phase], rules)
+      end
+      for name, opts in pairs(mod.achains or {}) do
+	 assert(not achains[name])
+	 achains[name] = opts
       end
    end
 
@@ -75,13 +83,22 @@ function Config:init(policyconfig)
       end
    end
 
+   local acfrags = {}
+
    local function insertrules(trules)
       for i, trule in ipairs(trules) do
 	 local t = self.iptables.config[trule.family][trule.table][trule.chain]
+	 local opts = (trule.opts and trule.opts..' ' or '')..'-j '..trule.target
+
+	 local acfrag = {family=trule.family,
+			 table=trule.table,
+			 chain=trule.target}
+	 acfrags[optfrag.location(acfrag)] = acfrag
+
 	 if trule.position == 'prepend' then
-	    table.insert(t, 1, trule.opts)
+	    table.insert(t, 1, opts)
 	 else
-	    table.insert(t, trule.opts)
+	    table.insert(t, opts)
 	 end
       end
    end
@@ -106,6 +123,10 @@ function Config:init(policyconfig)
       end
       insertdefrules('post-'..path)
    end
+
+   local ofrags = {}
+   for k, v in pairs(acfrags) do table.insert(ofrags, v) end
+   insertrules(optfrag.combinations(achains, ofrags))
 
    morph('ipset', awall.model.ConfigObject)
    self.ipset = ipset.IPSet.new(self.objects.ipset)
