@@ -28,5 +28,3 @@ end
 
 
 classes = {{'clamp-mss', ClampMSSRule}}
-
-defrules = {}

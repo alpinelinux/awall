@@ -23,5 +23,3 @@ end
 
 
 classes = {{'no-track', NoTrackRule}}
-
-defrules = {}

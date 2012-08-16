@@ -422,4 +422,4 @@ function ForwardOnlyRule:chain() return 'PREROUTING' end
 
 
 classes = {{'zone', Zone}}
-defrules = {}
+

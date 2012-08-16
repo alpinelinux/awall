@@ -7,8 +7,6 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
-classes = {}
-
 -- TODO configuration of the ipset via JSON config
 defrules = {['post-snat']={{family='inet', table='nat',
 			    chain='POSTROUTING',

@@ -26,12 +26,12 @@ function loadmodules(path)
    defrules = {}
 
    local function readmetadata(mod)
-      for i, clsdef in ipairs(mod.classes) do
+      for i, clsdef in ipairs(mod.classes or {}) do
 	 local path, cls = unpack(clsdef)
 	 classmap[path] = cls
 	 table.insert(procorder, path)
       end
-      for phase, rules in pairs(mod.defrules) do
+      for phase, rules in pairs(mod.defrules or {}) do
 	 if not defrules[phase] then defrules[phase] = {} end
 	 table.insert(defrules[phase], rules)
       end

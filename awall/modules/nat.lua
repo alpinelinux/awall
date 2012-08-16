@@ -59,5 +59,3 @@ end
 
 classes = {{'dnat', DNATRule},
 	   {'snat', SNATRule}}
-
-defrules = {}
