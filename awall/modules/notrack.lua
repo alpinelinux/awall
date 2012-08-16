@@ -12,12 +12,12 @@ require 'awall.model'
 local model = awall.model
 
 
-local NoTrackRule = model.class(model.ForwardOnlyRule)
+local NoTrackRule = model.class(model.Rule)
 
 function NoTrackRule:table() return 'raw' end
 
 function NoTrackRule:target()
-   if self.action then return model.ForwardOnlyRule.target(self) end
+   if self.action then return model.Rule.target(self) end
    return 'NOTRACK'
 end
 

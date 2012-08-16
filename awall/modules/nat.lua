@@ -8,15 +8,19 @@ Licensed under the terms of GPL2
 module(..., package.seeall)
 
 require 'awall.model'
+require 'awall.util'
 
 local model = awall.model
 
 
-local NATRule = model.class(model.ForwardOnlyRule)
+local NATRule = model.class(model.Rule)
 
 function NATRule:trules()
    local res = {}
-   for i, ofrags in ipairs(model.ForwardOnlyRule.trules(self)) do
+   for i, ofrags in ipairs(model.Rule.trules(self)) do
+      if not awall.util.contains(self.params.chains, ofrags.chain) then
+	 self:error('Inappropriate zone definitions for a '..self.params.target..' rule')
+      end
       if ofrags.family == 'inet' then table.insert(res, ofrags) end
    end
    return res
@@ -24,10 +28,8 @@ end
 
 function NATRule:table() return 'nat' end
 
-function NATRule:chain() return self.params.chain end
-
 function NATRule:target()
-   if self.action then return model.ForwardOnlyRule.target(self) end
+   if self.action then return model.Rule.target(self) end
 
    local target
    if self['ip-range'] then
@@ -44,7 +46,8 @@ local DNATRule = model.class(NATRule)
 function DNATRule:init(...)
    NATRule.init(self, unpack(arg))
    self.params = {forbidif='out', subject='destination',
-		  chain='PREROUTING', target='DNAT', deftarget='REDIRECT'}
+		  chains={'INPUT', 'PREROUTING'},
+		  target='DNAT', deftarget='REDIRECT'}
 end
 
 
@@ -53,7 +56,8 @@ local SNATRule = model.class(NATRule)
 function SNATRule:init(...)
    NATRule.init(self, unpack(arg))
    self.params = {forbidif='in', subject='source',
-		  chain='POSTROUTING', target='SNAT', deftarget='MASQUERADE'}
+		  chains={'OUTPUT', 'POSTROUTING'},
+		  target='SNAT', deftarget='MASQUERADE'}
 end
 
 

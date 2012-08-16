@@ -22,12 +22,11 @@ local families = {inet={cmd='iptables',
 			 file='rules6-save',
 			 procfile='/proc/net/ip6_tables_names'}}
 
-local builtin = {filter={'FORWARD', 'INPUT', 'OUTPUT'},
-		 mangle={'FORWARD', 'INPUT', 'OUTPUT', 'POSTROUTING',
-			 'PREROUTING'},
-		 nat={'INPUT', 'OUTPUT', 'POSTROUTING', 'PREROUTING'},
-		 raw={'OUTPUT', 'PREROUTING'},
-		 security={'FORWARD', 'INPUT', 'OUTPUT'}}
+builtin = {filter={'FORWARD', 'INPUT', 'OUTPUT'},
+	   mangle={'FORWARD', 'INPUT', 'OUTPUT', 'POSTROUTING', 'PREROUTING'},
+	   nat={'INPUT', 'OUTPUT', 'POSTROUTING', 'PREROUTING'},
+	   raw={'OUTPUT', 'PREROUTING'},
+	   security={'FORWARD', 'INPUT', 'OUTPUT'}}
 
 local backupdir = '/var/run/awall'
 

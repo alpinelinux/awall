@@ -12,11 +12,9 @@ require 'awall.model'
 local model = awall.model
 
 
-local ClampMSSRule = model.class(model.ForwardOnlyRule)
+local ClampMSSRule = model.class(model.Rule)
 
 function ClampMSSRule:table() return 'mangle' end
-
-function ClampMSSRule:chain() return 'POSTROUTING' end
 
 function ClampMSSRule:servoptfrags()
    return {{opts='-p tcp --tcp-flags SYN,RST SYN'}}

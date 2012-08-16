@@ -9,9 +9,10 @@ module(..., package.seeall)
 
 require 'awall'
 require 'awall.host'
-require 'awall.util'
+require 'awall.iptables'
 require 'awall.object'
 require 'awall.optfrag'
+require 'awall.util'
 
 local util = awall.util
 local combinations = awall.optfrag.combinations
@@ -118,8 +119,6 @@ function Rule:init(...)
    end
 end
 
-function Rule:defaultzones() return {nil, fwzone} end
-
 
 function Rule:zoneoptfrags()
 
@@ -139,6 +138,17 @@ function Rule:zoneoptfrags()
 	 chain = string.upper(dir)..'PUT'
 	 ofrags = zofs(z, dir)
 
+      elseif not zin or not zout then
+
+	 if zin then
+	    chain = 'PREROUTING'
+	    ofrags = zofs(zin, 'in')
+
+	 elseif zout then
+	    chain = 'POSTROUTING'
+	    ofrags = zofs(zout, 'out')
+	 end
+
       else
 	 chain = 'FORWARD'
 	 ofrags = combinations(zofs(zin, 'in'), zofs(zout, 'out'))
@@ -152,16 +162,14 @@ function Rule:zoneoptfrags()
 	 end
       end
 
-      if not ofrags then ofrags = {{}} end
-
-      for i, ofrag in ipairs(ofrags) do ofrag.fchain = chain end
-
-      return ofrags
+      return combinations(ofrags,
+			  chain and {{chain=chain}} or {{chain='PREROUTING'},
+							{chain='OUTPUT'}})
    end
 
    local res = {}
-   local izones = self['in'] or self:defaultzones()
-   local ozones = self.out or self:defaultzones()
+   local izones = self['in'] or {}
+   local ozones = self.out or {}
 
    for i = 1,math.max(1, table.maxn(izones)) do
       for j = 1,math.max(1, table.maxn(ozones)) do
@@ -248,8 +256,6 @@ end
 
 function Rule:table() return 'filter' end
 
-function Rule:chain() return nil end
-
 function Rule:position() return 'append' end
 
 function Rule:target()
@@ -327,7 +333,6 @@ function Rule:trules()
    res = combinations(res, self:servoptfrags())
 
    setfamilies(res)
-   tag(res, 'chain', self:chain())
 
    local addrofrags = combinations(self:create(Zone, {addr=self.src}):optfrags('in'),
 				   self:destoptfrags())
@@ -366,7 +371,42 @@ function Rule:trules()
 
    util.extend(res, ffilter(self:extraoptfrags()))
 
-   tag(res, 'table', self:table(), false)
+   local tbl = self:table()
+
+   local function convertchains(ofrags)
+      local res = {}
+
+      for i, ofrag in ipairs(ofrags) do
+
+	 if util.contains(awall.iptables.builtin[tbl], ofrag.chain) then
+	    table.insert(res, ofrag)
+
+	 else
+	    local chains
+	    if ofrag.chain == 'PREROUTING' then chains = {'FORWARD', 'INPUT'}
+	    elseif ofrag.chain == 'POSTROUTING' then
+	       chains = {'FORWARD', 'OUTPUT'}
+	    elseif util.contains({'INPUT', 'FORWARD'}, ofrag.chain) then
+	       chains = {'PREROUTING'}
+	    end
+
+	    if chains then
+	       ofrag.chain = nil
+	       util.extend(res,
+			   convertchains(combinations({ofrag},
+						      util.map(chains,
+							       function(c)
+								  return {chain=c}
+							       end))))
+	    else table.insert(res, ofrag) end
+	 end
+      end
+
+      return res
+   end
+
+   res = convertchains(res)
+   tag(res, 'table', tbl, false)
 
    local function checkzof(ofrag, dir, chains)
       if ofrag[dir] and util.contains(chains, ofrag.chain) then
@@ -399,22 +439,6 @@ function Rule:newchain(key)
    self.newchains[key] = res
    return res
 end
-
-
-ForwardOnlyRule = class(Rule)
-
-function ForwardOnlyRule:init(...)
-   Rule.init(self, unpack(arg))
-   for i, dir in ipairs({'in', 'out'}) do
-      if self[dir] and util.contains(self[dir], fwzone) then
-	 self:error('Not applicable to the firewall zone')
-      end
-   end
-end
-
-function ForwardOnlyRule:defaultzones() return {nil} end
-
-function ForwardOnlyRule:chain() return 'PREROUTING' end
 
 
 classes = {{'zone', Zone}}

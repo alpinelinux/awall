@@ -14,7 +14,7 @@ require 'awall.util'
 local model = awall.model
 
 
-local MarkRule = model.class(model.ForwardOnlyRule)
+local MarkRule = model.class(model.Rule)
 
 function MarkRule:table() return 'mangle' end
 
