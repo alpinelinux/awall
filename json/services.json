@@ -46,6 +46,7 @@
       { "proto": "icmp", "type": 8 },
       { "proto": "icmpv6", "type": 128 }
     ],
+    "rdp": { "proto": "tcp", "port": 3389 },
     "sip": [
     	{ "proto": "udp", "port": 5060 },
     	{ "proto": "tcp", "port": 5060 }
