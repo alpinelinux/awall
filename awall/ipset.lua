@@ -8,7 +8,6 @@ Licensed under the terms of GPL2
 module(..., package.seeall)
 
 require 'awall.object'
-require 'awall.util'
 
 IPSet = awall.object.class(awall.object.Object)
 
@@ -23,7 +22,7 @@ end
 
 function IPSet:dumpfile(name, ipsfile)
    ipsfile:write('# ipset '..name..'\n')
-   ipsfile:write(awall.util.join(self:options(name), ' '))
+   ipsfile:write(table.concat(self:options(name), ' '))
    ipsfile:write('\n')
 end
 
