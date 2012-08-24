@@ -7,6 +7,15 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
+function join(var, sep)
+   local res = ''
+   for i, s in listpairs(var) do
+      if i > 1 then res = res..sep end
+      res = res..s
+   end
+   return res
+end
+
 function list(var)
    if not var then return {} end
    if type(var) ~= 'table' then return {var} end

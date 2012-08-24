@@ -237,11 +237,7 @@ function Rule:servoptfrags()
       if len == 1 then
 	 opts = opts..' --dport '..plist[1]
       elseif len > 1 then
-	 opts = opts..' -m multiport --dports '
-	 for i, port in ipairs(plist) do
-	    if i > 1 then opts = opts..',' end
-	    opts = opts..port
-	 end
+	 opts = opts..' -m multiport --dports '..util.join(plist, ',')
       end
 
       table.insert(res, {opts=opts})
@@ -315,12 +311,13 @@ function Rule:trules()
 	 end
 
 	 local setopts = '-m set --match-set '..ipset.name..' '
-	 for i, arg in util.listpairs(ipset.args) do
-	    if i > 1 then setopts = setopts..',' end
-	    if arg == 'in' then setopts = setopts..'src'
-	    elseif arg == 'out' then setopts = setopts..'dst'
-	    else self:error('Invalid set direction argument') end
-	 end
+	 setopts = setopts..util.join(util.map(util.list(ipset.args),
+					       function(a)
+						  if a == 'in' then return 'src' end
+						  if a == 'out' then return 'dst' end
+						  self:error('Invalid set direction argument')
+					       end),
+				      ',')
 	 table.insert(ipsetofrags, {family=setdef.family, opts=setopts})
       end
       res = combinations(res, ipsetofrags)
