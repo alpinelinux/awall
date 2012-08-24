@@ -5,11 +5,11 @@
     "bacula-fd": { "proto": "tcp", "port": 9102 }, 
     "bacula-sd": { "proto": "tcp", "port": 9103 }, 
     "bgp": { "proto": "tcp", "port": 179 },
+    "dhcp": { "proto": "udp", "port": [ 67, 68 ] },
     "dns": [
       { "proto": "udp", "port": 53 },
       { "proto": "tcp", "port": 53 }
     ],
-    "dhcp": { "proto": "udp", "port": [ 67, 68 ] },
     "epmap": [
       { "proto": "tcp", "port": 135 },
       { "proto": "udp", "port": 135 }
@@ -32,7 +32,7 @@
       { "proto": "tcp", "port": 88 },
       { "proto": "udp", "port": 88 }
     ],
-     "kpasswd": [
+    "kpasswd": [
       { "proto": "tcp", "port": 464 },
       { "proto": "udp", "port": 464 }
     ],
@@ -58,13 +58,13 @@
       { "proto": "tcp", "port": 3269 },
       { "proto": "udp", "port": 3269 }
     ],
-    "netbios-ns": [
-      { "proto": "tcp", "port": 137 },
-      { "proto": "udp", "port": 137 }
-    ],
     "netbios-ds": [
       { "proto": "tcp", "port": 138 },
       { "proto": "udp", "port": 138 }
+    ],
+    "netbios-ns": [
+      { "proto": "tcp", "port": 137 },
+      { "proto": "udp", "port": 137 }
     ],
     "netbios-ssn": [
       { "proto": "tcp", "port": 139 },
@@ -79,11 +79,11 @@
     ],
     "radius": [
       { "proto": "udp", "port": 1812 },
-      { "proto": "tcp", "port": 1812 },
+      { "proto": "tcp", "port": 1812 }
     ],
     "radius-acct": [
       { "proto": "udp", "port": 1813 },
-      { "proto": "tcp", "port": 1813 },
+      { "proto": "tcp", "port": 1813 }
     ],
     "rdp": { "proto": "tcp", "port": 3389 },
     "sip": [
