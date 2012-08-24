@@ -138,9 +138,9 @@ function Config:print()
    self.iptables:print()
 end
 
-function Config:dump(iptdir, ipsfile)
-   self.ipset:dump(ipsfile or '/etc/ipset.d/awall')
-   self.iptables:dump(iptdir or '/etc/iptables')
+function Config:dump(dir)
+   self.ipset:dump(dir or '/etc/ipset.d')
+   self.iptables:dump(dir or '/etc/iptables')
 end
 
 function Config:test()

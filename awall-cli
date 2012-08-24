@@ -89,9 +89,7 @@ opts, opind = alt_getopt.get_opts(arg, short_opts, long_opts)
 for switch, value in pairs(opts) do
    if switch == 'f' then force = true
    elseif switch == 'V' then verify = true
-   elseif switch == 'o' then
-      iptdir = value
-      ipsfile = value..'/ipset'
+   elseif switch == 'o' then outputdir = value
    else table.insert(params[switch], value) end
 end
 
@@ -192,7 +190,7 @@ if mode == 'dump' then
 
 elseif mode == 'translate' then
    if verify then config:test() end
-   config:dump(iptdir, ipsfile)      
+   config:dump(outputdir)
    
 elseif mode == 'activate' then
 
