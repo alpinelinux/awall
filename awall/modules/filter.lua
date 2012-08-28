@@ -10,13 +10,46 @@ module(..., package.seeall)
 require 'awall'
 require 'awall.host'
 require 'awall.model'
+require 'awall.object'
 require 'awall.optfrag'
 require 'awall.util'
 
 local model = awall.model
 local combinations = awall.optfrag.combinations
+local extend = awall.util.extend
+
+
+Log = awall.object.class(awall.object.Object)
+
+function Log:matchopts()
+   return self.limit and '-m limit --limit '..self.limit..'/second'
+end
+
+function Log:target() return string.upper(self.mode or 'log') end
+
 
 local Filter = model.class(model.Rule)
+
+function Filter:init(...)
+   model.Rule.init(self, unpack(arg))
+
+   -- alpine v2.4 compatibility
+   if util.contains({'logdrop', 'logreject'}, self.action) then
+      self:warning('Deprecated action: '..self.action)
+      self.action = string.sub(self.action, 4, -1)
+   end
+
+   local function log(spec, default)
+      if spec == nil then spec = default end
+      if spec == false then return end
+      if spec == true then spec = '_default' end
+      return self.root.log[spec] or self:error('Invalid log: '..spec)
+   end
+
+   self.log = log(self.log, self.action ~= 'accept')
+   local limit = self:limit()
+   if limit then self[limit].log = log(self[limit].log, true) end
+end
 
 function Filter:defaultzones()
    return self.dnat and {nil} or model.Rule.defaultzones(self)
@@ -43,7 +76,7 @@ function Filter:trules()
 	 params[attr] = self[attr]
       end
       if extra then for k, v in pairs(extra) do params[k] = v end end
-      return awall.util.extend(res, self:create(cls, params):trules())
+      return extend(res, self:create(cls, params):trules())
    end
 
    if self.dnat then
@@ -80,7 +113,7 @@ function Filter:trules()
 
    if self.action == 'tarpit' then extrarules('no-track') end
 
-   awall.util.extend(res, model.Rule.trules(self))
+   extend(res, model.Rule.trules(self))
 
    return res
 end
@@ -103,25 +136,42 @@ function Filter:position()
 end
 
 function Filter:target()
-   if not self:limit() then return model.Rule.target(self) end
-   return self:newchain('limit')
+   if self:limit() then return self:newchain('limit') end
+   if self.log then return self:newchain('log'..self.action) end
+   return model.Rule.target(self)
 end
 
 function Filter:extraoptfrags()
    local res = {}
+
+   local function logchain(action, log, target)
+      extend(res, combinations({{chain=self:newchain('log'..action)}},
+			       {{opts=log:matchopts(), target=log:target()},
+				{target=target}}))
+   end
+
    local limit = self:limit()
    if limit then
       if self.action ~= 'accept' then
 	 self:error('Cannot specify limit for '..self.action..' filter')
       end
-      local optbase = '-m recent --name '..self:target()
-      table.insert(res, {chain=self:target(),
-			 opts=optbase..' --update --hitcount '..self[limit].count..' --seconds '..self[limit].interval,
-			 target='logdrop'})
-      table.insert(res, {chain=self:target(),
-			 opts=optbase..' --set',
-			 target='ACCEPT'})
+
+      local chain = self:newchain('limit')
+      local limitlog = self[limit].log
+
+      extend(res,
+	     combinations({{chain=chain,
+			    opts='-m recent --name '..chain}},
+			  {{opts='--update --hitcount '..self[limit].count..' --seconds '..self[limit].interval,
+				target=limitlog and self:newchain('logdrop') or 'DROP'},
+			     {opts='--set',
+			      target=self.log and self:newchain('log'..self.action) or 'ACCEPT'}}))
+
+      if limitlog then logchain('drop', limitlog, 'DROP') end
    end
+
+   if self.log then logchain(self.action, self.log, model.Rule.target(self)) end
+   
    return res
 end
 
@@ -132,7 +182,8 @@ local Policy = model.class(Filter)
 function Policy:servoptfrags() return nil end
 
 
-classes = {{'filter', Filter},
+classes = {{'log', Log},
+	   {'filter', Filter},
 	   {'policy', Policy}}
 
 
@@ -156,16 +207,6 @@ defrules['post-filter'] = combinations({{family='inet6',
 				       {{chain='INPUT'}, {chain='OUTPUT'}})
 
 
-achains = {}
-
-local limitedlog = {opts='-m limit --limit 1/second', target='LOG'}
-for i, target in ipairs({'drop', 'reject'}) do
-   util.extend(achains,
-	       combinations({{chain='log'..target}},
-			    {limitedlog, {target=string.upper(target)}}))
-end
-util.extend(achains,
-	    combinations({{chain='tarpit'}},
-			 {limitedlog,
-			  {opts='-p tcp', target='TARPIT'},
-			  {target='DROP'}}))
+achains = combinations({{chain='tarpit'}},
+		       {{opts='-p tcp', target='TARPIT'},
+			{target='DROP'}})
