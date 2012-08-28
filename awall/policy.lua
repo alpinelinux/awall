@@ -141,24 +141,46 @@ function PolicySet:load()
    
    local input = {}
    local source = {}
-   local required = {}
+   local polnames = {}
+   local policies = {}
+
+   local function require(name, fname)
+      if policies[name] then return end
+      table.insert(polnames, name)
+      policies[name] = self:loadJSON(name, fname)
+      for i, iname in util.listpairs(policies[name].import) do
+	 require(iname)
+      end
+   end
+
+   for i, pol in ipairs(list(self.autodirs)) do require(unpack(pol)) end
+
+
+   local pending = {}
    local imported = {}
 
-   local function import(name, fname)
+   local function import(name)
 
       if util.contains(imported, name) then return end
-      if util.contains(required, name) then
-	 error('Circular import: '..name)
+      if util.contains(pending, name) then
+	 error('Circular ordering directives: '..name)
       end
+      table.insert(pending, name)
 
-      local data = self:loadJSON(name, fname)
+      local data = policies[name]
 
-      table.insert(required, name)
-      for i, iname in util.listpairs(data.import) do import(iname) end
+      local after = util.list(data.after or data.import)
+      for pname, policy in pairs(policies) do
+	 if util.contains(util.list(policy.before), name) then
+	    table.insert(after, pname)
+	 end
+      end
+      for i, pname in ipairs(after) do import(pname) end
+
       table.insert(imported, name)
       
       for cls, objs in pairs(data) do
-	 if not util.contains({'description', 'import'},
+	 if not util.contains({'description', 'import', 'after', 'before'},
 			      cls) then
 	    if not source[cls] then source[cls] = {} end
 
@@ -181,9 +203,10 @@ function PolicySet:load()
       end
    end
 
-   for i, pol in ipairs(list(self.autodirs)) do import(unpack(pol)) end
+   table.sort(polnames)
+   for i, name in ipairs(polnames) do import(name) end
 
-   return PolicyConfig.new(input, source, imported)
+   return PolicyConfig.new(input, source, polnames)
 end
 
 
