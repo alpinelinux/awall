@@ -52,7 +52,8 @@ function PolicyConfig:expand()
 	 end
       end
 
-      return value ~= '' and value or nil
+      if value == '' then return end
+      return value
    end
 
    return expand(self.data)
