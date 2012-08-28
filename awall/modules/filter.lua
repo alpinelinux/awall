@@ -51,10 +51,6 @@ function Filter:init(...)
    if limit then self[limit].log = log(self[limit].log, true) end
 end
 
-function Filter:defaultzones()
-   return self.dnat and {nil} or model.Rule.defaultzones(self)
-end
-
 function Filter:destoptfrags()
    local ofrags = model.Rule.destoptfrags(self)
    if not self.dnat then return ofrags end
