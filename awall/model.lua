@@ -43,6 +43,10 @@ end
 
 function ConfigObject:error(msg) error(self.location..': '..msg) end
 
+function ConfigObject:warning(msg)
+   io.stderr:write(self.location..': '..msg..'\n')
+end
+
 function ConfigObject:trules() return {} end
 
 function ConfigObject:info()
