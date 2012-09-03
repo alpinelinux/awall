@@ -14,6 +14,7 @@
       { "proto": "tcp", "port": 135 },
       { "proto": "udp", "port": 135 }
     ],
+    "ftp": { "proto": "tcp", "port": 21 },
     "gre": { "proto": "gre" },
     "hp-pdl": { "proto": "tcp", "port": 9100 },
     "http": { "proto": "tcp", "port": 80 },
