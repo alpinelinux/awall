@@ -185,7 +185,9 @@ classes = {{'log', Log},
 
 defrules = {}
 
-local dar = combinations({{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}},
+local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
+
+local dar = combinations(fchains,
 			 {{opts='-m state --state RELATED,ESTABLISHED'}})
 for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
    table.insert(dar,
@@ -196,12 +198,27 @@ defrules.pre = combinations(dar,
 			    {{table='filter', target='ACCEPT'}},
 			    {{family='inet'}, {family='inet6'}})
 
-defrules['post-filter'] = combinations({{family='inet6',
-					 table='filter',
-					 opts='-p icmpv6',
-					 target='ACCEPT'}},
-				       {{chain='INPUT'}, {chain='OUTPUT'}})
+local icmp = {{family='inet', table='filter', opts='-p icmp'}}
+local icmp6 = {{family='inet6', table='filter', opts='-p icmpv6'}}
+defrules['post-filter'] = combinations(icmp6,
+				       {{chain='INPUT'}, {chain='OUTPUT'}},
+				       {{target='ACCEPT'}})
+extend(defrules['post-filter'],
+       combinations(icmp6, {{chain='FORWARD', target='icmp-routing'}}))
+extend(defrules['post-filter'],
+       combinations(icmp, fchains, {{target='icmp-routing'}}))
 
+local function icmprules(ofrag, oname, types)
+   extend(defrules['post-filter'],
+	  combinations(ofrag,
+		       {{chain='icmp-routing', target='ACCEPT'}},
+		       util.map(types,
+				function(t)
+				   return {opts='--'..oname..' '..t}
+				end)))
+end
+icmprules(icmp, 'icmp-type', {3, 11, 12})
+icmprules(icmp6, 'icmpv6-type', {1, 2, 3, 4})
 
 achains = combinations({{chain='tarpit'}},
 		       {{opts='-p tcp', target='TARPIT'},
