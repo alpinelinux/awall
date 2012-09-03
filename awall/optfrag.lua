@@ -7,12 +7,14 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
-function combinations(of1, of2)
-   if not of1 then
-      if not of2 then return nil end
-      return of2
-   end
-   if not of2 then return of1 end
+function combinations(of1, ...)
+   if #arg == 0 then return of1 end
+
+   if not of1 then return combinations(unpack(arg)) end
+
+   local of2 = arg[1]
+   table.remove(arg, 1)
+   if not of2 then return combinations(of1, unpack(arg)) end
 
    local res = {}
    for i, x in ipairs(of1) do
@@ -44,7 +46,7 @@ function combinations(of1, of2)
       end
    end
 
-   return res
+   return combinations(res, unpack(arg))
 end
 
 function location(of) return of.family..'/'..of.table..'/'..of.chain end

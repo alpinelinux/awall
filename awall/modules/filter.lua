@@ -192,8 +192,8 @@ for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
 		{chain=chain,
 		 opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'})
 end
-defrules.pre = combinations(combinations(dar,
-					 {{table='filter', target='ACCEPT'}}),
+defrules.pre = combinations(dar,
+			    {{table='filter', target='ACCEPT'}},
 			    {{family='inet'}, {family='inet6'}})
 
 defrules['post-filter'] = combinations({{family='inet6',
