@@ -50,12 +50,16 @@ function loadmodules(path)
    local cdir = lfs.currentdir()
    if path then lfs.chdir(path) end
 
+   local modules = {}
    for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
       if stringy.endswith(modfile, '.lua') then
-	 local name = 'awall.modules.'..string.sub(modfile, 1, -5)
-	 require(name)
-	 readmetadata(package.loaded[name])
+	 table.insert(modules, 'awall.modules.'..string.sub(modfile, 1, -5))
       end
+   end
+   table.sort(modules)
+   for i, name in ipairs(modules) do
+      require(name)
+      readmetadata(package.loaded[name])
    end
 
    lfs.chdir(cdir)
