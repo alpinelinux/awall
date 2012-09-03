@@ -214,7 +214,9 @@ function Rule:servoptfrags()
 
 	    if new or ports[sdef.proto][1] then
 	       if sdef.port then
-		  util.extend(ports[sdef.proto], sdef.port)
+		  util.extend(ports[sdef.proto],
+			      util.maplist(sdef.port,
+					   function(p) return string.gsub(p, '-', ':') end))
 	       else ports[sdef.proto] = {} end
 	    end
 
