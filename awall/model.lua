@@ -124,6 +124,13 @@ function Rule:init(...)
 end
 
 
+function Rule:direction(dir)
+   if dir == 'in' then return self.reverse and 'out' or 'in' end
+   if dir == 'out' then return self.reverse and 'in' or 'out' end
+   self:error('Invalid direction: '..dir)
+end
+
+
 function Rule:zoneoptfrags()
 
    local function zonepair(zin, zout)
@@ -172,8 +179,8 @@ function Rule:zoneoptfrags()
    end
 
    local res = {}
-   local izones = self['in'] or {}
-   local ozones = self.out or {}
+   local izones = self[self:direction('in')] or {}
+   local ozones = self[self:direction('out')] or {}
 
    for i = 1,math.max(1, table.maxn(izones)) do
       for j = 1,math.max(1, table.maxn(ozones)) do
@@ -234,14 +241,15 @@ function Rule:servoptfrags()
       end
    end
 
+   local popt = ' --'..(self.reverse and 's' or 'd')..'port'
    for proto, plist in pairs(ports) do
       local opts = '-p '..proto
       local len = table.maxn(plist)
 
       if len == 1 then
-	 opts = opts..' --dport '..plist[1]
+	 opts = opts..popt..' '..plist[1]
       elseif len > 1 then
-	 opts = opts..' -m multiport --dports '..table.concat(plist, ',')
+	 opts = opts..' -m multiport'..popt..'s '..table.concat(plist, ',')
       end
 
       table.insert(res, {opts=opts})
@@ -251,7 +259,7 @@ function Rule:servoptfrags()
 end
 
 function Rule:destoptfrags()
-   return self:create(Zone, {addr=self.dest}):optfrags('out')
+   return self:create(Zone, {addr=self.dest}):optfrags(self:direction('out'))
 end
 
 function Rule:table() return 'filter' end
@@ -317,9 +325,10 @@ function Rule:trules()
 	 local setopts = '-m set --match-set '..ipset.name..' '
 	 setopts = setopts..table.concat(util.map(util.list(ipset.args),
 						  function(a)
-						     if a == 'in' then return 'src' end
-						     if a == 'out' then return 'dst' end
-						     self:error('Invalid set direction argument')
+						     if self:direction(a) == 'in' then
+							return 'src'
+						     end
+						     return 'dst'
 						  end),
 					 ',')
 	 table.insert(ipsetofrags, {family=setdef.family, opts=setopts})
@@ -328,14 +337,16 @@ function Rule:trules()
    end
 
    if self.ipsec then
-      res = combinations(res, {{opts='-m policy --pol ipsec --dir '..self.ipsec}})
+      res = combinations(res,
+			 {{opts='-m policy --pol ipsec --dir '..self:direction(self.ipsec)}})
    end
 
    res = combinations(res, self:servoptfrags())
 
    setfamilies(res)
 
-   local addrofrags = combinations(self:create(Zone, {addr=self.src}):optfrags('in'),
+   local addrofrags = combinations(self:create(Zone,
+					       {addr=self.src}):optfrags(self:direction('in')),
 				   self:destoptfrags())
 
    if addrofrags then

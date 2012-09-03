@@ -79,6 +79,9 @@ function Filter:trules()
       if self.action ~= 'accept' then
 	 self:error('dnat option not allowed with '..self.action..' action')
       end
+      if self['no-track'] then
+	 self:error('dnat option not allowed with no-track')
+      end
       if not self.dest then
 	 self:error('Destination address must be specified with DNAT')
       end
@@ -107,9 +110,16 @@ function Filter:trules()
       extrarules('dnat', {['ip-range']=dnataddr, out=nil})
    end
 
-   if self.action == 'tarpit' then extrarules('no-track') end
+   if self.action == 'tarpit' or self['no-track'] then
+      extrarules('no-track')
+   end
 
    extend(res, model.Rule.trules(self))
+
+   if self['no-track'] and self.action == 'accept' then
+      extrarules('no-track', {reverse=true})
+      extrarules('filter', {reverse=true, action='accept', log=false})
+   end
 
    return res
 end
