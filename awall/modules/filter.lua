@@ -25,7 +25,11 @@ function Log:matchopts()
    return self.limit and '-m limit --limit '..self.limit..'/second'
 end
 
-function Log:target() return string.upper(self.mode or 'log') end
+function Log:target()
+   local mode = self.mode or 'log'
+   local prefix = self.prefix and ' --'..mode..'-prefix '..self.prefix or ''
+   return string.upper(mode)..prefix
+end
 
 
 local Filter = model.class(model.Rule)
