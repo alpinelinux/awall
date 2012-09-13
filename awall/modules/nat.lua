@@ -31,12 +31,15 @@ function NATRule:table() return 'nat' end
 function NATRule:target()
    if self.action then return model.Rule.target(self) end
 
+   local range = self['ip-range']
    local target
-   if self['ip-range'] then
-      target = self.params.target..' --to-'..self.params.subject..' '..self['ip-range']
+   if range then
+      target = self.params.target..' --to-'..self.params.subject..' '..range
    else target = self.params.deftarget end
 
-   if self['port-range'] then target = target..':'..self['port-range'] end
+   if self['port-range'] then
+      target = target..(range and ':' or ' --to-ports ')..self['port-range']
+   end
    return target
 end
 
