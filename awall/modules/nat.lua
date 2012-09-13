@@ -15,6 +15,18 @@ local model = awall.model
 
 local NATRule = model.class(model.Rule)
 
+-- alpine v2.4 compatibility
+function NATRule:init(...)
+   model.Rule.init(self, unpack(arg))
+   local attrs = {['ip-range']='to-addr', ['port-range']='to-port'}
+   for old, new in pairs(attrs) do
+      if not self[new] and self[old] then
+	 self:warning(old..' deprecated in favor of '..new)
+	 self[new] = self[old]
+      end
+   end
+end
+
 function NATRule:trules()
    local res = {}
    for i, ofrags in ipairs(model.Rule.trules(self)) do
@@ -31,14 +43,14 @@ function NATRule:table() return 'nat' end
 function NATRule:target()
    if self.action then return model.Rule.target(self) end
 
-   local range = self['ip-range']
+   local addr = self['to-addr']
    local target
-   if range then
-      target = self.params.target..' --to-'..self.params.subject..' '..range
+   if addr then
+      target = self.params.target..' --to-'..self.params.subject..' '..addr
    else target = self.params.deftarget end
 
-   if self['port-range'] then
-      target = target..(range and ':' or ' --to-ports ')..self['port-range']
+   if self['to-port'] then
+      target = target..(addr and ':' or ' --to-ports ')..self['to-port']
    end
    return target
 end
