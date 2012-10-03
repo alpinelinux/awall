@@ -111,7 +111,7 @@ function Filter:trules()
 	 self:error(self.dnat..' does not resolve to any IPv4 address')
       end
 
-      extrarules('dnat', {['ip-range']=dnataddr, out=nil})
+      extrarules('dnat', {['to-addr']=dnataddr, out=nil})
    end
 
    if self.action == 'tarpit' or self['no-track'] then
