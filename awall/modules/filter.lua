@@ -19,7 +19,7 @@ local combinations = awall.optfrag.combinations
 local extend = awall.util.extend
 
 
-Log = awall.object.class(awall.object.Object)
+Log = awall.object.class()
 
 function Log:matchopts()
    return self.limit and '-m limit --limit '..self.limit..'/second'

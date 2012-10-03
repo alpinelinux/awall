@@ -31,7 +31,7 @@ builtin = {filter={'FORWARD', 'INPUT', 'OUTPUT'},
 local backupdir = '/var/run/awall'
 
 
-local BaseIPTables = class(awall.object.Object)
+local BaseIPTables = class()
 
 function BaseIPTables:print()
    for family, tbls in pairs(families) do

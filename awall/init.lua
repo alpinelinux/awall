@@ -69,7 +69,7 @@ end
 PolicySet = policy.PolicySet
 
 
-Config = object.class(object.Object)
+Config = object.class()
 
 function Config:init(policyconfig)
 

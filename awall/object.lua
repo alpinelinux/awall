@@ -11,6 +11,7 @@ function class(base)
    local cls = {}
    local mt = {__index = cls}
 
+   if not base and Object then base = Object end
    if base then setmetatable(cls, {__index = base}) end
 
    function cls.new(...) return cls.morph({}, unpack(arg)) end

@@ -17,7 +17,7 @@ local object = awall.object
 local util = awall.util
 
 
-local PolicyConfig = object.class(object.Object)
+local PolicyConfig = awall.object.class()
 
 function PolicyConfig:init(data, source, policies)
    self.data = data
@@ -109,7 +109,7 @@ local function list(dirs)
 end
 
 
-PolicySet = object.class(object.Object)
+PolicySet = object.class()
 
 function PolicySet:init(confdirs, importdirs)
    self.autodirs = confdirs or {'/usr/share/awall/mandatory', '/etc/awall'}

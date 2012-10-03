@@ -9,7 +9,7 @@ module(..., package.seeall)
 
 require 'awall.object'
 
-IPSet = awall.object.class(awall.object.Object)
+IPSet = awall.object.class()
 
 function IPSet:init(config) self.config = config or {} end
 

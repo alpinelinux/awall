@@ -20,7 +20,7 @@ local combinations = awall.optfrag.combinations
 class = awall.object.class
 
 
-ConfigObject = class(awall.object.Object)
+ConfigObject = class()
 
 function ConfigObject:init(context, location)
    if context then
