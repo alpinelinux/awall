@@ -164,7 +164,7 @@ function Rule:zoneoptfrags()
 	 chain = 'FORWARD'
 	 ofrags = combinations(zofs(zin, 'in'), zofs(zout, 'out'))
 
-	 if ofrags then
+	 if ofrags and not zout['route-back'] then
 	    ofrags = util.filter(ofrags,
 				 function(of)
 				    return not (of['in'] and of.out and
