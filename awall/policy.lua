@@ -13,7 +13,6 @@ require 'lpc'
 require 'awall.object'
 require 'awall.util'
 
-local object = awall.object
 local util = awall.util
 
 
@@ -109,7 +108,7 @@ local function list(dirs)
 end
 
 
-PolicySet = object.class()
+PolicySet = awall.object.class()
 
 function PolicySet:init(confdirs, importdirs)
    self.autodirs = confdirs or {'/usr/share/awall/mandatory', '/etc/awall'}
