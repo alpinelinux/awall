@@ -113,7 +113,8 @@ PolicySet = awall.object.class()
 function PolicySet:init(confdirs, importdirs)
    self.autodirs = confdirs or {'/usr/share/awall/mandatory', '/etc/awall'}
    self.confdir = self.autodirs[#self.autodirs]
-   self.importdirs = importdirs or {'/usr/share/awall/optional'}
+   self.importdirs = importdirs or {'/usr/share/awall/optional',
+				    '/etc/awall/optional'}
 end
 
 

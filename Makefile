@@ -6,6 +6,7 @@ ROOT_DIR := /
 LUA_VERSION := 5.1
 
 poldir := usr/share/awall
+confdir := etc/awall
 
 all:	install
 
@@ -38,9 +39,10 @@ $(eval $(call copy,json,$(poldir)/mandatory,json))
 $(eval $(call rename,awall-cli,usr/sbin/awall,755))
 $(eval $(call rename,sample-policy.json,$(poldir)/sample/sample-policy.json,644))
 
-$(eval $(call mkdir,etc/awall))
-$(eval $(call mkdir,var/run/awall))
+$(eval $(call mkdir,$(confdir)))
+$(eval $(call mkdir,$(confdir)/optional))
 $(eval $(call mkdir,$(poldir)/optional))
+$(eval $(call mkdir,var/run/awall))
 
 install: $(foreach f,$(files),$(ROOT_DIR)/$(f))
 
