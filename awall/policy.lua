@@ -125,7 +125,7 @@ function PolicySet:loadJSON(name, fname)
    else
       file, fname = open(name, self.importdirs)
    end
-   if not file then error('Import failed: '..name) end
+   if not file then error('Unable to read policy file '..fname) end
 
    local data = ''
    for line in file:lines() do data = data..line end
