@@ -202,7 +202,7 @@ defrules = {}
 local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
 
 local dar = combinations(fchains,
-			 {{opts='-m state --state RELATED,ESTABLISHED'}})
+			 {{opts='-m conntrack --ctstate RELATED,ESTABLISHED'}})
 for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
    table.insert(dar,
 		{chain=chain,
