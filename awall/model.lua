@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -19,8 +19,10 @@ local combinations = awall.optfrag.combinations
 
 class = awall.object.class
 
+require 'stringy'
 
-ConfigObject = class()
+
+local ConfigObject = class()
 
 function ConfigObject:init(context, location)
    if context then
@@ -93,6 +95,28 @@ end
 
 
 fwzone = Zone.new()
+
+
+IPSet = class(ConfigObject)
+
+function IPSet:init(...)
+   ConfigObject.init(self, unpack(arg))
+
+   if not self.type then self:error('Type not defined') end
+
+   if stringy.startswith(self.type, 'bitmap:') then
+      if not self.range then self:error('Range not defined') end
+      self.options = {self.type, 'range', self.range}
+      self.family = 'inet'
+
+   elseif stringy.startswith(self.type, 'hash:') then
+      if not self.family then self:error('Family not defined') end
+      self.options = {self.type, 'family', self.family}
+
+   elseif self.type == 'list:set' then self.options = {self.type}
+
+   else self:error('Invalid type: '..self.type) end
+end
 
 
 Rule = class(ConfigObject)
@@ -455,5 +479,5 @@ function Rule:newchain(key)
 end
 
 
-classes = {{'zone', Zone}}
+classes = {{'zone', Zone}, {'ipset', IPSet}}
 

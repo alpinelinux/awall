@@ -1,6 +1,6 @@
 --[[
 Ipset file dumper for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -13,23 +13,16 @@ IPSet = awall.object.class()
 
 function IPSet:init(config) self.config = config or {} end
 
-function IPSet:options(name)
-   local ipset = self.config[name]
-   if not ipset.type then ipset:error('Type not defined') end
-   if not ipset.family then ipset:error('Family not defined') end
-   return {ipset.type, 'family', ipset.family}
-end
-
 function IPSet:dumpfile(name, ipsfile)
    ipsfile:write('# ipset '..name..'\n')
-   ipsfile:write(table.concat(self:options(name), ' '))
+   ipsfile:write(table.concat(self.config[name].options, ' '))
    ipsfile:write('\n')
 end
 
 function IPSet:create()
    for name, ipset in pairs(self.config) do
       local pid = lpc.run('ipset', '-!', 'create', name,
-			  unpack(self:options(name)))
+			  unpack(ipset.options))
       if lpc.wait(pid) ~= 0 then
 	 io.stderr:write('ipset creation failed: '..name)
       end

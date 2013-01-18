@@ -1,6 +1,6 @@
 --[[
 Alpine Wall main module
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -76,17 +76,6 @@ function Config:init(policyconfig)
    self.objects = policyconfig:expand()
    self.iptables = iptables.IPTables.new()
 
-   local function morph(path, cls)
-      local objs = self.objects[path]
-      if objs then
-	 for k, v in pairs(objs) do
-	    objs[k] = cls.morph(v,
-				self,
-				path..' '..k..' ('..policyconfig.source[path][k]..')')
-	 end
-      end
-   end
-
    local acfrags = {}
 
    local function insertrules(trules)
@@ -115,7 +104,18 @@ function Config:init(policyconfig)
       end
    end
 
-   for i, path in ipairs(procorder) do morph(path, classmap[path]) end
+   for i, path in ipairs(procorder) do
+      local objs = self.objects[path]
+      if objs then
+	 for k, v in pairs(objs) do
+	    objs[k] = classmap[path].morph(
+	       v,
+	       self,
+	       path..' '..k..' ('..policyconfig.source[path][k]..')'
+	    )
+	 end
+      end
+   end
 
    insertdefrules('pre')
 
@@ -132,7 +132,6 @@ function Config:init(policyconfig)
    for k, v in pairs(acfrags) do table.insert(ofrags, v) end
    insertrules(optfrag.combinations(achains, ofrags))
 
-   morph('ipset', awall.model.ConfigObject)
    self.ipset = ipset.IPSet.new(self.objects.ipset)
 end
 
