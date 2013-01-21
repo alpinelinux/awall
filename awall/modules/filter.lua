@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -19,7 +19,7 @@ local combinations = awall.optfrag.combinations
 local extend = awall.util.extend
 
 
-Log = awall.object.class()
+local Log = awall.object.class()
 
 function Log:matchopts()
    return self.limit and '-m limit --limit '..self.limit..'/second'
