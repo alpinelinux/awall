@@ -35,7 +35,7 @@ end
 function ConfigObject:create(cls, params)
    if type(cls) == 'string' then
       local name = cls
-      cls = awall.classmap[cls]
+      cls = awall.loadclass(cls)
       if not cls then
 	 self:error('Support for '..name..' objects not installed')
       end

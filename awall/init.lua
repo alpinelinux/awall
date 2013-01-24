@@ -27,16 +27,10 @@ local achains
 
 function loadmodules(path)
    events = {}
-   classmap = {}
    achains = {}
 
    local function readmetadata(mod)
-      for name, target in pairs(mod.export or {}) do
-	 events[name] = target
-	 if string.sub(name, 1, 1) ~= '%' then
-	    classmap[name] = target.class
-	 end
-      end
+      for name, target in pairs(mod.export or {}) do events[name] = target end
       for name, opts in pairs(mod.achains or {}) do
 	 assert(not achains[name])
 	 achains[name] = opts
@@ -65,6 +59,11 @@ function loadmodules(path)
 
    events['%modules'] = {before=modules}
    procorder = awall.dependency.order(events)
+end
+
+function loadclass(path)
+   assert(string.sub(path, 1, 1) ~= '%')
+   return events[path] and events[path].class
 end
 
 
@@ -103,7 +102,7 @@ function Config:init(policyconfig)
 	 local objs = self.objects[path]
 	 if objs then
 	    for k, v in pairs(objs) do
-	       objs[k] = classmap[path].morph(
+	       objs[k] = events[path].class.morph(
 		  v,
 		  self,
 		  path..' '..k..' ('..policyconfig.source[path][k]..')'
