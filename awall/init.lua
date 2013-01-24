@@ -9,6 +9,7 @@ module(..., package.seeall)
 require 'lfs'
 require 'stringy'
 
+require 'awall.dependency'
 require 'awall.ipset'
 require 'awall.iptables'
 require 'awall.model'
@@ -20,24 +21,21 @@ require 'awall.util'
 local optfrag = awall.optfrag
 
 
+local events
 local procorder
-local defrules
+local achains
 
 function loadmodules(path)
+   events = {}
    classmap = {}
-   procorder = {}
-   defrules = {}
    achains = {}
 
    local function readmetadata(mod)
-      for i, clsdef in ipairs(mod.classes or {}) do
-	 local path, cls = unpack(clsdef)
-	 classmap[path] = cls
-	 table.insert(procorder, path)
-      end
-      for phase, rules in pairs(mod.defrules or {}) do
-	 if not defrules[phase] then defrules[phase] = {} end
-	 table.insert(defrules[phase], rules)
+      for name, target in pairs(mod.export or {}) do
+	 events[name] = target
+	 if string.sub(name, 1, 1) ~= '%' then
+	    classmap[name] = target.class
+	 end
       end
       for name, opts in pairs(mod.achains or {}) do
 	 assert(not achains[name])
@@ -53,16 +51,20 @@ function loadmodules(path)
    local modules = {}
    for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
       if stringy.endswith(modfile, '.lua') then
-	 table.insert(modules, 'awall.modules.'..string.sub(modfile, 1, -5))
+	 table.insert(modules, string.sub(modfile, 1, -5))
       end
    end
    table.sort(modules)
    for i, name in ipairs(modules) do
-      require(name)
-      readmetadata(package.loaded[name])
+      local fname = 'awall.modules.'..name
+      require(fname)
+      readmetadata(package.loaded[fname])
    end
 
    lfs.chdir(cdir)
+
+   events['%modules'] = {before=modules}
+   procorder = awall.dependency.order(events)
 end
 
 
@@ -96,36 +98,34 @@ function Config:init(policyconfig)
       end
    end
 
-   local function insertdefrules(phase)
-      for i, rulegroup in ipairs(defrules[phase] or {}) do
-	 if type(rulegroup) == 'function' then
-	    insertrules(rulegroup(self.objects))
-	 else insertrules(rulegroup) end
-      end
-   end
-
    for i, path in ipairs(procorder) do
-      local objs = self.objects[path]
-      if objs then
-	 for k, v in pairs(objs) do
-	    objs[k] = classmap[path].morph(
-	       v,
-	       self,
-	       path..' '..k..' ('..policyconfig.source[path][k]..')'
-	    )
+      if string.sub(path, 1, 1) ~= '%' then
+	 local objs = self.objects[path]
+	 if objs then
+	    for k, v in pairs(objs) do
+	       objs[k] = classmap[path].morph(
+		  v,
+		  self,
+		  path..' '..k..' ('..policyconfig.source[path][k]..')'
+	       )
+	    end
 	 end
       end
    end
 
-   insertdefrules('pre')
-
-   for i, path in ipairs(procorder) do
-      if self.objects[path] then
-	 for i, rule in ipairs(self.objects[path]) do
+   for i, event in ipairs(procorder) do
+      if string.sub(event, 1, 1) == '%' then
+	 local r = events[event].rules
+	 if r then
+	    if type(r) == 'function' then r = r(self.objects) end
+	    assert(type(r) == 'table')
+	    insertrules(r)
+	 end
+      elseif self.objects[event] then
+	 for i, rule in ipairs(self.objects[event]) do
 	    insertrules(rule:trules())
 	 end
       end
-      insertdefrules('post-'..path)
    end
 
    local ofrags = {}

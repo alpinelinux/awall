@@ -1,6 +1,6 @@
 --[[
 Packet marking module for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -39,12 +39,7 @@ function RouteTrackRule:extraoptfrags()
 end
 
 
-classes = {{'route-track', RouteTrackRule},
-	   {'mark', MarkRule}}
-
-defrules = {}
-
-function defrules.pre(config)
+local function rt(config)
    local res = {}
    if awall.util.list(config['route-track'])[1] then
       for i, family in ipairs({'inet', 'inet6'}) do
@@ -60,3 +55,9 @@ function defrules.pre(config)
    end
    return res
 end
+
+export = {
+   mark={class=MarkRule},
+   ['route-track']={class=RouteTrackRule, before='mark'},
+   ['%mark-rt']={rules=rt, before='route-track'}
+}

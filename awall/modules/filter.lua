@@ -192,13 +192,6 @@ local Policy = model.class(Filter)
 function Policy:servoptfrags() return nil end
 
 
-classes = {{'log', Log},
-	   {'filter', Filter},
-	   {'policy', Policy}}
-
-
-defrules = {}
-
 local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
 
 local dar = combinations(fchains,
@@ -208,32 +201,45 @@ for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
 		{chain=chain,
 		 opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'})
 end
-defrules.pre = combinations(dar,
-			    {{table='filter', target='ACCEPT'}},
-			    {{family='inet'}, {family='inet6'}})
+dar = combinations(
+   dar,
+   {{table='filter', target='ACCEPT'}},
+   {{family='inet'}, {family='inet6'}}
+)
 
 local icmp = {{family='inet', table='filter', opts='-p icmp'}}
 local icmp6 = {{family='inet6', table='filter', opts='-p icmpv6'}}
-defrules['post-filter'] = combinations(icmp6,
-				       {{chain='INPUT'}, {chain='OUTPUT'}},
-				       {{target='ACCEPT'}})
-extend(defrules['post-filter'],
-       combinations(icmp6, {{chain='FORWARD', target='icmp-routing'}}))
-extend(defrules['post-filter'],
-       combinations(icmp, fchains, {{target='icmp-routing'}}))
+local ir = combinations(
+   icmp6,
+   {{chain='INPUT'}, {chain='OUTPUT'}},
+   {{target='ACCEPT'}}
+)
+extend(ir, combinations(icmp6, {{chain='FORWARD', target='icmp-routing'}}))
+extend(ir, combinations(icmp, fchains, {{target='icmp-routing'}}))
 
 local function icmprules(ofrag, oname, types)
-   extend(defrules['post-filter'],
-	  combinations(ofrag,
-		       {{chain='icmp-routing', target='ACCEPT'}},
-		       util.map(types,
-				function(t)
-				   return {opts='--'..oname..' '..t}
-				end)))
+   extend(
+      ir,
+      combinations(ofrag,
+		   {{chain='icmp-routing', target='ACCEPT'}},
+		   util.map(types,
+			    function(t)
+			       return {opts='--'..oname..' '..t}
+			    end))
+   )
 end
 icmprules(icmp, 'icmp-type', {3, 11, 12})
 icmprules(icmp6, 'icmpv6-type', {1, 2, 3, 4})
 
+export = {
+   filter={class=Filter, before={'dnat', 'no-track'}},
+   log={class=Log},
+   policy={class=Policy, after='%filter-after'},
+   ['%filter-before']={rules=dar, before='filter'},
+   ['%filter-after']={rules=ir, after='filter'}
+}
+
 achains = combinations({{chain='tarpit'}},
 		       {{opts='-p tcp', target='TARPIT'},
 			{target='DROP'}})
+

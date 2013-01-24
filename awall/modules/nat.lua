@@ -1,6 +1,6 @@
 --[[
 NAT module for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -76,5 +76,7 @@ function SNATRule:init(...)
 end
 
 
-classes = {{'dnat', DNATRule},
-	   {'snat', SNATRule}}
+export = {
+   dnat={class=DNATRule},
+   snat={class=SNATRule}
+}

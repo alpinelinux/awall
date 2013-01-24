@@ -1,6 +1,6 @@
 --[[
 TCP MSS clamping module for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -25,4 +25,4 @@ function ClampMSSRule:target()
 end
 
 
-classes = {{'clamp-mss', ClampMSSRule}}
+export = {['clamp-mss']={class=ClampMSSRule}}

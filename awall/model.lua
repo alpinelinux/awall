@@ -479,5 +479,4 @@ function Rule:newchain(key)
 end
 
 
-classes = {{'zone', Zone}, {'ipset', IPSet}}
-
+export = {zone={class=Zone}, ipset={class=IPSet, before='%modules'}}
