@@ -16,12 +16,14 @@ local model = awall.model
 
 local MarkRule = model.class(model.Rule)
 
+function MarkRule:init(...)
+   model.Rule.init(self, unpack(arg))
+   if not self.mark then self:error('Mark not specified') end
+end
+
 function MarkRule:table() return 'mangle' end
 
-function MarkRule:target()
-   if not self.mark then self:error('Mark not specified') end
-   return 'MARK --set-mark '..self.mark
-end
+function MarkRule:target() return 'MARK --set-mark '..self.mark end
 
 
 local RouteTrackRule = model.class(MarkRule)
