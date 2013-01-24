@@ -407,7 +407,11 @@ function Rule:trules()
       end      
    end
 
-   util.extend(res, ffilter(self:extraoptfrags()))
+   local ofrags = {}
+   for i, ofrag in ipairs(res) do
+      util.extend(ofrags, self:mangleoptfrag(ofrag))
+   end
+   util.extend(ofrags, self:extraoptfrags())
 
    local tbl = self:table()
 
@@ -443,7 +447,7 @@ function Rule:trules()
       return res
    end
 
-   res = convertchains(res)
+   res = convertchains(ffilter(ofrags))
    tag(res, 'table', tbl, false)
 
    local function checkzof(ofrag, dir, chains)
@@ -459,6 +463,8 @@ function Rule:trules()
    
    return combinations(res, ffilter({{family='inet'}, {family='inet6'}}))
 end
+
+function Rule:mangleoptfrag(ofrag) return {ofrag} end
 
 function Rule:extraoptfrags() return {} end
 
