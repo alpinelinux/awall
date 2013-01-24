@@ -1,6 +1,6 @@
 --[[
 Policy file handling for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -10,6 +10,7 @@ require 'json'
 require 'lfs'
 require 'lpc'
 
+require 'awall.dependency'
 require 'awall.object'
 require 'awall.util'
 
@@ -139,47 +140,32 @@ end
 
 function PolicySet:load()
    
-   local input = {}
-   local source = {}
-   local polnames = {}
    local policies = {}
 
    local function require(name, fname)
       if policies[name] then return end
-      table.insert(polnames, name)
-      policies[name] = self:loadJSON(name, fname)
-      for i, iname in util.listpairs(policies[name].import) do
-	 require(iname)
-      end
+
+      local policy = self:loadJSON(name, fname)
+      policies[name] = policy
+
+      if not policy.after then policy.after = policy.import end
+      for i, iname in util.listpairs(policy.import) do require(iname) end
    end
 
    for i, pol in ipairs(list(self.autodirs)) do require(unpack(pol)) end
 
 
-   local pending = {}
-   local imported = {}
+   local order = awall.dependency.order(policies)
+   if type(order) ~= 'table' then
+      error('Circular ordering directives: '..order)
+   end
 
-   local function import(name)
 
-      if util.contains(imported, name) then return end
-      if util.contains(pending, name) then
-	 error('Circular ordering directives: '..name)
-      end
-      table.insert(pending, name)
+   local input = {}
+   local source = {}
 
-      local data = policies[name]
-
-      local after = util.list(data.after or data.import)
-      for pname, policy in pairs(policies) do
-	 if util.contains(util.list(policy.before), name) then
-	    table.insert(after, pname)
-	 end
-      end
-      for i, pname in ipairs(after) do import(pname) end
-
-      table.insert(imported, name)
-      
-      for cls, objs in pairs(data) do
+   for i, name in ipairs(order) do
+      for cls, objs in pairs(policies[name]) do
 	 if not util.contains({'description', 'import', 'after', 'before'},
 			      cls) then
 	    if not source[cls] then source[cls] = {} end
@@ -203,10 +189,7 @@ function PolicySet:load()
       end
    end
 
-   table.sort(polnames)
-   for i, name in ipairs(polnames) do import(name) end
-
-   return PolicyConfig.new(input, source, polnames)
+   return PolicyConfig.new(input, source, util.keys(policies))
 end
 
 

@@ -1,6 +1,6 @@
 --[[
 Utility module for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -36,8 +36,20 @@ function maplist(var, func)
 end
 
 function contains(tbl, value)
-   for k, v in pairs(tbl) do if v == value then return true end end
+   for k, v in listpairs(tbl) do if v == value then return true end end
    return false
+end
+
+function keys(tbl)
+   local res = {}
+   for k, v in pairs(tbl) do table.insert(res, k) end
+   return res
+end
+
+function sortedkeys(tbl)
+   local res = keys(tbl)
+   table.sort(res)
+   return ipairs(res)
 end
 
 function extend(tbl1, tbl2)
