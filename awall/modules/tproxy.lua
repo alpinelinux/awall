@@ -16,8 +16,8 @@ local MarkRule = require('awall').loadclass('mark')
 local TProxyRule = class(MarkRule)
 
 function TProxyRule:target()
-   if not self['to-port'] then self:error('Proxy port not specified') end
-   return 'TPROXY --tproxy-mark '..self.mark..' --on-port '..self['to-port']
+   local port = self['to-port'] or 0
+   return 'TPROXY --tproxy-mark '..self.mark..' --on-port '..port
 end
 
 function TProxyRule:mangleoptfrag(ofrag)
