@@ -56,6 +56,13 @@ function extend(tbl1, tbl2)
    for i, var in listpairs(tbl2) do table.insert(tbl1, var) end
 end
 
+function update(tbl1, tbl2)
+   if tbl2 then for k, v in pairs(tbl2) do tbl1[k] = v end end
+   return tbl1
+end
+
+function copy(tbl) return update({}, tbl) end
+
 function compare(a, b)
    local t = type(a)
    if t ~= type(b) then return false end

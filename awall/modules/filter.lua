@@ -7,19 +7,15 @@ Licensed under the terms of GPL2
 
 module(..., package.seeall)
 
-require 'awall'
-require 'awall.host'
-require 'awall.model'
-require 'awall.object'
-require 'awall.optfrag'
-require 'awall.util'
+local resolve = require('awall.host').resolve
+local model = require('awall.model')
+local combinations = require('awall.optfrag').combinations
 
-local model = awall.model
-local combinations = awall.optfrag.combinations
-local extend = awall.util.extend
+local util = require('awall.util')
+local extend = util.extend
 
 
-local Log = awall.object.class()
+local Log = model.class()
 
 function Log:matchopts()
    return self.limit and '-m limit --limit '..self.limit..'/second'
@@ -75,7 +71,7 @@ function Filter:trules()
 			     'ipset', 'ipsec', 'service'}) do
 	 params[attr] = self[attr]
       end
-      if extra then for k, v in pairs(extra) do params[k] = v end end
+      util.update(params, extra)
       return extend(res, self:create(cls, params):trules())
    end
 
@@ -99,7 +95,7 @@ function Filter:trules()
       end
 
       local dnataddr
-      for i, addr in ipairs(awall.host.resolve(self.dnat, self)) do
+      for i, addr in ipairs(resolve(self.dnat, self)) do
 	 if addr[1] == 'inet' then
 	    if dnataddr then
 	       self:error(self.dnat..' resolves to multiple IPv4 addresses')
