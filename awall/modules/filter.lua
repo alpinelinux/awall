@@ -49,8 +49,14 @@ function Filter:init(...)
    end
 
    self.log = log(self.log, self.action ~= 'accept')
+
    local limit = self:limit()
-   if limit then self[limit].log = log(self[limit].log, true) end
+   if limit then
+      if type(self[limit]) ~= 'table' then
+	 self[limit] = {count=self[limit]}
+      end
+      self[limit].log = log(self[limit].log, true)
+   end
 end
 
 function Filter:destoptfrags()
@@ -166,7 +172,7 @@ function Filter:extraoptfrags()
 
       local limitlog = self[limit].log
       local count = self[limit].count
-      local interval = self[limit].interval
+      local interval = self[limit].interval or 1
 
       local chain = self:newchain('limit')
       local atgt = self.log and self:newchain('logaccept') or 'ACCEPT'
