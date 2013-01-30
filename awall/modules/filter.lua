@@ -17,14 +17,37 @@ local extend = util.extend
 local RECENT_MAX_COUNT = 20
 
 
-local Log = model.class()
+local Log = model.class(model.ConfigObject)
 
 function Log:optfrag()
+   local optmap = {
+      log={level='level', prefix='prefix'},
+      nflog={
+	 group='group',
+	 prefix='prefix',
+	 range='range',
+	 threshold='threshold'
+      },
+      ulog={
+	 group='nlgroup',
+	 prefix='prefix',
+	 range='cprange',
+	 threshold='qthreshold'
+      }
+   }
+
    local mode = self.mode or 'log'
-   local prefix = self.prefix and ' --'..mode..'-prefix '..self.prefix or ''
+   if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
+
+   local target = string.upper(mode)
+
+   for s, t in pairs(optmap[mode]) do
+      if self[s] then target = target..' --'..mode..'-'..t..' '..self[s] end
+   end
+
    return {
       opts=self.limit and '-m limit --limit '..self.limit..'/second',
-      target=string.upper(mode)..prefix
+      target=target
    }
 end
 

@@ -23,7 +23,7 @@ class = awall.object.class
 require 'stringy'
 
 
-local ConfigObject = class()
+ConfigObject = class()
 
 function ConfigObject:init(context, location)
    if context then
