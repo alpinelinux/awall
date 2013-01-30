@@ -14,6 +14,8 @@ local combinations = require('awall.optfrag').combinations
 local util = require('awall.util')
 local extend = util.extend
 
+local RECENT_MAX_COUNT = 20
+
 
 local Log = model.class()
 
@@ -162,16 +164,39 @@ function Filter:extraoptfrags()
 	 self:error('Cannot specify limit for '..self.action..' filter')
       end
 
-      local chain = self:newchain('limit')
       local limitlog = self[limit].log
+      local count = self[limit].count
+      local interval = self[limit].interval
 
-      extend(res,
-	     combinations({{chain=chain,
-			    opts='-m recent --name '..chain}},
-			  {{opts='--update --hitcount '..self[limit].count..' --seconds '..self[limit].interval,
-				target=limitlog and self:newchain('logdrop') or 'DROP'},
-			     {opts='--set',
-			      target=self.log and self:newchain('log'..self.action) or 'ACCEPT'}}))
+      local chain = self:newchain('limit')
+      local atgt = self.log and self:newchain('logaccept') or 'ACCEPT'
+      local dtgt = limitlog and self:newchain('logdrop') or 'DROP'
+
+      if count > RECENT_MAX_COUNT then
+	 count = math.ceil(count / interval)
+	 interval = 1
+      end
+
+      local ofrags
+      if count > RECENT_MAX_COUNT then
+	 ofrags = {
+	    {opts='-m limit --limit '..count..'/second', target=atgt},
+	    {target=dtgt}
+	 }
+      else
+	 ofrags = combinations(
+	    {{opts='-m recent --name '..chain}},
+	    {
+	       {
+		  opts='--update --hitcount '..count..' --seconds '..interval,
+		  target=dtgt
+	       },
+	       {opts='--set', target=atgt}
+	    }
+	 )
+      end
+
+      extend(res, combinations({{chain=chain}}, ofrags))
 
       if limitlog then logchain('drop', limitlog, 'DROP') end
    end
