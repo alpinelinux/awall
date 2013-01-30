@@ -19,14 +19,13 @@ local RECENT_MAX_COUNT = 20
 
 local Log = model.class()
 
-function Log:matchopts()
-   return self.limit and '-m limit --limit '..self.limit..'/second'
-end
-
-function Log:target()
+function Log:optfrag()
    local mode = self.mode or 'log'
    local prefix = self.prefix and ' --'..mode..'-prefix '..self.prefix or ''
-   return string.upper(mode)..prefix
+   return {
+      opts=self.limit and '-m limit --limit '..self.limit..'/second',
+      target=string.upper(mode)..prefix
+   }
 end
 
 
@@ -158,10 +157,14 @@ end
 function Filter:extraoptfrags()
    local res = {}
 
-   local function logchain(action, log, target)
-      extend(res, combinations({{chain=self:newchain('log'..action)}},
-			       {{opts=log:matchopts(), target=log:target()},
-				{target=target}}))
+   local function logchain(log, action, target)
+      if not log then return target end
+      local chain = self:newchain('log'..action)
+      extend(
+	 res,
+	 combinations({{chain=chain}}, {log:optfrag(), {target=target}})
+      )
+      return chain
    end
 
    local limit = self:limit()
@@ -170,13 +173,10 @@ function Filter:extraoptfrags()
 	 self:error('Cannot specify limit for '..self.action..' filter')
       end
 
+      local chain = self:newchain('limit')
       local limitlog = self[limit].log
       local count = self[limit].count
       local interval = self[limit].interval or 1
-
-      local chain = self:newchain('limit')
-      local atgt = self.log and self:newchain('logaccept') or 'ACCEPT'
-      local dtgt = limitlog and self:newchain('logdrop') or 'DROP'
 
       if count > RECENT_MAX_COUNT then
 	 count = math.ceil(count / interval)
@@ -186,28 +186,30 @@ function Filter:extraoptfrags()
       local ofrags
       if count > RECENT_MAX_COUNT then
 	 ofrags = {
-	    {opts='-m limit --limit '..count..'/second', target=atgt},
-	    {target=dtgt}
+	    {
+	       opts='-m limit --limit '..count..'/second',
+	       target=logchain(self.log, 'accept', 'ACCEPT')
+	    },
+	    {target='DROP'}
 	 }
+	 if limitlog then table.insert(ofrags, 2, limitlog:optfrag()) end
       else
 	 ofrags = combinations(
 	    {{opts='-m recent --name '..chain}},
 	    {
 	       {
 		  opts='--update --hitcount '..count..' --seconds '..interval,
-		  target=dtgt
+		  target=logchain(limitlog, 'drop', 'DROP')
 	       },
-	       {opts='--set', target=atgt}
+	       {opts='--set', target='ACCEPT'}
 	    }
 	 )
+	 if self.log then table.insert(ofrags, 2, self.log:optfrag()) end
       end
 
       extend(res, combinations({{chain=chain}}, ofrags))
 
-      if limitlog then logchain('drop', limitlog, 'DROP') end
-   end
-
-   if self.log then logchain(self.action, self.log, model.Rule.target(self)) end
+   else logchain(self.log, self.action, model.Rule.target(self)) end
    
    return res
 end
