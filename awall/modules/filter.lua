@@ -39,16 +39,32 @@ function Log:optfrag()
    local mode = self.mode or 'log'
    if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
 
+   local selector, opts
+   for i, sel in ipairs{'every', 'limit', 'probability'} do
+      local value = self[sel]
+      if value then
+	 if selector then
+	    self:error('Cannot combine '..sel..' with '..selector)
+	 end
+	 selector = sel
+
+	 if sel == 'every' then
+	    opts = '-m statistic --mode nth --every '..value..' --packet 0'
+	 elseif sel == 'limit' then
+	    opts = '-m limit --limit '..value..'/second'
+	 elseif sel == 'probability' then
+	    opts = '-m statistic --mode random --probability '..value
+	 else assert(false) end
+      end
+   end
+
    local target = string.upper(mode)
 
    for s, t in pairs(optmap[mode]) do
       if self[s] then target = target..' --'..mode..'-'..t..' '..self[s] end
    end
 
-   return {
-      opts=self.limit and '-m limit --limit '..self.limit..'/second',
-      target=target
-   }
+   return {opts=opts, target=target}
 end
 
 
