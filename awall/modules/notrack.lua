@@ -18,7 +18,7 @@ function NoTrackRule:table() return 'raw' end
 
 function NoTrackRule:target()
    if self.action then return model.Rule.target(self) end
-   return 'NOTRACK'
+   return 'CT --notrack'
 end
 
 
