@@ -12,9 +12,8 @@ require 'lpc'
 
 require 'awall.dependency'
 require 'awall.object'
-require 'awall.util'
-
-local util = awall.util
+local raise = require('awall.uerror').raise
+local util = require('awall.util')
 
 
 local PolicyConfig = awall.object.class()
@@ -37,18 +36,18 @@ function PolicyConfig:expand()
 	 local si, ei, name = string.find(value, pattern)
 	 
 	 if util.contains(visited, name) then
-	    error('Circular variable definition: '..name)
+	    raise('Circular variable definition: '..name)
 	 end
 	 table.insert(visited, name)
 	 
 	 local var = self.data.variable[name]
-	 if not var then error('Invalid variable reference: '..name) end
+	 if not var then raise('Invalid variable reference: '..name) end
 	 
 	 if si == 1 and ei == string.len(value) then value = var
 	 elseif util.contains({'number', 'string'}, type(var)) then
 	    value = string.sub(value, 1, si - 1)..var..string.sub(value, ei + 1, -1)
 	 else
-	    error('Attempted to concatenate complex variable: '..name)
+	    raise('Attempted to concatenate complex variable: '..name)
 	 end
       end
 
@@ -63,7 +62,7 @@ end
 
 local function open(name, dirs)
    if not string.match(name, '^[%w-]+$') then
-      error('Invalid characters in policy name: '..name)
+      raise('Invalid characters in policy name: '..name)
    end
    for i, dir in ipairs(dirs) do
       local path = dir..'/'..name..'.json'
@@ -90,7 +89,7 @@ local function list(dirs)
 	 local si, ei, name = string.find(fname, '^([%w-]+)%.json$')
 	 if name then
 	    if util.contains(allnames, name) then
-	       error('Duplicate policy name: '..name)
+	       raise('Duplicate policy name: '..name)
 	    end
 	    table.insert(allnames, name)
 
@@ -126,7 +125,7 @@ function PolicySet:loadJSON(name, fname)
    else
       file, fname = open(name, self.importdirs)
    end
-   if not file then error('Unable to read policy file '..fname) end
+   if not file then raise('Unable to read policy file '..fname) end
 
    local data = ''
    for line in file:lines() do data = data..line end
@@ -134,7 +133,7 @@ function PolicySet:loadJSON(name, fname)
 
    local success, res = pcall(json.decode, data)
    if success then return res end
-   error(res..' while parsing '..fname)
+   raise(res..' while parsing '..fname)
 end
 
 
@@ -157,7 +156,7 @@ function PolicySet:load()
 
    local order = awall.dependency.order(policies)
    if type(order) ~= 'table' then
-      error('Circular ordering directives: '..order)
+      raise('Circular ordering directives: '..order)
    end
 
 
@@ -196,16 +195,16 @@ end
 function PolicySet:findsymlink(name)
    local symlink = find(name, {self.confdir})
    if symlink and lfs.symlinkattributes(symlink).mode ~= 'link' then
-      error('Not an optional policy: '..name)
+      raise('Not an optional policy: '..name)
    end
    return symlink
 end
 
 function PolicySet:enable(name)
-   if self:findsymlink(name) then error('Policy already enabled: '..name)
+   if self:findsymlink(name) then raise('Policy already enabled: '..name)
    else
       local target = find(name, self.importdirs)
-      if not target then error('Policy not found: '..name) end
+      if not target then raise('Policy not found: '..name) end
       if string.sub(target, 1, 1) ~= '/' then
 	 target = lfs.currentdir()..'/'..target
       end
@@ -219,7 +218,7 @@ end
 
 function PolicySet:disable(name)
    local symlink = self:findsymlink(name)
-   if not symlink then error('Policy not enabled: '..name) end
+   if not symlink then raise('Policy not enabled: '..name) end
    assert(os.remove(symlink))
 end
 

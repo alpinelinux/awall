@@ -2,7 +2,7 @@
 
 --[[
 Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -63,7 +63,7 @@ Dump variable and zone definitions:
     Verbosity level is an integer in range 0-5 and defaults to 0.
 
 ]])
-   os.exit()
+   os.exit(1)
 end
 
 params = {}
@@ -107,144 +107,180 @@ if not util.contains({'translate', 'activate', 'fallback', 'flush',
 		     mode) then help() end
 
 
-require 'awall'
+require 'awall.uerror'
 
-policyset = awall.PolicySet.new(params.i, params.I)
+if not awall.uerror.call(
+   function()
+      
+      require 'awall'
 
-if mode == 'list' then
-   util.printtabular(policyset:list())
-   os.exit()
-end
+      policyset = awall.PolicySet.new(params.i, params.I)
 
-if util.contains({'disable', 'enable'}, mode) then
-   if opind > #arg then help() end
-   repeat
-      policyset[mode](policyset, arg[opind])
-      opind = opind + 1
-   until opind > #arg
-   os.exit()
-end
+      if mode == 'list' then
+	 util.printtabular(policyset:list())
+	 os.exit()
+      end
 
-
-input = policyset:load()
-
-if mode == 'dump' then level = 0 + (arg[opind] or 0) end
-
-if mode ~= 'dump' or level > 3 then
-   awall.loadmodules(basedir)
-   config = awall.Config.new(input)
-end
+      if util.contains({'disable', 'enable'}, mode) then
+	 if opind > #arg then help() end
+	 repeat
+	    policyset[mode](policyset, arg[opind])
+	    opind = opind + 1
+	 until opind > #arg
+	 os.exit()
+      end
 
 
-require 'awall.iptables'
+      input = policyset:load()
 
-if mode == 'dump' then
-   require 'json'
-   expinput = input:expand()
+      if mode == 'dump' then level = 0 + (arg[opind] or 0) end
 
-   function capitalize(cls)
-      return string.upper(string.sub(cls, 1, 1))..string.sub(cls, 2, -1)
-   end
+      if mode ~= 'dump' or level > 3 then
+	 awall.loadmodules(basedir)
+	 config = awall.Config.new(input)
+      end
 
-   for cls, objs in pairs(input.data) do
-      if level > 2 or (level == 2 and cls ~= 'service') or util.contains({'variable',
-									  'zone'},
-									 cls) then
-	 if level == 0 then print(capitalize(cls)..'s:') end
+
+      require 'awall.iptables'
+
+      if mode == 'dump' then
+	 require 'json'
+	 expinput = input:expand()
+
+	 function capitalize(cls)
+	    return string.upper(string.sub(cls, 1, 1))..string.sub(cls, 2, -1)
+	 end
+
+	 for cls, objs in pairs(input.data) do
+	    if level > 2 or (level == 2 and cls ~= 'service') or util.contains(
+	       {'variable', 'zone'},
+	       cls
+	    ) then
+	       if level == 0 then print(capitalize(cls)..'s:') end
 	 
-	 items = {}
-	 for k, v in pairs(objs) do
-	    exp = expinput[cls][k]
-	    expj = json.encode(exp)
-	    src = input.source[cls][k]
+	       items = {}
+	       for k, v in pairs(objs) do
+		  exp = expinput[cls][k]
+		  expj = json.encode(exp)
+		  src = input.source[cls][k]
 
-	    if level == 0 then table.insert(items, {k, expj, src})
+		  if level == 0 then table.insert(items, {k, expj, src})
 
-	    else
-	       data = {{capitalize(cls)..' '..k, json.encode(v)},
-		       {'('..src..')',
-			util.compare(exp, v) and '' or '-> '..expj}}
+		  else
+		     data = {
+			{capitalize(cls)..' '..k, json.encode(v)},
+			{
+			   '('..src..')',
+			   util.compare(exp, v) and '' or '-> '..expj
+			}
+		     }
 
-	       if level > 3 then
-		  obj = config.objects[cls][k]
-		  if type(obj) == 'table' and obj.info then
-		     util.extend(data, obj:info())
+		     if level > 3 then
+			obj = config.objects[cls][k]
+			if type(obj) == 'table' and obj.info then
+			   util.extend(data, obj:info())
+			end
+		     end
+	       
+		     table.insert(items, {k, data})
 		  end
 	       end
+	       table.sort(items, function(a, b) return a[1] < b[1] end)
 
-	       table.insert(items, {k, data})
+	       if level == 0 then util.printtabular(items)
+	       else
+		  util.printtabulars(
+		     util.map(items, function(x) return x[2] end)
+		  )
+		  print()
+	       end
 	    end
 	 end
-	 table.sort(items, function(a, b) return a[1] < b[1] end)
 
-	 if level == 0 then util.printtabular(items)
-	 else
-	    util.printtabulars(util.map(items,
-					function(x) return x[2] end))
-	    print()
+	 if level > 4 then config:print() end
+
+      elseif mode == 'translate' then
+	 if verify then config:test() end
+	 config:dump(outputdir)
+   
+      elseif mode == 'activate' then
+
+	 awall.iptables.backup()
+
+	 if not force then
+	    signal.signal(
+	       'SIGCHLD',
+	       function()
+		  if pid and lpc.wait(pid, 1) then os.exit(2) end
+	       end
+	    )
+	    for i, sig in ipairs({'INT', 'TERM'}) do
+	       signal.signal(
+		  'SIG'..sig,
+		  function()
+		     interrupted = true
+		     io.stdin:close()
+		  end
+	       )
+	    end
+
+	    require 'lpc'
+	    pid, stdio, stdout = lpc.run(arg[0], 'fallback')
+	    stdio:close()
+	    stdout:close()
 	 end
-      end
-   end
 
-   if level > 4 then config:print() end
+	 function kill()
+	    signal.signal('SIGCHLD', 'default')
+	    signal.kill(pid, 'SIGTERM')
+	    lpc.wait(pid)
+	 end
 
-elseif mode == 'translate' then
-   if verify then config:test() end
-   config:dump(outputdir)
+	 function revert()
+	    awall.iptables.revert()
+	    os.exit(1)
+	 end
+
+	 if awall.uerror.call(config.activate, config) then
+
+	    if not force then
+	       io.stderr:write('New firewall configuration activated\n')
+	       io.stderr:write('Press RETURN to commit changes permanently: ')
+	       interrupted = not io.read()
+
+	       kill()
+
+	       if interrupted then
+		  io.stderr:write(
+		     '\nActivation canceled, reverting to the old configuration\n'
+		  )
+		  revert()
+	       end
+	    end
+
+	    config:dump()
+
+	 else
+	    if not force then kill() end
+	    revert()
+	 end
+
+
+      elseif mode == 'fallback' then
    
-elseif mode == 'activate' then
+	 for i, sig in ipairs({'HUP', 'PIPE'}) do
+	    signal.signal('SIG'..sig, function() end)
+	 end
 
-   if not force then
-      awall.iptables.backup()
+	 require 'lsleep'
+	 lsleep.sleep(10)
 
-      signal.signal('SIGCHLD',
-		    function()
-		       if pid and lpc.wait(pid, 1) then os.exit(2) end
-		    end)
-      for i, sig in ipairs({'INT', 'TERM'}) do
-	 signal.signal('SIG'..sig, function()
-				      interrupted = true
-				      io.stdin:close()
-				   end)
-      end
+	 io.stderr:write('\nTimeout, reverting to the old configuration\n')
+	 awall.iptables.revert()
 
-      require 'lpc'
-      pid, stdio, stdout = lpc.run(arg[0], 'fallback')
-      stdio:close()
-      stdout:close()
+      elseif mode == 'flush' then awall.iptables.flush()
+
+      else assert(false) end
+
    end
-   
-   config:activate()
-
-   if not force then
-      io.stderr:write('New firewall configuration activated\n')
-      io.stderr:write('Press RETURN to commit changes permanently: ')
-      interrupted = not io.read()
-
-      signal.signal('SIGCHLD', 'default')
-      signal.kill(pid, 'SIGTERM')
-      lpc.wait(pid)
-   end
-
-   if interrupted then
-      io.stderr:write('\nActivation canceled, reverting to the old configuration\n')
-      awall.iptables.revert()
-
-   else config:dump() end
-
-
-elseif mode == 'fallback' then
-
-   for i, sig in ipairs({'HUP', 'PIPE'}) do
-      signal.signal('SIG'..sig, function() end)
-   end
-
-   require 'lsleep'
-   lsleep.sleep(10)
-
-   io.stderr:write('\nTimeout, reverting to the old configuration\n')
-   awall.iptables.revert()
-
-elseif mode == 'flush' then awall.iptables.flush()
-
-else assert(false) end
+) then os.exit(1) end

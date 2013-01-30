@@ -1,6 +1,6 @@
 --[[
 Iptables file dumper for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2013 Kaarle Ritvanen
 Licensed under the terms of GPL2
 ]]--
 
@@ -10,6 +10,7 @@ module(..., package.seeall)
 require 'lpc'
 
 require 'awall.object'
+require 'awall.uerror'
 require 'awall.util'
 
 local class = awall.object.class
@@ -70,7 +71,7 @@ function BaseIPTables:restore(test)
       end
    end
 
-   if disabled then error('Firewall not enabled in kernel') end
+   if disabled then awall.uerror.raise('Firewall not enabled in kernel') end
 end
 
 function BaseIPTables:activate()

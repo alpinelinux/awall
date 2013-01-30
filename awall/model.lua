@@ -12,6 +12,7 @@ require 'awall.host'
 require 'awall.iptables'
 require 'awall.object'
 require 'awall.optfrag'
+require 'awall.uerror'
 require 'awall.util'
 
 local util = awall.util
@@ -43,7 +44,9 @@ function ConfigObject:create(cls, params)
    return cls.morph(params, self.context, self.location)
 end
 
-function ConfigObject:error(msg) error(self.location..': '..msg) end
+function ConfigObject:error(msg)
+   awall.uerror.raise(self.location..': '..msg)
+end
 
 function ConfigObject:warning(msg)
    io.stderr:write(self.location..': '..msg..'\n')
