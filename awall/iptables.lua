@@ -1,7 +1,7 @@
 --[[
 Iptables file dumper for Alpine Wall
 Copyright (C) 2012-2013 Kaarle Ritvanen
-Licensed under the terms of GPL2
+See LICENSE file for license details
 ]]--
 
 
