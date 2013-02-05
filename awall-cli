@@ -16,7 +16,12 @@ long_opts = {force='f', ['output-dir']='o', verify='V'}
 
 function help()
    io.stderr:write([[
-Alpine Wall usage
+Alpine Wall
+Copyright (C) 2012-2013 Kaarle Ritvanen
+This is free software with ABSOLUTELY NO WARRANTY,
+available under the terms of the GNU General Public License, version 2
+
+Usage:
 
 Translate policy files to firewall configuration files:
     awall translate [-o|--output <dir>] [-V|--verify]
