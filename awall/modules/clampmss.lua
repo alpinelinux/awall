@@ -25,4 +25,4 @@ function ClampMSSRule:target()
 end
 
 
-export = {['clamp-mss']={class=ClampMSSRule}}
+export = {['clamp-mss']={class=ClampMSSRule, before='tproxy'}}
