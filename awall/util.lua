@@ -60,6 +60,12 @@ function keys(tbl)
    return res
 end
 
+function values(tbl)
+   local res = {}
+   for k, v in pairs(tbl) do table.insert(res, v) end
+   return res   
+end
+
 function sortedkeys(tbl)
    local res = keys(tbl)
    table.sort(res)
