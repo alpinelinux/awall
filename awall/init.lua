@@ -30,11 +30,15 @@ function loadmodules(path)
    achains = {}
 
    local function readmetadata(mod)
-      for name, target in pairs(mod.export or {}) do events[name] = target end
+      local export = mod.export or {}
+      for name, target in pairs(export) do events[name] = target end
+
       for name, opts in pairs(mod.achains or {}) do
 	 assert(not achains[name])
 	 achains[name] = opts
       end
+
+      return awall.util.keys(export)
    end
 
    readmetadata(model)
@@ -45,19 +49,20 @@ function loadmodules(path)
    local modules = {}
    for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
       if stringy.endswith(modfile, '.lua') then
-	 table.insert(modules, string.sub(modfile, 1, -5))
+	 table.insert(modules, 'awall.modules.'..string.sub(modfile, 1, -5))
       end
    end
    table.sort(modules)
+
+   local imported = {}
    for i, name in ipairs(modules) do
-      local fname = 'awall.modules.'..name
-      require(fname)
-      readmetadata(package.loaded[fname])
+      require(name)
+      awall.util.extend(imported, readmetadata(package.loaded[name]))
    end
 
    lfs.chdir(cdir)
 
-   events['%modules'] = {before=modules}
+   events['%modules'] = {before=imported}
    procorder = awall.dependency.order(events)
 end
 
