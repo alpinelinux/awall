@@ -377,37 +377,41 @@ function Rule:trules()
    local addrofrags = combinations(self:create(Zone,
 					       {addr=self.src}):optfrags(self:direction('in')),
 				   self:destoptfrags())
+   local combined = res
 
    if addrofrags then
       addrofrags = ffilter(addrofrags)
       setfamilies(addrofrags)
       res = ffilter(res)
-   end
 
-   local addrchain = false
-   for i, ofrag in ipairs(res) do
-      if not ofrag.chain then ofrag.chain = ofrag.fchain end
-      addrchain = addrchain or (self.src and ofrag.src) or (self.dest and ofrag.dest)
+      combined = {}
+      for i, ofrag in ipairs(res) do
+	 local cc = combinations({ofrag}, addrofrags)
+	 if #cc < #addrofrags then
+	    combined = nil
+	    break
+	 end
+	 util.extend(combined, cc)
+      end
    end
 
    local target
-   if addrchain then
-      target = self:newchain('address')
-   else
+   if combined then
       target = self:target()
-      res = combinations(res, addrofrags)
+      res = combined
+   else
+      target = self:newchain('address')
    end
 
    tag(res, 'position', self:position())
 
    res = combinations(res, {{target=target}})
 
-   if addrchain then
-      for i, ofrag in ipairs(addrofrags) do
-	 ofrag.chain = target
-	 ofrag.target = self:target()
-	 table.insert(res, ofrag)
-      end      
+   if not combined then
+      util.extend(
+	 res,
+	 combinations(addrofrags, {{chain=target, target=self:target()}})
+      )
    end
 
    local ofrags = {}
