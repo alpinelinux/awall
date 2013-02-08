@@ -17,57 +17,6 @@ local extend = util.extend
 local RECENT_MAX_COUNT = 20
 
 
-local Log = model.class(model.ConfigObject)
-
-function Log:optfrag()
-   local optmap = {
-      log={level='level', prefix='prefix'},
-      nflog={
-	 group='group',
-	 prefix='prefix',
-	 range='range',
-	 threshold='threshold'
-      },
-      ulog={
-	 group='nlgroup',
-	 prefix='prefix',
-	 range='cprange',
-	 threshold='qthreshold'
-      }
-   }
-
-   local mode = self.mode or 'log'
-   if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
-
-   local selector, opts
-   for i, sel in ipairs{'every', 'limit', 'probability'} do
-      local value = self[sel]
-      if value then
-	 if selector then
-	    self:error('Cannot combine '..sel..' with '..selector)
-	 end
-	 selector = sel
-
-	 if sel == 'every' then
-	    opts = '-m statistic --mode nth --every '..value..' --packet 0'
-	 elseif sel == 'limit' then
-	    opts = '-m limit --limit '..value..'/second'
-	 elseif sel == 'probability' then
-	    opts = '-m statistic --mode random --probability '..value
-	 else assert(false) end
-      end
-   end
-
-   local target = string.upper(mode)
-
-   for s, t in pairs(optmap[mode]) do
-      if self[s] then target = target..' --'..mode..'-'..t..' '..self[s] end
-   end
-
-   return {opts=opts, target=target}
-end
-
-
 local Filter = model.class(model.Rule)
 
 function Filter:init(...)
@@ -79,21 +28,15 @@ function Filter:init(...)
       self.action = string.sub(self.action, 4, -1)
    end
 
-   local function log(spec, default)
-      if spec == nil then spec = default end
-      if spec == false then return end
-      if spec == true then spec = '_default' end
-      return self.root.log[spec] or self:error('Invalid log: '..spec)
-   end
-
-   self.log = log(self.log, self.action ~= 'accept')
+   local log = require('awall').loadclass('log').get
+   self.log = log(self, self.log, self.action ~= 'accept')
 
    local limit = self:limit()
    if limit then
       if type(self[limit]) ~= 'table' then
 	 self[limit] = {count=self[limit]}
       end
-      self[limit].log = log(self[limit].log, true)
+      self[limit].log = log(self, self[limit].log, true)
    end
 end
 
@@ -301,7 +244,6 @@ icmprules(icmp6, 'icmpv6-type', {1, 2, 3, 4})
 
 export = {
    filter={class=Filter, before={'dnat', 'no-track'}},
-   log={class=Log},
    policy={class=Policy, after='%filter-after'},
    ['%filter-before']={rules=dar, before='filter'},
    ['%filter-after']={rules=ir, after='filter'}
