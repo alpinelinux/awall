@@ -7,6 +7,20 @@ See LICENSE file for license details
 
 module(..., package.seeall)
 
+function split(s, sep)
+   if s == '' then return {} end
+   local res = {}
+   while true do
+      local si, ei = string.find(s, sep, 1, true)
+      if not si then
+	 table.insert(res, s)
+	 return res
+      end
+      table.insert(res, string.sub(s, 1, si - 1))
+      s = string.sub(s, ei + 1, -1)
+   end
+end
+
 function list(var)
    if not var then return {} end
    if type(var) ~= 'table' then return {var} end

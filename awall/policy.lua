@@ -8,15 +8,14 @@ module(..., package.seeall)
 
 require 'json'
 require 'lfs'
-require 'lpc'
 
 require 'awall.dependency'
-require 'awall.object'
+local class = require('awall.object').class
 local raise = require('awall.uerror').raise
 local util = require('awall.util')
 
 
-local PolicyConfig = awall.object.class()
+local PolicyConfig = class()
 
 function PolicyConfig:init(data, source, policies)
    self.data = data
@@ -59,73 +58,13 @@ function PolicyConfig:expand()
 end
 
 
+local Policy = class()
 
-local function open(name, dirs)
-   if not string.match(name, '^[%w-]+$') then
-      raise('Invalid characters in policy name: '..name)
-   end
-   for i, dir in ipairs(dirs) do
-      local path = dir..'/'..name..'.json'
-      file = io.open(path)
-      if file then return file, path end
-   end
-end
+function Policy:init() self.enabled = self.type == 'mandatory' end
 
-local function find(name, dirs)
-   local file, path = open(name, dirs)
-   if file then file:close() end
-   return path
-end
-
-local function list(dirs)
-   local allnames = {}
-   local res = {}
-
-   for i, dir in ipairs(dirs) do
-      local names = {}
-      local paths = {}
-
-      for fname in lfs.dir(dir) do
-	 local si, ei, name = string.find(fname, '^([%w-]+)%.json$')
-	 if name then
-	    if util.contains(allnames, name) then
-	       raise('Duplicate policy name: '..name)
-	    end
-	    table.insert(allnames, name)
-
-	    table.insert(names, name)
-	    paths[name] = dir..'/'..fname
-	 end
-      end
-
-      table.sort(names)
-      for i, name in ipairs(names) do
-	 table.insert(res, {name, paths[name]})
-      end
-   end
-
-   return res
-end
-
-
-PolicySet = awall.object.class()
-
-function PolicySet:init(confdirs, importdirs)
-   self.autodirs = confdirs or {'/usr/share/awall/mandatory', '/etc/awall'}
-   self.confdir = self.autodirs[#self.autodirs]
-   self.importdirs = importdirs or {'/usr/share/awall/optional',
-				    '/etc/awall/optional'}
-end
-
-
-function PolicySet:loadJSON(name, fname)
-   local file
-   if fname then
-      file = io.open(fname)
-   else
-      file, fname = open(name, self.importdirs)
-   end
-   if not file then raise('Unable to read policy file '..fname) end
+function Policy:load()
+   local file = io.open(self.path)
+   if not file then raise('Unable to read policy file '..self.path) end
 
    local data = ''
    for line in file:lines() do data = data..line end
@@ -133,28 +72,101 @@ function PolicySet:loadJSON(name, fname)
 
    local success, res = pcall(json.decode, data)
    if success then return res end
-   raise(res..' while parsing '..fname)
+   raise(res..' while parsing '..self.path)
+end
+
+function Policy:checkoptional()
+   if self.type ~= 'optional' then raise('Not an optional policy: '..name) end
+end
+
+function Policy:enable()
+   self:checkoptional()
+   if self.enabled then raise('Policy already enabled: '..self.name) end   
+   assert(lfs.link(self.path, self.confdir..'/'..self.fname, true))
+end
+
+function Policy:disable()
+   self:checkoptional()
+   if not self.enabled then raise('Policy already disabled: '..self.name) end
+   assert(os.remove(self.confdir..'/'..self.fname))
+end
+
+
+local defdirs = {
+   mandatory={'/etc/awall', '/usr/share/awall/mandatory'},
+   optional={'/etc/awall/optional', '/usr/share/awall/optional'},
+   private={'/etc/awall/private', '/usr/share/awall/private'}
+}
+
+PolicySet = class()
+
+function PolicySet:init(dirs)
+   local confdir = (dirs.mandatory or defdirs.mandatory)[1]
+   self.policies = {}
+
+   for i, cls in ipairs{'private', 'optional', 'mandatory'} do
+      for i, dir in ipairs(dirs[cls] or defdirs[cls]) do
+	 for fname in lfs.dir(dir) do
+	    local si, ei, name = string.find(fname, '^([%w-]+)%.json$')
+	    if name then
+	       local pol = self.policies[name]
+
+	       local path = dir..'/'..fname
+	       if string.sub(path, 1, 1) ~= '/' then
+		  path = lfs.currentdir()..'/'..path
+	       end
+
+	       local attrs = lfs.attributes(path)
+	       local loc = attrs.dev..':'..attrs.ino
+
+	       if pol then
+		  if pol.loc ~= loc then
+		     raise('Duplicate policy name: '..name)
+		  end
+
+		  if dir == confdir and pol.type == 'optional' then
+		     pol.enabled = true
+		  else pol.type = cls end
+
+	       else
+		  self.policies[name] = Policy.morph{
+		     name=name,
+		     type=cls,
+		     path=path,
+		     fname=fname,
+		     loc=loc,
+		     confdir=confdir
+		  }
+	       end
+	    end
+	 end
+      end
+   end
 end
 
 
 function PolicySet:load()
+
+   local imported = {}
    
-   local policies = {}
+   local function require(policy)
+      if imported[policy.name] then return end
 
-   local function require(name, fname)
-      if policies[name] then return end
+      local data = policy:load()
+      imported[policy.name] = data
 
-      local policy = self:loadJSON(name, fname)
-      policies[name] = policy
-
-      if not policy.after then policy.after = policy.import end
-      for i, iname in util.listpairs(policy.import) do require(iname) end
+      if not data.after then data.after = data.import end
+      for i, name in util.listpairs(data.import) do
+	 require(self.policies[name])
+      end
    end
 
-   for i, pol in ipairs(list(self.autodirs)) do require(unpack(pol)) end
+   for name, policy in pairs(self.policies) do
+      if policy.enabled then require(policy) end
+   end
 
 
-   local order = awall.dependency.order(policies)
+   local order = awall.dependency.order(imported)
    if type(order) ~= 'table' then
       raise('Circular ordering directives: '..order)
    end
@@ -164,7 +176,7 @@ function PolicySet:load()
    local source = {}
 
    for i, name in ipairs(order) do
-      for cls, objs in pairs(policies[name]) do
+      for cls, objs in pairs(imported[name]) do
 	 if not util.contains({'description', 'import', 'after', 'before'},
 			      cls) then
 	    if not source[cls] then source[cls] = {} end
@@ -188,55 +200,5 @@ function PolicySet:load()
       end
    end
 
-   return PolicyConfig.new(input, source, util.keys(policies))
-end
-
-
-function PolicySet:findsymlink(name)
-   local symlink = find(name, {self.confdir})
-   if symlink and lfs.symlinkattributes(symlink).mode ~= 'link' then
-      raise('Not an optional policy: '..name)
-   end
-   return symlink
-end
-
-function PolicySet:enable(name)
-   if self:findsymlink(name) then raise('Policy already enabled: '..name)
-   else
-      local target = find(name, self.importdirs)
-      if not target then raise('Policy not found: '..name) end
-      if string.sub(target, 1, 1) ~= '/' then
-	 target = lfs.currentdir()..'/'..target
-      end
-
-      local pid, stdin, stdout = lpc.run('ln', '-s', target, self.confdir)
-      stdin:close()
-      stdout:close()
-      assert(lpc.wait(pid) == 0)
-   end
-end
-
-function PolicySet:disable(name)
-   local symlink = self:findsymlink(name)
-   if not symlink then raise('Policy not enabled: '..name) end
-   assert(os.remove(symlink))
-end
-
-function PolicySet:list()
-   local imported = self:load().policies
-   local res = {}
-
-   for i, pol in ipairs(list(self.importdirs)) do
-      local name = pol[1]
-
-      local status
-      if self:findsymlink(name) then status = 'enabled'
-      elseif util.contains(imported, name) then status = 'required'
-      else status = 'disabled' end
-
-      table.insert(res,
-		   {name, status, self:loadJSON(name, pol[2]).description})
-   end
-
-   return res
+   return PolicyConfig.new(input, source, util.keys(imported))
 end

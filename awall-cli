@@ -11,9 +11,6 @@ require 'lfs'
 require 'signal'
 require 'stringy'
 
-short_opts = 'fo:V'
-long_opts = {force='f', ['output-dir']='o', verify='V'}
-
 function help()
    io.stderr:write([[
 Alpine Wall
@@ -54,13 +51,16 @@ Enable/disable optional policies:
     awall {enable|disable} <policy>...
 
 List optional policies:
-    awall list
+    awall list [-a|--all]
 
     The 'enabled' status means that the policy has been enabled by the
     user. The 'disabled' status means that the policy is not in
     use. The 'required' status means that the policy has not been
     enabled by the user but is in use because it is required by
     another policy which is in use.
+
+    Normally, the command lists only optional policies. Specifying
+    --all makes it list all policies and more information about them.
 
 Dump variable and zone definitions:
     awall dump [level]
@@ -71,18 +71,6 @@ Dump variable and zone definitions:
    os.exit(1)
 end
 
-params = {}
-
-if stringy.endswith(arg[0], '/awall-cli') then
-   basedir = string.sub(arg[0], 1, -11)
-   params.i = {basedir..'/json'}
-   params.I = {}
-
-   short_opts = short_opts..'i:I:'
-   long_opts['input-dir'] = 'i'
-   long_opts['import-path'] = 'I'
-end
-
 if not arg[1] then help() end
 
 if not stringy.startswith(arg[1], '-') then
@@ -90,12 +78,18 @@ if not stringy.startswith(arg[1], '-') then
    table.remove(arg, 1)
 end
 
-opts, opind = alt_getopt.get_opts(arg, short_opts, long_opts)
+opts, opind = alt_getopt.get_opts(
+   arg,
+   'afo:V',
+   {all='a', force='f', ['output-dir']='o', verify='V'}
+)
 for switch, value in pairs(opts) do
-   if switch == 'f' then force = true
+   if switch == 'a' then all = true
+   elseif switch == 'f' then force = true
+   elseif switch == 'c' then verbose = true
    elseif switch == 'V' then verify = true
    elseif switch == 'o' then outputdir = value
-   else table.insert(params[switch], value) end
+   else assert(false) end
 end
 
 if not mode then
@@ -111,25 +105,63 @@ if not util.contains({'translate', 'activate', 'fallback', 'flush',
 		      'enable', 'disable', 'list', 'dump'},
 		     mode) then help() end
 
+pol_paths = {}
+for i, cls in ipairs{'mandatory', 'optional', 'private'} do
+   path = os.getenv('AWALL_PATH_'..string.upper(cls))
+   if path then pol_paths[cls] = util.split(path, ':') end
+end
 
-require 'awall.uerror'
+if stringy.endswith(arg[0], '/awall-cli') then
+   basedir = string.sub(arg[0], 1, -11)
+   if not pol_paths.mandatory then
+      pol_paths.mandatory = {'/etc/awall'}
+   end
+   table.insert(pol_paths.mandatory, basedir..'/json')
+end
 
-if not awall.uerror.call(
+local uerror = require('awall.uerror')
+
+if not uerror.call(
    function()
       
       require 'awall'
 
-      policyset = awall.PolicySet.new(params.i, params.I)
+      policyset = awall.PolicySet.new(pol_paths)
 
       if mode == 'list' then
-	 util.printtabular(policyset:list())
+	 imported = policyset:load().policies
+	 data = {}
+	 
+	 for i, name in util.sortedkeys(policyset.policies) do
+	    policy = policyset.policies[name]
+
+	    if all or policy.type == 'optional' then
+	       if policy.enabled then status = 'enabled'
+	       elseif util.contains(imported, name) then status = 'required'
+	       else status = 'disabled' end
+
+	       polinfo = {name, status, policy:load().description}
+
+	       if all then
+		  table.insert(polinfo, 2, policy.type)
+		  table.insert(polinfo, 4, policy.path)
+	       end
+
+	       table.insert(data, polinfo)
+	    end
+	 end
+	 
+	 util.printtabular(data)
 	 os.exit()
       end
 
       if util.contains({'disable', 'enable'}, mode) then
 	 if opind > #arg then help() end
 	 repeat
-	    policyset[mode](policyset, arg[opind])
+	    name = arg[opind]
+	    policy = policyset.policies[name]
+	    if not policy then uerror.raise('No such policy: '..name) end
+	    policy[mode](policy)
 	    opind = opind + 1
 	 until opind > #arg
 	 os.exit()
@@ -246,7 +278,7 @@ if not awall.uerror.call(
 	    os.exit(1)
 	 end
 
-	 if awall.uerror.call(config.activate, config) then
+	 if uerror.call(config.activate, config) then
 
 	    if not force then
 	       io.stderr:write('New firewall configuration activated\n')

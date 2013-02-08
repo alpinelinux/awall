@@ -1,5 +1,5 @@
 # Installer Makefile for Alpine Wall
-# Copyright (C) 2012 Kaarle Ritvanen
+# Copyright (C) 2012-2013 Kaarle Ritvanen
 # See LICENSE file for license details
 
 ROOT_DIR := /
@@ -42,6 +42,7 @@ $(eval $(call rename,sample-policy.json,$(poldir)/sample/sample-policy.json,644)
 $(eval $(call mkdir,$(confdir)))
 $(eval $(call mkdir,$(confdir)/optional))
 $(eval $(call mkdir,$(poldir)/optional))
+$(eval $(call mkdir,$(poldir)/private))
 $(eval $(call mkdir,var/run/awall))
 
 install: $(foreach f,$(files),$(ROOT_DIR)/$(f))
