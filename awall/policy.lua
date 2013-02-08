@@ -157,7 +157,11 @@ function PolicySet:load()
 
       if not data.after then data.after = data.import end
       for i, name in util.listpairs(data.import) do
-	 require(self.policies[name])
+	 local pol = self.policies[name]
+	 if not pol then
+	    raise('Invalid policy reference from '..policy.name..': '..name)
+	 end
+	 require(pol)
       end
    end
 
