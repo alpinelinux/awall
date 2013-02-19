@@ -16,7 +16,7 @@
       { "proto": "tcp", "port": 135 },
       { "proto": "udp", "port": 135 }
     ],
-    "ftp": { "proto": "tcp", "port": 21 },
+    "ftp": { "proto": "tcp", "port": 21, "ct-helper": "ftp" },
     "gre": { "proto": "gre" },
     "hp-pdl": { "proto": "tcp", "port": 9100 },
     "http": { "proto": "tcp", "port": 80 },
@@ -30,7 +30,7 @@
       { "proto": "esp" },
       { "proto": "udp", "port": [ 500, 4500 ] }
     ],
-    "irc": { "proto": "tcp", "port": 6667 },
+    "irc": { "proto": "tcp", "port": 6667, "ct-helper": "irc" },
     "kerberos": [
       { "proto": "tcp", "port": 88 },
       { "proto": "udp", "port": 88 }
@@ -67,7 +67,7 @@
     ],
     "netbios-ns": [
       { "proto": "tcp", "port": 137 },
-      { "proto": "udp", "port": 137 }
+      { "proto": "udp", "port": 137, "ct-helper": "netbios_ns" }
     ],
     "netbios-ssn": [
       { "proto": "tcp", "port": 139 },
@@ -90,8 +90,8 @@
     ],
     "rdp": { "proto": "tcp", "port": 3389 },
     "sip": [
-    	{ "proto": "udp", "port": 5060 },
-    	{ "proto": "tcp", "port": 5060 }
+    	{ "proto": "udp", "port": 5060, "ct-helper": "sip" },
+    	{ "proto": "tcp", "port": 5060, "ct-helper": "sip" }
     ],
     "sip-tls": [
       { "proto": "udp", "port": 5061 },

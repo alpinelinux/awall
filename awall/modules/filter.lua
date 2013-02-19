@@ -13,8 +13,27 @@ local combinations = require('awall.optfrag').combinations
 
 local util = require('awall.util')
 local extend = util.extend
+local listpairs = util.listpairs
 
 local RECENT_MAX_COUNT = 20
+
+
+local RelatedRule = model.class(model.Rule)
+
+function RelatedRule:servoptfrags()
+   local helpers = {}
+   for i, serv in listpairs(self.service) do
+      for i, sdef in listpairs(serv) do
+	 local helper = sdef['ct-helper']
+	 if helper then
+	    helpers[helper] = {
+	       opts='-m conntrack --ctstate RELATED --helper '..helper
+	    }
+	 end
+      end
+   end
+   return util.values(helpers)
+end
 
 
 local Filter = model.class(model.Rule)
@@ -54,11 +73,13 @@ end
 function Filter:trules()
    local res = {}
 
-   local function extrarules(cls, extra)
+   local function extrarules(cls, extra, src)
+      if not src then src = self end
       local params = {}
-      for i, attr in ipairs({'in', 'out', 'src', 'dest',
-			     'ipset', 'ipsec', 'service'}) do
-	 params[attr] = self[attr]
+      for i, attr in ipairs(
+	 {'in', 'out', 'src', 'dest', 'ipset', 'ipsec', 'service'}
+      ) do
+	 params[attr] = src[attr]
       end
       util.update(params, extra)
       return extend(res, self:create(cls, params):trules())
@@ -105,9 +126,31 @@ function Filter:trules()
 
    extend(res, model.Rule.trules(self))
 
-   if self['no-track'] and self.action == 'accept' then
-      extrarules('no-track', {reverse=true})
-      extrarules('filter', {reverse=true, action='accept', log=false})
+   if self.action == 'accept' then
+      local nr = #res
+
+      if self.related then
+	 for i, rule in listpairs(self.related) do
+	    extrarules(
+	       RelatedRule,
+	       {service=self.service, action='accept'},
+	       rule
+	    )
+	 end
+      else
+	 -- TODO avoid creating unnecessary RELATED rules by introducing
+	 -- helper direction attributes to service definitions
+	 extrarules(RelatedRule, {action='accept'})
+	 extrarules(RelatedRule, {reverse=true, action='accept'})
+      end
+
+      if self['no-track'] then
+	 if #res > nr then
+	    self:error('Tracking required by service')
+	 end
+	 extrarules('no-track', {reverse=true})
+	 extrarules('filter', {reverse=true, action='accept', log=false})
+      end
    end
 
    return res
@@ -205,18 +248,57 @@ function Policy:servoptfrags() return nil end
 
 local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
 
-local dar = combinations(fchains,
-			 {{opts='-m conntrack --ctstate RELATED,ESTABLISHED'}})
-for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
-   table.insert(dar,
-		{chain=chain,
-		 opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'})
+function stateful(config)
+   local res = {}
+
+   local families = {{family='inet'}, {family='inet6'}}
+
+   local er = combinations(
+      fchains,
+      {{opts='-m conntrack --ctstate ESTABLISHED'}}
+   )
+   for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
+      table.insert(
+	 er,
+	 {
+	    chain=chain,
+	    opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'
+	 }
+      )
+   end
+   extend(res, combinations(families, er, {{table='filter', target='ACCEPT'}}))
+
+   -- TODO avoid creating unnecessary CT rules by inspecting the
+   -- filter rules' target families and chains
+   local visited = {}
+   local ofrags = {}
+   for i, rule in listpairs(config.filter) do
+      for i, serv in listpairs(rule.service) do
+	 if not visited[serv] then
+	    for i, sdef in listpairs(serv) do
+	       if sdef['ct-helper'] then
+		  local of = model.Rule.morph({service={sdef}}):servoptfrags()
+		  assert(#of == 1)
+		  of[1].target = 'CT --helper '..sdef['ct-helper']
+		  table.insert(ofrags, of[1])
+	       end
+	    end
+	    visited[serv] = true
+	 end
+      end
+   end
+   extend(
+      res,
+      combinations(
+	 families,
+	 {{table='raw'}},
+	 {{chain='PREROUTING'}, {chain='OUTPUT'}},
+	 ofrags
+      )
+   )
+
+   return res
 end
-dar = combinations(
-   dar,
-   {{table='filter', target='ACCEPT'}},
-   {{family='inet'}, {family='inet6'}}
-)
 
 local icmp = {{family='inet', table='filter', opts='-p icmp'}}
 local icmp6 = {{family='inet6', table='filter', opts='-p icmpv6'}}
@@ -245,7 +327,7 @@ icmprules(icmp6, 'icmpv6-type', {1, 2, 3, 4})
 export = {
    filter={class=Filter, before={'dnat', 'no-track'}},
    policy={class=Policy, after='%filter-after'},
-   ['%filter-before']={rules=dar, before='filter'},
+   ['%filter-before']={rules=stateful, before='filter'},
    ['%filter-after']={rules=ir, after='filter'}
 }
 
