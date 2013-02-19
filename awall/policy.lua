@@ -15,6 +15,7 @@ local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
 local contains = util.contains
+local list = util.list
 
 
 local PolicyConfig = class()
@@ -157,8 +158,9 @@ function PolicySet:load()
       local data = policy:load()
       imported[policy.name] = data
 
-      if not data.after then data.after = util.copy(util.list(data.import)) end
+      if not data.after then data.after = util.copy(list(data.import)) end
       if not contains(data.before, '%defaults') then
+	 data.after = list(data.after)
 	 table.insert(data.after, '%defaults')
       end
 
