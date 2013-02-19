@@ -12,7 +12,9 @@ require 'lfs'
 require 'awall.dependency'
 local class = require('awall.object').class
 local raise = require('awall.uerror').raise
+
 local util = require('awall.util')
+local contains = util.contains
 
 
 local PolicyConfig = class()
@@ -34,7 +36,7 @@ function PolicyConfig:expand()
       while type(value) == 'string' and string.find(value, pattern) do
 	 local si, ei, name = string.find(value, pattern)
 	 
-	 if util.contains(visited, name) then
+	 if contains(visited, name) then
 	    raise('Circular variable definition: '..name)
 	 end
 	 table.insert(visited, name)
@@ -43,7 +45,7 @@ function PolicyConfig:expand()
 	 if not var then raise('Invalid variable reference: '..name) end
 	 
 	 if si == 1 and ei == string.len(value) then value = var
-	 elseif util.contains({'number', 'string'}, type(var)) then
+	 elseif contains({'number', 'string'}, type(var)) then
 	    value = string.sub(value, 1, si - 1)..var..string.sub(value, ei + 1, -1)
 	 else
 	    raise('Attempted to concatenate complex variable: '..name)
@@ -147,7 +149,7 @@ end
 
 function PolicySet:load()
 
-   local imported = {}
+   local imported = {['%defaults']={}}
    
    local function require(policy)
       if imported[policy.name] then return end
@@ -155,13 +157,19 @@ function PolicySet:load()
       local data = policy:load()
       imported[policy.name] = data
 
-      if not data.after then data.after = data.import end
+      if not data.after then data.after = util.copy(util.list(data.import)) end
+      if not contains(data.before, '%defaults') then
+	 table.insert(data.after, '%defaults')
+      end
+
       for i, name in util.listpairs(data.import) do
-	 local pol = self.policies[name]
-	 if not pol then
-	    raise('Invalid policy reference from '..policy.name..': '..name)
+	 if string.sub(name, 1, 1) ~= '%' then
+	    local pol = self.policies[name]
+	    if not pol then
+	       raise('Invalid policy reference from '..policy.name..': '..name)
+	    end
+	    require(pol)
 	 end
-	 require(pol)
       end
    end
 
@@ -181,8 +189,10 @@ function PolicySet:load()
 
    for i, name in ipairs(order) do
       for cls, objs in pairs(imported[name]) do
-	 if not util.contains({'description', 'import', 'after', 'before'},
-			      cls) then
+	 if not contains(
+	    {'description', 'import', 'after', 'before'},
+	    cls
+	 ) then
 	    if not source[cls] then source[cls] = {} end
 
 	    if not input[cls] then

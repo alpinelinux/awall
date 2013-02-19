@@ -1,4 +1,6 @@
 {
+  "before": "%defaults",
+
   "service": {
     "babel": { "proto": "tcp", "port": 6697 },
     "bacula-dir": { "proto": "tcp", "port": 9101 }, 

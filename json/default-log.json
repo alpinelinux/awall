@@ -1,1 +1,4 @@
-{ "log": { "_default": { "limit": 1 } } }
+{
+  "before": "%defaults",
+  "log": { "_default": { "limit": 1 } }
+}
