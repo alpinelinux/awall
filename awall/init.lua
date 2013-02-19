@@ -122,8 +122,10 @@ function Config:init(policyconfig)
 	 local r = events[event].rules
 	 if r then
 	    if type(r) == 'function' then r = r(self.objects) end
-	    assert(type(r) == 'table')
-	    insertrules(r)
+	    if r then
+	       assert(type(r) == 'table')
+	       insertrules(r)
+	    end
 	 end
       elseif self.objects[event] then
 	 for i, rule in ipairs(self.objects[event]) do
