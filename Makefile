@@ -41,6 +41,7 @@ $(eval $(call rename,sample-policy.json,$(poldir)/sample/sample-policy.json,644)
 
 $(eval $(call mkdir,$(confdir)))
 $(eval $(call mkdir,$(confdir)/optional))
+$(eval $(call mkdir,$(confdir)/private))
 $(eval $(call mkdir,$(poldir)/optional))
 $(eval $(call mkdir,$(poldir)/private))
 $(eval $(call mkdir,var/run/awall))
