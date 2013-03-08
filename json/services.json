@@ -101,6 +101,7 @@
     "snmp": { "proto": "udp", "port": 161 },
     "snmp-trap": { "proto": "udp", "port": 162 },
     "ssh": { "proto": "tcp", "port": 22 },
-    "syslog": { "proto": "udp", "port": 514 }
+    "syslog": { "proto": "udp", "port": 514 },
+    "tftp": { "proto": "udp", "port": 69 }
   }
 }
