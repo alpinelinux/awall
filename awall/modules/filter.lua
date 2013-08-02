@@ -212,7 +212,7 @@ function Filter:extraoptfrags()
       if count > RECENT_MAX_COUNT then
 	 ofrags = {
 	    {
-	       opts='-m limit --limit '..count..'/second',
+	       opts='-m hashlimit --hashlimit-upto '..count..'/second --hashlimit-mode srcip --hashlimit-name '..chain,
 	       target=logchain(self.log, 'accept', 'ACCEPT')
 	    },
 	    {target='DROP'}
