@@ -272,16 +272,38 @@ function Rule:servoptfrags()
 
    local popt = ' --'..(self.reverse and 's' or 'd')..'port'
    for proto, plist in pairs(ports) do
-      local opts = '-p '..proto
-      local len = table.maxn(plist)
+      local propt = '-p '..proto
 
-      if len == 1 then
-	 opts = opts..popt..' '..plist[1]
-      elseif len > 1 then
-	 opts = opts..' -m multiport'..popt..'s '..table.concat(plist, ',')
-      end
+      if plist[1] then
+	 local len = #plist
+	 repeat
+	    local opts
 
-      table.insert(res, {opts=opts})
+	    if len == 1 then
+	       opts = propt..popt..' '..plist[1]
+	       len = 0
+
+	    else
+	       opts = propt..' -m multiport'..popt..'s '
+	       local pc = 0
+	       repeat
+		  local sep = pc == 0 and '' or ','
+		  local port = plist[1]
+
+		  pc = pc + (string.find(port, ':') and 2 or 1)
+		  if pc > 15 then break end
+
+		  opts = opts..sep..port
+
+		  table.remove(plist, 1)
+		  len = len - 1
+	       until len == 0
+	    end
+
+	    table.insert(res, {opts=opts})
+	 until len == 0
+
+      else table.insert(res, {opts=propt}) end
    end
 
    return res
