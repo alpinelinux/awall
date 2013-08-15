@@ -27,7 +27,7 @@ function RelatedRule:servoptfrags()
 	 local helper = sdef['ct-helper']
 	 if helper then
 	    helpers[helper] = {
-	       opts='-m conntrack --ctstate RELATED --helper '..helper
+	       opts='-m conntrack --ctstate RELATED -m helper --helper '..helper
 	    }
 	 end
       end
