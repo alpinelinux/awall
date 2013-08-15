@@ -15,7 +15,7 @@ local combinations = require('awall.optfrag').combinations
 
 local Log = model.class(model.ConfigObject)
 
-function Log:matchopts()
+function Log:matchofrag()
    local selector, opts
 
    for i, sel in ipairs{'every', 'limit', 'probability'} do
@@ -36,7 +36,7 @@ function Log:matchopts()
       end
    end
 
-   return opts
+   return {family=self.mode == 'ulog' and 'inet' or nil, opts=opts}
 end
 
 function Log:target()
@@ -66,7 +66,11 @@ function Log:target()
    return res
 end
 
-function Log:optfrag() return {opts=self:matchopts(), target=self:target()} end
+function Log:optfrag()
+   local res = self:matchofrag()
+   res.target = self:target()
+   return res
+end
 
 function Log.get(rule, spec, default)
    if spec == nil then spec = default end
@@ -86,7 +90,7 @@ end
 function LogRule:position() return 'prepend' end
 
 function LogRule:servoptfrags()
-   return combinations(Rule.servoptfrags(self), {{opts=self.log:matchopts()}})
+   return combinations(Rule.servoptfrags(self), {self.log:matchofrag()})
 end
 
 function LogRule:target() return self.log:target() end
