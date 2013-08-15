@@ -89,6 +89,7 @@
       { "proto": "tcp", "port": 1813 }
     ],
     "rdp": { "proto": "tcp", "port": 3389 },
+    "rtsp": { "proto": "tcp", "port": 554 },
     "sip": [
     	{ "proto": "udp", "port": 5060, "ct-helper": "sip" },
     	{ "proto": "tcp", "port": 5060, "ct-helper": "sip" }
@@ -101,7 +102,9 @@
     "snmp": { "proto": "udp", "port": 161 },
     "snmp-trap": { "proto": "udp", "port": 162 },
     "ssh": { "proto": "tcp", "port": 22 },
+    "submission": { "proto": "tcp", "port": 587 },
     "syslog": { "proto": "udp", "port": 514 },
-    "tftp": { "proto": "udp", "port": 69 }
+    "tftp": { "proto": "udp", "port": 69 },
+    "vnc": { "proto": "tcp", "port": 5900 }
   }
 }
