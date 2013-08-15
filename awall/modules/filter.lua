@@ -173,10 +173,18 @@ function Filter:position()
    return self:limit() == 'flow-limit' and 'prepend' or 'append'
 end
 
+function Filter:actiontarget()
+   if self.action == 'tarpit' then return 'tarpit' end
+   if util.contains({'drop', 'reject'}, self.action) then
+      return string.upper(self.action)
+   end
+   return model.Rule.target(self)
+end
+
 function Filter:target()
    if self:limit() then return self:newchain('limit') end
    if self.log then return self:newchain('log'..self.action) end
-   return model.Rule.target(self)
+   return self:actiontarget()
 end
 
 function Filter:extraoptfrags()
@@ -234,7 +242,7 @@ function Filter:extraoptfrags()
 
       extend(res, combinations({{chain=chain}}, ofrags))
 
-   else logchain(self.log, self.action, model.Rule.target(self)) end
+   else logchain(self.log, self.action, self:actiontarget()) end
    
    return res
 end

@@ -319,10 +319,8 @@ function Rule:position() return 'append' end
 
 function Rule:target()
    if not self.action then self:error('Action not defined') end
-   if util.contains({'accept', 'drop', 'reject'}, self.action) then
-      return string.upper(self.action)
-   end
-   return self.action
+   if self.action == 'accept' then return 'ACCEPT' end
+   self:error('Invalid action: '..self.action)
 end
 
 
