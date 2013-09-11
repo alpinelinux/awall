@@ -44,7 +44,6 @@ $(eval $(call mkdir,$(confdir)/optional))
 $(eval $(call mkdir,$(confdir)/private))
 $(eval $(call mkdir,$(poldir)/optional))
 $(eval $(call mkdir,$(poldir)/private))
-$(eval $(call mkdir,var/run/awall))
 
 install: $(foreach f,$(files),$(ROOT_DIR)/$(f))
 

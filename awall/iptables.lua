@@ -7,6 +7,7 @@ See LICENSE file for license details
 
 module(..., package.seeall)
 
+require 'lfs'
 require 'lpc'
 
 require 'awall.object'
@@ -140,6 +141,7 @@ end
 
 
 function backup()
+   lfs.mkdir(backupdir)
    Current.new():dump(backupdir)
 end
 
