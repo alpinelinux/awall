@@ -27,6 +27,7 @@ function RelatedRule:servoptfrags()
 	 local helper = sdef['ct-helper']
 	 if helper then
 	    helpers[helper] = {
+	       family=sdef.family,
 	       opts='-m conntrack --ctstate RELATED -m helper --helper '..helper
 	    }
 	 end
@@ -259,51 +260,59 @@ local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
 function stateful(config)
    local res = {}
 
-   local families = {{family='inet'}, {family='inet6'}}
+   for i, family in ipairs{'inet', 'inet6'} do
 
-   local er = combinations(
-      fchains,
-      {{opts='-m conntrack --ctstate ESTABLISHED'}}
-   )
-   for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
-      table.insert(
-	 er,
-	 {
-	    chain=chain,
-	    opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'
-	 }
+      local er = combinations(
+	 fchains,
+	 {{opts='-m conntrack --ctstate ESTABLISHED'}}
       )
-   end
-   extend(res, combinations(families, er, {{table='filter', target='ACCEPT'}}))
+      for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
+	 table.insert(
+	    er,
+	    {
+	       chain=chain,
+	       opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'
+	    }
+	 )
+      end
+      extend(
+	 res,
+	 combinations(er, {{family=family, table='filter', target='ACCEPT'}})
+      )
 
-   -- TODO avoid creating unnecessary CT rules by inspecting the
-   -- filter rules' target families and chains
-   local visited = {}
-   local ofrags = {}
-   for i, rule in listpairs(config.filter) do
-      for i, serv in listpairs(rule.service) do
-	 if not visited[serv] then
-	    for i, sdef in listpairs(serv) do
-	       if sdef['ct-helper'] then
-		  local of = model.Rule.morph({service={sdef}}):servoptfrags()
-		  assert(#of == 1)
-		  of[1].target = 'CT --helper '..sdef['ct-helper']
-		  table.insert(ofrags, of[1])
+      -- TODO avoid creating unnecessary CT rules by inspecting the
+      -- filter rules' target families and chains
+      local visited = {}
+      local ofrags = {}
+      for i, rule in listpairs(config.filter) do
+	 for i, serv in listpairs(rule.service) do
+	    if not visited[serv] then
+	       for i, sdef in listpairs(serv) do
+		  if sdef['ct-helper'] then
+		     local of = combinations(
+			model.Rule.morph{service={sdef}}:servoptfrags(),
+			{{family=family}}
+		     )
+		     if of[1] then
+			assert(#of == 1)
+			of[1].target = 'CT --helper '..sdef['ct-helper']
+			table.insert(ofrags, of[1])
+		     end
+		  end
 	       end
+	       visited[serv] = true
 	    end
-	    visited[serv] = true
 	 end
       end
-   end
-   extend(
-      res,
-      combinations(
-	 families,
-	 {{table='raw'}},
-	 {{chain='PREROUTING'}, {chain='OUTPUT'}},
-	 ofrags
+      extend(
+	 res,
+	 combinations(
+	    {{table='raw'}},
+	    {{chain='PREROUTING'}, {chain='OUTPUT'}},
+	    ofrags
+	 )
       )
-   )
+   end
 
    return res
 end

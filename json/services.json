@@ -66,8 +66,13 @@
       { "proto": "udp", "port": 138 }
     ],
     "netbios-ns": [
-      { "proto": "tcp", "port": 137 },
-      { "proto": "udp", "port": 137, "ct-helper": "netbios-ns" }
+      { "family": "inet", "proto": "tcp", "port": 137 },
+      {
+        "family": "inet",
+        "proto": "udp",
+        "port": 137,
+        "ct-helper": "netbios-ns"
+      }
     ],
     "netbios-ssn": [
       { "proto": "tcp", "port": 139 },

@@ -223,12 +223,7 @@ function Rule:servoptfrags()
 
    if not self.service then return end
 
-   local function containskey(tbl, key)
-      for k, v in pairs(tbl) do if k == key then return true end end
-      return false
-   end
-
-   local ports = {}
+   local fports = {inet={}, inet6={}}
    local res = {}
 
    for i, serv in ipairs(self.service) do
@@ -236,15 +231,24 @@ function Rule:servoptfrags()
 	 if not sdef.proto then self:error('Protocol not defined') end
 
 	 if util.contains({6, 'tcp', 17, 'udp'}, sdef.proto) then
-	    local new = not containskey(ports, sdef.proto)
-	    if new then ports[sdef.proto] = {} end
+	    for family, ports in pairs(fports) do
+	       if not sdef.family or family == sdef.family then
 
-	    if new or ports[sdef.proto][1] then
-	       if sdef.port then
-		  util.extend(ports[sdef.proto],
-			      util.maplist(sdef.port,
-					   function(p) return string.gsub(p, '-', ':') end))
-	       else ports[sdef.proto] = {} end
+		  local new = not ports[sdef.proto]
+		  if new then ports[sdef.proto] = {} end
+
+		  if new or ports[sdef.proto][1] then
+		     if sdef.port then
+			util.extend(
+			   ports[sdef.proto],
+			   util.maplist(
+			      sdef.port,
+			      function(p) return string.gsub(p, '-', ':') end
+			   )
+			)
+		     else ports[sdef.proto] = {} end
+		  end
+	       end
 	    end
 
 	 else
@@ -263,47 +267,62 @@ function Rule:servoptfrags()
 	    elseif sdef.type then
 	       self:error('Type specification not valid with '..sdef.proto)
 	    end
-	    if sdef.type then opts = opts..' --'..oname..' '..sdef.type end
 
+	    if sdef.family then
+	       if not family then family = sdef.family
+	       elseif family ~= sdef.family then
+		  self:error(
+		     'Protocol '..sdef.proto..' is incompatible with '..sdef.family
+		  )
+	       end
+	    end
+
+	    if sdef.type then opts = opts..' --'..oname..' '..sdef.type end
 	    table.insert(res, {family=family, opts=opts})
 	 end
       end
    end
 
    local popt = ' --'..(self.reverse and 's' or 'd')..'port'
-   for proto, plist in pairs(ports) do
-      local propt = '-p '..proto
+   for family, pports in pairs(fports) do
+      local ofrags = {}
 
-      if plist[1] then
-	 local len = #plist
-	 repeat
-	    local opts
+      for proto, ports in pairs(pports) do
+	 local propt = '-p '..proto
 
-	    if len == 1 then
-	       opts = propt..popt..' '..plist[1]
-	       len = 0
+	 if ports[1] then
+	    local len = #ports
+	    repeat
+	       local opts
 
-	    else
-	       opts = propt..' -m multiport'..popt..'s '
-	       local pc = 0
-	       repeat
-		  local sep = pc == 0 and '' or ','
-		  local port = plist[1]
+	       if len == 1 then
+		  opts = propt..popt..' '..ports[1]
+		  len = 0
 
-		  pc = pc + (string.find(port, ':') and 2 or 1)
-		  if pc > 15 then break end
+	       else
+		  opts = propt..' -m multiport'..popt..'s '
+		  local pc = 0
+		  repeat
+		     local sep = pc == 0 and '' or ','
+		     local port = ports[1]
+		     
+		     pc = pc + (string.find(port, ':') and 2 or 1)
+		     if pc > 15 then break end
+		     
+		     opts = opts..sep..port
+		     
+		     table.remove(ports, 1)
+		     len = len - 1
+		  until len == 0
+	       end
 
-		  opts = opts..sep..port
+	       table.insert(ofrags, {opts=opts})
+	    until len == 0
 
-		  table.remove(plist, 1)
-		  len = len - 1
-	       until len == 0
-	    end
+	 else table.insert(ofrags, {opts=propt}) end
+      end
 
-	    table.insert(res, {opts=opts})
-	 until len == 0
-
-      else table.insert(res, {opts=propt}) end
+      util.extend(res, combinations(ofrags, {{family=family}}))
    end
 
    return res
