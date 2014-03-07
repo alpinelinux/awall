@@ -109,6 +109,7 @@
     "ssh": { "proto": "tcp", "port": 22 },
     "submission": { "proto": "tcp", "port": 587 },
     "syslog": { "proto": "udp", "port": 514 },
+    "telnet": { "proto": "tcp", "port": 23 },
     "tftp": { "proto": "udp", "port": 69 },
     "vnc": { "proto": "tcp", "port": 5900 }
   }
