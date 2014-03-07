@@ -264,7 +264,7 @@ function Rule:servoptfrags()
 	    elseif util.contains({58, 'ipv6-icmp', 'icmpv6'}, sdef.proto) then
 	       family = 'inet6'
 	       oname = 'icmpv6-type'
-	    elseif sdef.type or sdef['reverse-type'] then
+	    elseif sdef.type or sdef['reply-type'] then
 	       self:error('Type specification not valid with '..sdef.proto)
 	    end
 
@@ -279,7 +279,7 @@ function Rule:servoptfrags()
 
 	    if sdef.type then
 	       opts = opts..' --'..oname..' '..(
-		  self.reverse and sdef['reverse-type'] or sdef.type
+		  self.reverse and sdef['reply-type'] or sdef.type
 	       )
 	    end
 	    table.insert(res, {family=family, opts=opts})

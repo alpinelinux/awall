@@ -82,8 +82,8 @@
     "ospf": { "proto": "ospf" },
     "pgsql": { "proto": "tcp", "port": 5432 },
     "ping": [
-      { "proto": "icmp", "type": 8, "reverse-type": 0 },
-      { "proto": "icmpv6", "type": 128, "reverse-type": 129 }
+      { "proto": "icmp", "type": 8, "reply-type": 0 },
+      { "proto": "icmpv6", "type": 128, "reply-type": 129 }
     ],
     "radius": [
       { "proto": "udp", "port": 1812 },
