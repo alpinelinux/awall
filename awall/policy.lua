@@ -1,6 +1,6 @@
 --[[
 Policy file handling for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -43,7 +43,7 @@ function PolicyConfig:expand()
 	 table.insert(visited, name)
 	 
 	 local var = self.data.variable[name]
-	 if not var then raise('Invalid variable reference: '..name) end
+	 if var == nil then raise('Invalid variable reference: '..name) end
 	 
 	 if si == 1 and ei == string.len(value) then value = var
 	 elseif contains({'number', 'string'}, type(var)) then
