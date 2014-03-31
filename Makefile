@@ -1,11 +1,11 @@
 # Installer Makefile for Alpine Wall
-# Copyright (C) 2012-2013 Kaarle Ritvanen
+# Copyright (C) 2012-2014 Kaarle Ritvanen
 # See LICENSE file for license details
 
 ROOT_DIR := /
 LUA_VERSION := 5.1
 
-poldir := usr/share/awall
+resdir := usr/share/awall
 confdir := etc/awall
 
 all:	install
@@ -34,17 +34,21 @@ files += $(2)
 endef
 
 $(eval $(call copy,awall,usr/share/lua/$(LUA_VERSION)/awall,lua))
-$(eval $(call copy,json,$(poldir)/mandatory,json))
+$(eval $(call copy,json,$(resdir)/mandatory,json))
 
 $(eval $(call rename,awall-cli,usr/sbin/awall,755))
-$(eval $(call rename,sample-policy.json,$(poldir)/sample/sample-policy.json,644))
+$(eval $(call rename,sample-policy.json,$(resdir)/sample/sample-policy.json,644))
 
 $(eval $(call mkdir,$(confdir)))
 $(eval $(call mkdir,$(confdir)/optional))
 $(eval $(call mkdir,$(confdir)/private))
-$(eval $(call mkdir,$(poldir)/optional))
-$(eval $(call mkdir,$(poldir)/private))
+$(eval $(call mkdir,$(resdir)/optional))
+$(eval $(call mkdir,$(resdir)/private))
 
-install: $(foreach f,$(files),$(ROOT_DIR)/$(f))
+$(ROOT_DIR)/$(resdir)/modules:
+	install -d $(dir $@)
+	ln -s ../lua/$(LUA_VERSION)/awall/modules $@
+
+install: $(foreach f,$(files),$(ROOT_DIR)/$(f)) $(ROOT_DIR)/$(resdir)/modules
 
 .PHONY: all

@@ -46,7 +46,7 @@ function M.loadmodules(path)
    if path then lfs.chdir(path) end
 
    local modules = {}
-   for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
+   for modfile in lfs.dir((path or '/usr/share')..'/awall/modules') do
       if stringy.endswith(modfile, '.lua') then
 	 table.insert(modules, 'awall.modules.'..modfile:sub(1, -5))
       end
