@@ -126,7 +126,7 @@ if not uerror.call(
       
       require 'awall'
 
-      policyset = awall.PolicySet.new(pol_paths)
+      policyset = awall.PolicySet(pol_paths)
 
       if mode == 'list' then
 	 imported = policyset:load().policies
@@ -174,7 +174,7 @@ if not uerror.call(
 
       if mode ~= 'dump' or level > 3 then
 	 awall.loadmodules(basedir)
-	 config = awall.Config.new(input)
+	 config = awall.Config(input)
       end
 
 

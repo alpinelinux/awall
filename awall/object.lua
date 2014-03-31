@@ -9,20 +9,19 @@ module(..., package.seeall)
 
 function class(base)
    local cls = {}
-   local mt = {__index = cls}
-
-   if not base and Object then base = Object end
-   if base then setmetatable(cls, {__index = base}) end
-
-   function cls.new(...) return cls.morph({}, ...) end
 
    function cls:morph(...)
-      setmetatable(self, mt)
+      setmetatable(self, {__index = cls})
       self:init(...)
       return self
    end
 
-   return cls
+   local mt = {__call=function(self, ...) return cls.morph({}, ...) end}
+
+   if not base and Object then base = Object end
+   if base then mt.__index = base end
+
+   return setmetatable(cls, mt)
 end
 
 Object = class()

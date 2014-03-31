@@ -80,7 +80,7 @@ Config = object.class()
 function Config:init(policyconfig)
 
    self.objects = policyconfig:expand()
-   self.iptables = iptables.IPTables.new()
+   self.iptables = iptables.IPTables()
 
    local acfrags = {}
 
@@ -138,7 +138,7 @@ function Config:init(policyconfig)
    for k, v in pairs(acfrags) do table.insert(ofrags, v) end
    insertrules(optfrag.combinations(achains, ofrags))
 
-   self.ipset = ipset.IPSet.new(self.objects.ipset)
+   self.ipset = ipset.IPSet(self.objects.ipset)
 end
 
 function Config:print()

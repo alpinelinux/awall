@@ -1,6 +1,6 @@
 --[[
 Iptables file dumper for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -142,15 +142,15 @@ end
 
 function backup()
    lfs.mkdir(backupdir)
-   Current.new():dump(backupdir)
+   Current():dump(backupdir)
 end
 
 function revert()
-   Backup.new():activate()
+   Backup():activate()
 end
 
 function flush()
-   local empty = IPTables.new()
+   local empty = IPTables()
    for family, params in pairs(families) do
       local success, lines = pcall(io.lines, params.procfile)
       if success then

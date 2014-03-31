@@ -97,7 +97,7 @@ function Zone:optfrags(dir)
 end
 
 
-fwzone = Zone.new()
+fwzone = Zone()
 
 
 IPSet = class(ConfigObject)

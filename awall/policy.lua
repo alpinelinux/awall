@@ -225,5 +225,5 @@ function PolicySet:load()
       end
    end
 
-   return PolicyConfig.new(input, source, util.keys(imported))
+   return PolicyConfig(input, source, util.keys(imported))
 end
