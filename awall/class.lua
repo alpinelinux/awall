@@ -4,10 +4,9 @@ Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
+local Object
 
-module(..., package.seeall)
-
-function class(base)
+local function class(base)
    local cls = {}
 
    function cls.super(obj)
@@ -42,5 +41,6 @@ function class(base)
 end
 
 Object = class()
-
 function Object:init(...) end
+
+return class

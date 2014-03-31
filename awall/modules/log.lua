@@ -5,13 +5,13 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
-
 local model = require('awall.model')
+local class = model.class
+
 local combinations = require('awall.optfrag').combinations
 
 
-local Log = model.class(model.ConfigObject)
+local Log = class(model.ConfigObject)
 
 function Log:matchofrag()
    local selector, opts
@@ -78,7 +78,7 @@ function Log.get(rule, spec, default)
 end
 
 
-local LogRule = model.class(model.Rule)
+local LogRule = class(model.Rule)
 
 function LogRule:init(...)
    LogRule.super(self):init(...)
@@ -95,7 +95,9 @@ end
 
 function LogRule:target() return self.log:target() end
 
-export = {
-   log={class=Log},
-   ['packet-log']={class=LogRule, after='%filter-after'}
+
+return {
+   export={
+      log={class=Log}, ['packet-log']={class=LogRule, after='%filter-after'}
+   }
 }

@@ -4,18 +4,18 @@ Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
-module(..., package.seeall)
 
-require 'json'
-require 'lfs'
-
-require 'awall.dependency'
-local class = require('awall.object').class
+local resolve = require('awall.dependency')
+local class = require('awall.class')
 local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
 local contains = util.contains
 local listpairs = util.listpairs
+
+
+local json = require('json')
+local lfs = require('lfs')
 
 
 local PolicyConfig = class()
@@ -102,7 +102,7 @@ local defdirs = {
    private={'/etc/awall/private', '/usr/share/awall/private'}
 }
 
-PolicySet = class()
+local PolicySet = class()
 
 function PolicySet:init(dirs)
    local confdir = (dirs.mandatory or defdirs.mandatory)[1]
@@ -189,7 +189,7 @@ function PolicySet:load()
    end
 
 
-   local order = awall.dependency.order(imported)
+   local order = resolve(imported)
    if type(order) ~= 'table' then
       raise('Circular ordering directives: '..order)
    end
@@ -227,3 +227,5 @@ function PolicySet:load()
 
    return PolicyConfig(input, source, util.keys(imported))
 end
+
+return PolicySet

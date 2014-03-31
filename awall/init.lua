@@ -4,28 +4,27 @@ Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
-module(..., package.seeall)
 
-require 'lfs'
-require 'stringy'
+local M = {}
 
-require 'awall.dependency'
-require 'awall.ipset'
-require 'awall.iptables'
-require 'awall.model'
-require 'awall.object'
-require 'awall.optfrag'
-require 'awall.policy'
-require 'awall.util'
+local class = require('awall.class')
+local resolve = require('awall.dependency')
+local IPSet = require('awall.ipset')
+local IPTables = require('awall.iptables').IPTables
+local optfrag = require('awall.optfrag')
+M.PolicySet = require('awall.policy')
+local util = require('awall.util')
 
-local optfrag = awall.optfrag
+
+local lfs = require('lfs')
+local endswith = require('stringy').endswith
 
 
 local events
 local procorder
 local achains
 
-function loadmodules(path)
+function M.loadmodules(path)
    events = {}
    achains = {}
 
@@ -38,10 +37,10 @@ function loadmodules(path)
 	 achains[name] = opts
       end
 
-      return awall.util.keys(export)
+      return util.keys(export)
    end
 
-   readmetadata(model)
+   readmetadata(require('awall.model'))
 
    local cdir = lfs.currentdir()
    if path then lfs.chdir(path) end
@@ -56,31 +55,27 @@ function loadmodules(path)
 
    local imported = {}
    for i, name in ipairs(modules) do
-      require(name)
-      awall.util.extend(imported, readmetadata(package.loaded[name]))
+      util.extend(imported, readmetadata(require(name)))
    end
 
    lfs.chdir(cdir)
 
    events['%modules'] = {before=imported}
-   procorder = awall.dependency.order(events)
+   procorder = resolve(events)
 end
 
-function loadclass(path)
+function M.loadclass(path)
    assert(path:sub(1, 1) ~= '%')
    return events[path] and events[path].class
 end
 
 
-PolicySet = policy.PolicySet
+M.Config = class()
 
-
-Config = object.class()
-
-function Config:init(policyconfig)
+function M.Config:init(policyconfig)
 
    self.objects = policyconfig:expand()
-   self.iptables = iptables.IPTables()
+   self.iptables = IPTables()
 
    local acfrags = {}
 
@@ -138,26 +133,29 @@ function Config:init(policyconfig)
    for k, v in pairs(acfrags) do table.insert(ofrags, v) end
    insertrules(optfrag.combinations(achains, ofrags))
 
-   self.ipset = ipset.IPSet(self.objects.ipset)
+   self.ipset = IPSet(self.objects.ipset)
 end
 
-function Config:print()
+function M.Config:print()
    self.ipset:print()
    print()
    self.iptables:print()
 end
 
-function Config:dump(dir)
+function M.Config:dump(dir)
    self.ipset:dump(dir or '/etc/ipset.d')
    self.iptables:dump(dir or '/etc/iptables')
 end
 
-function Config:test()
+function M.Config:test()
    self.ipset:create()
    self.iptables:test()
 end
 
-function Config:activate()
+function M.Config:activate()
    self:test()
    self.iptables:activate()
 end
+
+
+return M

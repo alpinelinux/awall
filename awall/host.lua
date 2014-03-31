@@ -5,8 +5,6 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
-
 local familypatterns = {inet='%d[%.%d/]+',
 			inet6='[:%x/]+',
 			domain='[%a-][%.%w-]*'}
@@ -20,7 +18,7 @@ end
 
 local dnscache = {}
 
-function resolve(host, context)
+return function(host, context)
    local family = getfamily(host, context)
    if family == 'domain' then
 

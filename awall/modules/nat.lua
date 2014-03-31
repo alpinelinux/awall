@@ -5,15 +5,13 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
+local model = require('awall.model')
+local class = model.class
 
-require 'awall.model'
-require 'awall.util'
-
-local model = awall.model
+local contains = require('awall.util').contains
 
 
-local NATRule = model.class(model.Rule)
+local NATRule = class(model.Rule)
 
 -- alpine v2.4 compatibility
 function NATRule:init(...)
@@ -30,7 +28,7 @@ end
 function NATRule:trules()
    local res = {}
    for i, ofrags in ipairs(NATRule.super(self):trules()) do
-      if not awall.util.contains(self.params.chains, ofrags.chain) then
+      if not contains(self.params.chains, ofrags.chain) then
 	 self:error('Inappropriate zone definitions for a '..self.params.target..' rule')
       end
       if ofrags.family == 'inet' then table.insert(res, ofrags) end
@@ -58,7 +56,7 @@ function NATRule:target()
 end
 
 
-local DNATRule = model.class(NATRule)
+local DNATRule = class(NATRule)
 
 function DNATRule:init(...)
    DNATRule.super(self):init(...)
@@ -68,7 +66,7 @@ function DNATRule:init(...)
 end
 
 
-local SNATRule = model.class(NATRule)
+local SNATRule = class(NATRule)
 
 function SNATRule:init(...)
    SNATRule.super(self):init(...)
@@ -78,7 +76,4 @@ function SNATRule:init(...)
 end
 
 
-export = {
-   dnat={class=DNATRule},
-   snat={class=SNATRule}
-}
+return {export={dnat={class=DNATRule}, snat={class=SNATRule}}}

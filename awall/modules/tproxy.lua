@@ -5,8 +5,6 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
-
 local model = require('awall.model')
 local combinations = require('awall.optfrag').combinations
 
@@ -68,7 +66,9 @@ local function divert(config)
 end
 
 
-export = {
-   tproxy={class=TProxyRule, before='%mark-restore'},
-   ['%tproxy-divert']={rules=divert, before='tproxy'}
+return {
+   export={
+      tproxy={class=TProxyRule, before='%mark-restore'},
+      ['%tproxy-divert']={rules=divert, before='tproxy'}
+   }
 }

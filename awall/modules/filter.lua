@@ -5,20 +5,23 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
+local resolve = require('awall.host')
 
-local resolve = require('awall.host').resolve
 local model = require('awall.model')
+local class = model.class
+local Rule = model.Rule
+
 local combinations = require('awall.optfrag').combinations
 
 local util = require('awall.util')
+local contains = util.contains
 local extend = util.extend
 local listpairs = util.listpairs
 
 local RECENT_MAX_COUNT = 20
 
 
-local RelatedRule = model.class(model.Rule)
+local RelatedRule = class(Rule)
 
 function RelatedRule:servoptfrags()
    local helpers = {}
@@ -39,7 +42,7 @@ end
 function RelatedRule:target() return 'ACCEPT' end
 
 
-local Filter = model.class(model.Rule)
+local Filter = class(Rule)
 
 function Filter:init(...)
    Filter.super(self):init(...)
@@ -47,7 +50,7 @@ function Filter:init(...)
    if not self.action then self.action = 'accept' end
 
    -- alpine v2.4 compatibility
-   if util.contains({'logdrop', 'logreject'}, self.action) then
+   if contains({'logdrop', 'logreject'}, self.action) then
       self:warning('Deprecated action: '..self.action)
       self.action = self.action:sub(4, -1)
    end
@@ -176,7 +179,7 @@ end
 
 function Filter:actiontarget()
    if self.action == 'tarpit' then return 'tarpit' end
-   if util.contains({'accept', 'drop', 'reject'}, self.action) then
+   if contains({'accept', 'drop', 'reject'}, self.action) then
       return self.action:upper()
    end
    self:error('Invalid filter action: '..self.action)
@@ -250,14 +253,14 @@ end
 
 
 
-local Policy = model.class(Filter)
+local Policy = class(Filter)
 
 function Policy:servoptfrags() return nil end
 
 
 local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
 
-function stateful(config)
+local function stateful(config)
    local res = {}
 
    for i, family in ipairs{'inet', 'inet6'} do
@@ -286,7 +289,7 @@ function stateful(config)
 	       for i, sdef in listpairs(serv) do
 		  if sdef['ct-helper'] then
 		     local of = combinations(
-			model.Rule.morph{service={sdef}}:servoptfrags(),
+			Rule.morph{service={sdef}}:servoptfrags(),
 			{{family=family}}
 		     )
 		     if of[1] then
@@ -337,14 +340,14 @@ end
 icmprules(icmp, 'icmp-type', {3, 11, 12})
 icmprules(icmp6, 'icmpv6-type', {1, 2, 3, 4})
 
-export = {
-   filter={class=Filter, before={'dnat', 'no-track'}},
-   policy={class=Policy, after='%filter-after'},
-   ['%filter-before']={rules=stateful, before='filter'},
-   ['%filter-after']={rules=ir, after='filter'}
+return {
+   export={
+      filter={class=Filter, before={'dnat', 'no-track'}},
+      policy={class=Policy, after='%filter-after'},
+      ['%filter-before']={rules=stateful, before='filter'},
+      ['%filter-after']={rules=ir, after='filter'}
+   },
+   achains=combinations(
+      {{chain='tarpit'}}, {{opts='-p tcp', target='TARPIT'}, {target='DROP'}}
+   )
 }
-
-achains = combinations({{chain='tarpit'}},
-		       {{opts='-p tcp', target='TARPIT'},
-			{target='DROP'}})
-

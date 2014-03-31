@@ -5,18 +5,18 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
+local M = {}
 
-function combinations(of1, ...)
+function M.combinations(of1, ...)
    local arg = {...}
 
    if #arg == 0 then return of1 end
 
-   if not of1 then return combinations(...) end
+   if not of1 then return M.combinations(...) end
 
    local of2 = arg[1]
    table.remove(arg, 1)
-   if not of2 then return combinations(of1, unpack(arg)) end
+   if not of2 then return M.combinations(of1, unpack(arg)) end
 
    local res = {}
    for i, x in ipairs(of1) do
@@ -48,7 +48,9 @@ function combinations(of1, ...)
       end
    end
 
-   return combinations(res, unpack(arg))
+   return M.combinations(res, unpack(arg))
 end
 
-function location(of) return of.family..'/'..of.table..'/'..of.chain end
+function M.location(of) return of.family..'/'..of.table..'/'..of.chain end
+
+return M

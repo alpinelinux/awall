@@ -5,11 +5,7 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
-
-require 'awall.model'
-
-local model = awall.model
+local model = require('awall.model')
 
 
 local NoTrackRule = model.class(model.Rule)
@@ -21,4 +17,4 @@ function NoTrackRule:target()
 end
 
 
-export = {['no-track']={class=NoTrackRule}}
+return {export={['no-track']={class=NoTrackRule}}}

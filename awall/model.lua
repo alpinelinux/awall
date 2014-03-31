@@ -5,27 +5,33 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
-
-require 'awall'
-require 'awall.host'
-require 'awall.iptables'
-require 'awall.object'
-require 'awall.optfrag'
-require 'awall.uerror'
-require 'awall.util'
-
-local util = awall.util
-local combinations = awall.optfrag.combinations
-
-class = awall.object.class
-
-require 'stringy'
+local M = {}
 
 
-ConfigObject = class()
+local loadclass = require('awall').loadclass
+M.class = require('awall.class')
+local resolve = require('awall.host')
+local builtin = require('awall.iptables').builtin
 
-function ConfigObject:init(context, location)
+local optfrag = require('awall.optfrag')
+local combinations = optfrag.combinations
+
+local raise = require('awall.uerror').raise
+
+local util = require('awall.util')
+local contains = util.contains
+local extend = util.extend
+local filter = util.filter
+local listpairs = util.listpairs
+local maplist = util.maplist
+
+
+local startswith = require('stringy').startswith
+
+
+M.ConfigObject = M.class()
+
+function M.ConfigObject:init(context, location)
    if context then
       self.context = context
       self.root = context.objects
@@ -33,10 +39,10 @@ function ConfigObject:init(context, location)
    self.location = location
 end
 
-function ConfigObject:create(cls, params)
+function M.ConfigObject:create(cls, params)
    if type(cls) == 'string' then
       local name = cls
-      cls = awall.loadclass(cls)
+      cls = loadclass(cls)
       if not cls then
 	 self:error('Support for '..name..' objects not installed')
       end
@@ -44,30 +50,32 @@ function ConfigObject:create(cls, params)
    return cls.morph(params, self.context, self.location)
 end
 
-function ConfigObject:error(msg)
-   awall.uerror.raise(self.location..': '..msg)
-end
+function M.ConfigObject:error(msg) raise(self.location..': '..msg) end
 
-function ConfigObject:warning(msg)
+function M.ConfigObject:warning(msg)
    io.stderr:write(self.location..': '..msg..'\n')
 end
 
-function ConfigObject:trules() return {} end
+function M.ConfigObject:trules() return {} end
 
-function ConfigObject:info()
+function M.ConfigObject:info()
    local res = {}
    for i, trule in ipairs(self:trules()) do
-      table.insert(res,
-		   {'  '..awall.optfrag.location(trule),
-		    (trule.opts and trule.opts..' ' or '')..'-j '..trule.target})
+      table.insert(
+	 res,
+	 {
+	    '  '..optfrag.location(trule),
+	    (trule.opts and trule.opts..' ' or '')..'-j '..trule.target
+	 }
+      )
    end
    return res
 end
 
 
-Zone = class(ConfigObject)
+M.Zone = M.class(M.ConfigObject)
 
-function Zone:optfrags(dir)
+function M.Zone:optfrags(dir)
    local iopt, aopt, iprop, aprop
    if dir == 'in' then
       iopt, aopt, iprop, aprop = 'i', 's', 'in', 'src'
@@ -78,8 +86,8 @@ function Zone:optfrags(dir)
    local aopts = nil
    if self.addr then
       aopts = {}
-      for i, hostdef in util.listpairs(self.addr) do
-	 for i, addr in ipairs(awall.host.resolve(hostdef, self)) do
+      for i, hostdef in listpairs(self.addr) do
+	 for i, addr in ipairs(resolve(hostdef, self)) do
 	    table.insert(aopts,
 			 {family=addr[1],
 			  [aprop]=addr[2],
@@ -88,31 +96,32 @@ function Zone:optfrags(dir)
       end
    end
 
-   return combinations(util.maplist(self.iface,
-				    function(x)
-				       return {[iprop]=x,
-					       opts='-'..iopt..' '..x}
-				    end),
-		       aopts)
+   return combinations(
+      maplist(
+	 self.iface,
+	 function(x) return {[iprop]=x, opts='-'..iopt..' '..x} end
+      ),
+      aopts
+   )
 end
 
 
-fwzone = Zone()
+M.fwzone = M.Zone()
 
 
-IPSet = class(ConfigObject)
+local IPSet = M.class(M.ConfigObject)
 
 function IPSet:init(...)
    IPSet.super(self):init(...)
 
    if not self.type then self:error('Type not defined') end
 
-   if stringy.startswith(self.type, 'bitmap:') then
+   if startswith(self.type, 'bitmap:') then
       if not self.range then self:error('Range not defined') end
       self.options = {self.type, 'range', self.range}
       self.family = 'inet'
 
-   elseif stringy.startswith(self.type, 'hash:') then
+   elseif startswith(self.type, 'hash:') then
       if not self.family then self:error('Family not defined') end
       self.options = {self.type, 'family', self.family}
 
@@ -122,43 +131,47 @@ function IPSet:init(...)
 end
 
 
-Rule = class(ConfigObject)
+M.Rule = M.class(M.ConfigObject)
 
 
-function Rule:init(...)
-   Rule.super(self):init(...)
+function M.Rule:init(...)
+   M.Rule.super(self):init(...)
 
    self.newchains = {}
 
    for i, prop in ipairs({'in', 'out'}) do
-      self[prop] = self[prop] and util.maplist(self[prop],
-					       function(z)
-						  if type(z) ~= 'string' then return z end
-						  return z == '_fw' and fwzone or
-						     self.root.zone[z] or
-						     self:error('Invalid zone: '..z)
-					       end)
+      self[prop] = self[prop] and maplist(
+	 self[prop],
+	 function(z)
+	    if type(z) ~= 'string' then return z end
+	    return z == '_fw' and M.fwzone or
+	       self.root.zone[z] or
+	       self:error('Invalid zone: '..z)
+	 end
+      )
    end
 
    if self.service then
       if type(self.service) == 'string' then self.label = self.service end
-      self.service = util.maplist(self.service,
-				  function(s)
-				     if type(s) ~= 'string' then return s end
-				     return self.root.service[s] or self:error('Invalid service: '..s)
-				  end)
+      self.service = maplist(
+	 self.service,
+	 function(s)
+	    if type(s) ~= 'string' then return s end
+	    return self.root.service[s] or self:error('Invalid service: '..s)
+	 end
+      )
    end
 end
 
 
-function Rule:direction(dir)
+function M.Rule:direction(dir)
    if dir == 'in' then return self.reverse and 'out' or 'in' end
    if dir == 'out' then return self.reverse and 'in' or 'out' end
    self:error('Invalid direction: '..dir)
 end
 
 
-function Rule:zoneoptfrags()
+function M.Rule:zoneoptfrags()
 
    local function zonepair(zin, zout)
 
@@ -169,10 +182,10 @@ function Rule:zoneoptfrags()
 
       local chain, ofrags
 
-      if zin == fwzone or zout == fwzone then
+      if zin == M.fwzone or zout == M.fwzone then
 	 if zin == zout then return {} end
 	 local dir, z = 'in', zin
-	 if zin == fwzone then dir, z = 'out', zout end
+	 if zin == M.fwzone then dir, z = 'out', zout end
 	 chain = dir:upper()..'PUT'
 	 ofrags = zofs(z, dir)
 
@@ -192,11 +205,12 @@ function Rule:zoneoptfrags()
 	 ofrags = combinations(zofs(zin, 'in'), zofs(zout, 'out'))
 
 	 if ofrags and not zout['route-back'] then
-	    ofrags = util.filter(ofrags,
-				 function(of)
-				    return not (of['in'] and of.out and
-						of['in'] == of.out)
-				 end)
+	    ofrags = filter(
+	       ofrags,
+	       function(of)
+		  return not (of['in'] and of.out and of['in'] == of.out)
+	       end
+	    )
 	 end
       end
 
@@ -211,7 +225,7 @@ function Rule:zoneoptfrags()
 
    for i = 1,math.max(1, table.maxn(izones)) do
       for j = 1,math.max(1, table.maxn(ozones)) do
-	 util.extend(res, zonepair(izones[i], ozones[j]))
+	 extend(res, zonepair(izones[i], ozones[j]))
       end
    end
 
@@ -219,7 +233,7 @@ function Rule:zoneoptfrags()
 end
 
 
-function Rule:servoptfrags()
+function M.Rule:servoptfrags()
 
    if not self.service then return end
 
@@ -227,10 +241,10 @@ function Rule:servoptfrags()
    local res = {}
 
    for i, serv in ipairs(self.service) do
-      for i, sdef in util.listpairs(serv) do
+      for i, sdef in listpairs(serv) do
 	 if not sdef.proto then self:error('Protocol not defined') end
 
-	 if util.contains({6, 'tcp', 17, 'udp'}, sdef.proto) then
+	 if contains({6, 'tcp', 17, 'udp'}, sdef.proto) then
 	    for family, ports in pairs(fports) do
 	       if not sdef.family or family == sdef.family then
 
@@ -239,9 +253,9 @@ function Rule:servoptfrags()
 
 		  if new or ports[sdef.proto][1] then
 		     if sdef.port then
-			util.extend(
+			extend(
 			   ports[sdef.proto],
-			   util.maplist(
+			   maplist(
 			      sdef.port,
 			      function(p) return tostring(p):gsub('-', ':') end
 			   )
@@ -258,10 +272,10 @@ function Rule:servoptfrags()
 
 	    -- TODO multiple ICMP types per rule
 	    local oname
-	    if util.contains({1, 'icmp'}, sdef.proto) then
+	    if contains({1, 'icmp'}, sdef.proto) then
 	       family = 'inet'
 	       oname = 'icmp-type'
-	    elseif util.contains({58, 'ipv6-icmp', 'icmpv6'}, sdef.proto) then
+	    elseif contains({58, 'ipv6-icmp', 'icmpv6'}, sdef.proto) then
 	       family = 'inet6'
 	       oname = 'icmpv6-type'
 	    elseif sdef.type or sdef['reply-type'] then
@@ -326,21 +340,21 @@ function Rule:servoptfrags()
 	 else table.insert(ofrags, {opts=propt}) end
       end
 
-      util.extend(res, combinations(ofrags, {{family=family}}))
+      extend(res, combinations(ofrags, {{family=family}}))
    end
 
    return res
 end
 
-function Rule:destoptfrags()
-   return self:create(Zone, {addr=self.dest}):optfrags(self:direction('out'))
+function M.Rule:destoptfrags()
+   return self:create(M.Zone, {addr=self.dest}):optfrags(self:direction('out'))
 end
 
-function Rule:table() return 'filter' end
+function M.Rule:table() return 'filter' end
 
-function Rule:position() return 'append' end
+function M.Rule:position() return 'append' end
 
-function Rule:target()
+function M.Rule:target()
    -- alpine v2.7 compatibility
    if self.action == 'accept' then
       self:warning("'accept' action deprecated in favor of 'exclude'")
@@ -354,7 +368,7 @@ function Rule:target()
 end
 
 
-function Rule:trules()
+function M.Rule:trules()
 
    local function tag(ofrags, tag, value)
       for i, ofrag in ipairs(ofrags) do
@@ -380,18 +394,19 @@ function Rule:trules()
 
    local function ffilter(ofrags)
       if not ofrags or not ofrags[1] or not families then return ofrags end
-      return util.filter(ofrags,
-			 function(of)
-			    return not of.family or util.contains(families,
-								  of.family)
-			 end)
+      return filter(
+	 ofrags,
+	 function(of)
+	    return not of.family or contains(families, of.family)
+	 end
+      )
    end
 
    local res = self:zoneoptfrags()
 
    if self.ipset then
       local ipsetofrags = {}
-      for i, ipset in util.listpairs(self.ipset) do
+      for i, ipset in listpairs(self.ipset) do
 	 if not ipset.name then self:error('Set name not defined') end
 
 	 local setdef = self.root.ipset and self.root.ipset[ipset.name]
@@ -424,9 +439,10 @@ function Rule:trules()
 
    setfamilies(res)
 
-   local addrofrags = combinations(self:create(Zone,
-					       {addr=self.src}):optfrags(self:direction('in')),
-				   self:destoptfrags())
+   local addrofrags = combinations(
+      self:create(M.Zone, {addr=self.src}):optfrags(self:direction('in')),
+      self:destoptfrags()
+   )
    local combined = res
 
    if addrofrags then
@@ -441,7 +457,7 @@ function Rule:trules()
 	    combined = nil
 	    break
 	 end
-	 util.extend(combined, cc)
+	 extend(combined, cc)
       end
    end
 
@@ -458,13 +474,13 @@ function Rule:trules()
    res = combinations(res, {{target=target}})
 
    if not combined then
-      util.extend(
+      extend(
 	 res,
 	 combinations(addrofrags, {{chain=target, target=self:target()}})
       )
    end
 
-   util.extend(res, self:extraoptfrags())
+   extend(res, self:extraoptfrags())
 
    local tbl = self:table()
 
@@ -473,9 +489,7 @@ function Rule:trules()
 
       for i, ofrag in ipairs(ofrags) do
 
-	 if util.contains(awall.iptables.builtin[tbl], ofrag.chain) then
-	    table.insert(res, ofrag)
-
+	 if contains(builtin[tbl], ofrag.chain) then table.insert(res, ofrag)
 	 else
 	    local ofs, recursive
 	    if ofrag.chain == 'PREROUTING' then
@@ -495,7 +509,7 @@ function Rule:trules()
 	       ofrag.chain = nil
 	       ofs = combinations(ofs, {ofrag})
 	       if recursive then ofs = convertchains(ofs) end
-	       util.extend(res, ofs)
+	       extend(res, ofs)
 
 	    else table.insert(res, ofrag) end
 	 end
@@ -508,7 +522,7 @@ function Rule:trules()
    tag(res, 'table', tbl, false)
 
    local function checkzof(ofrag, dir, chains)
-      if ofrag[dir] and util.contains(chains, ofrag.chain) then
+      if ofrag[dir] and contains(chains, ofrag.chain) then
 	 self:error('Cannot specify '..dir..'bound interface ('..ofrag[dir]..')')
       end
    end
@@ -521,9 +535,9 @@ function Rule:trules()
    return combinations(res, ffilter({{family='inet'}, {family='inet6'}}))
 end
 
-function Rule:extraoptfrags() return {} end
+function M.Rule:extraoptfrags() return {} end
 
-function Rule:newchain(key)
+function M.Rule:newchain(key)
    if self.newchains[key] then return self.newchains[key] end
 
    if not self.context.lastid then self.context.lastid = {} end
@@ -540,4 +554,6 @@ function Rule:newchain(key)
 end
 
 
-export = {zone={class=Zone}, ipset={class=IPSet, before='%modules'}}
+M.export = {zone={class=M.Zone}, ipset={class=IPSet, before='%modules'}}
+
+return M

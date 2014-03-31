@@ -4,13 +4,14 @@ Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
-module(..., package.seeall)
+
+local M = {}
 
 local prefix = 'awall user error: '
 
-function raise(msg) error(prefix..msg) end
+function M.raise(msg) error(prefix..msg) end
 
-function call(f, ...)
+function M.call(f, ...)
    local arg = {...}
    return xpcall(
       function() f(unpack(arg)) end,
@@ -22,3 +23,5 @@ function call(f, ...)
       end
    )
 end
+
+return M

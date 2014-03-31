@@ -5,13 +5,11 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
-
 local model = require('awall.model')
 local class = model.class
 
 local combinations = require('awall.optfrag').combinations
-local util = require('awall.util')
+local list = require('awall.util').list
 
 
 local MarkRule = class(model.Rule)
@@ -45,7 +43,7 @@ end
 
 
 local function restoremark(config)
-   if util.list(config['route-track'])[1] then
+   if list(config['route-track'])[1] then
       return combinations(
 	 {{family='inet'}, {family='inet6'}},
 	 {{chain='OUTPUT'}, {chain='PREROUTING'}},
@@ -61,8 +59,10 @@ local function restoremark(config)
 end
 
 
-export = {
-   mark={class=MarkRule},
-   ['route-track']={class=RouteTrackRule, before='mark'},
-   ['%mark-restore']={rules=restoremark, before='route-track'}
+return {
+   export={
+      mark={class=MarkRule},
+      ['route-track']={class=RouteTrackRule, before='mark'},
+      ['%mark-restore']={rules=restoremark, before='route-track'}
+   }
 }

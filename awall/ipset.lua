@@ -1,15 +1,10 @@
 --[[
 Ipset file dumper for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
-
-module(..., package.seeall)
-
-require 'awall.object'
-
-IPSet = awall.object.class()
+local IPSet = require('awall.class')()
 
 function IPSet:init(config) self.config = config or {} end
 
@@ -47,3 +42,5 @@ function IPSet:dump(ipsdir)
       file:close()
    end
 end
+
+return IPSet

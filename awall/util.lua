@@ -5,9 +5,9 @@ See LICENSE file for license details
 ]]--
 
 
-module(..., package.seeall)
+local M = {}
 
-function split(s, sep)
+function M.split(s, sep)
    if s == '' then return {} end
    local res = {}
    while true do
@@ -21,85 +21,83 @@ function split(s, sep)
    end
 end
 
-function list(var)
+function M.list(var)
    if not var then return {} end
    if type(var) ~= 'table' then return {var} end
    if not next(var) then return {} end
    return var[1] and var or {var}
 end
 
-function listpairs(var)
-   return ipairs(list(var))
-end
+function M.listpairs(var) return ipairs(M.list(var)) end
 
-function filter(var, func)
+function M.filter(var, func)
    local res = {}
    for i, v in ipairs(var) do if func(v) then table.insert(res, v) end end
    return res
 end
 
-function map(var, func)
+function M.map(var, func)
    local res = {}
    for k, v in pairs(var) do res[k] = func(v) end
    return res
 end
 
-function maplist(var, func)
+function M.maplist(var, func)
    if not var then return var end
-   return map(list(var), func)
+   return M.map(M.list(var), func)
 end
 
-function contains(tbl, value)
-   for k, v in listpairs(tbl) do if v == value then return true end end
+function M.contains(tbl, value)
+   for k, v in M.listpairs(tbl) do if v == value then return true end end
    return false
 end
 
-function keys(tbl)
+function M.keys(tbl)
    local res = {}
    for k, v in pairs(tbl) do table.insert(res, k) end
    return res
 end
 
-function values(tbl)
+function M.values(tbl)
    local res = {}
    for k, v in pairs(tbl) do table.insert(res, v) end
    return res   
 end
 
-function sortedkeys(tbl)
-   local res = keys(tbl)
+function M.sortedkeys(tbl)
+   local res = M.keys(tbl)
    table.sort(res)
    return ipairs(res)
 end
 
-function extend(tbl1, tbl2)
-   for i, var in listpairs(tbl2) do table.insert(tbl1, var) end
+function M.extend(tbl1, tbl2)
+   for i, var in M.listpairs(tbl2) do table.insert(tbl1, var) end
 end
 
-function update(tbl1, tbl2)
+function M.update(tbl1, tbl2)
    if tbl2 then for k, v in pairs(tbl2) do tbl1[k] = v end end
    return tbl1
 end
 
-function copy(tbl) return update({}, tbl) end
+function M.copy(tbl) return M.update({}, tbl) end
 
-function compare(a, b)
+function M.compare(a, b)
    local t = type(a)
    if t ~= type(b) then return false end
    if t ~= 'table' then return a == b end
 
    local keys = {}
    for k, v in pairs(a) do
-      if not compare(v, b[k]) then return false end
+      if not M.compare(v, b[k]) then return false end
       table.insert(keys, k)
    end
    for k, v in pairs(b) do
-      if not contains(keys, k) then return false end
+      if not M.contains(keys, k) then return false end
    end
    return true
 end
 
-function printtabulars(tables)
+function M.printtabulars(tables)
    local colwidth = {}
    for i, tbl in ipairs(tables) do
       for j, row in ipairs(tbl) do
@@ -123,4 +121,6 @@ function printtabulars(tables)
    end
 end
 
-function printtabular(tbl) printtabulars({tbl}) end
+function M.printtabular(tbl) M.printtabulars({tbl}) end
+
+return M
