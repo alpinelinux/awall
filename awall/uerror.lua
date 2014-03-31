@@ -1,6 +1,6 @@
 --[[
 User error handling for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -11,6 +11,7 @@ local prefix = 'awall user error: '
 function raise(msg) error(prefix..msg) end
 
 function call(f, ...)
+   local arg = {...}
    return xpcall(
       function() f(unpack(arg)) end,
       function(msg)

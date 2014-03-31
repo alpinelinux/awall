@@ -1,6 +1,6 @@
 --[[
 Option fragment module for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -8,9 +8,11 @@ See LICENSE file for license details
 module(..., package.seeall)
 
 function combinations(of1, ...)
+   local arg = {...}
+
    if #arg == 0 then return of1 end
 
-   if not of1 then return combinations(unpack(arg)) end
+   if not of1 then return combinations(...) end
 
    local of2 = arg[1]
    table.remove(arg, 1)

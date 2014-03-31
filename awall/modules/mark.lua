@@ -1,6 +1,6 @@
 --[[
 Packet marking module for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -17,7 +17,7 @@ local util = require('awall.util')
 local MarkRule = class(model.Rule)
 
 function MarkRule:init(...)
-   model.Rule.init(self, unpack(arg))
+   model.Rule.init(self, ...)
    if not self.mark then self:error('Mark not specified') end
 end
 

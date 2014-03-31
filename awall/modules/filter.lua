@@ -42,7 +42,7 @@ function RelatedRule:target() return 'ACCEPT' end
 local Filter = model.class(model.Rule)
 
 function Filter:init(...)
-   model.Rule.init(self, unpack(arg))
+   model.Rule.init(self, ...)
 
    if not self.action then self.action = 'accept' end
 

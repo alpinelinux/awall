@@ -17,7 +17,7 @@ local NATRule = model.class(model.Rule)
 
 -- alpine v2.4 compatibility
 function NATRule:init(...)
-   model.Rule.init(self, unpack(arg))
+   model.Rule.init(self, ...)
    local attrs = {['ip-range']='to-addr', ['port-range']='to-port'}
    for old, new in pairs(attrs) do
       if not self[new] and self[old] then
@@ -61,7 +61,7 @@ end
 local DNATRule = model.class(NATRule)
 
 function DNATRule:init(...)
-   NATRule.init(self, unpack(arg))
+   NATRule.init(self, ...)
    self.params = {forbidif='out', subject='destination',
 		  chains={'INPUT', 'PREROUTING'},
 		  target='DNAT', deftarget='REDIRECT'}
@@ -71,7 +71,7 @@ end
 local SNATRule = model.class(NATRule)
 
 function SNATRule:init(...)
-   NATRule.init(self, unpack(arg))
+   NATRule.init(self, ...)
    self.params = {forbidif='in', subject='source',
 		  chains={'OUTPUT', 'POSTROUTING'},
 		  target='SNAT', deftarget='MASQUERADE'}

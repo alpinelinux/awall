@@ -1,6 +1,6 @@
 --[[
 Transparent proxy module for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -21,7 +21,7 @@ local listpairs = util.listpairs
 local TProxyRule = model.class(Rule)
 
 function TProxyRule:init(...)
-   Rule.init(self, unpack(arg))
+   Rule.init(self, ...)
 
    if not self['in'] then self:error('Ingress zone must be specified') end
    if contains(list(self['in']), model.fwzone) then

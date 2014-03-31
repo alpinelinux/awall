@@ -1,6 +1,6 @@
 --[[
 Packet logging module for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -83,7 +83,7 @@ end
 local LogRule = model.class(Rule)
 
 function LogRule:init(...)
-   Rule.init(self, unpack(arg))
+   Rule.init(self, ...)
    self.log = Log.get(self, self.log, true)
 end
 
