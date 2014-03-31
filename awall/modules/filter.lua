@@ -44,6 +44,8 @@ local Filter = model.class(model.Rule)
 function Filter:init(...)
    model.Rule.init(self, unpack(arg))
 
+   if not self.action then self.action = 'accept' end
+
    -- alpine v2.4 compatibility
    if util.contains({'logdrop', 'logreject'}, self.action) then
       self:warning('Deprecated action: '..self.action)
