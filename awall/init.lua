@@ -143,7 +143,7 @@ function M.Config:print()
 end
 
 function M.Config:dump(dir)
-   self.ipset:dump(dir or '/etc/ipset.d')
+   self.ipset:dump(dir and dir..'/ipset-' or '/etc/ipset.d/')
    self.iptables:dump(dir or '/etc/iptables')
 end
 

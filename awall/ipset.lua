@@ -31,9 +31,9 @@ function IPSet:print()
    end
 end
 
-function IPSet:dump(ipsdir)
+function IPSet:dump(prefix)
    for name, ipset in pairs(self.config) do
-      local fname = ipsdir..'/'..name
+      local fname = prefix..name
       local file = io.open(fname)
       if not file then
 	 file = io.open(fname, 'w')
