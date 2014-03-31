@@ -40,14 +40,14 @@ local BaseIPTables = class()
 
 function BaseIPTables:print()
    for _, family in sortedkeys(families) do
-      self:dumpfile(family, io.stdout)
-      print()
+      self:dumpfile(family, io.output())
+      io.write('\n')
    end
 end
 
 function BaseIPTables:dump(dir)
    for family, tbls in pairs(families) do
-      local file = io.output(dir..'/'..families[family].file)
+      local file = io.open(dir..'/'..families[family].file, 'w')
       self:dumpfile(family, file)
       file:close()
    end

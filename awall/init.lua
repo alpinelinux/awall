@@ -138,7 +138,7 @@ end
 
 function M.Config:print()
    self.ipset:print()
-   print()
+   io.write('\n')
    self.iptables:print()
 end
 

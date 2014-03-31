@@ -30,8 +30,8 @@ end
 
 function IPSet:print()
    for _, name in sortedkeys(self.config) do
-      self:dumpfile(name, io.stdout)
-      io.stdout:write('\n')
+      self:dumpfile(name, io.output())
+      io.write('\n')
    end
 end
 
