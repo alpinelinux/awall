@@ -470,22 +470,26 @@ function Rule:trules()
 	    table.insert(res, ofrag)
 
 	 else
-	    local chains
-	    if ofrag.chain == 'PREROUTING' then chains = {'FORWARD', 'INPUT'}
+	    local ofs, recursive
+	    if ofrag.chain == 'PREROUTING' then
+	       ofs = {{chain='FORWARD'}, {chain='INPUT'}}
 	    elseif ofrag.chain == 'POSTROUTING' then
-	       chains = {'FORWARD', 'OUTPUT'}
-	    elseif util.contains({'INPUT', 'FORWARD'}, ofrag.chain) then
-	       chains = {'PREROUTING'}
+	       ofs = {{chain='FORWARD'}, {chain='OUTPUT'}}
+	       recursive = true
+	    elseif ofrag.chain == 'INPUT' then
+	       ofs = {{opts='-m addrtype --dst-type LOCAL', chain='PREROUTING'}}
+	    elseif ofrag.chain == 'FORWARD' then
+	       ofs = {
+		  {opts='-m addrtype ! --dst-type LOCAL', chain='PREROUTING'}
+	       }
 	    end
 
-	    if chains then
+	    if ofs then
 	       ofrag.chain = nil
-	       util.extend(res,
-			   convertchains(combinations({ofrag},
-						      util.map(chains,
-							       function(c)
-								  return {chain=c}
-							       end))))
+	       ofs = combinations(ofs, {ofrag})
+	       if recursive then ofs = convertchains(ofs) end
+	       util.extend(res, ofs)
+
 	    else table.insert(res, ofrag) end
 	 end
       end

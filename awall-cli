@@ -2,7 +2,7 @@
 
 --[[
 Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -14,7 +14,7 @@ require 'stringy'
 function help()
    io.stderr:write([[
 Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 This is free software with ABSOLUTELY NO WARRANTY,
 available under the terms of the GNU General Public License, version 2
 
