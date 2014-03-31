@@ -137,21 +137,21 @@ if not call(
       local awall = require('awall')
       local printtabular = util.printtabular
 
-      policyset = awall.PolicySet(pol_paths)
+      local policyset = awall.PolicySet(pol_paths)
 
       if mode == 'list' then
-	 imported = policyset:load().policies
-	 data = {}
+	 local imported = policyset:load().policies
+	 local data = {}
 	 
 	 for i, name in util.sortedkeys(policyset.policies) do
-	    policy = policyset.policies[name]
+	    local policy = policyset.policies[name]
 
 	    if all or policy.type == 'optional' then
 	       if policy.enabled then status = 'enabled'
 	       elseif contains(imported, name) then status = 'required'
 	       else status = 'disabled' end
 
-	       polinfo = {name, status, policy:load().description}
+	       local polinfo = {name, status, policy:load().description}
 
 	       if all then
 		  table.insert(polinfo, 2, policy.type)
@@ -169,8 +169,8 @@ if not call(
       if contains({'disable', 'enable'}, mode) then
 	 if opind > #arg then help() end
 	 repeat
-	    name = arg[opind]
-	    policy = policyset.policies[name]
+	    local name = arg[opind]
+	    local policy = policyset.policies[name]
 	    if not policy then uerror.raise('No such policy: '..name) end
 	    policy[mode](policy)
 	    opind = opind + 1
@@ -179,10 +179,11 @@ if not call(
       end
 
 
-      input = policyset:load()
+      local input = policyset:load()
 
       if mode == 'dump' then level = 0 + (arg[opind] or 0) end
 
+      local config
       if mode ~= 'dump' or level > 3 then
 	 awall.loadmodules(basedir)
 	 config = awall.Config(input)
@@ -193,9 +194,9 @@ if not call(
 
       if mode == 'dump' then
 	 local json = require('cjson')
-	 expinput = input:expand()
+	 local expinput = input:expand()
 
-	 function capitalize(cls)
+	 local function capitalize(cls)
 	    return cls:sub(1, 1):upper()..cls:sub(2, -1)
 	 end
 
@@ -206,16 +207,16 @@ if not call(
 	    ) then
 	       if level == 0 then print(capitalize(cls)..'s:') end
 	 
-	       items = {}
+	       local items = {}
 	       for k, v in pairs(objs) do
-		  exp = expinput[cls][k]
-		  expj = json.encode(exp)
-		  src = input.source[cls][k]
+		  local exp = expinput[cls][k]
+		  local expj = json.encode(exp)
+		  local src = input.source[cls][k]
 
 		  if level == 0 then table.insert(items, {k, expj, src})
 
 		  else
-		     data = {
+		     local data = {
 			{capitalize(cls)..' '..k, json.encode(v)},
 			{
 			   '('..src..')',
@@ -224,7 +225,7 @@ if not call(
 		     }
 
 		     if level > 3 then
-			obj = config.objects[cls][k]
+			local obj = config.objects[cls][k]
 			if type(obj) == 'table' and obj.info then
 			   util.extend(data, obj:info())
 			end
@@ -257,6 +258,8 @@ if not call(
 
 	 iptables.backup()
 
+	 local pid, interrupted
+
 	 if not force then
 	    signal.signal(
 	       'SIGCHLD',
@@ -274,18 +277,19 @@ if not call(
 	       )
 	    end
 
+	    local stdio, stdout
 	    pid, stdio, stdout = lpc.run(arg[0], 'fallback')
 	    stdio:close()
 	    stdout:close()
 	 end
 
-	 function kill()
+	 local function kill()
 	    signal.signal('SIGCHLD', 'default')
 	    signal.kill(pid, 'SIGTERM')
 	    lpc.wait(pid)
 	 end
 
-	 function revert()
+	 local function revert()
 	    iptables.revert()
 	    os.exit(1)
 	 end
