@@ -39,7 +39,7 @@ local backupdir = '/var/run/awall'
 local BaseIPTables = class()
 
 function BaseIPTables:print()
-   for family, tbls in pairs(families) do
+   for _, family in sortedkeys(families) do
       self:dumpfile(family, io.stdout)
       print()
    end

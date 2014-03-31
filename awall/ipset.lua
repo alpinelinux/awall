@@ -4,6 +4,10 @@ Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
+
+local sortedkeys = require('awall.util').sortedkeys
+
+
 local IPSet = require('awall.class')()
 
 function IPSet:init(config) self.config = config or {} end
@@ -25,7 +29,7 @@ function IPSet:create()
 end
 
 function IPSet:print()
-   for name, ipset in pairs(self.config) do
+   for _, name in sortedkeys(self.config) do
       self:dumpfile(name, io.stdout)
       io.stdout:write('\n')
    end
