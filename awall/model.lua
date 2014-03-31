@@ -341,9 +341,16 @@ function Rule:table() return 'filter' end
 function Rule:position() return 'append' end
 
 function Rule:target()
-   if not self.action then self:error('Action not defined') end
-   if self.action == 'accept' then return 'ACCEPT' end
-   self:error('Invalid action: '..self.action)
+   -- alpine v2.7 compatibility
+   if self.action == 'accept' then
+      self:warning("'accept' action deprecated in favor of 'exclude'")
+      self.action = 'exclude'
+   end
+
+   if self.action == 'exclude' then return 'ACCEPT' end
+   if self.action and self.action ~= 'include' then
+      self:error('Invalid action: '..self.action)
+   end
 end
 
 

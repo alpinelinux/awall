@@ -1,6 +1,6 @@
 --[[
 NAT module for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -41,17 +41,19 @@ end
 function NATRule:table() return 'nat' end
 
 function NATRule:target()
-   if self.action then return model.Rule.target(self) end
+   local target = model.Rule.target(self)
 
-   local addr = self['to-addr']
-   local target
-   if addr then
-      target = self.params.target..' --to-'..self.params.subject..' '..addr
-   else target = self.params.deftarget end
+   if not target then
+      local addr = self['to-addr']
+      if addr then
+	 target = self.params.target..' --to-'..self.params.subject..' '..addr
+      else target = self.params.deftarget end
 
-   if self['to-port'] then
-      target = target..(addr and ':' or ' --to-ports ')..self['to-port']
+      if self['to-port'] then
+	 target = target..(addr and ':' or ' --to-ports ')..self['to-port']
+      end
    end
+
    return target
 end
 

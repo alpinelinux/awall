@@ -176,10 +176,10 @@ end
 
 function Filter:actiontarget()
    if self.action == 'tarpit' then return 'tarpit' end
-   if util.contains({'drop', 'reject'}, self.action) then
+   if util.contains({'accept', 'drop', 'reject'}, self.action) then
       return string.upper(self.action)
    end
-   return model.Rule.target(self)
+   self:error('Invalid filter action: '..self.action)
 end
 
 function Filter:target()

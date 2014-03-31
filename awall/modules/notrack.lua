@@ -1,6 +1,6 @@
 --[[
 Connection tracking bypass module for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -17,8 +17,7 @@ local NoTrackRule = model.class(model.Rule)
 function NoTrackRule:table() return 'raw' end
 
 function NoTrackRule:target()
-   if self.action then return model.Rule.target(self) end
-   return 'CT --notrack'
+   return model.Rule.target(self) or 'CT --notrack'
 end
 
 
