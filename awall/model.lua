@@ -173,7 +173,7 @@ function Rule:zoneoptfrags()
 	 if zin == zout then return {} end
 	 local dir, z = 'in', zin
 	 if zin == fwzone then dir, z = 'out', zout end
-	 chain = string.upper(dir)..'PUT'
+	 chain = dir:upper()..'PUT'
 	 ofrags = zofs(z, dir)
 
       elseif not zin or not zout then
@@ -243,7 +243,7 @@ function Rule:servoptfrags()
 			   ports[sdef.proto],
 			   util.maplist(
 			      sdef.port,
-			      function(p) return string.gsub(p, '-', ':') end
+			      function(p) return tostring(p):gsub('-', ':') end
 			   )
 			)
 		     else ports[sdef.proto] = {} end
@@ -310,7 +310,7 @@ function Rule:servoptfrags()
 		     local sep = pc == 0 and '' or ','
 		     local port = ports[1]
 		     
-		     pc = pc + (string.find(port, ':') and 2 or 1)
+		     pc = pc + (port:find(':') and 2 or 1)
 		     if pc > 15 then break end
 		     
 		     opts = opts..sep..port

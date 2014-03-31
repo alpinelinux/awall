@@ -15,8 +15,8 @@ function call(f, ...)
    return xpcall(
       function() f(unpack(arg)) end,
       function(msg)
-	 local si, ei = string.find(msg, prefix, 1, true)
-   	 if si then msg = 'awall: '..string.sub(msg, ei + 1, -1) end
+	 local si, ei = msg:find(prefix, 1, true)
+	 if si then msg = 'awall: '..msg:sub(ei + 1, -1) end
    	 io.stderr:write(msg..'\n')
    	 if not si then io.stderr:write(debug.traceback()..'\n') end
       end

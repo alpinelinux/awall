@@ -59,7 +59,7 @@ function Log:target()
    local mode = self.mode or 'log'
    if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
 
-   local res = string.upper(mode)
+   local res = mode:upper()
    for s, t in pairs(optmap[mode]) do
       if self[s] then res = res..' --'..mode..'-'..t..' '..self[s] end
    end

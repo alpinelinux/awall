@@ -1,6 +1,6 @@
 --[[
 Utility module for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -11,13 +11,13 @@ function split(s, sep)
    if s == '' then return {} end
    local res = {}
    while true do
-      local si, ei = string.find(s, sep, 1, true)
+      local si, ei = s:find(sep, 1, true)
       if not si then
 	 table.insert(res, s)
 	 return res
       end
-      table.insert(res, string.sub(s, 1, si - 1))
-      s = string.sub(s, ei + 1, -1)
+      table.insert(res, s:sub(1, si - 1))
+      s = s:sub(ei + 1, -1)
    end
 end
 
@@ -104,7 +104,7 @@ function printtabulars(tables)
    for i, tbl in ipairs(tables) do
       for j, row in ipairs(tbl) do
 	 for k, col in ipairs(row) do
-	    colwidth[k] = math.max(colwidth[k] or 0, string.len(col))
+	    colwidth[k] = math.max(colwidth[k] or 0, col:len())
 	 end
       end
    end
@@ -114,7 +114,7 @@ function printtabulars(tables)
 	    if k > 1 then io.write('  ') end
 	    io.write(row[k])
 	    if k < #row then
-	       for l = 1,colwidth[k] - string.len(row[k]) do io.write(' ') end
+	       for l = 1,colwidth[k] - row[k]:len() do io.write(' ') end
 	    end
 	 end
 	 io.write('\n')

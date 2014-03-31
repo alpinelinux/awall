@@ -34,8 +34,9 @@ function PolicyConfig:expand()
       local visited = {}
       local pattern = '%$(%a[%w_]*)'
       
-      while type(value) == 'string' and string.find(value, pattern) do
-	 local si, ei, name = string.find(value, pattern)
+      while type(value) == 'string' do
+	 local si, ei, name = value:find(pattern)
+	 if not si then break end
 	 
 	 if contains(visited, name) then
 	    raise('Circular variable definition: '..name)
@@ -45,9 +46,9 @@ function PolicyConfig:expand()
 	 local var = self.data.variable[name]
 	 if var == nil then raise('Invalid variable reference: '..name) end
 	 
-	 if si == 1 and ei == string.len(value) then value = var
+	 if si == 1 and ei == value:len() then value = var
 	 elseif contains({'number', 'string'}, type(var)) then
-	    value = string.sub(value, 1, si - 1)..var..string.sub(value, ei + 1, -1)
+	    value = value:sub(1, si - 1)..var..value:sub(ei + 1, -1)
 	 else
 	    raise('Attempted to concatenate complex variable: '..name)
 	 end
@@ -110,12 +111,12 @@ function PolicySet:init(dirs)
    for i, cls in ipairs{'private', 'optional', 'mandatory'} do
       for i, dir in ipairs(dirs[cls] or defdirs[cls]) do
 	 for fname in lfs.dir(dir) do
-	    local si, ei, name = string.find(fname, '^([%w-]+)%.json$')
+	    local si, ei, name = fname:find('^([%w-]+)%.json$')
 	    if name then
 	       local pol = self.policies[name]
 
 	       local path = dir..'/'..fname
-	       if string.sub(path, 1, 1) ~= '/' then
+	       if path:sub(1, 1) ~= '/' then
 		  path = lfs.currentdir()..'/'..path
 	       end
 
@@ -173,7 +174,7 @@ function PolicySet:load()
       end
 
       for i, name in listpairs(data.import) do
-	 if string.sub(name, 1, 1) ~= '%' then
+	 if name:sub(1, 1) ~= '%' then
 	    local pol = self.policies[name]
 	    if not pol then
 	       raise('Invalid policy reference from '..policy.name..': '..name)

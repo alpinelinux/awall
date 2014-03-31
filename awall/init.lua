@@ -1,6 +1,6 @@
 --[[
 Alpine Wall main module
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -49,7 +49,7 @@ function loadmodules(path)
    local modules = {}
    for modfile in lfs.dir((path or '/usr/share/lua/5.1')..'/awall/modules') do
       if stringy.endswith(modfile, '.lua') then
-	 table.insert(modules, 'awall.modules.'..string.sub(modfile, 1, -5))
+	 table.insert(modules, 'awall.modules.'..modfile:sub(1, -5))
       end
    end
    table.sort(modules)
@@ -67,7 +67,7 @@ function loadmodules(path)
 end
 
 function loadclass(path)
-   assert(string.sub(path, 1, 1) ~= '%')
+   assert(path:sub(1, 1) ~= '%')
    return events[path] and events[path].class
 end
 
@@ -103,7 +103,7 @@ function Config:init(policyconfig)
    end
 
    for i, path in ipairs(procorder) do
-      if string.sub(path, 1, 1) ~= '%' then
+      if path:sub(1, 1) ~= '%' then
 	 local objs = self.objects[path]
 	 if objs then
 	    for k, v in pairs(objs) do
@@ -118,7 +118,7 @@ function Config:init(policyconfig)
    end
 
    for i, event in ipairs(procorder) do
-      if string.sub(event, 1, 1) == '%' then
+      if event:sub(1, 1) == '%' then
 	 local r = events[event].rules
 	 if r then
 	    if type(r) == 'function' then r = r(self.objects) end

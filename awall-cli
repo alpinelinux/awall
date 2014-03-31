@@ -107,12 +107,12 @@ if not util.contains({'translate', 'activate', 'fallback', 'flush',
 
 pol_paths = {}
 for i, cls in ipairs{'mandatory', 'optional', 'private'} do
-   path = os.getenv('AWALL_PATH_'..string.upper(cls))
+   path = os.getenv('AWALL_PATH_'..cls:upper())
    if path then pol_paths[cls] = util.split(path, ':') end
 end
 
 if stringy.endswith(arg[0], '/awall-cli') then
-   basedir = string.sub(arg[0], 1, -11)
+   basedir = arg[0]:sub(1, -11)
    if not pol_paths.mandatory then
       pol_paths.mandatory = {'/etc/awall'}
    end
@@ -185,7 +185,7 @@ if not uerror.call(
 	 expinput = input:expand()
 
 	 function capitalize(cls)
-	    return string.upper(string.sub(cls, 1, 1))..string.sub(cls, 2, -1)
+	    return cls:sub(1, 1):upper()..cls:sub(2, -1)
 	 end
 
 	 for cls, objs in pairs(input.data) do

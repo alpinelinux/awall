@@ -1,6 +1,6 @@
 --[[
 Host address resolver for Alpine Wall
-Copyright (C) 2012 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -13,7 +13,7 @@ local familypatterns = {inet='%d[%.%d/]+',
 
 local function getfamily(addr, context)
    for k, v in pairs(familypatterns) do
-      if string.match(addr, '^'..v..'$') then return k end
+      if addr:match('^'..v..'$') then return k end
    end
    context:error('Malformed host specification: '..addr)
 end
@@ -28,9 +28,11 @@ function resolve(host, context)
 	 dnscache[host] = {}
 	 for rec in io.popen('dig -t ANY '..host):lines() do
 	    local name, rtype, addr =
-	       string.match(rec, '^('..familypatterns.domain..')%s+%d+%s+IN%s+(A+)%s+(.+)')
+	       rec:match(
+		  '^('..familypatterns.domain..')%s+%d+%s+IN%s+(A+)%s+(.+)'
+	       )
 
-	    if name and string.sub(name, 1, string.len(host) + 1) == host..'.' then
+	    if name and name:sub(1, host:len() + 1) == host..'.' then
 	       if rtype == 'A' then family = 'inet'
 	       elseif rtype == 'AAAA' then family = 'inet6'
 	       else family = nil end

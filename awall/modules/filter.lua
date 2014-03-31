@@ -49,7 +49,7 @@ function Filter:init(...)
    -- alpine v2.4 compatibility
    if util.contains({'logdrop', 'logreject'}, self.action) then
       self:warning('Deprecated action: '..self.action)
-      self.action = string.sub(self.action, 4, -1)
+      self.action = self.action:sub(4, -1)
    end
 
    local log = require('awall').loadclass('log').get
@@ -100,7 +100,7 @@ function Filter:trules()
       if not self.dest then
 	 self:error('Destination address must be specified with DNAT')
       end
-      if string.find(self.dnat, '/') then
+      if self.dnat:find('/') then
 	 self:error('DNAT target cannot be a network address')
       end
       for i, attr in ipairs({'ipsec', 'ipset'}) do
@@ -177,7 +177,7 @@ end
 function Filter:actiontarget()
    if self.action == 'tarpit' then return 'tarpit' end
    if util.contains({'accept', 'drop', 'reject'}, self.action) then
-      return string.upper(self.action)
+      return self.action:upper()
    end
    self:error('Invalid filter action: '..self.action)
 end
@@ -268,11 +268,7 @@ function stateful(config)
       )
       for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
 	 table.insert(
-	    er,
-	    {
-	       chain=chain,
-	       opts='-'..string.lower(string.sub(chain, 1, 1))..' lo'
-	    }
+	    er, {chain=chain, opts='-'..chain:sub(1, 1):lower()..' lo'}
 	 )
       end
       extend(
