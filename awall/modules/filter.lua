@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2013 Kaarle Ritvanen
+Copyright (C) 2012-2014 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -35,6 +35,8 @@ function RelatedRule:servoptfrags()
    end
    return util.values(helpers)
 end
+
+function RelatedRule:target() return 'ACCEPT' end
 
 
 local Filter = model.class(model.Rule)
@@ -132,17 +134,13 @@ function Filter:trules()
 
       if self.related then
 	 for i, rule in listpairs(self.related) do
-	    extrarules(
-	       RelatedRule,
-	       {service=self.service, action='accept'},
-	       rule
-	    )
+	    extrarules(RelatedRule, {service=self.service}, rule)
 	 end
       else
 	 -- TODO avoid creating unnecessary RELATED rules by introducing
 	 -- helper direction attributes to service definitions
-	 extrarules(RelatedRule, {action='accept'})
-	 extrarules(RelatedRule, {reverse=true, action='accept'})
+	 extrarules(RelatedRule)
+	 extrarules(RelatedRule, {reverse=true})
       end
 
       if self['no-track'] then
