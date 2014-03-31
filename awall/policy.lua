@@ -14,7 +14,7 @@ local contains = util.contains
 local listpairs = util.listpairs
 
 
-local json = require('json')
+local json = require('cjson')
 local lfs = require('lfs')
 
 
