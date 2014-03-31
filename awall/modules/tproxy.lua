@@ -8,8 +8,6 @@ See LICENSE file for license details
 module(..., package.seeall)
 
 local model = require('awall.model')
-local Rule = model.Rule
-
 local combinations = require('awall.optfrag').combinations
 
 local util = require('awall.util')
@@ -18,10 +16,10 @@ local list = util.list
 local listpairs = util.listpairs
 
 
-local TProxyRule = model.class(Rule)
+local TProxyRule = model.class(model.Rule)
 
 function TProxyRule:init(...)
-   Rule.init(self, ...)
+   TProxyRule.super(self):init(...)
 
    if not self['in'] then self:error('Ingress zone must be specified') end
    if contains(list(self['in']), model.fwzone) then

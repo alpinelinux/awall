@@ -17,7 +17,7 @@ local NoTrackRule = model.class(model.Rule)
 function NoTrackRule:table() return 'raw' end
 
 function NoTrackRule:target()
-   return model.Rule.target(self) or 'CT --notrack'
+   return NoTrackRule.super(self):target() or 'CT --notrack'
 end
 
 

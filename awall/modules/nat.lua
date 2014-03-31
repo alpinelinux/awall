@@ -17,7 +17,7 @@ local NATRule = model.class(model.Rule)
 
 -- alpine v2.4 compatibility
 function NATRule:init(...)
-   model.Rule.init(self, ...)
+   NATRule.super(self):init(...)
    local attrs = {['ip-range']='to-addr', ['port-range']='to-port'}
    for old, new in pairs(attrs) do
       if not self[new] and self[old] then
@@ -29,7 +29,7 @@ end
 
 function NATRule:trules()
    local res = {}
-   for i, ofrags in ipairs(model.Rule.trules(self)) do
+   for i, ofrags in ipairs(NATRule.super(self):trules()) do
       if not awall.util.contains(self.params.chains, ofrags.chain) then
 	 self:error('Inappropriate zone definitions for a '..self.params.target..' rule')
       end
@@ -41,7 +41,7 @@ end
 function NATRule:table() return 'nat' end
 
 function NATRule:target()
-   local target = model.Rule.target(self)
+   local target = NATRule.super(self):target()
 
    if not target then
       local addr = self['to-addr']
@@ -61,7 +61,7 @@ end
 local DNATRule = model.class(NATRule)
 
 function DNATRule:init(...)
-   NATRule.init(self, ...)
+   DNATRule.super(self):init(...)
    self.params = {forbidif='out', subject='destination',
 		  chains={'INPUT', 'PREROUTING'},
 		  target='DNAT', deftarget='REDIRECT'}
@@ -71,7 +71,7 @@ end
 local SNATRule = model.class(NATRule)
 
 function SNATRule:init(...)
-   NATRule.init(self, ...)
+   SNATRule.super(self):init(...)
    self.params = {forbidif='in', subject='source',
 		  chains={'OUTPUT', 'POSTROUTING'},
 		  target='SNAT', deftarget='MASQUERADE'}

@@ -8,8 +8,6 @@ See LICENSE file for license details
 module(..., package.seeall)
 
 local model = require('awall.model')
-local Rule = model.Rule
-
 local combinations = require('awall.optfrag').combinations
 
 
@@ -80,17 +78,19 @@ function Log.get(rule, spec, default)
 end
 
 
-local LogRule = model.class(Rule)
+local LogRule = model.class(model.Rule)
 
 function LogRule:init(...)
-   Rule.init(self, ...)
+   LogRule.super(self):init(...)
    self.log = Log.get(self, self.log, true)
 end
 
 function LogRule:position() return 'prepend' end
 
 function LogRule:servoptfrags()
-   return combinations(Rule.servoptfrags(self), {self.log:matchofrag()})
+   return combinations(
+      LogRule.super(self):servoptfrags(), {self.log:matchofrag()}
+   )
 end
 
 function LogRule:target() return self.log:target() end

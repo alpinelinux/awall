@@ -10,6 +10,23 @@ module(..., package.seeall)
 function class(base)
    local cls = {}
 
+   function cls.super(obj)
+      return setmetatable(
+	 {},
+	 {
+	    __index=function(t, k)
+	       local v = base[k]
+	       if type(v) ~= 'function' then return v end
+	       return function(...)
+		  local arg = {...}
+		  arg[1] = obj
+		  return v(unpack(arg))
+	       end
+	    end
+	 }
+      )
+   end
+
    function cls:morph(...)
       setmetatable(self, {__index = cls})
       self:init(...)

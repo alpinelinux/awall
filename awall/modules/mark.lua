@@ -17,7 +17,7 @@ local util = require('awall.util')
 local MarkRule = class(model.Rule)
 
 function MarkRule:init(...)
-   model.Rule.init(self, ...)
+   MarkRule.super(self):init(...)
    if not self.mark then self:error('Mark not specified') end
 end
 
@@ -32,14 +32,15 @@ function RouteTrackRule:target() return self:newchain('mark') end
 
 function RouteTrackRule:servoptfrags()
    return combinations(
-      MarkRule.servoptfrags(self),
-      {{opts='-m mark --mark 0'}}
+      RouteTrackRule.super(self):servoptfrags(), {{opts='-m mark --mark 0'}}
    )
 end
 
 function RouteTrackRule:extraoptfrags()
-   return {{chain=self:target(), target=MarkRule.target(self)},
-	   {chain=self:target(), target='CONNMARK --save-mark'}}
+   return {
+      {chain=self:target(), target=RouteTrackRule.super(self).target()},
+      {chain=self:target(), target='CONNMARK --save-mark'}
+   }
 end
 
 

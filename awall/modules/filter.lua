@@ -42,7 +42,7 @@ function RelatedRule:target() return 'ACCEPT' end
 local Filter = model.class(model.Rule)
 
 function Filter:init(...)
-   model.Rule.init(self, ...)
+   Filter.super(self):init(...)
 
    if not self.action then self.action = 'accept' end
 
@@ -65,7 +65,7 @@ function Filter:init(...)
 end
 
 function Filter:destoptfrags()
-   local ofrags = model.Rule.destoptfrags(self)
+   local ofrags = Filter.super(self):destoptfrags()
    if not self.dnat then return ofrags end
 
    ofrags = combinations(ofrags, {{family='inet6'}})
@@ -129,7 +129,7 @@ function Filter:trules()
       extrarules('no-track')
    end
 
-   extend(res, model.Rule.trules(self))
+   extend(res, Filter.super(self):trules())
 
    if self.action == 'accept' then
       local nr = #res

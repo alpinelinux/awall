@@ -103,7 +103,7 @@ fwzone = Zone()
 IPSet = class(ConfigObject)
 
 function IPSet:init(...)
-   ConfigObject.init(self, ...)
+   IPSet.super(self):init(...)
 
    if not self.type then self:error('Type not defined') end
 
@@ -126,7 +126,7 @@ Rule = class(ConfigObject)
 
 
 function Rule:init(...)
-   ConfigObject.init(self, ...)
+   Rule.super(self):init(...)
 
    self.newchains = {}
 
