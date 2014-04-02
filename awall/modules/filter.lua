@@ -43,7 +43,9 @@ local LoggingRule = class(TranslatingRule)
 function LoggingRule:init(...)
    LoggingRule.super(self):init(...)
    if not self.action then self.action = 'accept' end
-   self.log = loadclass('log').get(self, self.log, self.action ~= 'accept')
+   if type(self.log) ~= 'table' then
+      self.log = loadclass('log').get(self, self.log, self.action ~= 'accept')
+   end
 end
 
 function LoggingRule:actiontarget() return 'ACCEPT' end
@@ -165,6 +167,10 @@ function Filter:trules()
    extend(res, Filter.super(self):trules())
 
    if self.action == 'accept' then
+      if self:position() == 'prepend' then
+	 extrarules(LoggingRule, {log=self.log})
+      end
+
       local nr = #res
 
       if self.related then
@@ -238,9 +244,15 @@ function Filter:extraoptfrags()
 	 interval = 1
       end
 
-      local ofrags, logch, limitofs
+      local ofrags = {}
+      local logch, limitofs
+      local accept = self:position() == 'append'
+
       if count > RECENT_MAX_COUNT then
-	 ofrags, logch = self:logchain(self.log, 'accept', 'ACCEPT')
+	 if accept then
+	    ofrags, logch = self:logchain(self.log, 'accept', 'ACCEPT')
+	 else logch = 'RETURN' end
+
 	 limitofs = {
 	    {
 	       opts='-m hashlimit --hashlimit-upto '..count..'/second --hashlimit-burst '..count..' --hashlimit-mode srcip --hashlimit-name '..limitchain,
@@ -249,8 +261,10 @@ function Filter:extraoptfrags()
 	    {target='DROP'}
 	 }
 	 if limitlog then table.insert(limitofs, 2, limitlog:optfrag()) end
+
       else
 	 ofrags, logch = self:logchain(limitlog, 'drop', 'DROP')
+
 	 limitofs = combinations(
 	    {{opts='-m recent --name '..limitchain}},
 	    {
@@ -258,10 +272,12 @@ function Filter:extraoptfrags()
 		  opts='--update --hitcount '..count..' --seconds '..interval,
 		  target=logch
 	       },
-	       {opts='--set', target='ACCEPT'}
+	       {opts='--set', target=accept and 'ACCEPT' or nil}
 	    }
 	 )
-	 if self.log then table.insert(limitofs, 2, self.log:optfrag()) end
+	 if accept and self.log then
+	    table.insert(limitofs, 2, self.log:optfrag())
+	 end
       end
 
       extend(ofrags, combinations({{chain=limitchain}}, limitofs))

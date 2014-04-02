@@ -53,4 +53,9 @@ end
 
 function M.location(of) return of.family..'/'..of.table..'/'..of.chain end
 
+function M.command(of)
+   return (of.opts and of.opts..' ' or '')..
+      (of.target and '-j '..of.target or '')
+end
+
 return M

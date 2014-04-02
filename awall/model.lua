@@ -61,13 +61,7 @@ function M.ConfigObject:trules() return {} end
 function M.ConfigObject:info()
    local res = {}
    for i, trule in ipairs(self:trules()) do
-      table.insert(
-	 res,
-	 {
-	    '  '..optfrag.location(trule),
-	    (trule.opts and trule.opts..' ' or '')..'-j '..trule.target
-	 }
-      )
+      table.insert(res, {'  '..optfrag.location(trule), optfrag.command(trule)})
    end
    return res
 end

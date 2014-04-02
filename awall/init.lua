@@ -82,12 +82,16 @@ function M.Config:init(policyconfig)
    local function insertrules(trules)
       for i, trule in ipairs(trules) do
 	 local t = self.iptables.config[trule.family][trule.table][trule.chain]
-	 local opts = (trule.opts and trule.opts..' ' or '')..'-j '..trule.target
+	 local opts = optfrag.command(trule)
 
-	 local acfrag = {family=trule.family,
-			 table=trule.table,
-			 chain=trule.target}
-	 acfrags[optfrag.location(acfrag)] = acfrag
+	 if trule.target then
+	    local acfrag = {
+	       family=trule.family,
+	       table=trule.table,
+	       chain=trule.target
+	    }
+	    acfrags[optfrag.location(acfrag)] = acfrag
+	 end
 
 	 if trule.position == 'prepend' then
 	    table.insert(t, 1, opts)
