@@ -108,21 +108,31 @@ function Filter:init(...)
       end
       self[limit].log = loadclass('log').get(self, self[limit].log, true)
    end
+
+   self.extrarules = {}
 end
 
 function Filter:trules()
    local res = {}
 
-   local function extrarules(cls, extra, src)
-      if not src then src = self end
-      local params = {}
-      for i, attr in ipairs(
-	 {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
-      ) do
-	 params[attr] = src[attr]
+   local function extrarules(key, cls, extra, src)
+      local obj = self.extrarules[key]
+
+      if not obj then
+	 if not src then src = self end
+	 local params = {}
+	 for i, attr in ipairs(
+	    {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
+         ) do
+	    params[attr] = src[attr]
+	 end
+	 util.update(params, extra)
+
+	 obj = self:create(cls, params)
+	 self.extrarules[key] = obj
       end
-      util.update(params, extra)
-      return extend(res, self:create(cls, params):trules())
+      
+      extend(res, obj:trules())
    end
 
    if self.dnat then
@@ -157,39 +167,39 @@ function Filter:trules()
 	 self:error(self.dnat..' does not resolve to any IPv4 address')
       end
 
-      extrarules('dnat', {['to-addr']=dnataddr, out=nil})
+      extrarules('dnat', 'dnat', {['to-addr']=dnataddr, out=nil})
    end
 
    if self.action == 'tarpit' or self['no-track'] then
-      extrarules('no-track')
+      extrarules('no-track', 'no-track')
    end
 
    extend(res, Filter.super(self):trules())
 
    if self.action == 'accept' then
       if self:position() == 'prepend' then
-	 extrarules(LoggingRule, {log=self.log})
+	 extrarules('final', LoggingRule, {log=self.log})
       end
 
       local nr = #res
 
       if self.related then
 	 for i, rule in listpairs(self.related) do
-	    extrarules(RelatedRule, {service=self.service}, rule)
+	    extrarules('related', RelatedRule, {service=self.service}, rule)
 	 end
       else
 	 -- TODO avoid creating unnecessary RELATED rules by introducing
 	 -- helper direction attributes to service definitions
-	 extrarules(RelatedRule)
-	 extrarules(RelatedRule, {reverse=true})
+	 extrarules('related', RelatedRule)
+	 extrarules('related-reply', RelatedRule, {reverse=true})
       end
 
       if self['no-track'] then
 	 if #res > nr then
 	    self:error('Tracking required by service')
 	 end
-	 extrarules('no-track', {reverse=true})
-	 extrarules('filter', {reverse=true})
+	 extrarules('no-track-reply', 'no-track', {reverse=true})
+	 extrarules('reply', 'filter', {reverse=true})
       end
    end
 
