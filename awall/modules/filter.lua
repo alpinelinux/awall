@@ -5,6 +5,7 @@ See LICENSE file for license details
 ]]--
 
 
+local loadclass = require('awall').loadclass
 local resolve = require('awall.host')
 
 local model = require('awall.model')
@@ -37,6 +38,32 @@ function TranslatingRule:destoptfrags()
 end
 
 
+local LoggingRule = class(TranslatingRule)
+
+function LoggingRule:init(...)
+   LoggingRule.super(self):init(...)
+   if not self.action then self.action = 'accept' end
+   self.log = loadclass('log').get(self, self.log, self.action ~= 'accept')
+end
+
+function LoggingRule:actiontarget() return 'ACCEPT' end
+
+function LoggingRule:target()
+   if self.log then return self:newchain('log'..self.action) end
+   return self:actiontarget()
+end
+
+function LoggingRule:logchain(log, action, target)
+   if not log then return {}, target end
+   local chain = self:newchain('log'..action)
+   return combinations({{chain=chain}}, {log:optfrag(), {target=target}}), chain
+end
+
+function LoggingRule:extraoptfrags()
+   return self:logchain(self.log, self.action, self:actiontarget())
+end
+
+
 local RelatedRule = class(TranslatingRule)
 
 function RelatedRule:servoptfrags()
@@ -58,21 +85,16 @@ end
 function RelatedRule:target() return 'ACCEPT' end
 
 
-local Filter = class(TranslatingRule)
+local Filter = class(LoggingRule)
 
 function Filter:init(...)
    Filter.super(self):init(...)
-
-   if not self.action then self.action = 'accept' end
 
    -- alpine v2.4 compatibility
    if contains({'logdrop', 'logreject'}, self.action) then
       self:warning('Deprecated action: '..self.action)
       self.action = self.action:sub(4, -1)
    end
-
-   local log = require('awall').loadclass('log').get
-   self.log = log(self, self.log, self.action ~= 'accept')
 
    local limit = self:limit()
    if limit then
@@ -82,7 +104,7 @@ function Filter:init(...)
       if type(self[limit]) ~= 'table' then
 	 self[limit] = {count=self[limit]}
       end
-      self[limit].log = log(self, self[limit].log, true)
+      self[limit].log = loadclass('log').get(self, self[limit].log, true)
    end
 end
 
@@ -196,30 +218,17 @@ end
 
 function Filter:target()
    if self:limit() then return self:newchain('limit') end
-   if self.log then return self:newchain('log'..self.action) end
-   return self:actiontarget()
+   return Filter.super(self).target()
 end
 
 function Filter:extraoptfrags()
-   local res = {}
-
-   local function logchain(log, action, target)
-      if not log then return target end
-      local chain = self:newchain('log'..action)
-      extend(
-	 res,
-	 combinations({{chain=chain}}, {log:optfrag(), {target=target}})
-      )
-      return chain
-   end
-
    local limit = self:limit()
    if limit then
       if self.action ~= 'accept' then
 	 self:error('Cannot specify limit for '..self.action..' filter')
       end
 
-      local chain = self:newchain('limit')
+      local limitchain = self:newchain('limit')
       local limitlog = self[limit].log
       local count = self[limit].count
       local interval = self[limit].interval or 1
@@ -229,37 +238,38 @@ function Filter:extraoptfrags()
 	 interval = 1
       end
 
-      local ofrags
+      local ofrags, logch, limitofs
       if count > RECENT_MAX_COUNT then
-	 ofrags = {
+	 ofrags, logch = self:logchain(self.log, 'accept', 'ACCEPT')
+	 limitofs = {
 	    {
-	       opts='-m hashlimit --hashlimit-upto '..count..'/second --hashlimit-burst '..count..' --hashlimit-mode srcip --hashlimit-name '..chain,
-	       target=logchain(self.log, 'accept', 'ACCEPT')
+	       opts='-m hashlimit --hashlimit-upto '..count..'/second --hashlimit-burst '..count..' --hashlimit-mode srcip --hashlimit-name '..limitchain,
+	       target=logch
 	    },
 	    {target='DROP'}
 	 }
-	 if limitlog then table.insert(ofrags, 2, limitlog:optfrag()) end
+	 if limitlog then table.insert(limitofs, 2, limitlog:optfrag()) end
       else
-	 ofrags = combinations(
-	    {{opts='-m recent --name '..chain}},
+	 ofrags, logch = self:logchain(limitlog, 'drop', 'DROP')
+	 limitofs = combinations(
+	    {{opts='-m recent --name '..limitchain}},
 	    {
 	       {
 		  opts='--update --hitcount '..count..' --seconds '..interval,
-		  target=logchain(limitlog, 'drop', 'DROP')
+		  target=logch
 	       },
 	       {opts='--set', target='ACCEPT'}
 	    }
 	 )
-	 if self.log then table.insert(ofrags, 2, self.log:optfrag()) end
+	 if self.log then table.insert(limitofs, 2, self.log:optfrag()) end
       end
 
-      extend(res, combinations({{chain=chain}}, ofrags))
+      extend(ofrags, combinations({{chain=limitchain}}, limitofs))
+      return ofrags
+   end
 
-   else logchain(self.log, self.action, self:actiontarget()) end
-   
-   return res
+   return Filter.super(self):extraoptfrags()
 end
-
 
 
 local Policy = class(Filter)
