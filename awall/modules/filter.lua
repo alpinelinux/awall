@@ -21,7 +21,23 @@ local listpairs = util.listpairs
 local RECENT_MAX_COUNT = 20
 
 
-local RelatedRule = class(Rule)
+local TranslatingRule = class(Rule)
+
+function TranslatingRule:destoptfrags()
+   local ofrags = TranslatingRule.super(self):destoptfrags()
+   if not self.dnat then return ofrags end
+
+   ofrags = combinations(ofrags, {{family='inet6'}})
+   local natof = self:create(
+      model.Zone, {addr=self.dnat}
+   ):optfrags(self:direction('out'))
+   assert(#natof == 1)
+   table.insert(ofrags, natof[1])
+   return ofrags
+end
+
+
+local RelatedRule = class(TranslatingRule)
 
 function RelatedRule:servoptfrags()
    local helpers = {}
@@ -42,7 +58,7 @@ end
 function RelatedRule:target() return 'ACCEPT' end
 
 
-local Filter = class(Rule)
+local Filter = class(TranslatingRule)
 
 function Filter:init(...)
    Filter.super(self):init(...)
@@ -70,17 +86,6 @@ function Filter:init(...)
    end
 end
 
-function Filter:destoptfrags()
-   local ofrags = Filter.super(self):destoptfrags()
-   if not self.dnat then return ofrags end
-
-   ofrags = combinations(ofrags, {{family='inet6'}})
-   local natof = self:create(model.Zone, {addr=self.dnat}):optfrags('out')
-   assert(#natof == 1)
-   table.insert(ofrags, natof[1])
-   return ofrags
-end
-
 function Filter:trules()
    local res = {}
 
@@ -88,7 +93,7 @@ function Filter:trules()
       if not src then src = self end
       local params = {}
       for i, attr in ipairs(
-	 {'in', 'out', 'src', 'dest', 'ipset', 'ipsec', 'service'}
+	 {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
       ) do
 	 params[attr] = src[attr]
       end
