@@ -177,7 +177,8 @@ function Filter:limit()
 end
 
 function Filter:position()
-   return self:limit() == 'flow-limit' and 'prepend' or 'append'
+   return not self['no-track'] and self:limit() == 'flow-limit'
+      and 'prepend' or 'append'
 end
 
 function Filter:actiontarget()
