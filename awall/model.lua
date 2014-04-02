@@ -146,7 +146,10 @@ function M.Rule:init(...)
    end
 
    if self.service then
-      if type(self.service) == 'string' then self.label = self.service end
+      if not self.label and type(self.service) == 'string' then
+	 self.label = self.service
+      end
+
       self.service = maplist(
 	 self.service,
 	 function(s)

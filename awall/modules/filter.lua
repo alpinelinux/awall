@@ -120,7 +120,7 @@ function Filter:trules()
 
       if not obj then
 	 if not src then src = self end
-	 local params = {}
+	 local params = {label=(self.label and self.label..'-' or '')..key}
 	 for i, attr in ipairs(
 	    {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
          ) do
