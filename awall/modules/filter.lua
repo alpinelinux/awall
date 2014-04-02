@@ -153,7 +153,7 @@ function Filter:trules()
 	    self:error('Tracking required by service')
 	 end
 	 extrarules('no-track', {reverse=true})
-	 extrarules('filter', {reverse=true, action='accept', log=false})
+	 extrarules('filter', {reverse=true})
       end
    end
 
