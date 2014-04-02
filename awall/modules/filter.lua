@@ -60,6 +60,9 @@ function Filter:init(...)
 
    local limit = self:limit()
    if limit then
+      if limit == 'conn-limit' and self['no-track'] then
+	 self:error('Tracking required with connection limit')
+      end
       if type(self[limit]) ~= 'table' then
 	 self[limit] = {count=self[limit]}
       end
