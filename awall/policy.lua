@@ -204,6 +204,10 @@ function PolicySet:load()
 	    {'description', 'import', 'after', 'before'},
 	    cls
 	 ) then
+	    if type(objs) ~= 'table' then
+	       raise('Invalid top-level attribute: '..cls..' ('..name..')')
+	    end
+
 	    if not source[cls] then source[cls] = {} end
 
 	    if not input[cls] then
