@@ -115,18 +115,20 @@ end
 function Filter:trules()
    local res = {}
 
-   local function extrarules(key, cls, extra, src)
+   local function extrarules(key, cls, options)
       local obj = self.extrarules[key]
 
       if not obj then
-	 if not src then src = self end
+	 options = options or {}
+
 	 local params = {label=(self.label and self.label..'-' or '')..key}
 	 for i, attr in ipairs(
 	    {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
          ) do
-	    params[attr] = src[attr]
+	    params[attr] = (options.src or self)[attr]
 	 end
-	 util.update(params, extra)
+	 util.update(params, options.update)
+	 if options.discard then params[options.discard] = nil end
 
 	 obj = self:create(cls, params)
 	 self.extrarules[key] = obj
@@ -164,7 +166,7 @@ function Filter:trules()
 	 self:error(self.dnat..' does not resolve to any IPv4 address')
       end
 
-      extrarules('dnat', 'dnat', {['to-addr']=dnataddr, out=nil})
+      extrarules('dnat', 'dnat', {update={['to-addr']=dnataddr}, discard='out'})
    end
 
    if self.action == 'tarpit' or self['no-track'] then
@@ -175,28 +177,30 @@ function Filter:trules()
 
    if self.action == 'accept' then
       if self:position() == 'prepend' then
-	 extrarules('final', LoggingRule, {log=self.log})
+	 extrarules('final', LoggingRule, {update={log=self.log}})
       end
 
       local nr = #res
 
       if self.related then
 	 for i, rule in listpairs(self.related) do
-	    extrarules('related', RelatedRule, {service=self.service}, rule)
+	    extrarules(
+	       'related', RelatedRule, {src=rule, update={service=self.service}}
+	    )
 	 end
       else
 	 -- TODO avoid creating unnecessary RELATED rules by introducing
 	 -- helper direction attributes to service definitions
 	 extrarules('related', RelatedRule)
-	 extrarules('related-reply', RelatedRule, {reverse=true})
+	 extrarules('related-reply', RelatedRule, {update={reverse=true}})
       end
 
       if self['no-track'] then
 	 if #res > nr then
 	    self:error('Tracking required by service')
 	 end
-	 extrarules('no-track-reply', 'no-track', {reverse=true})
-	 extrarules('reply', 'filter', {reverse=true})
+	 extrarules('no-track-reply', 'no-track', {update={reverse=true}})
+	 extrarules('reply', 'filter', {update={reverse=true}})
       end
    end
 
