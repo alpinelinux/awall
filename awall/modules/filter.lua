@@ -97,9 +97,6 @@ function Filter:trules()
       if self['no-track'] then
 	 self:error('dnat option not allowed with no-track')
       end
-      if not self.dest then
-	 self:error('Destination address must be specified with DNAT')
-      end
       if string.find(self.dnat, '/') then
 	 self:error('DNAT target cannot be a network address')
       end
