@@ -115,13 +115,13 @@ end
 function Filter:trules()
    local res = {}
 
-   local function extrarules(key, cls, options)
+   local function extrarules(label, cls, options)
+      options = options or {}
+      local key = label..(options.index or '')
       local obj = self.extrarules[key]
 
       if not obj then
-	 options = options or {}
-
-	 local params = {label=(self.label and self.label..'-' or '')..key}
+	 local params = {label=(self.label and self.label..'-' or '')..label}
 	 for i, attr in ipairs(
 	    {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
          ) do
@@ -185,7 +185,9 @@ function Filter:trules()
       if self.related then
 	 for i, rule in listpairs(self.related) do
 	    extrarules(
-	       'related', RelatedRule, {src=rule, update={service=self.service}}
+	       'related',
+	       RelatedRule,
+	       {index=i, src=rule, update={service=self.service}}
 	    )
 	 end
       else
