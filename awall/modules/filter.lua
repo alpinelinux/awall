@@ -78,15 +78,18 @@ end
 function Filter:trules()
    local res = {}
 
-   local function extrarules(cls, extra, src)
-      if not src then src = self end
+   local function extrarules(cls, options)
+      options = options or {}
+
       local params = {}
       for i, attr in ipairs(
 	 {'in', 'out', 'src', 'dest', 'ipset', 'ipsec', 'service'}
       ) do
-	 params[attr] = src[attr]
+	 params[attr] = (options.src or self)[attr]
       end
-      util.update(params, extra)
+      util.update(params, options.update)
+      if options.discard then params[options.discard] = nil end
+
       return extend(res, self:create(cls, params):trules())
    end
 
@@ -119,7 +122,7 @@ function Filter:trules()
 	 self:error(self.dnat..' does not resolve to any IPv4 address')
       end
 
-      extrarules('dnat', {['to-addr']=dnataddr, out=nil})
+      extrarules('dnat', {update={['to-addr']=dnataddr}, discard='out'})
    end
 
    if self.action == 'tarpit' or self['no-track'] then
@@ -133,21 +136,21 @@ function Filter:trules()
 
       if self.related then
 	 for i, rule in listpairs(self.related) do
-	    extrarules(RelatedRule, {service=self.service}, rule)
+	    extrarules(RelatedRule, {src=rule, update={service=self.service}})
 	 end
       else
 	 -- TODO avoid creating unnecessary RELATED rules by introducing
 	 -- helper direction attributes to service definitions
 	 extrarules(RelatedRule)
-	 extrarules(RelatedRule, {reverse=true})
+	 extrarules(RelatedRule, {update={reverse=true}})
       end
 
       if self['no-track'] then
 	 if #res > nr then
 	    self:error('Tracking required by service')
 	 end
-	 extrarules('no-track', {reverse=true})
-	 extrarules('filter', {reverse=true, action='accept', log=false})
+	 extrarules('no-track', {update={reverse=true}})
+	 extrarules('filter', {update={reverse=true}})
       end
    end
 
