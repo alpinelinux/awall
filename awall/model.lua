@@ -449,8 +449,9 @@ function M.Rule:trules()
 
       combined = {}
       for i, ofrag in ipairs(res) do
-	 local cc = combinations({ofrag}, addrofrags)
-	 if #cc < #addrofrags then
+	 local aofs = combinations(addrofrags, {{family=ofrag.family}})
+	 local cc = combinations({ofrag}, aofs)
+	 if #cc < #aofs then
 	    combined = nil
 	    break
 	 end
