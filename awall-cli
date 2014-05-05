@@ -267,7 +267,7 @@ if not call(
 	 dump(5)
       end
 
-      local sysdumpfile = '/var/lib/misc/awall'
+      local sysdumpfile = '/etc/iptables/awall-save'
       local dumpfile = outputdir and outputdir..'/dump' or sysdumpfile
 
 
