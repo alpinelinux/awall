@@ -278,6 +278,11 @@ if not call(
       if mode == 'dump' then dump(level)
 
       elseif mode == 'diff' then
+	 if not require('lfs').attributes(dumpfile) then
+	    io.stderr:write('Please translate or activate first\n')
+	    os.exit(1)
+	 end
+
 	 local pid, stdin, stdout = lpc.run(
 	    'diff', '-w', '--', dumpfile, '/proc/self/fd/0'
 	 )
