@@ -7,6 +7,7 @@ See LICENSE file for license details
 ]]--
 
 get_opts = require('alt_getopt').get_opts
+lpc = require('lpc')
 signal = require('signal')
 stringy = require('stringy')
 
@@ -294,8 +295,6 @@ if not call(
 	 filedump(dumpfile)
 
       elseif mode == 'activate' then
-
-	 local lpc = require('lpc')
 
 	 iptables.backup()
 
