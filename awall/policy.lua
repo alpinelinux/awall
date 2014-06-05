@@ -69,9 +69,7 @@ function Policy:init() self.enabled = self.type == 'mandatory' end
 function Policy:load()
    local file = io.open(self.path)
    if not file then raise('Unable to read policy file '..self.path) end
-
-   local data = ''
-   for line in file:lines() do data = data..line end
+   local data = file:read('*all')
    file:close()
 
    local success, res = pcall(json.decode, data)
