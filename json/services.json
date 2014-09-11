@@ -86,6 +86,7 @@
       { "proto": "icmpv6", "type": 128, "reply-type": 129 }
     ],
     "pop3": { "proto": "tcp", "port": 110 },
+    "pop3s": { "proto": "tcp", "port": 995 },
     "radius": [
       { "proto": "udp", "port": 1812 },
       { "proto": "tcp", "port": 1812 }
