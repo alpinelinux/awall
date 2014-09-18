@@ -40,7 +40,7 @@ local LoggingRule = class(TranslatingRule)
 
 function LoggingRule:init(...)
    LoggingRule.super(self):init(...)
-   if not self.action then self.action = 'accept' end
+   util.setdefault(self, 'action', 'accept')
    if type(self.log) ~= 'table' then
       self.log = loadclass('log').get(self, self.log, self.action ~= 'accept')
    end

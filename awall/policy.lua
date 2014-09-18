@@ -208,7 +208,7 @@ function PolicySet:load()
 	       raise('Invalid top-level attribute: '..cls..' ('..name..')')
 	    end
 
-	    if not source[cls] then source[cls] = {} end
+	    util.setdefault(source, cls, {})
 
 	    if not input[cls] then
 	       input[cls] = objs

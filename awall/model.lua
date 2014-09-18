@@ -24,6 +24,7 @@ local extend = util.extend
 local filter = util.filter
 local listpairs = util.listpairs
 local maplist = util.maplist
+local setdefault = util.setdefault
 
 
 local startswith = require('stringy').startswith
@@ -82,12 +83,9 @@ function M.ConfigObject:uniqueid(key)
    if not key then key = '' end
    if self.uniqueids[key] then return self.uniqueids[key] end
 
-   if not self.context.lastid then self.context.lastid = {} end
-   local lastid = self.context.lastid
-
+   local lastid = setdefault(self.context, 'lastid', {})
    local res = join(key, self.label)
-   if not lastid[res] then lastid[res] = -1 end
-   lastid[res] = lastid[res] + 1
+   lastid[res] = setdefault(lastid, res, -1) + 1
    res = res..'-'..lastid[res]
 
    self.uniqueids[key] = res
@@ -588,7 +586,7 @@ function M.Limit:init(...)
       self.count = self[1]
    end
 
-   if not self.interval then self.interval = 1 end
+   setdefault(self, 'interval', 1)
 end
 
 function M.Limit:rate() return math.ceil(self.count / self.interval) end

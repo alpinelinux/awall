@@ -134,9 +134,7 @@ end
 
 if stringy.endswith(arg[0], '/awall-cli') then
    basedir = arg[0]:sub(1, -11)
-   if not pol_paths.mandatory then
-      pol_paths.mandatory = {'/etc/awall'}
-   end
+   util.setdefault(pol_paths, 'mandatory', {'/etc/awall'})
    table.insert(pol_paths.mandatory, basedir..'/json')
 end
 

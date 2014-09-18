@@ -79,6 +79,11 @@ function M.update(tbl1, tbl2)
    return tbl1
 end
 
+function M.setdefault(t, k, v)
+   if t[k] == nil then t[k] = v end
+   return t[k]
+end
+
 function M.copy(tbl) return M.update({}, tbl) end
 
 function M.compare(a, b)
