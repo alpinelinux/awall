@@ -47,6 +47,11 @@ function M.ConfigObject:create(cls, params)
 	 self:error('Support for '..name..' objects not installed')
       end
    end
+
+   if self.label then
+      params.label = self.label..(params.label and '-'..params.label or '')
+   end
+
    return cls.morph(params, self.context, self.location)
 end
 

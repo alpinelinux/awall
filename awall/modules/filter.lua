@@ -121,7 +121,7 @@ function Filter:trules()
       local obj = self.extrarules[key]
 
       if not obj then
-	 local params = {label=(self.label and self.label..'-' or '')..label}
+	 local params = {label=label}
 	 for i, attr in ipairs(
 	    {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
          ) do
