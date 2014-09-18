@@ -108,8 +108,6 @@ function Filter:init(...)
       end
       self[limit].log = loadclass('log').get(self, self[limit].log, true)
    end
-
-   self.extrarules = {}
 end
 
 function Filter:trules()
@@ -117,24 +115,17 @@ function Filter:trules()
 
    local function extrarules(label, cls, options)
       options = options or {}
-      local key = label..(options.index or '')
-      local obj = self.extrarules[key]
 
-      if not obj then
-	 local params = {label=label}
-	 for i, attr in ipairs(
-	    {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
-         ) do
-	    params[attr] = (options.src or self)[attr]
-	 end
-	 util.update(params, options.update)
-	 if options.discard then params[options.discard] = nil end
-
-	 obj = self:create(cls, params)
-	 self.extrarules[key] = obj
+      local params = {}
+      for i, attr in ipairs(
+	 {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
+      ) do
+	 params[attr] = (options.src or self)[attr]
       end
-      
-      extend(res, obj:trules())
+      util.update(params, options.update)
+      if options.discard then params[options.discard] = nil end
+
+      extend(res, self:create(cls, params, label, options.index):trules())
    end
 
    if self.dnat then

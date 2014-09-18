@@ -37,10 +37,19 @@ function M.ConfigObject:init(context, location)
       self.root = context.objects
    end
    self.location = location
+
+   self.extraobjs = {}
    self.uniqueids = {}
 end
 
-function M.ConfigObject:create(cls, params)
+function M.ConfigObject:create(cls, params, label, index)
+   local key
+   if label then
+      key = label..(index or '')
+      local obj = self.extraobjs[key]
+      if obj then return obj end
+   end
+
    if type(cls) == 'string' then
       local name = cls
       cls = loadclass(cls)
@@ -49,11 +58,13 @@ function M.ConfigObject:create(cls, params)
       end
    end
 
-   if self.label then
-      params.label = self.label..(params.label and '-'..params.label or '')
-   end
+   local lbl = {self.label}
+   table.insert(lbl, label)
+   if lbl[1] then params.label = table.concat(lbl, '-') end
 
-   return cls.morph(params, self.context, self.location)
+   local obj = cls.morph(params, self.context, self.location)
+   if key then self.extraobjs[key] = obj end
+   return obj
 end
 
 function M.ConfigObject:uniqueid(key)
