@@ -580,10 +580,14 @@ function M.Limit:init(...)
    if type(setdefault(self, 'mask', {})) == 'number' then
       self.mask = {src=self.mask}
    end
-   for family, len in pairs{inet=32, inet6=128} do
+   for _, family in ipairs{'inet', 'inet6'} do
       setdefault(self.mask, family, util.copy(self.mask))
-      for attr, default in pairs{src=len, dest=0} do
-	 local mask = setdefault(self.mask[family], attr, default)
+      for _, attr in ipairs{'src', 'dest'} do
+	 local mask = setdefault(
+	    self.mask[family],
+	    attr,
+	    ({src=({inet=32, inet6=128})[family], dest=0})[attr]
+	 )
 	 if mask > 0 then
 	    self.mask[family].mode =
 	       self.mask[family].mode and true or {attr, mask}
@@ -601,9 +605,10 @@ function M.Limit:limitofrags(name)
    for _, family in ipairs{'inet', 'inet6'} do
       local keys = {}
       local maskopts = ''
-      for attr, opt in pairs{src='src', dest='dst'} do
+      for _, attr in ipairs{'src', 'dest'} do
 	 local mask = self.mask[family][attr]
 	 if mask > 0 then
+	    local opt = ({src='src', dest='dst'})[attr]
 	    table.insert(keys, opt..'ip')
 	    maskopts = maskopts..' --hashlimit-'..opt..'mask '..mask
 	 end
