@@ -37,6 +37,7 @@ function M.ConfigObject:init(context, location)
       self.root = context.objects
    end
    self.location = location
+   self.uniqueids = {}
 end
 
 function M.ConfigObject:create(cls, params)
@@ -53,6 +54,22 @@ function M.ConfigObject:create(cls, params)
    end
 
    return cls.morph(params, self.context, self.location)
+end
+
+function M.ConfigObject:uniqueid(key)
+   if self.uniqueids[key] then return self.uniqueids[key] end
+
+   if not self.context.lastid then self.context.lastid = {} end
+   local lastid = self.context.lastid
+
+   local res = key
+   if self.label then res = res..'-'..self.label end
+   if not lastid[res] then lastid[res] = -1 end
+   lastid[res] = lastid[res] + 1
+   res = res..'-'..lastid[res]
+
+   self.uniqueids[key] = res
+   return res
 end
 
 function M.ConfigObject:error(msg) raise(self.location..': '..msg) end
@@ -135,8 +152,6 @@ M.Rule = M.class(M.ConfigObject)
 
 function M.Rule:init(...)
    M.Rule.super(self):init(...)
-
-   self.uniqueids = {}
 
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and maplist(
@@ -537,22 +552,6 @@ function M.Rule:trules()
 end
 
 function M.Rule:extraoptfrags() return {} end
-
-function M.Rule:uniqueid(key)
-   if self.uniqueids[key] then return self.uniqueids[key] end
-
-   if not self.context.lastid then self.context.lastid = {} end
-   local lastid = self.context.lastid
-
-   local res = key
-   if self.label then res = res..'-'..self.label end
-   if not lastid[res] then lastid[res] = -1 end
-   lastid[res] = lastid[res] + 1
-   res = res..'-'..lastid[res]
-
-   self.uniqueids[key] = res
-   return res
-end
 
 
 M.export = {zone={class=M.Zone}, ipset={class=IPSet, before='%modules'}}
