@@ -29,6 +29,15 @@ local maplist = util.maplist
 local startswith = require('stringy').startswith
 
 
+local function join(a, b)
+   local comps = {}
+   local function add(s) if s and s > '' then table.insert(comps, s) end end
+   add(a)
+   add(b)
+   if comps[1] then return table.concat(comps, '-') end
+end
+
+
 M.ConfigObject = M.class()
 
 function M.ConfigObject:init(context, location)
@@ -58,9 +67,7 @@ function M.ConfigObject:create(cls, params, label, index)
       end
    end
 
-   local lbl = {self.label}
-   table.insert(lbl, label)
-   if lbl[1] then params.label = table.concat(lbl, '-') end
+   params.label = join(self.label, label)
 
    local obj = cls.morph(params, self.context, self.location)
    if key then self.extraobjs[key] = obj end
@@ -68,13 +75,13 @@ function M.ConfigObject:create(cls, params, label, index)
 end
 
 function M.ConfigObject:uniqueid(key)
+   if not key then key = '' end
    if self.uniqueids[key] then return self.uniqueids[key] end
 
    if not self.context.lastid then self.context.lastid = {} end
    local lastid = self.context.lastid
 
-   local res = key
-   if self.label then res = res..'-'..self.label end
+   local res = join(key, self.label)
    if not lastid[res] then lastid[res] = -1 end
    lastid[res] = lastid[res] + 1
    res = res..'-'..lastid[res]
