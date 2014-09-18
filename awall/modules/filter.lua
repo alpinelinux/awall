@@ -120,7 +120,11 @@ end
 function LoggingRule:logchain(log, action, target)
    if not log then return {}, target end
    local chain = self:uniqueid('log'..action)
-   return combinations({{chain=chain}}, {log:optfrag(), {target=target}}), chain
+
+   local ofrags = log:optfrags()
+   table.insert(ofrags, {target=target})
+
+   return combinations({{chain=chain}}, ofrags), chain
 end
 
 function LoggingRule:extraoptfrags()
@@ -314,9 +318,7 @@ function Filter:extraoptfrags()
 	 ofrags, logch = self:logchain(limitlog, 'drop', 'DROP')
 
 	 limitofs = combinations(uofs, {{target=logch}})
-	 if accept and self.log then
-	    table.insert(limitofs, self.log:optfrag())
-	 end
+	 if accept and self.log then extend(limitofs, self.log:optfrags()) end
 	 extend(
 	    limitofs, combinations(sofs, {{target=accept and 'ACCEPT' or nil}})
 	 )
@@ -329,7 +331,7 @@ function Filter:extraoptfrags()
 	 limitofs = combinations(
 	    limitobj:limitofrags(limitchain), {{target=logch}}
 	 )
-	 if limitlog then table.insert(limitofs, limitlog:optfrag()) end
+	 if limitlog then extend(limitofs, limitlog:optfrags()) end
 	 table.insert(limitofs, {target='DROP'})
       end
 

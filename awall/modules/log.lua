@@ -9,12 +9,21 @@ local model = require('awall.model')
 local class = model.class
 
 local combinations = require('awall.optfrag').combinations
+local setdefault = require('awall.util').setdefault
+
+
+local LogLimit = class(model.Limit)
+
+function LogLimit:init(...)
+   setdefault(self, 'mask', 0)
+   LogLimit.super(self):init(...)
+end
 
 
 local Log = class(model.ConfigObject)
 
-function Log:matchofrag()
-   local selector, opts
+function Log:matchofrags()
+   local selector, ofrags
 
    for i, sel in ipairs{'every', 'limit', 'probability'} do
       local value = self[sel]
@@ -25,16 +34,22 @@ function Log:matchofrag()
 	 selector = sel
 
 	 if sel == 'every' then
-	    opts = '-m statistic --mode nth --every '..value..' --packet 0'
+	    ofrags = {
+	       {opts='-m statistic --mode nth --every '..value..' --packet 0'}
+	    }
 	 elseif sel == 'limit' then
-	    opts = '-m limit --limit '..value..'/second'
+	    ofrags = self:create(LogLimit, value, 'loglimit'):limitofrags()
 	 elseif sel == 'probability' then
-	    opts = '-m statistic --mode random --probability '..value
+	    ofrags = {{opts='-m statistic --mode random --probability '..value}}
 	 else assert(false) end
       end
    end
 
-   return {family=self.mode == 'ulog' and 'inet' or nil, opts=opts}
+   if self.mode == 'ulog' then
+      ofrags = combinations({{family='inet'}}, ofrags)
+   end
+
+   return ofrags
 end
 
 function Log:target()
@@ -64,10 +79,8 @@ function Log:target()
    return res
 end
 
-function Log:optfrag()
-   local res = self:matchofrag()
-   res.target = self:target()
-   return res
+function Log:optfrags()
+   return combinations(self:matchofrags(), {{target=self:target()}})
 end
 
 function Log.get(rule, spec, default)
@@ -89,7 +102,7 @@ function LogRule:position() return 'prepend' end
 
 function LogRule:servoptfrags()
    return combinations(
-      LogRule.super(self):servoptfrags(), {self.log:matchofrag()}
+      LogRule.super(self):servoptfrags(), self.log:matchofrags()
    )
 end
 
