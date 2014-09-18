@@ -20,6 +20,70 @@ local extend = util.extend
 local listpairs = util.listpairs
 
 
+local RECENT_MAX_COUNT = 20
+
+local FilterLimit = class(model.Limit)
+
+function FilterLimit:recentofrags(name)
+   local count = self.count
+   local interval = self.interval
+
+   if count > RECENT_MAX_COUNT then
+      count = self:rate()
+      interval = 1
+   end
+
+   if count > RECENT_MAX_COUNT then return end
+
+   local uofs = {}
+   local sofs = {}
+
+   for _, family in ipairs{'inet', 'inet6'} do
+      if type(self.mask[family].mode) ~= 'table' then return end
+      local mask = ''
+      local attr, len = unpack(self.mask[family].mode)
+
+      if family == 'inet' then
+	 local octet
+	 for i = 0, 3 do
+	    if len <= i * 8 then octet = 0
+	    elseif len > i * 8 + 7 then octet = 255
+	    else octet = 256 - 2^(8 - len % 8) end
+	    mask = util.join(mask, '.', octet)
+	 end
+
+      elseif family == 'inet6' then
+	 while len > 0 do
+	    if #mask % 5 == 4 then mask = mask..':' end
+	    mask = mask..('%x'):format(16 - 2^math.max(0, 4 - len))
+	    len = len - 4
+	 end
+	 while #mask % 5 < 4 do mask = mask..'0' end
+	 if #mask < 39 then mask = mask..'::' end
+      end
+
+      local rec = {
+	 {
+	    family=family,
+	    opts='-m recent --name '..name..' --r'..
+	       ({src='source', dest='dest'})[attr]..' --mask '..mask
+	 }
+      }
+
+      extend(
+	 uofs,
+	 combinations(
+	    rec,
+	    {{opts='--update --hitcount '..count..' --seconds '..interval}}
+	 )
+      )
+      extend(sofs, combinations(rec, {{opts='--set'}}))
+   end
+
+   return uofs, sofs
+end
+
+
 local TranslatingRule = class(Rule)
 
 function TranslatingRule:destoptfrags()
@@ -238,7 +302,7 @@ function Filter:extraoptfrags()
 
       local limitchain = self:uniqueid('limit')
       local limitlog = self[limit].log
-      local limitobj = self:create(model.Limit, self[limit], 'limit')
+      local limitobj = self:create(FilterLimit, self[limit], 'limit')
 
       local ofrags = {}
       local logch, limitofs
