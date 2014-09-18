@@ -131,7 +131,7 @@ M.Rule = M.class(M.ConfigObject)
 function M.Rule:init(...)
    M.Rule.super(self):init(...)
 
-   self.newchains = {}
+   self.uniqueids = {}
 
    for i, prop in ipairs({'in', 'out'}) do
       self[prop] = self[prop] and maplist(
@@ -463,9 +463,7 @@ function M.Rule:trules()
    if combined then
       target = self:target()
       res = combined
-   else
-      target = self:newchain('address')
-   end
+   else target = self:uniqueid('address') end
 
    tag(res, 'position', self:position())
 
@@ -535,8 +533,8 @@ end
 
 function M.Rule:extraoptfrags() return {} end
 
-function M.Rule:newchain(key)
-   if self.newchains[key] then return self.newchains[key] end
+function M.Rule:uniqueid(key)
+   if self.uniqueids[key] then return self.uniqueids[key] end
 
    if not self.context.lastid then self.context.lastid = {} end
    local lastid = self.context.lastid
@@ -547,7 +545,7 @@ function M.Rule:newchain(key)
    lastid[res] = lastid[res] + 1
    res = res..'-'..lastid[res]
 
-   self.newchains[key] = res
+   self.uniqueids[key] = res
    return res
 end
 

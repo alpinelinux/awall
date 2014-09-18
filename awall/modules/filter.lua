@@ -51,13 +51,13 @@ end
 function LoggingRule:actiontarget() return 'ACCEPT' end
 
 function LoggingRule:target()
-   if self.log then return self:newchain('log'..self.action) end
+   if self.log then return self:uniqueid('log'..self.action) end
    return self:actiontarget()
 end
 
 function LoggingRule:logchain(log, action, target)
    if not log then return {}, target end
-   local chain = self:newchain('log'..action)
+   local chain = self:uniqueid('log'..action)
    return combinations({{chain=chain}}, {log:optfrag(), {target=target}}), chain
 end
 
@@ -236,7 +236,7 @@ function Filter:actiontarget()
 end
 
 function Filter:target()
-   if self:limit() then return self:newchain('limit') end
+   if self:limit() then return self:uniqueid('limit') end
    return Filter.super(self).target()
 end
 
@@ -247,7 +247,7 @@ function Filter:extraoptfrags()
 	 self:error('Cannot specify limit for '..self.action..' filter')
       end
 
-      local limitchain = self:newchain('limit')
+      local limitchain = self:uniqueid('limit')
       local limitlog = self[limit].log
       local count = self[limit].count
       local interval = self[limit].interval or 1

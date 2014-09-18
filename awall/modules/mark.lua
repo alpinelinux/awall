@@ -26,7 +26,7 @@ function MarkRule:target() return 'MARK --set-mark '..self.mark end
 
 local RouteTrackRule = class(MarkRule)
 
-function RouteTrackRule:target() return self:newchain('mark') end
+function RouteTrackRule:target() return self:uniqueid('mark') end
 
 function RouteTrackRule:servoptfrags()
    return combinations(
