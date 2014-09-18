@@ -607,11 +607,16 @@ function M.Limit:recentopts()
    end
 end
 
-function M.Limit:limitopts(name)
+function M.Limit:limitofrags(name)
    local rate = self:rate()
-   return '-m hashlimit --hashlimit-upto '..rate..
-      '/second --hashlimit-burst '..rate..
-      ' --hashlimit-mode srcip --hashlimit-name '..(name or self:uniqueid())
+   return {
+      {
+	 opts='-m hashlimit --hashlimit-upto '..rate..
+	    '/second --hashlimit-burst '..rate..
+	    ' --hashlimit-mode srcip --hashlimit-name '..
+	    (name or self:uniqueid())
+      }
+   }
 end
 
 

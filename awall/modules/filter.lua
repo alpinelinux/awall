@@ -265,11 +265,11 @@ function Filter:extraoptfrags()
 	    ofrags, logch = self:logchain(self.log, 'accept', 'ACCEPT')
 	 else logch = 'RETURN' end
 
-	 limitofs = {
-	    {opts=limitobj:limitopts(limitchain), target=logch},
-	    {target='DROP'}
-	 }
-	 if limitlog then table.insert(limitofs, 2, limitlog:optfrag()) end
+	 limitofs = combinations(
+	    limitobj:limitofrags(limitchain), {{target=logch}}
+	 )
+	 if limitlog then table.insert(limitofs, limitlog:optfrag()) end
+	 table.insert(limitofs, {target='DROP'})
       end
 
       extend(ofrags, combinations({{chain=limitchain}}, limitofs))
