@@ -19,8 +19,6 @@ local contains = util.contains
 local extend = util.extend
 local listpairs = util.listpairs
 
-local RECENT_MAX_COUNT = 20
-
 
 local TranslatingRule = class(Rule)
 
@@ -240,48 +238,38 @@ function Filter:extraoptfrags()
 
       local limitchain = self:uniqueid('limit')
       local limitlog = self[limit].log
-      local count = self[limit].count
-      local interval = self[limit].interval or 1
-
-      if count > RECENT_MAX_COUNT then
-	 count = math.ceil(count / interval)
-	 interval = 1
-      end
+      local limitobj = self:create(model.Limit, self[limit], 'limit')
 
       local ofrags = {}
       local logch, limitofs
       local accept = self:position() == 'append'
 
-      if count > RECENT_MAX_COUNT then
-	 if accept then
-	    ofrags, logch = self:logchain(self.log, 'accept', 'ACCEPT')
-	 else logch = 'RETURN' end
+      local recentopts = limitobj:recentopts()
 
-	 limitofs = {
-	    {
-	       opts='-m hashlimit --hashlimit-upto '..count..'/second --hashlimit-burst '..count..' --hashlimit-mode srcip --hashlimit-name '..limitchain,
-	       target=logch
-	    },
-	    {target='DROP'}
-	 }
-	 if limitlog then table.insert(limitofs, 2, limitlog:optfrag()) end
-
-      else
+      if recentopts then
 	 ofrags, logch = self:logchain(limitlog, 'drop', 'DROP')
 
 	 limitofs = combinations(
 	    {{opts='-m recent --name '..limitchain}},
 	    {
-	       {
-		  opts='--update --hitcount '..count..' --seconds '..interval,
-		  target=logch
-	       },
+	       {opts=recentopts, target=logch},
 	       {opts='--set', target=accept and 'ACCEPT' or nil}
 	    }
 	 )
 	 if accept and self.log then
 	    table.insert(limitofs, 2, self.log:optfrag())
 	 end
+
+      else
+	 if accept then
+	    ofrags, logch = self:logchain(self.log, 'accept', 'ACCEPT')
+	 else logch = 'RETURN' end
+
+	 limitofs = {
+	    {opts=limitobj:limitopts(limitchain), target=logch},
+	    {target='DROP'}
+	 }
+	 if limitlog then table.insert(limitofs, 2, limitlog:optfrag()) end
       end
 
       extend(ofrags, combinations({{chain=limitchain}}, limitofs))

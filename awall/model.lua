@@ -29,6 +29,9 @@ local maplist = util.maplist
 local startswith = require('stringy').startswith
 
 
+local RECENT_MAX_COUNT = 20
+
+
 local function join(a, b)
    local comps = {}
    local function add(s) if s and s > '' then table.insert(comps, s) end end
@@ -67,6 +70,7 @@ function M.ConfigObject:create(cls, params, label, index)
       end
    end
 
+   if type(params) ~= 'table' then params = {params} end
    params.label = join(self.label, label)
 
    local obj = cls.morph(params, self.context, self.location)
@@ -570,6 +574,45 @@ function M.Rule:trules()
 end
 
 function M.Rule:extraoptfrags() return {} end
+
+
+M.Limit = M.class(M.ConfigObject)
+
+function M.Limit:init(...)
+   M.Limit.super(self):init(...)
+
+   if not self.count then
+      if not self[1] then
+	 self:error('Packet count not defined for limit')
+      end
+      self.count = self[1]
+   end
+
+   if not self.interval then self.interval = 1 end
+end
+
+function M.Limit:rate() return math.ceil(self.count / self.interval) end
+
+function M.Limit:recentopts()
+   local count = self.count
+   local interval = self.interval
+
+   if count > RECENT_MAX_COUNT then
+      count = self:rate()
+      interval = 1
+   end
+
+   if count <= RECENT_MAX_COUNT then
+      return '--update --hitcount '..count..' --seconds '..interval
+   end
+end
+
+function M.Limit:limitopts(name)
+   local rate = self:rate()
+   return '-m hashlimit --hashlimit-upto '..rate..
+      '/second --hashlimit-burst '..rate..
+      ' --hashlimit-mode srcip --hashlimit-name '..(name or self:uniqueid())
+end
 
 
 M.export = {zone={class=M.Zone}, ipset={class=IPSet, before='%modules'}}
