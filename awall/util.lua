@@ -102,6 +102,19 @@ function M.compare(a, b)
    return true
 end
 
+function M.join(a, sep, b)
+   local comps = {}
+   local function add(s)
+      if not s then return end
+      s = tostring(s)
+      if s > '' then table.insert(comps, s) end
+   end
+   add(a)
+   add(b)
+   if comps[1] then return table.concat(comps, sep) end
+end
+
+
 function M.printtabulars(tables)
    local colwidth = {}
    for i, tbl in ipairs(tables) do
