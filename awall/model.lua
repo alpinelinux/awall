@@ -591,7 +591,7 @@ end
 
 function M.Limit:rate() return math.ceil(self.count / self.interval) end
 
-function M.Limit:recentopts()
+function M.Limit:recentopts(name)
    local count = self.count
    local interval = self.interval
 
@@ -600,9 +600,11 @@ function M.Limit:recentopts()
       interval = 1
    end
 
-   if count <= RECENT_MAX_COUNT then
-      return '--update --hitcount '..count..' --seconds '..interval
-   end
+   if count > RECENT_MAX_COUNT then return end
+
+   local rec = '-m recent --name '..name
+   return rec..' --update --hitcount '..count..' --seconds '..interval,
+      rec..' --set'
 end
 
 function M.Limit:limitofrags(name)

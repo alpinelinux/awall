@@ -244,21 +244,16 @@ function Filter:extraoptfrags()
       local logch, limitofs
       local accept = self:position() == 'append'
 
-      local recentopts = limitobj:recentopts()
+      local uopts, sopts = limitobj:recentopts(limitchain)
 
-      if recentopts then
+      if uopts then
 	 ofrags, logch = self:logchain(limitlog, 'drop', 'DROP')
 
-	 limitofs = combinations(
-	    {{opts='-m recent --name '..limitchain}},
-	    {
-	       {opts=recentopts, target=logch},
-	       {opts='--set', target=accept and 'ACCEPT' or nil}
-	    }
-	 )
+	 limitofs = {{opts=uopts, target=logch}}
 	 if accept and self.log then
-	    table.insert(limitofs, 2, self.log:optfrag())
+	    table.insert(limitofs, self.log:optfrag())
 	 end
+	 table.insert(limitofs, {opts=sopts, target=accept and 'ACCEPT' or nil})
 
       else
 	 if accept then
