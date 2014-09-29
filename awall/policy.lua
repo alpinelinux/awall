@@ -17,7 +17,7 @@ local map = util.map
 
 
 local json = require('cjson')
-local lfs = require('lfs')
+local posix = require('posix')
 
 
 local PolicyConfig = class()
@@ -86,7 +86,7 @@ end
 function Policy:enable()
    self:checkoptional()
    if self.enabled then raise('Policy already enabled: '..self.name) end   
-   assert(lfs.link(self.path, self.confdir..'/'..self.fname, true))
+   assert(posix.link(self.path, self.confdir..'/'..self.fname, true))
 end
 
 function Policy:disable()
@@ -110,18 +110,17 @@ function PolicySet:init(dirs)
 
    for i, cls in ipairs{'private', 'optional', 'mandatory'} do
       for i, dir in ipairs(dirs[cls] or defdirs[cls]) do
-	 for fname in lfs.dir(dir) do
+	 for _, fname in ipairs(posix.dir(dir)) do
 	    local si, ei, name = fname:find('^([%w-]+)%.json$')
 	    if name then
 	       local pol = self.policies[name]
 
 	       local path = dir..'/'..fname
 	       if path:sub(1, 1) ~= '/' then
-		  path = lfs.currentdir()..'/'..path
+		  path = posix.getcwd()..'/'..path
 	       end
 
-	       local attrs = lfs.attributes(path)
-	       local loc = attrs.dev..':'..attrs.ino
+	       local loc = posix.realpath(path)
 
 	       if pol then
 		  if pol.loc ~= loc then

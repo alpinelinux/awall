@@ -12,7 +12,7 @@ local util = require('awall.util')
 local sortedkeys = util.sortedkeys
 
 
-local mkdir = require('lfs').mkdir
+local mkdir = require('posix').mkdir
 local lpc = require('lpc')
 
 

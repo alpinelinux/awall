@@ -276,7 +276,7 @@ if not call(
       if mode == 'dump' then dump(level)
 
       elseif mode == 'diff' then
-	 if not require('lfs').attributes(dumpfile) then
+	 if not require('posix').stat(dumpfile) then
 	    io.stderr:write('Please translate or activate first\n')
 	    os.exit(1)
 	 end

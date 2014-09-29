@@ -16,7 +16,9 @@ M.PolicySet = require('awall.policy')
 local util = require('awall.util')
 
 
-local lfs = require('lfs')
+local posix = require('posix')
+local chdir = posix.chdir
+
 local endswith = require('stringy').endswith
 
 
@@ -42,11 +44,13 @@ function M.loadmodules(path)
 
    readmetadata(require('awall.model'))
 
-   local cdir = lfs.currentdir()
-   if path then lfs.chdir(path) end
+   local cdir = posix.getcwd()
+   if path then assert(chdir(path)) end
 
    local modules = {}
-   for modfile in lfs.dir((path or '/usr/share')..'/awall/modules') do
+   for _, modfile in ipairs(
+      posix.dir((path or '/usr/share')..'/awall/modules')
+   ) do
       if stringy.endswith(modfile, '.lua') then
 	 table.insert(modules, 'awall.modules.'..modfile:sub(1, -5))
       end
@@ -58,7 +62,7 @@ function M.loadmodules(path)
       util.extend(imported, readmetadata(require(name)))
    end
 
-   lfs.chdir(cdir)
+   assert(chdir(cdir))
 
    events['%modules'] = {before=imported}
    procorder = resolve(events)
