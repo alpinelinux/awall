@@ -10,7 +10,7 @@
   "policy": [
     { "in": "internet", "action": "drop" },
     { "action": "reject" }
-  ]
+  ],
 
   "filter": [
     {
