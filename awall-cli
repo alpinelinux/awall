@@ -372,7 +372,7 @@ if not call(
 	    signal(posix['SIG'..sig], 'SIG_IGN')
 	 end
 
-	 require('lsleep').sleep(10)
+	 posix.sleep(10)
 
 	 io.stderr:write('\nTimeout, reverting to the old configuration\n')
 	 iptables.revert()
