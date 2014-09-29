@@ -179,13 +179,20 @@ function M.Rule:init(...)
 	 self.label = self.service
       end
 
-      self.service = maplist(
-	 self.service,
-	 function(s)
-	    if type(s) ~= 'string' then return s end
-	    return self.root.service[s] or self:error('Invalid service: '..s)
+      self.service = util.list(self.service)
+
+      for i, serv in ipairs(self.service) do
+	 if type(serv) == 'string' then
+	    self.service[i] = self.root.service[serv] or
+	       self:error('Invalid service: '..serv)
 	 end
-      )
+	 for i, sdef in listpairs(self.service[i]) do
+	    if not sdef.proto then self:error('Protocol not defined') end
+	    sdef.proto = (
+	       {[1]='icmp', [6]='tcp', [17]='udp', [58]='ipv6-icmp'}
+            )[sdef.proto] or sdef.proto
+	 end
+      end
    end
 end
 
@@ -268,9 +275,7 @@ function M.Rule:servoptfrags()
 
    for i, serv in ipairs(self.service) do
       for i, sdef in listpairs(serv) do
-	 if not sdef.proto then self:error('Protocol not defined') end
-
-	 if contains({6, 'tcp', 17, 'udp'}, sdef.proto) then
+	 if contains({'tcp', 'udp'}, sdef.proto) then
 	    for family, ports in pairs(fports) do
 	       if not sdef.family or family == sdef.family then
 
@@ -298,10 +303,10 @@ function M.Rule:servoptfrags()
 
 	    -- TODO multiple ICMP types per rule
 	    local oname
-	    if contains({1, 'icmp'}, sdef.proto) then
+	    if sdef.proto == 'icmp' then
 	       family = 'inet'
 	       oname = 'icmp-type'
-	    elseif contains({58, 'ipv6-icmp', 'icmpv6'}, sdef.proto) then
+	    elseif contains({'ipv6-icmp', 'icmpv6'}, sdef.proto) then
 	       family = 'inet6'
 	       oname = 'icmpv6-type'
 	    elseif sdef.type or sdef['reply-type'] then
