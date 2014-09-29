@@ -92,10 +92,42 @@ function TranslatingRule:destoptfrags()
 
    ofrags = combinations(ofrags, {{family='inet6'}})
    local natof = self:create(
-      model.Zone, {addr=self.dnat}
+      model.Zone, {addr=self.dnat.addr}
    ):optfrags(self:direction('out'))
    assert(#natof == 1)
    table.insert(ofrags, natof[1])
+   return ofrags
+end
+
+function TranslatingRule:servoptfrags()
+   local ofrags = TranslatingRule.super(self):servoptfrags()
+   if not (self.dnat and self.dnat.port) then return ofrags end
+
+   ofrags = combinations(ofrags, {{family='inet6'}})
+
+   local protos = {}
+   for _, serv in listpairs(self.service) do
+      for _, sdef in listpairs(serv) do
+	 if sdef.family ~= 'inet6' then
+	    if not contains({'tcp', 'udp'}, sdef.proto) then
+	       self:error('Cannot do port translation for '..sdef.proto)
+	    end
+	    protos[sdef.proto] = true
+	 end
+      end
+   end
+   for proto, _ in pairs(protos) do
+      extend(
+	 ofrags,
+	 combinations(
+	    self:create(
+	       model.Rule, {service={proto=proto, port=self.dnat.port}}
+	    ):servoptfrags(),
+	    {{family='inet'}}
+	 )
+      )
+   end
+
    return ofrags
 end
 
@@ -201,29 +233,40 @@ function Filter:trules()
       if self['no-track'] then
 	 self:error('dnat option not allowed with no-track')
       end
-      if self.dnat:find('/') then
-	 self:error('DNAT target cannot be a network address')
-      end
       for i, attr in ipairs({'ipsec', 'ipset'}) do
 	 if self[attr] then
 	    self:error('dnat and '..attr..' options cannot be used simultaneously')
 	 end
       end
 
+      if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
+      if self.dnat.addr:find('/') then
+	 self:error('DNAT target cannot be a network address')
+      end
+
       local dnataddr
-      for i, addr in ipairs(resolve(self.dnat, self)) do
+      for i, addr in ipairs(resolve(self.dnat.addr, self)) do
 	 if addr[1] == 'inet' then
 	    if dnataddr then
-	       self:error(self.dnat..' resolves to multiple IPv4 addresses')
+	       self:error(
+		  self.dnat.addr..' resolves to multiple IPv4 addresses'
+	       )
 	    end
 	    dnataddr = addr[2]
 	 end
       end
       if not dnataddr then
-	 self:error(self.dnat..' does not resolve to any IPv4 address')
+	 self:error(self.dnat.addr..' does not resolve to any IPv4 address')
       end
 
-      extrarules('dnat', 'dnat', {update={['to-addr']=dnataddr}, discard='out'})
+      extrarules(
+	 'dnat',
+	 'dnat',
+	 {
+	    update={['to-addr']=dnataddr, ['to-port']=self.dnat.port},
+	    discard='out'
+	 }
+      )
    end
 
    if self.action == 'tarpit' or self['no-track'] then
