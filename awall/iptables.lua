@@ -154,8 +154,14 @@ function M.flush()
       local success, lines = pcall(io.lines, params.procfile)
       if success then
 	 for tbl in lines do
-	    for i, chain in ipairs(M.builtin[tbl]) do
-	       empty.config[family][tbl][chain] = {}
+	    if M.builtin[tbl] then
+	       for i, chain in ipairs(M.builtin[tbl]) do
+		  empty.config[family][tbl][chain] = {}
+	       end
+	    else
+	       io.stderr:write(
+		  'Warning: not flushing unknown table: '..tbl..'\n'
+	       )
 	    end
 	 end
       end
