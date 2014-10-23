@@ -20,8 +20,9 @@ end
 
 function IPSet:create()
    for name, ipset in pairs(self.config) do
-      local pid = lpc.run('ipset', '-!', 'create', name,
-			  unpack(ipset.options))
+      local pid = lpc.run(
+	 'ipset', '-!', 'create', name, table.unpack(ipset.options)
+      )
       if lpc.wait(pid) ~= 0 then
 	 io.stderr:write('ipset creation failed: '..name)
       end

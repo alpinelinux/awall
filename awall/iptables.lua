@@ -61,8 +61,9 @@ function BaseIPTables:restore(test)
       if file then
 	 io.close(file)
 
-	 local pid, stdin, stdout = lpc.run(params.cmd..'-restore',
-					    unpack({test and '-t' or nil}))
+	 local pid, stdin, stdout = lpc.run(
+	    params.cmd..'-restore', table.unpack{test and '-t' or nil}
+	 )
 	 stdout:close()
 	 self:dumpfile(family, stdin)
 	 stdin:close()

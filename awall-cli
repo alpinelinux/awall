@@ -14,6 +14,9 @@ signal = posix.signal
 
 stringy = require('stringy')
 
+-- Lua 5.1 compatibility
+if not table.unpack then table.unpack = unpack end
+
 function help()
    io.stderr:write([[
 Alpine Wall

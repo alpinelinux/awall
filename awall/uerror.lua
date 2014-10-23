@@ -14,7 +14,7 @@ function M.raise(msg) error(prefix..msg) end
 function M.call(f, ...)
    local arg = {...}
    return xpcall(
-      function() f(unpack(arg)) end,
+      function() f(table.unpack(arg)) end,
       function(msg)
 	 local si, ei = msg:find(prefix, 1, true)
 	 if si then msg = 'awall: '..msg:sub(ei + 1, -1) end

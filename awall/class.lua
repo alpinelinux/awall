@@ -19,7 +19,7 @@ local function class(base)
 	       return function(...)
 		  local arg = {...}
 		  arg[1] = obj
-		  return v(unpack(arg))
+		  return v(table.unpack(arg))
 	       end
 	    end
 	 }
