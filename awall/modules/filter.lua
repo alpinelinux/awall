@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2015 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -29,7 +29,7 @@ function FilterLimit:recentofrags(name)
    local interval = self.interval
 
    if count > RECENT_MAX_COUNT then
-      count = self:rate()
+      count = self:intrate()
       interval = 1
    end
 

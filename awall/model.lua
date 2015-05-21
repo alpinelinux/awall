@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2015 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -601,10 +601,22 @@ function M.Limit:init(...)
    end
 end
 
-function M.Limit:rate() return math.ceil(self.count / self.interval) end
+function M.Limit:rate() return self.count / self.interval end
+
+function M.Limit:intrate() return math.ceil(self:rate()) end
 
 function M.Limit:limitofrags(name)
    local rate = self:rate()
+   local unit
+   for _, quantum in ipairs{
+      {1, 'second'}, {60, 'minute'}, {60, 'hour'}, {24, 'day'}
+   } do
+      rate = rate * quantum[1]
+      unit = quantum[2]
+      if rate >= 1 then break end
+   end
+   rate = math.ceil(rate)..'/'..unit
+
    local ofrags = {}
 
    for _, family in ipairs{'inet', 'inet6'} do
@@ -624,11 +636,10 @@ function M.Limit:limitofrags(name)
 	 {
 	    family=family,
 	    opts=keys[1] and
-	       '-m hashlimit --hashlimit-upto '..rate..
-	       '/second --hashlimit-burst '..rate..' --hashlimit-mode '..
-	       table.concat(keys, ',')..maskopts..' --hashlimit-name '..
-	       (name or self:uniqueid()) or
-	       '-m limit --limit '..rate..'/second'
+	       '-m hashlimit --hashlimit-upto '..rate..' --hashlimit-burst '..
+	       self:intrate()..' --hashlimit-mode '..table.concat(keys, ',')..
+	       maskopts..' --hashlimit-name '..(name or self:uniqueid()) or
+	       '-m limit --limit '..rate
 	 }
       )
    end
