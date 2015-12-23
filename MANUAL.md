@@ -87,7 +87,7 @@ objects* model high-level concepts such as services and zones. *Rule
 objects* translate into one or more iptables rules, and are often
 defined with the help of some auxiliary objects.
 
-### Services
+### <a name="service"></a>Services
 
 A *service* represents a set of network protocols. A top-level
 attribute **service** is a dictionary that maps service names to
@@ -147,6 +147,14 @@ fulfill both criteria in order to match the rule.
 
 The firewall host itself can be referred to using the special value
 **_fw** as the zone name.
+
+In general, it is not necessary to define rules for both directions of
+traffic. Awall policies are supposed to declare explicit rules in one
+direction, such that the **in** zone points to the client and **out**
+to the server side of the service, that is, the side where the TCP/UDP
+port or ICMP type matches the [service definition](#service). The
+necessary iptables rules for the opposite direction are automatically
+deduced.
 
 By default, awall does not generate iptables rules with identical
 ingress and egress interfaces. This behavior can be changed per zone
@@ -440,10 +448,10 @@ earlier). The default value is **include**.
 
 #### Packet Marking Rules
 
-Packet marking rules are used to mark incoming packets matching the
-specified criteria. The mark can be used as a basis for the routing
-decision. Each marking rule must specify the mark using the **mark**
-attribute, which is a 32-bit integer.
+Packet marking rules are used to mark packets matching the specified
+criteria. The mark can be used as a basis for the routing decision.
+Each marking rule must specify the mark using the **mark** attribute,
+which is a 32-bit integer.
 
 Normal marking rules are contained by the top-level list attribute
 named **mark**.
@@ -452,6 +460,15 @@ There is another top-level list attribute, named **route-track**,
 which contains route tracking rules. These are special marking rules
 which cause all the subsequent packets related to the same connection
 to be marked according to the rule.
+
+#### Packet Classification Rules
+
+Packet classification rules are used to set the DSCP field of the
+packets matching the specified criteria, in order to ensure quality of
+service. Each classification rule, contained in the top-level list
+attribute named **classify**, must specify the class using the
+**class** attribute. These rules apply to the both directions of the
+matching traffic.
 
 #### Transparent Proxy Rules
 
