@@ -213,17 +213,8 @@ function Filter:trules()
 
    local function extrarules(label, cls, options)
       options = options or {}
-
-      local params = {}
-      for i, attr in ipairs(
-	 {'in', 'out', 'src', 'dest', 'dnat', 'ipset', 'ipsec', 'service'}
-      ) do
-	 params[attr] = (options.src or self)[attr]
-      end
-      util.update(params, options.update)
-      if options.discard then params[options.discard] = nil end
-
-      extend(res, self:create(cls, params, label, options.index):trules())
+      options.attrs = 'dnat'
+      extend(res, self:extrarules(label, cls, options))
    end
 
    if self.dnat then

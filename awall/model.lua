@@ -567,6 +567,24 @@ end
 
 function M.Rule:extraoptfrags() return {} end
 
+function M.Rule:extrarules(label, cls, options)
+   local params = {}
+
+   for _, attr in ipairs(
+      extend(
+	 {'in', 'out', 'src', 'dest', 'ipset', 'ipsec', 'service'},
+	 options.attrs
+      )
+   ) do
+      params[attr] = (options.src or self)[attr]
+   end
+
+   util.update(params, options.update)
+   if options.discard then params[options.discard] = nil end
+
+   return self:create(cls, params, label, options.index):trules()
+end
+
 
 M.Limit = M.class(M.ConfigObject)
 

@@ -1,6 +1,6 @@
 --[[
 Utility module for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2015 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -72,6 +72,7 @@ end
 
 function M.extend(tbl1, tbl2)
    for i, var in M.listpairs(tbl2) do table.insert(tbl1, var) end
+   return tbl1
 end
 
 function M.update(tbl1, tbl2)
