@@ -102,6 +102,7 @@
     "rdp": { "proto": "tcp", "port": 3389 },
     "rsync": { "proto": "tcp", "port": 873 },
     "rtsp": { "proto": "tcp", "port": 554 },
+    "sieve": { "proto": "tcp", "port": 4190 },
     "sip": [
     	{ "proto": "udp", "port": 5060, "ct-helper": "sip" },
     	{ "proto": "tcp", "port": 5060, "ct-helper": "sip" }
