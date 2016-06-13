@@ -101,6 +101,7 @@
     ],
     "rdp": { "proto": "tcp", "port": 3389 },
     "rsync": { "proto": "tcp", "port": 873 },
+    "rtmp": { "proto": "tcp", "port": 1935 },
     "rtsp": { "proto": "tcp", "port": 554 },
     "sieve": { "proto": "tcp", "port": 4190 },
     "sip": [
