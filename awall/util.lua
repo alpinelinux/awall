@@ -1,6 +1,6 @@
 --[[
 Utility module for Alpine Wall
-Copyright (C) 2012-2015 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -141,5 +141,8 @@ function M.printtabulars(tables)
 end
 
 function M.printtabular(tbl) M.printtabulars({tbl}) end
+
+
+function M.printmsg(msg) io.stderr:write(msg..'\n') end
 
 return M

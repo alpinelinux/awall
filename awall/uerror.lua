@@ -1,8 +1,11 @@
 --[[
 User error handling for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
+
+
+local printmsg = require('awall.util').printmsg
 
 
 local M = {}
@@ -18,8 +21,8 @@ function M.call(f, ...)
       function(msg)
 	 local si, ei = msg:find(prefix, 1, true)
 	 if si then msg = 'awall: '..msg:sub(ei + 1, -1) end
-   	 io.stderr:write(msg..'\n')
-   	 if not si then io.stderr:write(debug.traceback()..'\n') end
+	 printmsg(msg)
+	 if not si then printmsg(debug.traceback()) end
       end
    )
 end

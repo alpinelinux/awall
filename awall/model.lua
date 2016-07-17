@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2015 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -84,7 +84,7 @@ end
 function M.ConfigObject:error(msg) raise(self.location..': '..msg) end
 
 function M.ConfigObject:warning(msg)
-   io.stderr:write(self.location..': '..msg..'\n')
+   util.printmsg(self.location..': '..msg)
 end
 
 function M.ConfigObject:trules() return {} end

@@ -1,6 +1,6 @@
 --[[
 Iptables file dumper for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -9,6 +9,7 @@ local class = require('awall.class')
 local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
+local printmsg = util.printmsg
 local sortedkeys = util.sortedkeys
 
 
@@ -71,9 +72,7 @@ function BaseIPTables:restore(test)
 
 	 disabled = false
 
-      elseif test then
-	 io.stderr:write('Warning: '..family..' rules not tested\n')
-      end
+      elseif test then printmsg('Warning: '..family..' rules not tested') end
    end
 
    if disabled then raise('Firewall not enabled in kernel') end
@@ -159,11 +158,7 @@ function M.flush()
 	       for i, chain in ipairs(M.builtin[tbl]) do
 		  empty.config[family][tbl][chain] = {}
 	       end
-	    else
-	       io.stderr:write(
-		  'Warning: not flushing unknown table: '..tbl..'\n'
-	       )
-	    end
+	    else printmsg('Warning: not flushing unknown table: '..tbl) end
 	 end
       end
    end

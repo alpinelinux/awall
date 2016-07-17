@@ -1,11 +1,11 @@
 --[[
 Ipset file dumper for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
-local sortedkeys = require('awall.util').sortedkeys
+local util = require('awall.util')
 
 
 local IPSet = require('awall.class')()
@@ -24,13 +24,13 @@ function IPSet:create()
 	 'ipset', '-!', 'create', name, table.unpack(ipset.options)
       )
       if lpc.wait(pid) ~= 0 then
-	 io.stderr:write('ipset creation failed: '..name)
+	 util.printmsg('ipset creation failed: '..name)
       end
    end
 end
 
 function IPSet:print()
-   for _, name in sortedkeys(self.config) do
+   for _, name in util.sortedkeys(self.config) do
       self:dumpfile(name, io.output())
       io.write('\n')
    end
