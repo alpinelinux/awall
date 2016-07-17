@@ -1,6 +1,6 @@
 --[[
 Policy file handling for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -14,6 +14,7 @@ local contains = util.contains
 local keys = util.keys
 local listpairs = util.listpairs
 local map = util.map
+local printmsg = util.printmsg
 
 
 local json = require('cjson')
@@ -85,14 +86,14 @@ end
 
 function Policy:enable()
    self:checkoptional()
-   if self.enabled then raise('Policy already enabled: '..self.name) end   
-   assert(posix.link(self.path, self.confdir..'/'..self.fname, true))
+   if self.enabled then printmsg('Policy already enabled: '..self.name)
+   else assert(posix.link(self.path, self.confdir..'/'..self.fname, true)) end
 end
 
 function Policy:disable()
    self:checkoptional()
-   if not self.enabled then raise('Policy already disabled: '..self.name) end
-   assert(os.remove(self.confdir..'/'..self.fname))
+   if self.enabled then assert(os.remove(self.confdir..'/'..self.fname))
+   else printmsg('Policy already disabled: '..self.name) end
 end
 
 
