@@ -43,6 +43,7 @@
       { "proto": "tcp", "port": 464 },
       { "proto": "udp", "port": 464 }
     ],
+    "l2tp": { "proto": "udp", "port": 1701 },
     "ldap": [
       { "proto": "tcp", "port": 389 },
       { "proto": "udp", "port": 389 }
@@ -119,6 +120,7 @@
     "submission": { "proto": "tcp", "port": 587 },
     "syslog": { "proto": "udp", "port": 514 },
     "telnet": { "proto": "tcp", "port": 23 },
+    "teredo": { "proto": "udp", "port": 3544 },
     "tftp": { "proto": "udp", "port": 69 },
     "vnc": { "proto": "tcp", "port": 5900 }
   }
