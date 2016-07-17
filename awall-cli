@@ -294,9 +294,14 @@ if not call(
 	 filedump(stdin)
 	 stdin:close()
 
-	 lpc.wait(pid)
-	 io.stdout:write(stdout:read('*all'))
+	 local data
+	 repeat
+	    data = stdout:read('*a')
+	    io.stdout:write(data)
+	 until data == ''
 	 stdout:close()
+
+	 lpc.wait(pid)
    
       elseif mode == 'translate' then
 	 if verify then config:test() end
