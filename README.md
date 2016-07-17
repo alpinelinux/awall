@@ -127,13 +127,14 @@ of the top-level service dictionary.
 
 A *zone* represents a set of network hosts. A top-level attribute
 **zone** is a dictionary that maps zone names to zone objects. A zone
-object has an attribute named **iface**, **addr**, or both. **iface**
-is a list of network interfaces and **addr** is a list of IPv4/IPv6
-host and network addresses (CIDR notation). **addr** may also contain
-domain names, which are expanded to IP addresses using DNS
-resolution. If not defined, **addr** defaults to the entire address
-space and **iface** to all interfaces. An empty zone can be defined by
-setting either **addr** or **iface** to an empty list.
+object has any combination of attributes named **iface**, **addr**,
+and **ipsec**. **iface** is a list of network interfaces and **addr**
+is a list of IPv4/IPv6 host and network addresses (CIDR notation).
+**addr** may also contain domain names, which are expanded to IP
+addresses using DNS resolution. If not defined, **addr** defaults to
+the entire address space and **iface** to all interfaces. An empty
+zone can be defined by setting either **addr** or **iface** to an
+empty list.
 
 Rule objects contain two attributes, **in** and **out**, which are
 lists of zone names. These attributes control whether a packet matches
@@ -163,6 +164,15 @@ by setting the optional **route-back** attribute of the zone to
 where **in** and **out** attributes of a rule are not equal but their
 definitions overlap. In this case, the **route-back** attribute of the
 **out** zone determines the behavior.
+
+If used, the **ipsec** attribute is used to exclude from the zone any
+traffic that is or is not subject to IPsec processing. If set to
+**true** in the **in** zone, only the packets subject to IPsec
+decapsulation are considered originating from the zone. In the **out**
+zone, only the packets subject to IPsec encapsulation will be included
+if **ipsec** is set to **true**. The value of **false** would exclude
+any traffic requiring IPsec processing towards the respective
+direction.
 
 ### <a name="limit"></a>Limits
 
@@ -318,14 +328,6 @@ attributes:
         arguments are taken from the source (<strong>in</strong>) and
         destination (<strong>out</strong>) address or port in the
         order specified by <strong>args</strong>
-      </td>
-    </tr>
-    <tr>
-      <td><strong>ipsec</strong></td>
-      <td><strong>in</strong> or <strong>out</strong></td>
-      <td>
-        IPsec decapsulation perfomed on ingress (<strong>in</strong>)
-        or encapsulation performed on egress (<strong>out</strong>)
       </td>
     </tr>
   </tbody>

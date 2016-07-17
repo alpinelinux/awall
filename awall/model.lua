@@ -121,12 +121,23 @@ function M.Zone:optfrags(dir)
       end
    end
 
+   local popt
+   if self.ipsec ~= nil then
+      popt = {
+	 {
+	    opts='-m policy --dir '..dir..' --pol '..
+	       (self.ipsec and 'ipsec' or 'none')
+	 }
+      }
+   end
+
    return combinations(
       maplist(
 	 self.iface,
 	 function(x) return {[iprop]=x, opts='-'..iopt..' '..x} end
       ),
-      aopts
+      aopts,
+      popt
    )
 end
 
@@ -172,6 +183,26 @@ function M.Rule:init(...)
 	       self:error('Invalid zone: '..z)
 	 end
       )
+   end
+
+   -- alpine v3.4 compatibility
+   if self.ipsec then
+      if not contains({'in', 'out'}, self.ipsec) then
+	 self:error('Invalid ipsec policy direction')
+      end
+      self:warning('ipsec deprecated in rules, define in zones instead')
+      local zones = self[self.ipsec]
+      if zones then
+	 self[self.ipsec] = maplist(
+	    zones,
+	    function(z)
+	       return self:create(
+		  M.Zone, {iface=z.iface, addr=z.addr, ipsec=true}
+	       )
+	    end
+	 )
+      else self[self.ipsec] = {self:create(M.Zone, {ipsec=true})} end
+      self.ipsec = nil
    end
 
    if self.service then
@@ -461,11 +492,6 @@ function M.Rule:trules()
       res = combinations(res, ipsetofrags)
    end
 
-   if self.ipsec then
-      res = combinations(res,
-			 {{opts='-m policy --pol ipsec --dir '..self:direction(self.ipsec)}})
-   end
-
    res = combinations(res, self:servoptfrags())
 
    setfamilies(res)
@@ -571,10 +597,7 @@ function M.Rule:extrarules(label, cls, options)
    local params = {}
 
    for _, attr in ipairs(
-      extend(
-	 {'in', 'out', 'src', 'dest', 'ipset', 'ipsec', 'service'},
-	 options.attrs
-      )
+      extend({'in', 'out', 'src', 'dest', 'ipset', 'service'}, options.attrs)
    ) do
       params[attr] = (options.src or self)[attr]
    end
