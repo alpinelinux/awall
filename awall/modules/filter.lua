@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2015 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -224,10 +224,8 @@ function Filter:trules()
       if self['no-track'] then
 	 self:error('dnat option not allowed with no-track')
       end
-      for i, attr in ipairs({'ipsec', 'ipset'}) do
-	 if self[attr] then
-	    self:error('dnat and '..attr..' options cannot be used simultaneously')
-	 end
+      if self.ipset then
+	 self:error('dnat and ipset options cannot be used simultaneously')
       end
 
       if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
