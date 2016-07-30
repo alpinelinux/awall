@@ -472,6 +472,17 @@ attribute named **classify**, must specify the class using the
 **class** attribute. These rules apply to the both directions of the
 matching traffic.
 
+#### TTL Adjustment Rules
+
+TTL adjustment rules are used to set the TTL field of the IPv4 packets
+matching the specified criteria. The TTL adjustment rules are contained
+in the top-level list attribute named **ttl** and define an attribute
+named **ttl**. If the value is a non-negative integer, the TTL of the
+packet is set to the value. If it is a negative integer, the TTL value
+is decremented accordingly. The TTL value can be incremented by a
+constant by setting the attribute value to a string representing a
+positive integer, prepended with the plus sign (**+**).
+
 #### Transparent Proxy Rules
 
 Transparent proxy rules divert the matching packets to a local proxy
