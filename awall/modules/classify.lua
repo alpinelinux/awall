@@ -1,6 +1,6 @@
 --[[
 Packet classification module for Alpine Wall
-Copyright (C) 2012-2015 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -22,17 +22,10 @@ function ClassificationRule:target()
    return 'DSCP --set-dscp-class '..self.class
 end
 
-function ClassificationRule:trules()
-   local res = ClassificationRule.super(self):trules()
-   if not self.reverse then
-      extend(
-	 res,
-	 self:extrarules(
-	    'reply', 'classify', {attrs='class', update={reverse=true}}
-	 )
-      )
-   end
-   return res
+function ClassificationRule:extratrules(rules)
+   return not self.reverse and self:extrarules(
+      'reply', 'classify', {attrs='class', update={reverse=true}}
+   )
 end
 
 return {export={classify={class=ClassificationRule}}}

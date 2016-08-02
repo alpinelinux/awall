@@ -590,10 +590,18 @@ function M.Rule:trules()
       checkzof(ofrag, 'out', {'INPUT', 'PREROUTING'})
    end
    
-   return combinations(ofrags, ffilter({{family='inet'}, {family='inet6'}}))
+   ofrags = filter(
+      combinations(ofrags, ffilter({{family='inet'}, {family='inet6'}})),
+      function(r) return self:trulefilter(r) end
+   )
+   return extend(ofrags, self:extratrules(ofrags))
 end
 
 function M.Rule:extraoptfrags() return {} end
+
+function M.Rule:trulefilter(rule) return true end
+
+function M.Rule:extratrules(rules) return {} end
 
 function M.Rule:extrarules(label, cls, options)
    local params = {}

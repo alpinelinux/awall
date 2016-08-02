@@ -86,6 +86,11 @@ end
 
 local TranslatingRule = class(Rule)
 
+function TranslatingRule:init(...)
+   TranslatingRule.super(self):init(...)
+   if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
+end
+
 function TranslatingRule:destoptfrags()
    local ofrags = TranslatingRule.super(self):destoptfrags()
    if not self.dnat then return ofrags end
@@ -208,7 +213,7 @@ function Filter:init(...)
    end
 end
 
-function Filter:trules()
+function Filter:extratrules()
    local res = {}
 
    local function extrarules(label, cls, options)
@@ -228,7 +233,6 @@ function Filter:trules()
 	 self:error('dnat and ipset options cannot be used simultaneously')
       end
 
-      if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
       if self.dnat.addr:find('/') then
 	 self:error('DNAT target cannot be a network address')
       end
@@ -261,8 +265,6 @@ function Filter:trules()
    if self.action == 'tarpit' or self['no-track'] then
       extrarules('no-track', 'no-track')
    end
-
-   extend(res, Filter.super(self):trules())
 
    if self.action == 'accept' then
       if self:position() == 'prepend' then

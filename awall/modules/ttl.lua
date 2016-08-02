@@ -10,13 +10,7 @@ local model = require('awall.model')
 
 local TTLRule = model.class(model.Rule)
 
-function TTLRule:trules()
-   local res = {}
-   for _, rule in ipairs(TTLRule.super(self):trules()) do
-      if rule.family == 'inet' then table.insert(res, rule) end
-   end
-   return res
-end
+function TTLRule:trulefilter(rule) return rule.family == 'inet' end
 
 function TTLRule:table() return 'mangle' end
 

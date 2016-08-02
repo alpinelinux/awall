@@ -1,6 +1,6 @@
 --[[
 NAT module for Alpine Wall
-Copyright (C) 2012-2015 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -25,15 +25,13 @@ function NATRule:init(...)
    end
 end
 
-function NATRule:trules()
-   local res = {}
-   for i, ofrags in ipairs(NATRule.super(self):trules()) do
-      if not contains(self.params.chains, ofrags.chain) then
-	 self:error('Inappropriate zone definitions for a '..self.params.target..' rule')
-      end
-      if ofrags.family == 'inet' then table.insert(res, ofrags) end
+function NATRule:trulefilter(rule)
+   if not contains(self.params.chains, rule.chain) then
+      self:error(
+         'Inappropriate zone definitions for a '..self.params.target..' rule'
+      )
    end
-   return res
+   return rule.family == 'inet'
 end
 
 function NATRule:table() return 'nat' end
