@@ -464,7 +464,7 @@ function M.Rule:trules()
       )
    end
 
-   local res = self:zoneoptfrags()
+   local ofrags = self:zoneoptfrags()
 
    if self.ipset then
       local ipsetofrags = {}
@@ -489,28 +489,28 @@ function M.Rule:trules()
 					 ',')
 	 table.insert(ipsetofrags, {family=setdef.family, opts=setopts})
       end
-      res = combinations(res, ipsetofrags)
+      ofrags = combinations(ofrags, ipsetofrags)
    end
 
-   if self.match then res = combinations(res, {{opts=self.match}}) end
+   if self.match then ofrags = combinations(ofrags, {{opts=self.match}}) end
 
-   res = combinations(res, self:servoptfrags())
+   ofrags = combinations(ofrags, self:servoptfrags())
 
-   setfamilies(res)
+   setfamilies(ofrags)
 
    local addrofrags = combinations(
       self:create(M.Zone, {addr=self.src}):optfrags(self:direction('in')),
       self:destoptfrags()
    )
-   local combined = res
+   local combined = ofrags
 
    if addrofrags then
       addrofrags = ffilter(addrofrags)
       setfamilies(addrofrags)
-      res = ffilter(res)
+      ofrags = ffilter(ofrags)
 
       combined = {}
-      for i, ofrag in ipairs(res) do
+      for i, ofrag in ipairs(ofrags) do
 	 local aofs = combinations(addrofrags, {{family=ofrag.family}})
 	 local cc = combinations({ofrag}, aofs)
 	 if #cc < #aofs then
@@ -524,21 +524,21 @@ function M.Rule:trules()
    local target
    if combined then
       target = self:target()
-      res = combined
+      ofrags = combined
    else target = self:uniqueid('address') end
 
-   tag(res, 'position', self:position())
+   tag(ofrags, 'position', self:position())
 
-   res = combinations(res, {{target=target}})
+   ofrags = combinations(ofrags, {{target=target}})
 
    if not combined then
       extend(
-	 res,
+	 ofrags,
 	 combinations(addrofrags, {{chain=target, target=self:target()}})
       )
    end
 
-   extend(res, self:extraoptfrags())
+   extend(ofrags, self:extraoptfrags())
 
    local tbl = self:table()
 
@@ -576,8 +576,8 @@ function M.Rule:trules()
       return res
    end
 
-   res = convertchains(ffilter(res))
-   tag(res, 'table', tbl, false)
+   ofrags = convertchains(ffilter(ofrags))
+   tag(ofrags, 'table', tbl, false)
 
    local function checkzof(ofrag, dir, chains)
       if ofrag[dir] and contains(chains, ofrag.chain) then
@@ -585,12 +585,12 @@ function M.Rule:trules()
       end
    end
 
-   for i, ofrag in ipairs(res) do
+   for i, ofrag in ipairs(ofrags) do
       checkzof(ofrag, 'in', {'OUTPUT', 'POSTROUTING'})
       checkzof(ofrag, 'out', {'INPUT', 'PREROUTING'})
    end
    
-   return combinations(res, ffilter({{family='inet'}, {family='inet6'}}))
+   return combinations(ofrags, ffilter({{family='inet'}, {family='inet6'}}))
 end
 
 function M.Rule:extraoptfrags() return {} end
