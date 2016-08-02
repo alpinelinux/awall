@@ -492,6 +492,8 @@ function M.Rule:trules()
       res = combinations(res, ipsetofrags)
    end
 
+   if self.match then res = combinations(res, {{opts=self.match}}) end
+
    res = combinations(res, self:servoptfrags())
 
    setfamilies(res)
@@ -597,7 +599,10 @@ function M.Rule:extrarules(label, cls, options)
    local params = {}
 
    for _, attr in ipairs(
-      extend({'in', 'out', 'src', 'dest', 'ipset', 'service'}, options.attrs)
+      extend(
+         {'in', 'out', 'src', 'dest', 'ipset', 'match', 'service'},
+	 options.attrs
+      )
    ) do
       params[attr] = (options.src or self)[attr]
    end
