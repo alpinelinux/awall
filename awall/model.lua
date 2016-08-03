@@ -521,24 +521,29 @@ function M.Rule:trules()
       end
    end
 
-   local target
+   local custom = self:customtarget()
+   local final = custom or self:target()
+
+   local nxt
    if combined then
-      target = self:target()
+      nxt = final
       ofrags = combined
-   else target = self:uniqueid('address') end
+   else nxt = self:uniqueid('address') end
 
    tag(ofrags, 'position', self:position())
 
-   ofrags = combinations(ofrags, {{target=target}})
+   ofrags = combinations(ofrags, {{target=nxt}})
 
    if not combined then
-      extend(
-	 ofrags,
-	 combinations(addrofrags, {{chain=target, target=self:target()}})
-      )
+      extend(ofrags, combinations(addrofrags, {{chain=nxt, target=final}}))
    end
 
-   extend(ofrags, self:extraoptfrags())
+   local function extofrags(new)
+      if not custom then extend(ofrags, new)
+      elseif new[1] then self:error('Custom action not allowed here') end
+   end
+
+   extofrags(self:extraoptfrags())
 
    local tbl = self:table()
 
@@ -594,7 +599,16 @@ function M.Rule:trules()
       combinations(ofrags, ffilter({{family='inet'}, {family='inet6'}})),
       function(r) return self:trulefilter(r) end
    )
-   return extend(ofrags, self:extratrules(ofrags))
+   extofrags(self:extratrules(ofrags))
+
+   return ofrags
+end
+
+function M.Rule:customtarget()
+   if self.action then
+      local as = self.action:sub(1, 1)
+      if as == as:upper() then return self.action end
+   end
 end
 
 function M.Rule:extraoptfrags() return {} end

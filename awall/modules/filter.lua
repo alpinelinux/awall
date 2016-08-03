@@ -142,8 +142,15 @@ local LoggingRule = class(TranslatingRule)
 function LoggingRule:init(...)
    LoggingRule.super(self):init(...)
    util.setdefault(self, 'action', 'accept')
+
+   local custom = self:customtarget()
    if type(self.log) ~= 'table' then
-      self.log = loadclass('log').get(self, self.log, self.action ~= 'accept')
+      self.log = loadclass('log').get(
+	 self, self.log, not custom and self.action ~= 'accept'
+      )
+   end
+   if custom and self.log then
+      self:error('Logging not allowed with custom action: '..self.action)
    end
 end
 
@@ -165,7 +172,9 @@ function LoggingRule:logchain(log, action, target)
 end
 
 function LoggingRule:extraoptfrags()
-   return self:logchain(self.log, self.action, self:actiontarget())
+   return self.log and
+      self:logchain(self.log, self.action, self:actiontarget()) or
+      LoggingRule.super(self):extraoptfrags()
 end
 
 
