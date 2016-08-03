@@ -1,6 +1,6 @@
 --[[
 Alpine Wall main module
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -13,7 +13,9 @@ local IPSet = require('awall.ipset')
 local IPTables = require('awall.iptables').IPTables
 local optfrag = require('awall.optfrag')
 M.PolicySet = require('awall.policy')
+
 local util = require('awall.util')
+local extend = util.extend
 
 
 local posix = require('posix')
@@ -34,10 +36,7 @@ function M.loadmodules(path)
       local export = mod.export or {}
       for name, target in pairs(export) do events[name] = target end
 
-      for name, opts in pairs(mod.achains or {}) do
-	 assert(not achains[name])
-	 achains[name] = opts
-      end
+      extend(achains, mod.achains)
 
       return util.keys(export)
    end
@@ -59,7 +58,7 @@ function M.loadmodules(path)
 
    local imported = {}
    for i, name in ipairs(modules) do
-      util.extend(imported, readmetadata(require(name)))
+      extend(imported, readmetadata(require(name)))
    end
 
    assert(chdir(cdir))
