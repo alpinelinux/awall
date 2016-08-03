@@ -1,6 +1,6 @@
 --[[
 TCP MSS clamping module for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -13,7 +13,7 @@ local ClampMSSRule = model.class(model.Rule)
 function ClampMSSRule:table() return 'mangle' end
 
 function ClampMSSRule:servoptfrags()
-   return {{opts='-p tcp --tcp-flags SYN,RST SYN'}}
+   return {{match='-p tcp --tcp-flags SYN,RST SYN'}}
 end
 
 function ClampMSSRule:target()

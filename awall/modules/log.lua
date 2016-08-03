@@ -1,6 +1,6 @@
 --[[
 Packet logging module for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -35,12 +35,12 @@ function Log:matchofrags()
 
 	 if sel == 'every' then
 	    ofrags = {
-	       {opts='-m statistic --mode nth --every '..value..' --packet 0'}
+	       {match='-m statistic --mode nth --every '..value..' --packet 0'}
 	    }
 	 elseif sel == 'limit' then
 	    ofrags = self:create(LogLimit, value, 'loglimit'):limitofrags()
 	 elseif sel == 'probability' then
-	    ofrags = {{opts='-m statistic --mode random --probability '..value}}
+	    ofrags = {{match='-m statistic --mode random --probability '..value}}
 	 else assert(false) end
       end
    end

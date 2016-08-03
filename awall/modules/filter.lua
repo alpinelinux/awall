@@ -65,7 +65,7 @@ function FilterLimit:recentofrags(name)
       local rec = {
 	 {
 	    family=family,
-	    opts='-m recent --name '..name..' --r'..
+	    match='-m recent --name '..name..' --r'..
 	       ({src='source', dest='dest'})[attr]..' --mask '..mask
 	 }
       }
@@ -74,10 +74,10 @@ function FilterLimit:recentofrags(name)
 	 uofs,
 	 combinations(
 	    rec,
-	    {{opts='--update --hitcount '..count..' --seconds '..interval}}
+	    {{match='--update --hitcount '..count..' --seconds '..interval}}
 	 )
       )
-      extend(sofs, combinations(rec, {{opts='--set'}}))
+      extend(sofs, combinations(rec, {{match='--set'}}))
    end
 
    return uofs, sofs
@@ -188,7 +188,8 @@ function RelatedRule:servoptfrags()
 	 if helper then
 	    helpers[helper] = {
 	       family=sdef.family,
-	       opts='-m conntrack --ctstate RELATED -m helper --helper '..helper
+	       match='-m conntrack --ctstate RELATED -m helper --helper '..
+	          helper
 	    }
 	 end
       end
@@ -400,11 +401,11 @@ local function stateful(config)
 
       local er = combinations(
 	 fchains,
-	 {{opts='-m conntrack --ctstate ESTABLISHED'}}
+	 {{match='-m conntrack --ctstate ESTABLISHED'}}
       )
       for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
 	 table.insert(
-	    er, {chain=chain, opts='-'..chain:sub(1, 1):lower()..' lo'}
+	    er, {chain=chain, match='-'..chain:sub(1, 1):lower()..' lo'}
 	 )
       end
       extend(
@@ -449,8 +450,8 @@ local function stateful(config)
    return res
 end
 
-local icmp = {{family='inet', table='filter', opts='-p icmp'}}
-local icmp6 = {{family='inet6', table='filter', opts='-p icmpv6'}}
+local icmp = {{family='inet', table='filter', match='-p icmp'}}
+local icmp6 = {{family='inet6', table='filter', match='-p icmpv6'}}
 local ir = combinations(
    icmp6,
    {{chain='INPUT'}, {chain='OUTPUT'}},
@@ -462,12 +463,11 @@ extend(ir, combinations(icmp, fchains, {{target='icmp-routing'}}))
 local function icmprules(ofrag, oname, types)
    extend(
       ir,
-      combinations(ofrag,
-		   {{chain='icmp-routing', target='ACCEPT'}},
-		   util.map(types,
-			    function(t)
-			       return {opts='--'..oname..' '..t}
-			    end))
+      combinations(
+         ofrag,
+	 {{chain='icmp-routing', target='ACCEPT'}},
+	 util.map(types, function(t) return {match='--'..oname..' '..t} end)
+      )
    )
 end
 icmprules(icmp, 'icmp-type', {3, 11, 12})
@@ -481,6 +481,6 @@ return {
       ['%filter-after']={rules=ir, after='filter'}
    },
    achains=combinations(
-      {{chain='tarpit'}}, {{opts='-p tcp', target='TARPIT'}, {target='DROP'}}
+      {{chain='tarpit'}}, {{match='-p tcp', target='TARPIT'}, {target='DROP'}}
    )
 }

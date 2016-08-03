@@ -1,6 +1,6 @@
 --[[
 Packet marking module for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -30,7 +30,7 @@ function RouteTrackRule:target() return self:uniqueid('mark') end
 
 function RouteTrackRule:servoptfrags()
    return combinations(
-      RouteTrackRule.super(self):servoptfrags(), {{opts='-m mark --mark 0'}}
+      RouteTrackRule.super(self):servoptfrags(), {{match='-m mark --mark 0'}}
    )
 end
 
@@ -50,7 +50,7 @@ local function restoremark(config)
 	 {
 	    {
 	       table='mangle',
-	       opts='-m connmark ! --mark 0',
+	       match='-m connmark ! --mark 0',
 	       target='CONNMARK --restore-mark'
 	    }
 	 }

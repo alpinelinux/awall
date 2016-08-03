@@ -1,6 +1,6 @@
 --[[
 Option fragment module for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2016 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -24,12 +24,12 @@ function M.combinations(of1, ...)
 
 	 local of = {}
 	 for k, v in pairs(x) do
-	    if k ~= 'opts' then of[k] = v end
+	    if k ~= 'match' then of[k] = v end
 	 end
 
 	 local match = true
 	 for k, v in pairs(y) do
-	    if k ~= 'opts' then
+	    if k ~= 'match' then
 	       if of[k] and v ~= of[k] then
 		  match = false
 		  break
@@ -39,10 +39,10 @@ function M.combinations(of1, ...)
 	 end
 
 	 if match then
-	    if x.opts then
-	       if y.opts then of.opts = x.opts..' '..y.opts
-	       else of.opts = x.opts end
-	    else of.opts = y.opts end
+	    if x.match then
+	       if y.match then of.match = x.match..' '..y.match
+	       else of.match = x.match end
+	    else of.match = y.match end
 	    table.insert(res, of)
 	 end
       end
@@ -54,7 +54,7 @@ end
 function M.location(of) return of.family..'/'..of.table..'/'..of.chain end
 
 function M.command(of)
-   return (of.opts and of.opts..' ' or '')..
+   return (of.match and of.match..' ' or '')..
       (of.target and '-j '..of.target or '')
 end
 

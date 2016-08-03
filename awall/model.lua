@@ -113,10 +113,10 @@ function M.Zone:optfrags(dir)
       aopts = {}
       for i, hostdef in listpairs(self.addr) do
 	 for i, addr in ipairs(resolve(hostdef, self)) do
-	    table.insert(aopts,
-			 {family=addr[1],
-			  [aprop]=addr[2],
-			  opts='-'..aopt..' '..addr[2]})
+	    table.insert(
+	       aopts,
+	       {family=addr[1], [aprop]=addr[2], match='-'..aopt..' '..addr[2]}
+	    )
 	 end
       end
    end
@@ -125,7 +125,7 @@ function M.Zone:optfrags(dir)
    if self.ipsec ~= nil then
       popt = {
 	 {
-	    opts='-m policy --dir '..dir..' --pol '..
+	    match='-m policy --dir '..dir..' --pol '..
 	       (self.ipsec and 'ipsec' or 'none')
 	 }
       }
@@ -134,7 +134,7 @@ function M.Zone:optfrags(dir)
    return combinations(
       maplist(
 	 self.iface,
-	 function(x) return {[iprop]=x, opts='-'..iopt..' '..x} end
+	 function(x) return {[iprop]=x, match='-'..iopt..' '..x} end
       ),
       aopts,
       popt
@@ -358,7 +358,7 @@ function M.Rule:servoptfrags()
 		  self.reverse and sdef['reply-type'] or sdef.type
 	       )
 	    end
-	    table.insert(res, {family=family, opts=opts})
+	    table.insert(res, {family=family, match=opts})
 	 end
       end
    end
@@ -396,10 +396,10 @@ function M.Rule:servoptfrags()
 		  until len == 0
 	       end
 
-	       table.insert(ofrags, {opts=opts})
+	       table.insert(ofrags, {match=opts})
 	    until len == 0
 
-	 else table.insert(ofrags, {opts=propt}) end
+	 else table.insert(ofrags, {match=propt}) end
       end
 
       extend(res, combinations(ofrags, {{family=family}}))
@@ -487,12 +487,12 @@ function M.Rule:trules()
 						     return 'dst'
 						  end),
 					 ',')
-	 table.insert(ipsetofrags, {family=setdef.family, opts=setopts})
+	 table.insert(ipsetofrags, {family=setdef.family, match=setopts})
       end
       ofrags = combinations(ofrags, ipsetofrags)
    end
 
-   if self.match then ofrags = combinations(ofrags, {{opts=self.match}}) end
+   if self.match then ofrags = combinations(ofrags, {{match=self.match}}) end
 
    ofrags = combinations(ofrags, self:servoptfrags())
 
@@ -561,10 +561,12 @@ function M.Rule:trules()
 	       ofs = {{chain='FORWARD'}, {chain='OUTPUT'}}
 	       recursive = true
 	    elseif ofrag.chain == 'INPUT' then
-	       ofs = {{opts='-m addrtype --dst-type LOCAL', chain='PREROUTING'}}
+	       ofs = {
+	          {match='-m addrtype --dst-type LOCAL', chain='PREROUTING'}
+	       }
 	    elseif ofrag.chain == 'FORWARD' then
 	       ofs = {
-		  {opts='-m addrtype ! --dst-type LOCAL', chain='PREROUTING'}
+		  {match='-m addrtype ! --dst-type LOCAL', chain='PREROUTING'}
 	       }
 	    end
 
@@ -703,7 +705,7 @@ function M.Limit:limitofrags(name)
 	 ofrags,
 	 {
 	    family=family,
-	    opts=keys[1] and
+	    match=keys[1] and
 	       '-m hashlimit --hashlimit-upto '..rate..' --hashlimit-burst '..
 	       self:intrate()..' --hashlimit-mode '..table.concat(keys, ',')..
 	       maskopts..' --hashlimit-name '..(name or self:uniqueid()) or
