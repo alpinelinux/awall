@@ -11,7 +11,10 @@ local class = require('awall.class')
 local resolve = require('awall.dependency')
 local IPSet = require('awall.ipset')
 local IPTables = require('awall.iptables').IPTables
+
 local optfrag = require('awall.optfrag')
+local combinations = optfrag.combinations
+
 M.PolicySet = require('awall.policy')
 
 local util = require('awall.util')
@@ -21,7 +24,7 @@ local extend = util.extend
 local posix = require('posix')
 local chdir = posix.chdir
 
-local endswith = require('stringy').endswith
+local stringy = require('stringy')
 
 
 local events
@@ -82,7 +85,7 @@ function M.Config:init(policyconfig)
 
    local actions = {}
 
-   local function insertrules(trules)
+   local function insertrules(trules, obj)
       for i, trule in ipairs(trules) do
 	 local t = self.iptables.config[trule.family][trule.table][trule.chain]
 	 local opts = optfrag.command(trule)
@@ -96,7 +99,19 @@ function M.Config:init(policyconfig)
 	    local key = optfrag.location(acfrag)
 	    if not actions[key] then
 	       actions[key] = true
-	       insertrules(optfrag.combinations(achains, {acfrag}))
+	       if stringy.startswith(trule.target, 'custom:') then
+		  local name = trule.target:sub(8, -1)
+		  local rules = (self.objects.custom or {})[name]
+		  if not rules then
+		     obj:error('Invalid custom chain: '..name)
+		  end
+		  insertrules(
+		     combinations(
+			{{chain=trule.target}}, util.list(rules), {acfrag}
+		     ),
+		     rules
+		  )
+	       else insertrules(combinations(achains, {acfrag})) end
 	    end
 	 end
 
@@ -135,7 +150,7 @@ function M.Config:init(policyconfig)
 	 end
       elseif self.objects[event] then
 	 for i, rule in ipairs(self.objects[event]) do
-	    insertrules(rule:trules())
+	    insertrules(rule:trules(), rule)
 	 end
       end
    end

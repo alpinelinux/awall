@@ -609,7 +609,9 @@ end
 function M.Rule:customtarget()
    if self.action then
       local as = self.action:sub(1, 1)
-      if as == as:upper() then return self.action end
+      if as == as:upper() or startswith(self.action, 'custom:') then
+	 return self.action
+      end
    end
 end
 
@@ -718,6 +720,10 @@ function M.Limit:limitofrags(name)
 end
 
 
-M.export = {zone={class=M.Zone}, ipset={class=IPSet, before='%modules'}}
+M.export = {
+   custom={class=M.ConfigObject},
+   ipset={class=IPSet, before='%modules'},
+   zone={class=M.Zone}
+}
 
 return M
