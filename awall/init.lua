@@ -80,7 +80,7 @@ function M.Config:init(policyconfig)
    self.objects = policyconfig:expand()
    self.iptables = IPTables()
 
-   local acfrags = {}
+   local actions = {}
 
    local function insertrules(trules)
       for i, trule in ipairs(trules) do
@@ -93,7 +93,11 @@ function M.Config:init(policyconfig)
 	       table=trule.table,
 	       chain=trule.target
 	    }
-	    acfrags[optfrag.location(acfrag)] = acfrag
+	    local key = optfrag.location(acfrag)
+	    if not actions[key] then
+	       actions[key] = true
+	       insertrules(optfrag.combinations(achains, {acfrag}))
+	    end
 	 end
 
 	 if trule.position == 'prepend' then
@@ -135,10 +139,6 @@ function M.Config:init(policyconfig)
 	 end
       end
    end
-
-   local ofrags = {}
-   for k, v in pairs(acfrags) do table.insert(ofrags, v) end
-   insertrules(optfrag.combinations(achains, ofrags))
 
    self.ipset = IPSet(self.objects.ipset)
 end
