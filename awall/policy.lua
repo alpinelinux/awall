@@ -81,7 +81,9 @@ function Policy:load()
 end
 
 function Policy:checkoptional()
-   if self.type ~= 'optional' then raise('Not an optional policy: '..name) end
+   if self.type ~= 'optional' then
+      raise('Not an optional policy: '..self.name)
+   end
 end
 
 function Policy:enable()
