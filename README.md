@@ -535,6 +535,28 @@ addresses separated by the **-** character. It is not necessary to
 specify **family** for bitmaps, since the kernel supports only IPv4
 bitmaps.
 
+## Customizing iptables Rules
+
+In the rare event that awall's capabilities do not suffice for your
+use case, it is possible to manually define match options, targets,
+and additional chains.  Match options can be added via the **match**
+attribute in the corresponding awall rule. The iptables target with
+possible options can be set via the **action** attribute. The iptables
+targets are always spelled in upper case, so awall can distinguish
+them from other actions.
+
+Customized chains can be defined in the top-level dictionary named
+**custom**.  The key is the unique identifier of the chain, and
+packets can be sent to the chain by defining the value of the
+**action** attribute of an awall rule as this identifier prefixed by
+**custom:**. The values of the dictionary are lists of objects. Each
+object maps to a single rule in the custom iptables chain, defined
+using two attributes: **match** for match options and **target** for
+the target with its options. The target can also refer to another
+customized chain, using the **custom:** prefix. It is also possible to
+constrain each rule to IPv4 or IPv6 only by defining the **family**
+attribute as **inet** or **inet6**, respectively.
+
 ## Command Line Syntax
 
 ### Translating Policy Files to Firewall Configuration Files
