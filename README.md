@@ -1,10 +1,29 @@
 # Alpine Wall User's Guide
 
-## Configuration File Processing
+## Introduction
 
-[Alpine Wall](http://wiki.alpinelinux.org/wiki/Alpine_Wall) (awall)
-reads its configuration from multiple JSON-formatted files, called
-*policy files*. The files located in directory
+Alpine Wall (awall) is a Linux firewall configuration tool, providing
+various benefits over plain iptables:
+
+* Common usage patterns abstracted to high-level constructs, such as
+  [zones](#zone) and [limits](#limit)
+* Single source for multiple heterogenous hosts: implement modular
+  policies using [dependencies](#processing) and
+  [variables](#variable)
+* Single source for IPv4 and IPv6 rules
+* Refer to hosts using DNS names
+* [Review the effect of changed policies](#diff) before activation
+* [Automatic fallback](#activate): avoid locking yourself out when
+  changing rules
+
+Awall is lightweight: no additional daemons, Python, D-BUS
+etc. required. Awall translates high-level policies into the format
+accepted by <code>iptables-restore</code>.
+
+## <a name="processing"></a>Configuration File Processing
+
+Awall reads its configuration from multiple JSON-formatted files,
+called *policy files*. The files located in directory
 `/usr/share/awall/mandatory` are *mandatory* policies shipped with APK
 packages. In addition, there can be installation-specific mandatory
 policies in `/etc/awall`.
@@ -52,7 +71,7 @@ facilitate manual editing of policy files, awall also accepts single
 values in place of lists. Such values are semantically equivalent to
 lists containing one element.
 
-## Variable Expansion
+## <a name="variable"></a>Variable Expansion
 
 Awall allows variable definitions in policy files. The top-level
 attribute **variable** is a dictionary containing the definitions. The
@@ -564,14 +583,15 @@ attribute as **inet** or **inet6**, respectively.
  **awall translate** \[**-o** | **--output** DIRECTORY\] \[**-V** | **--verify**\]
 
 The `--verify` option makes awall verify the configuration using the
-test mode of iptables-restore before overwriting the old files.
+test mode of <code>iptables-restore</code> before overwriting the old
+files.
 
 Specifying the output directory allows testing awall policies without
 overwriting the current iptables and ipset configuration files. By
 default, awall generates the configuration to `/etc/iptables` and
 `/etc/ipset.d`, which are read by the init scripts.
 
-### Run-Time Configuration of Firewall
+### <a name="activate"></a>Run-Time Configuration of Firewall
 
  **awall activate** \[**-f** | **--force**\]
 
@@ -611,7 +631,7 @@ as well as their source policies:
 The level is an integer in range 0&ndash;5 and defaults to 0. More
 information is displayed on higher levels.
 
- **awall diff** \[ **-o** | **--output** DIRECTORY]
+<a name="diff"></a> **awall diff** \[ **-o** | **--output** DIRECTORY]
 
 Displays the difference in the input policy files and generated output
 files since the last **translate** or **activate** command.
