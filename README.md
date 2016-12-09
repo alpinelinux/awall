@@ -581,8 +581,6 @@ the Return key within 10 seconds or the `--force` option is used, the
 configuration is saved to the files. Otherwise, the old configuration
 is restored.
 
-There is also a command for deleting all firewall rules:
-
  **awall flush**
 
 This command configures the firewall to drop all packets.
@@ -612,3 +610,12 @@ as well as their source policies:
 
 The level is an integer in range 0&ndash;5 and defaults to 0. More
 information is displayed on higher levels.
+
+ **awall diff** \[ **-o** | **--output** DIRECTORY]
+
+Displays the difference in the input policy files and generated output
+files since the last **translate** or **activate** command.
+
+When the **--output** option is used, the updated configuration is
+compared to the generated files in the specified directory (generated
+by the equivalent **translate** command).
