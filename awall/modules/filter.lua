@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -146,13 +146,15 @@ function LoggingRule:init(...)
    local custom = self:customtarget()
    if type(self.log) ~= 'table' then
       self.log = loadclass('log').get(
-	 self, self.log, not custom and self.action ~= 'accept'
+	 self, self.log, not custom and self:logdefault()
       )
    end
    if custom and self.log then
       self:error('Logging not allowed with custom action: '..self.action)
    end
 end
+
+function LoggingRule:logdefault() return false end
 
 function LoggingRule:actiontarget() return 'ACCEPT' end
 
@@ -328,12 +330,15 @@ function Filter:position()
       and 'prepend' or 'append'
 end
 
+function Filter:logdefault()
+   return contains({'drop', 'reject', 'tarpit'}, self.action)
+end
+
 function Filter:actiontarget()
-   if self.action == 'tarpit' then return 'tarpit' end
-   if contains({'accept', 'drop', 'reject'}, self.action) then
-      return self.action:upper()
+   if self.action ~= 'accept' and not self:logdefault() then
+      self:error('Invalid filter action: '..self.action)
    end
-   self:error('Invalid filter action: '..self.action)
+   return self.action == 'tarpit' and 'tarpit' or self.action:upper()
 end
 
 function Filter:target()
