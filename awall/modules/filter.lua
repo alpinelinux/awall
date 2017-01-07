@@ -168,7 +168,7 @@ function LoggingRule:logchain(log, action, target)
    local chain = self:uniqueid('log'..action)
 
    local ofrags = log:optfrags()
-   table.insert(ofrags, {target=target})
+   if target then table.insert(ofrags, {target=target}) end
 
    return combinations({{chain=chain}}, ofrags), chain
 end
@@ -335,6 +335,7 @@ function Filter:logdefault()
 end
 
 function Filter:actiontarget()
+   if self.action == 'pass' then return end
    if self.action ~= 'accept' and not self:logdefault() then
       self:error('Invalid filter action: '..self.action)
    end

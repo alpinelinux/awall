@@ -291,7 +291,7 @@ definitions. If the value of the **log** attribute is **true**
 (boolean), logging is done using default settings. If the value is
 **false** (boolean), logging is disabled for the rule. If **log** is
 not defined, logging is done using the default settings except for
-accept rules, for which logging is omitted.
+accept and pass rules, for which logging is omitted.
 
 Default logging settings can be set by defining a logging class named
 **_default**. Normally, default logging uses the **log** mode with
@@ -387,6 +387,9 @@ which can be one of the following:
         packets. (Connection tracking bypass is automatically enabled
         for the matching packets.)
       </td>
+    </tr>
+    <tr>
+      <td><strong>pass</strong></td><td>No action</td>
     </tr>
   </tbody>
 </table>
