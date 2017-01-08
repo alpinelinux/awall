@@ -349,6 +349,25 @@ attributes:
         order specified by <strong>args</strong>
       </td>
     </tr>
+    <tr>
+      <td><strong>string</strong></td>
+      <td>
+        String or object containing at least an attribute named
+        <strong>match</strong> and optionally one or more of the
+        following: <strong>algo</strong>, <strong>from</strong>, and
+        <strong>to</strong>.
+      </td>
+      <td>
+        Packet contains the given plain string or the one defined by
+        the <strong>match</strong> attribute. Attributes
+        <strong>from</strong> and <strong>to</strong> can be used to
+        constrain the search to the specific byte range of the
+        packet. The used algorithm may be selected using the
+        <strong>algo</strong> attribute. The allowed values are
+        <strong>bm</strong> for Boyer&ndash;Moore (default) and
+        <strong>kmp</strong> for Knuth&ndash;Pratt&ndash;Morris.
+      </td>
+    </tr>
   </tbody>
 </table>
 

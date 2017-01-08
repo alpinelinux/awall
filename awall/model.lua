@@ -536,6 +536,25 @@ function M.Rule:trules()
       ofrags = combinations(ofrags, ipsetofrags)
    end
 
+   if self.string then
+      if type(self.string) == 'string' then
+	 self.string = {match=self.string}
+      end
+      if not self.string.match then self:error('String match not defined') end
+      setdefault(self.string, 'algo', 'bm')
+
+      local opts = '-m string --string "'..
+	 self.string.match:gsub('(["\\])', '\\%1')..'"'
+
+      for _, attr in ipairs{'algo', 'from', 'to'} do
+	 if self.string[attr] then
+	    opts = opts..' --'..attr..' '..self.string[attr]
+	 end
+      end
+
+      ofrags = combinations(ofrags, {{match=opts}})
+   end
+
    if self.match then ofrags = combinations(ofrags, {{match=self.match}}) end
 
    ofrags = combinations(ofrags, self:servoptfrags())
@@ -643,7 +662,7 @@ function M.Rule:extrarules(label, cls, options)
 
    for _, attr in ipairs(
       extend(
-         {'in', 'out', 'src', 'dest', 'ipset', 'match', 'service'},
+         {'in', 'out', 'src', 'dest', 'ipset', 'string', 'match', 'service'},
 	 options.attrs
       )
    ) do
