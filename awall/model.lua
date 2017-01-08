@@ -690,28 +690,48 @@ function M.Limit:init(...)
 
    setdefault(self, 'interval', 1)
 
-   if type(setdefault(self, 'mask', {})) == 'number' then
-      self.mask = {src=self.mask}
+   -- alpine v3.5 compatibility
+   if self.mask then
+      self:warning(
+	 "'mask' attribute is deprecated, please use 'src-mask' and 'dest-mask'"
+      )
+      self['src-mask'] = {}
+      self['dest-mask'] = {}
+      if type(self.mask) == 'number' then self.mask = {src=self.mask} end
+      for _, family in ipairs{'inet', 'inet6'} do
+	 setdefault(self.mask, family, util.copy(self.mask))
+	 for _, attr in ipairs{'src', 'dest'} do
+	    self[attr..'-mask'][family] = self.mask[family][attr] or
+	       ({src=({inet=32, inet6=128})[family], dest=0})[attr]
+	 end
+      end
    end
-   for _, family in ipairs{'inet', 'inet6'} do
-      setdefault(self.mask, family, util.copy(self.mask))
-      for _, attr in ipairs{'src', 'dest'} do
-	 setdefault(
-	    self.mask[family],
-	    attr,
-	    ({src=({inet=32, inet6=128})[family], dest=0})[attr]
-	 )
+
+   setdefault(self, 'src-mask', not self['dest-mask'])
+   setdefault(self, 'dest-mask', false)
+
+   for _, addr in ipairs{'src', 'dest'} do
+      local mask = addr..'-mask'
+      if type(self[mask]) ~= 'table' then
+	 self[mask] = {inet=self[mask], inet6=self[mask]}
+      end
+      for _, family in ipairs{'inet', 'inet6'} do
+	 local value = self[mask][family]
+	 if not value then self[mask][family] = 0
+	 elseif value == true then
+	    self[mask][family] = ({inet=32, inet6=128})[family]
+	 end
       end
    end
 end
 
 function M.Limit:maskmode(family)
    local res
-   for _, attr in ipairs{'src', 'dest'} do
-      local mask = self.mask[family][attr]
+   for _, addr in ipairs{'src', 'dest'} do
+      local mask = self[addr..'-mask'][family]
       if mask > 0 then
 	 if res then return end
-	 res = {attr, mask}
+	 res = {addr, mask}
       end
    end
    if res then return table.unpack(res) end
@@ -738,10 +758,10 @@ function M.Limit:limitofrags(name)
    for _, family in ipairs{'inet', 'inet6'} do
       local keys = {}
       local maskopts = ''
-      for _, attr in ipairs{'src', 'dest'} do
-	 local mask = self.mask[family][attr]
+      for _, addr in ipairs{'src', 'dest'} do
+	 local mask = self[addr..'-mask'][family]
 	 if mask > 0 then
-	    local opt = ({src='src', dest='dst'})[attr]
+	    local opt = ({src='src', dest='dst'})[addr]
 	    table.insert(keys, opt..'ip')
 	    maskopts = maskopts..' --hashlimit-'..opt..'mask '..mask
 	 end

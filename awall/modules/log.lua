@@ -1,6 +1,6 @@
 --[[
 Packet logging module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -15,7 +15,7 @@ local setdefault = require('awall.util').setdefault
 local LogLimit = class(model.Limit)
 
 function LogLimit:init(...)
-   setdefault(self, 'mask', 0)
+   setdefault(self, 'src-mask', false)
    LogLimit.super(self):init(...)
 end
 

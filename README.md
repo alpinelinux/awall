@@ -209,18 +209,17 @@ default value is 1.
 The maximum rate defined by a limit may be absolute or specific to
 blocks of IP addresses or pairs thereof. The number of most
 significant bits taken into account when mapping the source and
-destination IP addresses to blocks can be specified with the **mask**
-attribute. The **mask** attribute is an object with two attributes
-defining the prefix lengths, named **src** and
-**dest**. Alternatively, the **mask** object may have object
-attributes named **inet** and **inet6** which contain address
-family&ndash;specific prefix length pairs. If **mask** is defined as
-an integer, it is interpreted as the source address prefix length.
+destination IP addresses to blocks can be specified with the
+**src-mask** and **dest-mask** attributes, respectively. If set to
+**true** (boolean), all bits are considered. The value of **false**
+causes the respective address to be ignored. Address
+family&ndash;specific prefix lengths can be set by defining the mask
+as an object with attributes named **inet** and **inet6**.
 
-The default value for **mask** depends on the type of the enclosing
-object. For [filters](#filter), the default behavior is to apply the
-limit for each source address separately. For [logging classes](#log),
-the limit is considered absolute by default.
+The default behavior with respect to the masks depends on the type of
+the enclosing object. For [filters](#filter), the default behavior is
+to apply the limit for each source address separately. For [logging
+classes](#log), the limit is considered absolute by default.
 
 ### <a name="log"></a>Logging Classes
 
