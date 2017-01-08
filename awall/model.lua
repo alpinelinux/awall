@@ -707,6 +707,10 @@ function M.Limit:init(...)
       end
    end
 
+   self:initmask()
+end
+
+function M.Limit:initmask()
    setdefault(self, 'src-mask', not self['dest-mask'])
    setdefault(self, 'dest-mask', false)
 

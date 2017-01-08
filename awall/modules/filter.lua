@@ -24,6 +24,25 @@ local RECENT_MAX_COUNT = 20
 
 local FilterLimit = class(model.Limit)
 
+function FilterLimit:initmask()
+   if self.name then
+      for _, attr in ipairs{'src-mask', 'dest-mask'} do
+        if self[attr] then
+           self:error('Attribute not allowed with a named limit: '..attr)
+        end
+      end
+
+      local limits = self.root.limit
+      self[(self.addr or 'src')..'-mask'] = limits and limits[self.name] or true
+   end
+
+   FilterLimit.super(self):initmask()
+
+   if self.name and not self:recentofrags() then
+      self:error('Attribute allowed only with low-rate limits: name')
+   end
+end
+
 function FilterLimit:recentofrags(name)
    local count = self.count
    local interval = self.interval
@@ -66,7 +85,8 @@ function FilterLimit:recentofrags(name)
       local rec = {
 	 {
 	    family=family,
-	    match='-m recent --name '..name..' --r'..
+	    match='-m recent --name '..
+	       (self.name and 'user:'..self.name or name)..' --r'..
 	       ({src='source', dest='dest'})[attr]..' --mask '..mask
 	 }
       }
