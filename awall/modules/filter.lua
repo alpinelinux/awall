@@ -358,14 +358,14 @@ function Filter:extraoptfrags()
       local limitlog = self[limit].log
       local limitobj = self:create(FilterLimit, self[limit], 'limit')
 
-      local ofrags = {}
+      local ofs = {}
       local logch, limitofs
       local accept = self:position() == 'append'
 
       local uofs, sofs = limitobj:recentofrags(limitchain)
 
       if uofs then
-	 ofrags, logch = self:logchain(limitlog, 'drop', 'DROP')
+	 ofs, logch = self:logchain(limitlog, 'drop', 'DROP')
 
 	 limitofs = combinations(uofs, {{target=logch}})
 	 if accept and self.log then extend(limitofs, self.log:optfrags()) end
@@ -375,7 +375,7 @@ function Filter:extraoptfrags()
 
       else
 	 if accept then
-	    ofrags, logch = self:logchain(self.log, 'accept', 'ACCEPT')
+	    ofs, logch = self:logchain(self.log, 'accept', 'ACCEPT')
 	 else logch = 'RETURN' end
 
 	 limitofs = combinations(
@@ -385,8 +385,8 @@ function Filter:extraoptfrags()
 	 table.insert(limitofs, {target='DROP'})
       end
 
-      extend(ofrags, combinations({{chain=limitchain}}, limitofs))
-      return ofrags
+      extend(ofs, combinations({{chain=limitchain}}, limitofs))
+      return ofs
    end
 
    return Filter.super(self):extraoptfrags()
