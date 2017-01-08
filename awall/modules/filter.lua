@@ -39,9 +39,10 @@ function FilterLimit:recentofrags(name)
    local sofs = {}
 
    for _, family in ipairs{'inet', 'inet6'} do
-      if type(self.mask[family].mode) ~= 'table' then return end
+      local attr, len = self:maskmode(family)
+      if not attr then return end
+
       local mask = ''
-      local attr, len = table.unpack(self.mask[family].mode)
 
       if family == 'inet' then
 	 local octet

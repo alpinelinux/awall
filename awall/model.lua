@@ -696,17 +696,25 @@ function M.Limit:init(...)
    for _, family in ipairs{'inet', 'inet6'} do
       setdefault(self.mask, family, util.copy(self.mask))
       for _, attr in ipairs{'src', 'dest'} do
-	 local mask = setdefault(
+	 setdefault(
 	    self.mask[family],
 	    attr,
 	    ({src=({inet=32, inet6=128})[family], dest=0})[attr]
 	 )
-	 if mask > 0 then
-	    self.mask[family].mode =
-	       self.mask[family].mode and true or {attr, mask}
-	 end
       end
    end
+end
+
+function M.Limit:maskmode(family)
+   local res
+   for _, attr in ipairs{'src', 'dest'} do
+      local mask = self.mask[family][attr]
+      if mask > 0 then
+	 if res then return end
+	 res = {attr, mask}
+      end
+   end
+   if res then return table.unpack(res) end
 end
 
 function M.Limit:rate() return self.count / self.interval end
