@@ -349,47 +349,44 @@ end
 
 function Filter:extraoptfrags()
    local limit = self:limit()
-   if limit then
-      if self.action ~= 'accept' then
-	 self:error('Cannot specify limit for '..self.action..' filter')
-      end
+   if not limit then return Filter.super(self):extraoptfrags() end
 
-      local limitchain = self:uniqueid('limit')
-      local limitlog = self[limit].log
-      local limitobj = self:create(FilterLimit, self[limit], 'limit')
-
-      local ofs = {}
-      local logch, limitofs
-      local accept = self:position() == 'append'
-
-      local uofs, sofs = limitobj:recentofrags(limitchain)
-
-      if uofs then
-	 ofs, logch = self:logchain(limitlog, 'drop', 'DROP')
-
-	 limitofs = combinations(uofs, {{target=logch}})
-	 if accept and self.log then extend(limitofs, self.log:optfrags()) end
-	 extend(
-	    limitofs, combinations(sofs, {{target=accept and 'ACCEPT' or nil}})
-	 )
-
-      else
-	 if accept then
-	    ofs, logch = self:logchain(self.log, 'accept', 'ACCEPT')
-	 else logch = 'RETURN' end
-
-	 limitofs = combinations(
-	    limitobj:limitofrags(limitchain), {{target=logch}}
-	 )
-	 if limitlog then extend(limitofs, limitlog:optfrags()) end
-	 table.insert(limitofs, {target='DROP'})
-      end
-
-      extend(ofs, combinations({{chain=limitchain}}, limitofs))
-      return ofs
+   if self.action ~= 'accept' then
+      self:error('Cannot specify limit for '..self.action..' filter')
    end
 
-   return Filter.super(self):extraoptfrags()
+   local limitchain = self:uniqueid('limit')
+   local limitlog = self[limit].log
+   local limitobj = self:create(FilterLimit, self[limit], 'limit')
+
+   local ofs = {}
+   local logch, limitofs
+   local accept = self:position() == 'append'
+
+   local uofs, sofs = limitobj:recentofrags(limitchain)
+
+   if uofs then
+      ofs, logch = self:logchain(limitlog, 'drop', 'DROP')
+
+      limitofs = combinations(uofs, {{target=logch}})
+      if accept and self.log then extend(limitofs, self.log:optfrags()) end
+      extend(
+	 limitofs, combinations(sofs, {{target=accept and 'ACCEPT' or nil}})
+      )
+
+   else
+      if accept then ofs, logch = self:logchain(self.log, 'accept', 'ACCEPT')
+      else logch = 'RETURN' end
+
+      limitofs = combinations(
+	 limitobj:limitofrags(limitchain), {{target=logch}}
+      )
+      if limitlog then extend(limitofs, limitlog:optfrags()) end
+      table.insert(limitofs, {target='DROP'})
+   end
+
+   extend(ofs, combinations({{chain=limitchain}}, limitofs))
+   return ofs
 end
 
 
