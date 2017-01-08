@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -521,29 +521,27 @@ function M.Rule:trules()
       end
    end
 
-   local custom = self:customtarget()
-   local final = custom or self:target()
-
-   local nxt
-   if combined then
-      nxt = final
-      ofrags = combined
-   else nxt = self:uniqueid('address') end
+   if combined then ofrags = combined end
 
    tag(ofrags, 'position', self:position())
 
-   ofrags = combinations(ofrags, {{target=nxt}})
-
+   local addrchain
    if not combined then
-      extend(ofrags, combinations(addrofrags, {{chain=nxt, target=final}}))
+      addrchain = self:uniqueid('address')
+      self:settarget(ofrags, addrchain)
+      extend(ofrags, combinations(addrofrags, {{chain=addrchain}}))
    end
 
-   local function extofrags(new)
-      if not custom then extend(ofrags, new)
-      elseif new[1] then self:error('Custom action not allowed here') end
-   end
+   local function bancustom() self:error('Custom action not allowed here') end
+   local custom = self:customtarget()
 
-   extofrags(self:extraoptfrags())
+   ofrags = self:mangleoptfrags(ofrags)
+   for _, ofrag in ipairs(ofrags) do
+      if custom and ofrag.target and ofrag.target ~= addrchain then
+	 bancustom()
+      end
+   end
+   self:settarget(ofrags, custom or self:target())
 
    local tbl = self:table()
 
@@ -601,9 +599,10 @@ function M.Rule:trules()
       combinations(ofrags, ffilter({{family='inet'}, {family='inet6'}})),
       function(r) return self:trulefilter(r) end
    )
-   extofrags(self:extratrules(ofrags))
 
-   return ofrags
+   local extra = self:extratrules(ofrags)
+   if custom and extra[1] then bancustom() end
+   return extend(ofrags, extra)
 end
 
 function M.Rule:customtarget()
@@ -615,7 +614,12 @@ function M.Rule:customtarget()
    end
 end
 
-function M.Rule:extraoptfrags() return {} end
+function M.Rule:settarget(ofrags, target)
+   for _, ofrag in ipairs(ofrags) do setdefault(ofrag, 'target', target) end
+   return ofrags
+end
+
+function M.Rule:mangleoptfrags(ofrags) return ofrags end
 
 function M.Rule:trulefilter(rule) return true end
 

@@ -156,12 +156,7 @@ end
 
 function LoggingRule:logdefault() return false end
 
-function LoggingRule:actiontarget() return 'ACCEPT' end
-
-function LoggingRule:target()
-   if self.log then return self:uniqueid('log'..self.action) end
-   return self:actiontarget()
-end
+function LoggingRule:target() return 'ACCEPT' end
 
 function LoggingRule:logchain(log, action, target)
    if not log then return {}, target end
@@ -173,10 +168,10 @@ function LoggingRule:logchain(log, action, target)
    return combinations({{chain=chain}}, ofrags), chain
 end
 
-function LoggingRule:extraoptfrags()
-   return self.log and
-      self:logchain(self.log, self.action, self:actiontarget()) or
-      LoggingRule.super(self):extraoptfrags()
+function LoggingRule:mangleoptfrags(ofrags)
+   if not self.log then return ofrags end
+   local ofs, chain = self:logchain(self.log, self.action, self:target())
+   return extend(self:settarget(ofrags, chain), ofs)
 end
 
 
@@ -334,7 +329,7 @@ function Filter:logdefault()
    return contains({'drop', 'reject', 'tarpit'}, self.action)
 end
 
-function Filter:actiontarget()
+function Filter:target()
    if self.action == 'pass' then return end
    if self.action ~= 'accept' and not self:logdefault() then
       self:error('Invalid filter action: '..self.action)
@@ -342,20 +337,17 @@ function Filter:actiontarget()
    return self.action == 'tarpit' and 'tarpit' or self.action:upper()
 end
 
-function Filter:target()
-   if self:limit() then return self:uniqueid('limit') end
-   return Filter.super(self).target()
-end
-
-function Filter:extraoptfrags()
+function Filter:mangleoptfrags(ofrags)
    local limit = self:limit()
-   if not limit then return Filter.super(self):extraoptfrags() end
+   if not limit then return Filter.super(self):mangleoptfrags(ofrags) end
 
    if self.action ~= 'accept' then
       self:error('Cannot specify limit for '..self.action..' filter')
    end
 
    local limitchain = self:uniqueid('limit')
+   self:settarget(ofrags, limitchain)
+
    local limitlog = self[limit].log
    local limitobj = self:create(FilterLimit, self[limit], 'limit')
 
@@ -370,9 +362,7 @@ function Filter:extraoptfrags()
 
       limitofs = combinations(uofs, {{target=logch}})
       if accept and self.log then extend(limitofs, self.log:optfrags()) end
-      extend(
-	 limitofs, combinations(sofs, {{target=accept and 'ACCEPT' or nil}})
-      )
+      extend(limitofs, combinations(sofs, {{target=accept and 'ACCEPT'}}))
 
    else
       if accept then ofs, logch = self:logchain(self.log, 'accept', 'ACCEPT')
@@ -385,8 +375,8 @@ function Filter:extraoptfrags()
       table.insert(limitofs, {target='DROP'})
    end
 
-   extend(ofs, combinations({{chain=limitchain}}, limitofs))
-   return ofs
+   extend(ofrags, ofs)
+   return extend(ofrags, combinations({{chain=limitchain}}, limitofs))
 end
 
 

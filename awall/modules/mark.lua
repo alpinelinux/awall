@@ -1,6 +1,6 @@
 --[[
 Packet marking module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -9,7 +9,7 @@ local model = require('awall.model')
 local class = model.class
 
 local combinations = require('awall.optfrag').combinations
-local list = require('awall.util').list
+local util = require('awall.util')
 
 
 local MarkRule = class(model.Rule)
@@ -26,24 +26,19 @@ function MarkRule:target() return 'MARK --set-mark '..self.mark end
 
 local RouteTrackRule = class(MarkRule)
 
-function RouteTrackRule:target() return self:uniqueid('mark') end
-
-function RouteTrackRule:servoptfrags()
-   return combinations(
-      RouteTrackRule.super(self):servoptfrags(), {{match='-m mark --mark 0'}}
+function RouteTrackRule:mangleoptfrags(ofrags)
+   local markchain = self:uniqueid('mark')
+   return util.extend(
+      self:settarget(
+	 combinations(ofrags, {{match='-m mark --mark 0'}}), markchain
+      ),
+      {{chain=markchain}, {chain=markchain, target='CONNMARK --save-mark'}}
    )
-end
-
-function RouteTrackRule:extraoptfrags()
-   return {
-      {chain=self:target(), target=RouteTrackRule.super(self).target()},
-      {chain=self:target(), target='CONNMARK --save-mark'}
-   }
 end
 
 
 local function restoremark(config)
-   if list(config['route-track'])[1] then
+   if util.list(config['route-track'])[1] then
       return combinations(
 	 {{family='inet'}, {family='inet6'}},
 	 {{chain='OUTPUT'}, {chain='PREROUTING'}},
