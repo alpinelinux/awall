@@ -341,8 +341,12 @@ function Filter:mangleoptfrags(ofrags)
    local limit = self:limit()
    if not limit then return Filter.super(self):mangleoptfrags(ofrags) end
 
-   if self.action ~= 'accept' then
-      self:error('Cannot specify limit for '..self.action..' filter')
+   local function incompatible(item)
+      self:error('Limit incompatible with '..item)
+   end
+
+   if self:customtarget() or self:logdefault() then
+      incompatible('action: '..self.action)
    end
 
    local limitchain = self:uniqueid('limit')
@@ -351,17 +355,27 @@ function Filter:mangleoptfrags(ofrags)
 
    local ofs
    local conn = limit == 'conn-limit'
+   local target = self:target()
+   local ct = conn and target
+   local pl = not target and self.log
 
    local uofs, sofs = limitobj:recentofrags(limitchain)
 
    if uofs then
       ofs = self:combinelog(uofs, limitlog, 'drop', 'DROP')
-      if conn then extend(ofs, self:actofrags(self.log)) end
-      extend(ofs, combinations(sofs, {{target=conn and 'ACCEPT'}}))
+
+      local nxt
+      if ct then
+	 extend(ofs, self:actofrags(self.log))
+	 nxt = target
+      elseif not pl then nxt = false end
+      extend(ofs, combinations(sofs, self:actofrags(pl, nxt)))
 
    else
+      if pl then incompatible('action or log') end
+
       local limofs = limitobj:limitofrags(limitchain)
-      ofs = conn and Filter.super(self):mangleoptfrags(limofs) or
+      ofs = ct and Filter.super(self):mangleoptfrags(limofs) or
 	 combinations(limofs, {{target='RETURN'}})
 
       extend(ofs, self:actofrags(limitlog, 'DROP'))
