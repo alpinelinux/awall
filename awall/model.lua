@@ -676,19 +676,10 @@ function M.Rule:extrarules(label, cls, options)
 end
 
 
-M.Limit = M.class(M.ConfigObject)
+M.Maskable = M.class(M.ConfigObject)
 
-function M.Limit:init(...)
-   M.Limit.super(self):init(...)
-
-   if not self.count then
-      if not self[1] then
-	 self:error('Packet count not defined for limit')
-      end
-      self.count = self[1]
-   end
-
-   setdefault(self, 'interval', 1)
+function M.Maskable:init(...)
+   M.Maskable.super(self):init(...)
 
    -- alpine v3.5 compatibility
    if self.mask then
@@ -729,7 +720,7 @@ function M.Limit:initmask()
    end
 end
 
-function M.Limit:maskmode(family)
+function M.Maskable:maskmode(family)
    local res
    for _, addr in ipairs{'src', 'dest'} do
       local mask = self[addr..'-mask'][family]
@@ -739,6 +730,22 @@ function M.Limit:maskmode(family)
       end
    end
    if res then return table.unpack(res) end
+end
+
+
+M.Limit = M.class(M.Maskable)
+
+function M.Limit:init(...)
+   M.Limit.super(self):init(...)
+
+   if not self.count then
+      if not self[1] then
+	 self:error('Packet count not defined for limit')
+      end
+      self.count = self[1]
+   end
+
+   setdefault(self, 'interval', 1)
 end
 
 function M.Limit:rate() return self.count / self.interval end
