@@ -158,20 +158,20 @@ function LoggingRule:logdefault() return false end
 
 function LoggingRule:target() return 'ACCEPT' end
 
-function LoggingRule:logchain(log, action, target)
-   if not log then return {}, target end
-   local chain = self:uniqueid('log'..action)
+function LoggingRule:actofrags(log, target)
+   local res = log and log:optfrags() or {}
+   if target ~= nil then table.insert(res, {target=target}) end
+   return res
+end
 
-   local ofrags = log:optfrags()
-   if target then table.insert(ofrags, {target=target}) end
-
-   return combinations({{chain=chain}}, ofrags), chain
+function LoggingRule:combinelog(ofrags, log, action, target)
+   local actions = self:actofrags(log, target)
+   return actions[1] and
+      self:combine(ofrags, actions, 'log'..action, log) or ofrags
 end
 
 function LoggingRule:mangleoptfrags(ofrags)
-   if not self.log then return ofrags end
-   local ofs, chain = self:logchain(self.log, self.action, self:target())
-   return extend(self:settarget(ofrags, chain), ofs)
+   return self:combinelog(ofrags, self.log, self.action, self:target())
 end
 
 
@@ -346,37 +346,28 @@ function Filter:mangleoptfrags(ofrags)
    end
 
    local limitchain = self:uniqueid('limit')
-   self:settarget(ofrags, limitchain)
-
    local limitlog = self[limit].log
    local limitobj = self:create(FilterLimit, self[limit], 'limit')
 
-   local ofs = {}
-   local logch, limitofs
+   local ofs
    local accept = self:position() == 'append'
 
    local uofs, sofs = limitobj:recentofrags(limitchain)
 
    if uofs then
-      ofs, logch = self:logchain(limitlog, 'drop', 'DROP')
-
-      limitofs = combinations(uofs, {{target=logch}})
-      if accept and self.log then extend(limitofs, self.log:optfrags()) end
-      extend(limitofs, combinations(sofs, {{target=accept and 'ACCEPT'}}))
+      ofs = self:combinelog(uofs, limitlog, 'drop', 'DROP')
+      if accept then extend(ofs, self:actofrags(self.log)) end
+      extend(ofs, combinations(sofs, {{target=accept and 'ACCEPT'}}))
 
    else
-      if accept then ofs, logch = self:logchain(self.log, 'accept', 'ACCEPT')
-      else logch = 'RETURN' end
+      local limofs = limitobj:limitofrags(limitchain)
+      ofs = accept and Filter.super(self):mangleoptfrags(limofs) or
+	 combinations(limofs, {{target='RETURN'}})
 
-      limitofs = combinations(
-	 limitobj:limitofrags(limitchain), {{target=logch}}
-      )
-      if limitlog then extend(limitofs, limitlog:optfrags()) end
-      table.insert(limitofs, {target='DROP'})
+      extend(ofs, self:actofrags(limitlog, 'DROP'))
    end
 
-   extend(ofrags, ofs)
-   return extend(ofrags, combinations({{chain=limitchain}}, limitofs))
+   return self:combine(ofrags, ofs, 'limit', true)
 end
 
 

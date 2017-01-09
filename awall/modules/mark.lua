@@ -9,7 +9,7 @@ local model = require('awall.model')
 local class = model.class
 
 local combinations = require('awall.optfrag').combinations
-local util = require('awall.util')
+local list = require('awall.util').list
 
 
 local MarkRule = class(model.Rule)
@@ -27,18 +27,16 @@ function MarkRule:target() return 'MARK --set-mark '..self.mark end
 local RouteTrackRule = class(MarkRule)
 
 function RouteTrackRule:mangleoptfrags(ofrags)
-   local markchain = self:uniqueid('mark')
-   return util.extend(
-      self:settarget(
-	 combinations(ofrags, {{match='-m mark --mark 0'}}), markchain
-      ),
-      {{chain=markchain}, {chain=markchain, target='CONNMARK --save-mark'}}
+   return self:combine(
+      combinations(ofrags, {{match='-m mark --mark 0'}}),
+      {{}, {target='CONNMARK --save-mark'}},
+      'mark'
    )
 end
 
 
 local function restoremark(config)
-   if util.list(config['route-track'])[1] then
+   if list(config['route-track'])[1] then
       return combinations(
 	 {{family='inet'}, {family='inet6'}},
 	 {{chain='OUTPUT'}, {chain='PREROUTING'}},

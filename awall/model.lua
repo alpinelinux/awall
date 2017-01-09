@@ -24,6 +24,7 @@ local extend = util.extend
 local filter = util.filter
 local join = util.join
 local listpairs = util.listpairs
+local map = util.map
 local maplist = util.maplist
 local setdefault = util.setdefault
 
@@ -430,6 +431,49 @@ function M.Rule:target()
 end
 
 
+function M.Rule:combine(ofs1, ofs2, key, unique)
+
+   local function connect()
+      local chain = self:uniqueid(key)
+      local function setvar(name)
+	 return function(of)
+	    setdefault(of, name, chain)
+	    return of
+	 end
+      end
+
+      return extend(map(ofs1, setvar('target')), map(ofs2, setvar('chain')))
+   end
+
+   local chainless = filter(ofs2, function(of) return not of.chain end)
+   local created = {}
+   local res = {}
+
+   for _, of in ipairs(ofs1) do
+      if of.target == nil then
+
+	 local ofs = combinations(chainless, {{family=of.family}})
+	 assert(#ofs > 0)
+
+	 if unique then
+	    assert(of.family)
+	    if created[of.family] then return connect() end
+	    created[of.family] = true
+
+	    if #ofs > 1 then return connect() end
+	 end
+
+	 local comb = combinations({of}, ofs)
+	 if #comb < #ofs then return connect() end
+	 extend(res, comb)
+
+      else table.insert(res, of) end
+   end
+
+   return res
+end
+
+
 function M.Rule:trules()
 
    local function tag(ofrags, tag, value)
@@ -496,52 +540,26 @@ function M.Rule:trules()
 
    ofrags = combinations(ofrags, self:servoptfrags())
 
+   tag(ofrags, 'position', self:position())
+
    setfamilies(ofrags)
 
    local addrofrags = combinations(
       self:create(M.Zone, {addr=self.src}):optfrags(self:direction('in')),
       self:destoptfrags()
    )
-   local combined = ofrags
-
    if addrofrags then
       addrofrags = ffilter(addrofrags)
       setfamilies(addrofrags)
-      ofrags = ffilter(ofrags)
-
-      combined = {}
-      for i, ofrag in ipairs(ofrags) do
-	 local aofs = combinations(addrofrags, {{family=ofrag.family}})
-	 local cc = combinations({ofrag}, aofs)
-	 if #cc < #aofs then
-	    combined = nil
-	    break
-	 end
-	 extend(combined, cc)
-      end
+      ofrags = self:combine(ffilter(ofrags), addrofrags, 'address')
    end
-
-   if combined then ofrags = combined end
-
-   tag(ofrags, 'position', self:position())
-
-   local addrchain
-   if not combined then
-      addrchain = self:uniqueid('address')
-      self:settarget(ofrags, addrchain)
-      extend(ofrags, combinations(addrofrags, {{chain=addrchain}}))
-   end
-
-   local function bancustom() self:error('Custom action not allowed here') end
-   local custom = self:customtarget()
 
    ofrags = self:mangleoptfrags(ofrags)
+
+   local custom = self:customtarget()
    for _, ofrag in ipairs(ofrags) do
-      if custom and ofrag.target and ofrag.target ~= addrchain then
-	 bancustom()
-      end
+      setdefault(ofrag, 'target', custom or self:target())
    end
-   self:settarget(ofrags, custom or self:target())
 
    local tbl = self:table()
 
@@ -601,7 +619,7 @@ function M.Rule:trules()
    )
 
    local extra = self:extratrules(ofrags)
-   if custom and extra[1] then bancustom() end
+   if custom and extra[1] then self:error('Custom action not allowed here') end
    return extend(ofrags, extra)
 end
 
@@ -612,11 +630,6 @@ function M.Rule:customtarget()
 	 return self.action
       end
    end
-end
-
-function M.Rule:settarget(ofrags, target)
-   for _, ofrag in ipairs(ofrags) do setdefault(ofrag, 'target', target) end
-   return ofrags
 end
 
 function M.Rule:mangleoptfrags(ofrags) return ofrags end
