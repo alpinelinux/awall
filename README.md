@@ -223,16 +223,18 @@ classes](#log), the limit is considered absolute by default.
 
 The packet rates contributing to the limit may be summed over multiple
 [filters](#filter). This can be achieved by setting the optional
-**name** attribute to equal values among the related limits. Named
-limits may be specific only to fixed-size blocks of either the source
-or the destination address, not both. However, the address to be
-considered may vary among the rules using the limit and may be
-selected by setting an attribute named **addr** to either **src**
-(default) or **dest**. By default, all bits of the selected address
-are taken into account, but address family&ndash;specific prefix
-lengths can be set via the top-level **limit** dictionary, where the
-keys correspond to limit names and values follow the syntax of
-**src-mask** and **dest-mask**.
+**name** attribute to equal values among the related limits. If the
+**update** attribute is set to **false** (boolean), the rates measured
+at this limit are not included in the sum, but the referred sum is
+used to make the limiting decision. Named limits may be specific only
+to fixed-size blocks of either the source or the destination address,
+not both. However, the address to be considered may vary among the
+rules using the limit and may be selected by setting an attribute
+named **addr** to either **src** (default) or **dest**. By default,
+all bits of the selected address are taken into account, but address
+family&ndash;specific prefix lengths can be set via the top-level
+**limit** dictionary, where the keys correspond to limit names and
+values follow the syntax of **src-mask** and **dest-mask**.
 
 ### <a name="log"></a>Logging Classes
 

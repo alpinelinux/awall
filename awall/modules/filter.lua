@@ -34,6 +34,9 @@ function FilterLimit:initmask()
 
       local limits = self.root.limit
       self[(self.addr or 'src')..'-mask'] = limits and limits[self.name] or true
+
+   elseif self.update ~= nil then
+      self:error('Attribute allowed only with named limits: update')
    end
 
    FilterLimit.super(self):initmask()
@@ -54,8 +57,9 @@ function FilterLimit:recentofrags(name)
 
    if count > RECENT_MAX_COUNT then return end
 
+   local update = self.update ~= false
    local cofs = {}
-   local sofs = {}
+   local sofs = update and {} or nil
 
    for _, family in ipairs{'inet', 'inet6'} do
       local attr, len = self:maskmode(family)
@@ -95,10 +99,13 @@ function FilterLimit:recentofrags(name)
 	 cofs,
 	 combinations(
 	    rec,
-	    {{match='--update --hitcount '..count..' --seconds '..interval}}
+	    {
+	       {match='--'..(update and 'update' or 'rcheck')..' --hitcount '..
+		   count..' --seconds '..interval}
+	    }
 	 )
       )
-      extend(sofs, combinations(rec, {{match='--set'}}))
+      if sofs then extend(sofs, combinations(rec, {{match='--set'}})) end
    end
 
    return cofs, sofs
@@ -389,7 +396,7 @@ function Filter:mangleoptfrags(ofrags)
       if ct then
 	 extend(ofs, self:actofrags(self.log))
 	 nxt = target
-      elseif not pl then nxt = false end
+      elseif sofs and not pl then nxt = false end
       extend(ofs, combinations(sofs, self:actofrags(pl, nxt)))
 
    else
