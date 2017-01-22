@@ -436,6 +436,18 @@ limit object may have an attribute named **log**. It defines how the
 dropped packets should be logged and is semantically similar to the
 **log** attribute of rule objects.
 
+Filter objects may have an attribute named **update-limit**. This
+causes the packet flow or new connection attempts matching the filter
+to be included in the total rate of a named limit without any packets
+being dropped. When defined as a string, it is interpreted as the name
+of the limit. It can also be defined as an object with a **name**
+attribute and additional attributes. The **measure** attribute is used
+to select whether to measure the packet flow (**flow**) or connection
+attempts (**conn**, default). The **addr** attribute is used to select
+whether to consider the source (**src**, default) or destination
+(**dest**) address. When **update-limit** is defined, **action**
+defaults to **pass** and cannot be set to any other value.
+
 Filter objects may have an attribute named **dnat**, the value of
 which is an IPv4 address. If defined, this enables destination NAT for
 all IPv4 packets matching the rule, such that the specified address

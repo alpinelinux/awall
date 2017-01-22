@@ -18,6 +18,19 @@ local util = require('awall.util')
 local contains = util.contains
 local extend = util.extend
 local listpairs = util.listpairs
+local setdefault = util.setdefault
+
+
+local function initmask(obj)
+   for _, attr in ipairs{'src-mask', 'dest-mask'} do
+      if obj[attr] then
+	 obj:error('Attribute not allowed with a named limit: '..attr)
+      end
+   end
+
+   local limits = obj.root.limit
+   obj[(obj.addr or 'src')..'-mask'] = limits and limits[obj.name] or true
+end
 
 
 local RECENT_MAX_COUNT = 20
@@ -25,16 +38,7 @@ local RECENT_MAX_COUNT = 20
 local FilterLimit = class(model.Limit)
 
 function FilterLimit:initmask()
-   if self.name then
-      for _, attr in ipairs{'src-mask', 'dest-mask'} do
-        if self[attr] then
-           self:error('Attribute not allowed with a named limit: '..attr)
-        end
-      end
-
-      local limits = self.root.limit
-      self[(self.addr or 'src')..'-mask'] = limits and limits[self.name] or true
-
+   if self.name then initmask(self)
    elseif self.update ~= nil then
       self:error('Attribute allowed only with named limits: update')
    end
@@ -69,6 +73,24 @@ function FilterLimit:recentofrags(name)
 	     count..' --seconds '..interval}
       }
    ), update and combinations(ofs, {{match='--set'}}) or nil
+end
+
+
+local LimitReference = class(model.Maskable)
+
+function LimitReference:initmask()
+   if not self.name then
+      if not self[1] then self:error('Limit name not defined') end
+      self.name = self[1]
+   end
+   initmask(self)
+
+   LimitReference.super(self):initmask()
+end
+
+function LimitReference:recentofrags()
+   local ofs = self:recentmask()
+   return ofs and combinations(ofs, {{match='--set'}}) or self:error(MASK_ERROR)
 end
 
 
@@ -129,7 +151,7 @@ local LoggingRule = class(TranslatingRule)
 
 function LoggingRule:init(...)
    LoggingRule.super(self):init(...)
-   util.setdefault(self, 'action', 'accept')
+   setdefault(self, 'action', 'accept')
 
    local custom = self:customtarget()
    if type(self.log) ~= 'table' then
@@ -188,6 +210,9 @@ function RelatedRule:target() return 'ACCEPT' end
 local Filter = class(LoggingRule)
 
 function Filter:init(...)
+   local ul = self['update-limit']
+   if ul then setdefault(self, 'action', 'pass') end
+
    Filter.super(self):init(...)
 
    -- alpine v2.4 compatibility
@@ -205,6 +230,21 @@ function Filter:init(...)
 	 self[limit] = {count=self[limit]}
       end
       self[limit].log = loadclass('log').get(self, self[limit].log, true)
+   end
+
+   if ul then
+      if self.action ~= 'pass' then
+	 self:error('Cannot specify action with update-limit')
+      end
+
+      if not contains({'conn', 'flow'}, setdefault(ul, 'measure', 'conn')) then
+	 self:error('Invalid value for measure: '..ul.measure)
+      end
+      if self['no-track'] and ul.measure == 'conn' then
+	 self:error('Tracking required when measuring connection rate')
+      end
+
+      self:create(LimitReference, ul, 'update-limit')
    end
 end
 
@@ -309,8 +349,11 @@ function Filter:limit()
 end
 
 function Filter:position()
-   return not self['no-track'] and self:limit() == 'flow-limit'
-      and 'prepend' or 'append'
+   return not self['no-track'] and (
+      self:limit() == 'flow-limit' or (
+	 self['update-limit'] and self['update-limit'].measure == 'flow'
+      )
+   ) and 'prepend' or 'append'
 end
 
 function Filter:logdefault()
@@ -327,11 +370,18 @@ end
 
 function Filter:mangleoptfrags(ofrags)
    local limit = self:limit()
-   if not limit then return Filter.super(self):mangleoptfrags(ofrags) end
+   if not limit then
+      if self['update-limit'] then
+	 ofrags = self:combine(ofrags, self['update-limit']:recentofrags())
+      end
+      return Filter.super(self):mangleoptfrags(ofrags)
+   end
 
    local function incompatible(item)
       self:error('Limit incompatible with '..item)
    end
+
+   if self['update-limit'] then incompatible('update-limit') end
 
    if self:customtarget() or self:logdefault() then
       incompatible('action: '..self.action)
