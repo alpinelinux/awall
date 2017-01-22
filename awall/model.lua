@@ -701,7 +701,7 @@ function M.Maskable:init(...)
    self:initmask()
 end
 
-function M.Limit:initmask()
+function M.Maskable:initmask()
    setdefault(self, 'src-mask', not self['dest-mask'])
    setdefault(self, 'dest-mask', false)
 
@@ -720,24 +720,60 @@ function M.Limit:initmask()
    end
 end
 
-function M.Maskable:maskmode(family)
-   local res
-   for _, addr in ipairs{'src', 'dest'} do
-      local mask = self[addr..'-mask'][family]
-      if mask > 0 then
-	 if res then return end
-	 res = {addr, mask}
+function M.Maskable:recentmask(name)
+   local res = {}
+
+   for _, family in ipairs{'inet', 'inet6'} do
+      local addr, len
+      for _, a in ipairs{'src', 'dest'} do
+	 local mask = self[a..'-mask'][family]
+	 if mask > 0 then
+	    if addr then return end
+	    addr = a
+	    len = mask
+	 end
       end
+      if not addr then return end
+
+      local mask = ''
+
+      if family == 'inet' then
+	 local octet
+	 for i = 0, 3 do
+	    if len <= i * 8 then octet = 0
+	    elseif len > i * 8 + 7 then octet = 255
+	    else octet = 256 - 2^(8 - len % 8) end
+	    mask = util.join(mask, '.', octet)
+	 end
+
+      elseif family == 'inet6' then
+	 while len > 0 do
+	    if #mask % 5 == 4 then mask = mask..':' end
+	    mask = mask..('%x'):format(16 - 2^math.max(0, 4 - len))
+	    len = len - 4
+	 end
+	 while #mask % 5 < 4 do mask = mask..'0' end
+	 if #mask < 39 then mask = mask..'::' end
+      end
+
+      table.insert(
+	 res,
+	 {
+	    family=family,
+	    match='-m recent --name '..
+	       (self.name and 'user:'..self.name or name)..' --r'..
+	       ({src='source', dest='dest'})[addr]..' --mask '..mask
+	 }
+      )
    end
-   if res then return table.unpack(res) end
+
+   return res
 end
 
 
 M.Limit = M.class(M.Maskable)
 
 function M.Limit:init(...)
-   M.Limit.super(self):init(...)
-
    if not self.count then
       if not self[1] then
 	 self:error('Packet count not defined for limit')
@@ -746,6 +782,8 @@ function M.Limit:init(...)
    end
 
    setdefault(self, 'interval', 1)
+
+   M.Limit.super(self):init(...)
 end
 
 function M.Limit:rate() return self.count / self.interval end

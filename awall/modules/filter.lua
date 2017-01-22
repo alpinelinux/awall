@@ -58,57 +58,17 @@ function FilterLimit:recentofrags(name)
    if count > RECENT_MAX_COUNT then return end
 
    local update = self.update ~= false
-   local cofs = {}
-   local sofs = update and {} or nil
 
-   for _, family in ipairs{'inet', 'inet6'} do
-      local attr, len = self:maskmode(family)
-      if not attr then return end
+   local ofs = self:recentmask(name)
+   if not ofs then return end
 
-      local mask = ''
-
-      if family == 'inet' then
-	 local octet
-	 for i = 0, 3 do
-	    if len <= i * 8 then octet = 0
-	    elseif len > i * 8 + 7 then octet = 255
-	    else octet = 256 - 2^(8 - len % 8) end
-	    mask = util.join(mask, '.', octet)
-	 end
-
-      elseif family == 'inet6' then
-	 while len > 0 do
-	    if #mask % 5 == 4 then mask = mask..':' end
-	    mask = mask..('%x'):format(16 - 2^math.max(0, 4 - len))
-	    len = len - 4
-	 end
-	 while #mask % 5 < 4 do mask = mask..'0' end
-	 if #mask < 39 then mask = mask..'::' end
-      end
-
-      local rec = {
-	 {
-	    family=family,
-	    match='-m recent --name '..
-	       (self.name and 'user:'..self.name or name)..' --r'..
-	       ({src='source', dest='dest'})[attr]..' --mask '..mask
-	 }
+   return combinations(
+      ofs,
+      {
+	 {match='--'..(update and 'update' or 'rcheck')..' --hitcount '..
+	     count..' --seconds '..interval}
       }
-
-      extend(
-	 cofs,
-	 combinations(
-	    rec,
-	    {
-	       {match='--'..(update and 'update' or 'rcheck')..' --hitcount '..
-		   count..' --seconds '..interval}
-	    }
-	 )
-      )
-      if sofs then extend(sofs, combinations(rec, {{match='--set'}})) end
-   end
-
-   return cofs, sofs
+   ), update and combinations(ofs, {{match='--set'}}) or nil
 end
 
 
