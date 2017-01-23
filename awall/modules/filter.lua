@@ -54,7 +54,7 @@ function FilterLimit:recentofrags(name)
 
    if count > RECENT_MAX_COUNT then return end
 
-   local uofs = {}
+   local cofs = {}
    local sofs = {}
 
    for _, family in ipairs{'inet', 'inet6'} do
@@ -92,7 +92,7 @@ function FilterLimit:recentofrags(name)
       }
 
       extend(
-	 uofs,
+	 cofs,
 	 combinations(
 	    rec,
 	    {{match='--update --hitcount '..count..' --seconds '..interval}}
@@ -101,7 +101,7 @@ function FilterLimit:recentofrags(name)
       extend(sofs, combinations(rec, {{match='--set'}}))
    end
 
-   return uofs, sofs
+   return cofs, sofs
 end
 
 
@@ -380,10 +380,10 @@ function Filter:mangleoptfrags(ofrags)
    local ct = conn and target
    local pl = not target and self.log
 
-   local uofs, sofs = limitobj:recentofrags(limitchain)
+   local cofs, sofs = limitobj:recentofrags(limitchain)
 
-   if uofs then
-      ofs = self:combinelog(uofs, limitlog, 'drop', 'DROP')
+   if cofs then
+      ofs = self:combinelog(cofs, limitlog, 'drop', 'DROP')
 
       local nxt
       if ct then
