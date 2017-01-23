@@ -365,7 +365,7 @@ Filter objects specify an action for packets fulfilling certain
 criteria. The top-level attribute **filter** is a list of filter
 objects.
 
-Filter objects must have an attribute named **action**, the value of
+Filter objects may have an attribute named **action**, the value of
 which can be one of the following:
 
 <table>
