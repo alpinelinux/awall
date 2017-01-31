@@ -446,7 +446,7 @@ function M.Rule:combine(ofs1, ofs2, key, unique)
    end
 
    local chainless = filter(ofs2, function(of) return not of.chain end)
-   local created = {}
+   local created
    local res = {}
 
    for _, of in ipairs(ofs1) do
@@ -455,16 +455,24 @@ function M.Rule:combine(ofs1, ofs2, key, unique)
 	 local ofs = combinations(chainless, {{family=of.family}})
 	 assert(#ofs > 0)
 
-	 if unique then
-	    assert(of.family)
-	    if created[of.family] then return connect() end
-	    created[of.family] = true
-
-	    if #ofs > 1 then return connect() end
-	 end
-
 	 local comb = combinations({of}, ofs)
 	 if #comb < #ofs then return connect() end
+
+	 if unique then
+	    for _, c in ipairs(comb) do
+	       if c.family then
+	          if not created then created = {}
+		  elseif created == true or created[c.family] then
+		     return connect()
+		  end
+		  created[c.family] = true
+	       else
+	          if created then return connect() end
+		  created = true
+	       end
+	    end
+	 end
+
 	 extend(res, comb)
 
       else table.insert(res, of) end
