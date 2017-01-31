@@ -181,7 +181,8 @@ function LoggingRule:combinelog(ofrags, log, action, target)
 end
 
 function LoggingRule:mangleoptfrags(ofrags)
-   return self:combinelog(ofrags, self.log, self.action, self:target())
+   return self:customtarget() and ofrags or
+      self:combinelog(ofrags, self.log, self.action, self:target())
 end
 
 
