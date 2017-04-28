@@ -551,8 +551,7 @@ function M.Rule:trules()
       if not self.string.match then self:error('String match not defined') end
       setdefault(self.string, 'algo', 'bm')
 
-      local opts = '-m string --string "'..
-	 self.string.match:gsub('(["\\])', '\\%1')..'"'
+      local opts = '-m string --string '..util.quote(self.string.match)
 
       for _, attr in ipairs{'algo', 'from', 'to'} do
 	 if self.string[attr] then

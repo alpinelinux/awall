@@ -1,6 +1,6 @@
 --[[
 Utility module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -114,6 +114,9 @@ function M.join(a, sep, b)
    add(b)
    if comps[1] then return table.concat(comps, sep) end
 end
+
+
+function M.quote(s) return '"'..s:gsub('(["\\])', '\\%1')..'"' end
 
 
 function M.printtabulars(tables)
