@@ -1,6 +1,6 @@
 --[[
 Packet logging module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -9,13 +9,13 @@ local model = require('awall.model')
 local class = model.class
 
 local combinations = require('awall.optfrag').combinations
-local setdefault = require('awall.util').setdefault
+local util = require('awall.util')
 
 
 local LogLimit = class(model.Limit)
 
 function LogLimit:init(...)
-   setdefault(self, 'mask', 0)
+   util.setdefault(self, 'mask', 0)
    LogLimit.super(self):init(...)
 end
 
@@ -74,7 +74,11 @@ function Log:target()
 
    local res = mode:upper()
    for s, t in pairs(optmap[mode]) do
-      if self[s] then res = res..' --'..mode..'-'..t..' '..self[s] end
+      local value = self[s]
+      if value then
+	 if s == 'prefix' then value = util.quote(value) end
+	 res = res..' --'..mode..'-'..t..' '..value
+      end
    end
    return res
 end
