@@ -17,7 +17,6 @@ local map = util.map
 local printmsg = util.printmsg
 
 
-local json = require('cjson')
 local posix = require('posix')
 
 
@@ -75,7 +74,7 @@ function Policy:load()
    local data = file:read('*all')
    file:close()
 
-   local success, res = pcall(json.decode, data)
+   local success, res = pcall(self.decode, data)
    if success then return res end
    raise(res..' while parsing '..self.path)
 end
@@ -109,14 +108,21 @@ local PolicySet = class()
 
 function PolicySet:init(dirs)
    local confdir = (dirs.mandatory or defdirs.mandatory)[1]
+   local decoder = {
+      json = { mod="cjson", func="decode" },
+      yaml = { mod="lyaml", func="load" },
+      toml = { mod="toml", func="parse" },
+   }
    self.policies = {}
 
    for i, cls in ipairs{'private', 'optional', 'mandatory'} do
       for i, dir in ipairs(dirs[cls] or defdirs[cls]) do
 	 for _, fname in ipairs(posix.dir(dir)) do
-	    local si, ei, name = fname:find('^([%w-]+)%.json$')
-	    if name then
+	    local si, ei, name, suff = fname:find('^([%w-]+)%.([jyt][sao][om][nl])$') -- json|yaml|toml
+
+	    if name and suff and decoder[suff] then
 	       local pol = self.policies[name]
+	       local decmod = require(decoder[suff].mod)
 
 	       local path = dir..'/'..fname
 	       if path:sub(1, 1) ~= '/' then
@@ -141,7 +147,8 @@ function PolicySet:init(dirs)
 		     path=path,
 		     fname=fname,
 		     loc=loc,
-		     confdir=confdir
+		     confdir=confdir,
+		     decode=decmod[decoder[suff].func]
 		  }
 	       end
 	    end
