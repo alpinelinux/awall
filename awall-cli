@@ -299,7 +299,9 @@ if not call(
 
 	 local data
 	 repeat
+	    -- Lua 5.2 compatibility: prefix with *
 	    data = stdout:read('*a')
+
 	    io.stdout:write(data)
 	 until data == ''
 	 stdout:close()

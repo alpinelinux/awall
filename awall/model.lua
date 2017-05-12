@@ -289,8 +289,8 @@ function M.Rule:zoneoptfrags()
    local izones = self[self:direction('in')] or {}
    local ozones = self[self:direction('out')] or {}
 
-   for i = 1,math.max(1, table.maxn(izones)) do
-      for j = 1,math.max(1, table.maxn(ozones)) do
+   for i = 1,math.max(1, #izones) do
+      for j = 1,math.max(1, #ozones) do
 	 extend(res, zonepair(izones[i], ozones[j]))
       end
    end

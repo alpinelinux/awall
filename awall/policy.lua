@@ -1,6 +1,6 @@
 --[[
 Policy file handling for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -71,7 +71,10 @@ function Policy:init() self.enabled = self.type == 'mandatory' end
 function Policy:load()
    local file = io.open(self.path)
    if not file then raise('Unable to read policy file '..self.path) end
-   local data = file:read('*all')
+
+   -- Lua 5.2 compatibility: prefix with *
+   local data = file:read('*a')
+
    file:close()
 
    local success, res = pcall(self.decode, data)
