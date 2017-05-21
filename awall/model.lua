@@ -27,6 +27,7 @@ local listpairs = util.listpairs
 local map = util.map
 local maplist = util.maplist
 local setdefault = util.setdefault
+local sortedkeys = util.sortedkeys
 
 
 local startswith = require('stringy').startswith
@@ -365,11 +366,13 @@ function M.Rule:servoptfrags()
    end
 
    local popt = ' --'..(self.reverse and 's' or 'd')..'port'
-   for family, pports in pairs(fports) do
+   for _, family in sortedkeys(fports) do
       local ofrags = {}
+      local pports = fports[family]
 
-      for proto, ports in pairs(pports) do
+      for _, proto in sortedkeys(pports) do
 	 local propt = '-p '..proto
+	 local ports = pports[proto]
 
 	 if ports[1] then
 	    local len = #ports
