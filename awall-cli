@@ -209,7 +209,9 @@ if not call(
 
 
       local function dump(level)
-	 local json = require('cjson')
+	 local json = require('cjson').new()
+	 json.encode_sort_keys(true)
+
 	 local expinput = input:expand()
 
 	 local function capitalize(cls)
