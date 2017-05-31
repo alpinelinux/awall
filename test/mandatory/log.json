@@ -1,0 +1,13 @@
+{
+    "filter": [
+	{},
+	{ "action": "drop" },
+	{ "action": "pass" },
+	{ "log": false },
+	{ "log": false, "action": "drop" },
+	{ "log": false, "action": "pass" },
+	{ "log": true },
+	{ "log": true, "action": "drop" },
+	{ "log": true, "action": "pass" }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "filter": [
+	{},
+	{ "action": "accept" },
+	{ "action": "drop" },
+	{ "action": "pass" },
+	{ "action": "reject" },
+	{ "action": "tarpit" }
+    ]
+}

@@ -4,21 +4,337 @@
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
+:limit-0 - [0:0]
+:limit-1 - [0:0]
+:limit-10 - [0:0]
+:limit-11 - [0:0]
+:limit-12 - [0:0]
+:limit-13 - [0:0]
+:limit-14 - [0:0]
+:limit-15 - [0:0]
+:limit-16 - [0:0]
+:limit-17 - [0:0]
+:limit-18 - [0:0]
+:limit-19 - [0:0]
+:limit-2 - [0:0]
+:limit-20 - [0:0]
+:limit-21 - [0:0]
+:limit-22 - [0:0]
+:limit-23 - [0:0]
+:limit-24 - [0:0]
+:limit-25 - [0:0]
+:limit-26 - [0:0]
+:limit-27 - [0:0]
+:limit-3 - [0:0]
+:limit-4 - [0:0]
+:limit-5 - [0:0]
+:limit-6 - [0:0]
+:limit-7 - [0:0]
+:limit-8 - [0:0]
+:limit-9 - [0:0]
+:logaccept-0 - [0:0]
+:logaccept-1 - [0:0]
+:logaccept-2 - [0:0]
+:logaccept-final-0 - [0:0]
+:logaccept-final-1 - [0:0]
+:logaccept-final-2 - [0:0]
+:logaccept-final-3 - [0:0]
+:logdrop-0 - [0:0]
+:logdrop-1 - [0:0]
+:logdrop-10 - [0:0]
+:logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
+:logdrop-4 - [0:0]
+:logdrop-5 - [0:0]
+:logdrop-6 - [0:0]
+:logdrop-7 - [0:0]
+:logdrop-8 - [0:0]
+:logdrop-9 - [0:0]
+:logpass-0 - [0:0]
+:logreject-0 - [0:0]
+:logtarpit-0 - [0:0]
+:tarpit - [0:0]
+-A FORWARD -j limit-27
+-A FORWARD -j limit-26
+-A FORWARD -j limit-25
+-A FORWARD -j limit-24
+-A FORWARD -j limit-23
+-A FORWARD -j limit-22
+-A FORWARD -j limit-21
+-A FORWARD -j limit-20
+-A FORWARD -j limit-19
+-A FORWARD -j limit-18
+-A FORWARD -j limit-17
+-A FORWARD -j limit-16
+-A FORWARD -j limit-15
+-A FORWARD -j limit-14
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logdrop-0
+-A FORWARD 
+-A FORWARD -j logreject-0
+-A FORWARD -j logtarpit-0
+-A FORWARD -j limit-0
+-A FORWARD -j limit-1
+-A FORWARD -j limit-2
+-A FORWARD -j limit-3
+-A FORWARD -j limit-4
+-A FORWARD -j limit-5
+-A FORWARD -j limit-6
+-A FORWARD -j limit-7
+-A FORWARD -j limit-8
+-A FORWARD -j limit-9
+-A FORWARD -j limit-10
+-A FORWARD -j limit-11
+-A FORWARD -j limit-12
+-A FORWARD -j limit-13
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-0
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-1
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-2
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-3
+-A FORWARD -j ACCEPT
+-A FORWARD -j logdrop-9
+-A FORWARD 
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
+-A FORWARD -j logaccept-2
+-A FORWARD -j logdrop-10
+-A FORWARD -j logpass-0
 -A FORWARD -p icmp -j icmp-routing
+-A INPUT -j limit-27
+-A INPUT -j limit-26
+-A INPUT -j limit-25
+-A INPUT -j limit-24
+-A INPUT -j limit-23
+-A INPUT -j limit-22
+-A INPUT -j limit-21
+-A INPUT -j limit-20
+-A INPUT -j limit-19
+-A INPUT -j limit-18
+-A INPUT -j limit-17
+-A INPUT -j limit-16
+-A INPUT -j limit-15
+-A INPUT -j limit-14
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logdrop-0
+-A INPUT 
+-A INPUT -j logreject-0
+-A INPUT -j logtarpit-0
+-A INPUT -j limit-0
+-A INPUT -j limit-1
+-A INPUT -j limit-2
+-A INPUT -j limit-3
+-A INPUT -j limit-4
+-A INPUT -j limit-5
+-A INPUT -j limit-6
+-A INPUT -j limit-7
+-A INPUT -j limit-8
+-A INPUT -j limit-9
+-A INPUT -j limit-10
+-A INPUT -j limit-11
+-A INPUT -j limit-12
+-A INPUT -j limit-13
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-0
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-1
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-2
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-3
+-A INPUT -j ACCEPT
+-A INPUT -j logdrop-9
+-A INPUT 
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
+-A INPUT -j logaccept-2
+-A INPUT -j logdrop-10
+-A INPUT -j logpass-0
 -A INPUT -p icmp -j icmp-routing
+-A OUTPUT -j limit-27
+-A OUTPUT -j limit-26
+-A OUTPUT -j limit-25
+-A OUTPUT -j limit-24
+-A OUTPUT -j limit-23
+-A OUTPUT -j limit-22
+-A OUTPUT -j limit-21
+-A OUTPUT -j limit-20
+-A OUTPUT -j limit-19
+-A OUTPUT -j limit-18
+-A OUTPUT -j limit-17
+-A OUTPUT -j limit-16
+-A OUTPUT -j limit-15
+-A OUTPUT -j limit-14
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logdrop-0
+-A OUTPUT 
+-A OUTPUT -j logreject-0
+-A OUTPUT -j logtarpit-0
+-A OUTPUT -j limit-0
+-A OUTPUT -j limit-1
+-A OUTPUT -j limit-2
+-A OUTPUT -j limit-3
+-A OUTPUT -j limit-4
+-A OUTPUT -j limit-5
+-A OUTPUT -j limit-6
+-A OUTPUT -j limit-7
+-A OUTPUT -j limit-8
+-A OUTPUT -j limit-9
+-A OUTPUT -j limit-10
+-A OUTPUT -j limit-11
+-A OUTPUT -j limit-12
+-A OUTPUT -j limit-13
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-0
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-1
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-2
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-3
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logdrop-9
+-A OUTPUT 
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
+-A OUTPUT -j logaccept-2
+-A OUTPUT -j logdrop-10
+-A OUTPUT -j logpass-0
 -A OUTPUT -p icmp -j icmp-routing
 -A icmp-routing -p icmp --icmp-type 3 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 11 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 12 -j ACCEPT
+-A limit-0 -m recent --name limit-0 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-1
+-A limit-0 -m recent --name limit-0 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-1 -m recent --name limit-1 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-2
+-A limit-1 -m recent --name limit-1 --rsource --mask 255.255.255.255 --set 
+-A limit-10 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-10 -j logaccept-0
+-A limit-10 -m limit --limit 1/second -j LOG
+-A limit-10 -j DROP
+-A limit-11 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-11 -j ACCEPT
+-A limit-11 -j DROP
+-A limit-12 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-12 -j RETURN
+-A limit-12 -j DROP
+-A limit-13 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-13 -j logaccept-1
+-A limit-13 -j DROP
+-A limit-14 -m recent --name limit-14 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-5
+-A limit-14 -m recent --name limit-14 --rsource --mask 255.255.255.255 --set 
+-A limit-15 -m recent --name limit-15 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-6
+-A limit-15 -m recent --name limit-15 --rsource --mask 255.255.255.255 --set 
+-A limit-16 -m recent --name limit-16 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-7
+-A limit-16 -m recent --name limit-16 --rsource --mask 255.255.255.255 --set 
+-A limit-17 -m recent --name limit-17 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-8
+-A limit-17 -m recent --name limit-17 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-18 -m recent --name limit-18 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-18 -m recent --name limit-18 --rsource --mask 255.255.255.255 --set 
+-A limit-19 -m recent --name limit-19 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-19 -m recent --name limit-19 --rsource --mask 255.255.255.255 --set 
+-A limit-2 -m recent --name limit-2 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-3
+-A limit-2 -m limit --limit 1/second -j LOG
+-A limit-2 -m recent --name limit-2 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-20 -m recent --name limit-20 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-20 -m recent --name limit-20 --rsource --mask 255.255.255.255 --set 
+-A limit-21 -m recent --name limit-21 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-21 -m recent --name limit-21 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-22 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-22 -j RETURN
+-A limit-22 -m limit --limit 1/second -j LOG
+-A limit-22 -j DROP
+-A limit-23 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-23 -j RETURN
+-A limit-23 -m limit --limit 1/second -j LOG
+-A limit-23 -j DROP
+-A limit-24 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-24 -j RETURN
+-A limit-24 -m limit --limit 1/second -j LOG
+-A limit-24 -j DROP
+-A limit-25 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-25 -j RETURN
+-A limit-25 -j DROP
+-A limit-26 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-26 -j RETURN
+-A limit-26 -j DROP
+-A limit-27 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-27 -j RETURN
+-A limit-27 -j DROP
+-A limit-3 -m recent --name limit-3 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-4
+-A limit-3 -m recent --name limit-3 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-4 -m recent --name limit-4 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-4 -m recent --name limit-4 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-5 -m recent --name limit-5 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-5 -m recent --name limit-5 --rsource --mask 255.255.255.255 --set 
+-A limit-6 -m recent --name limit-6 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-6 -m limit --limit 1/second -j LOG
+-A limit-6 -m recent --name limit-6 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-7 -m recent --name limit-7 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-7 -m recent --name limit-7 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-8 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-8 -j ACCEPT
+-A limit-8 -m limit --limit 1/second -j LOG
+-A limit-8 -j DROP
+-A limit-9 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-9 -j RETURN
+-A limit-9 -m limit --limit 1/second -j LOG
+-A limit-9 -j DROP
+-A logaccept-0 -m limit --limit 1/second -j LOG
+-A logaccept-0 -j ACCEPT
+-A logaccept-1 -m limit --limit 1/second -j LOG
+-A logaccept-1 -j ACCEPT
+-A logaccept-2 -m limit --limit 1/second -j LOG
+-A logaccept-2 -j ACCEPT
+-A logaccept-final-0 -m limit --limit 1/second -j LOG
+-A logaccept-final-0 -j ACCEPT
+-A logaccept-final-1 -m limit --limit 1/second -j LOG
+-A logaccept-final-1 -j ACCEPT
+-A logaccept-final-2 -m limit --limit 1/second -j LOG
+-A logaccept-final-2 -j ACCEPT
+-A logaccept-final-3 -m limit --limit 1/second -j LOG
+-A logaccept-final-3 -j ACCEPT
+-A logdrop-0 -m limit --limit 1/second -j LOG
+-A logdrop-0 -j DROP
+-A logdrop-1 -m limit --limit 1/second -j LOG
+-A logdrop-1 -j DROP
+-A logdrop-10 -m limit --limit 1/second -j LOG
+-A logdrop-10 -j DROP
+-A logdrop-2 -m limit --limit 1/second -j LOG
+-A logdrop-2 -j DROP
+-A logdrop-3 -m limit --limit 1/second -j LOG
+-A logdrop-3 -j DROP
+-A logdrop-4 -m limit --limit 1/second -j LOG
+-A logdrop-4 -j DROP
+-A logdrop-5 -m limit --limit 1/second -j LOG
+-A logdrop-5 -j DROP
+-A logdrop-6 -m limit --limit 1/second -j LOG
+-A logdrop-6 -j DROP
+-A logdrop-7 -m limit --limit 1/second -j LOG
+-A logdrop-7 -j DROP
+-A logdrop-8 -m limit --limit 1/second -j LOG
+-A logdrop-8 -j DROP
+-A logdrop-9 -m limit --limit 1/second -j LOG
+-A logdrop-9 -j DROP
+-A logpass-0 -m limit --limit 1/second -j LOG
+-A logreject-0 -m limit --limit 1/second -j LOG
+-A logreject-0 -j REJECT
+-A logtarpit-0 -m limit --limit 1/second -j LOG
+-A logtarpit-0 -j tarpit
+-A tarpit -p tcp -j TARPIT
+-A tarpit -j DROP
 COMMIT
 *nat
 :POSTROUTING ACCEPT [0:0]
 :awall-masquerade - [0:0]
 -A POSTROUTING -m set --match-set awall-masquerade src -j awall-masquerade
 -A awall-masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
+COMMIT
+*raw
+:OUTPUT ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A OUTPUT -j CT --notrack
+-A PREROUTING -j CT --notrack
 COMMIT
