@@ -51,4 +51,7 @@ $(ROOT_DIR)/$(resdir)/modules:
 
 install: $(foreach f,$(files),$(ROOT_DIR)/$(f)) $(ROOT_DIR)/$(resdir)/modules
 
-.PHONY: all
+check:
+	LUA_VERSION=$(LUA_VERSION) ./test.sh
+
+.PHONY: all check install
