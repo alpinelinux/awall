@@ -138,7 +138,7 @@ Filter 10                         {"action":"pass","conn-limit":1,"log":true}
   inet/filter/limit-3             -m recent --name limit-3 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
   inet6/filter/limit-3            -m recent --name limit-3 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
 
-Filter 11                         {"conn-limit":{"count":1,"log":false}}
+Filter 11                         {"conn-limit":1,"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-4
   inet6/filter/FORWARD            -j limit-4
@@ -146,12 +146,16 @@ Filter 11                         {"conn-limit":{"count":1,"log":false}}
   inet6/filter/INPUT              -j limit-4
   inet/filter/OUTPUT              -j limit-4
   inet6/filter/OUTPUT             -j limit-4
-  inet/filter/limit-4             -m recent --name limit-4 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
-  inet6/filter/limit-4            -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-4             -m recent --name limit-4 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-5
+  inet6/filter/limit-4            -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-5
+  inet/filter/logdrop-5           -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-5          -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-5           -j DROP
+  inet6/filter/logdrop-5          -j DROP
   inet/filter/limit-4             -m recent --name limit-4 --rsource --mask 255.255.255.255 --set -j ACCEPT
   inet6/filter/limit-4            -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 
-Filter 12                         {"action":"pass","conn-limit":{"count":1,"log":false}}
+Filter 12                         {"action":"pass","conn-limit":1,"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-5
   inet6/filter/FORWARD            -j limit-5
@@ -159,12 +163,16 @@ Filter 12                         {"action":"pass","conn-limit":{"count":1,"log"
   inet6/filter/INPUT              -j limit-5
   inet/filter/OUTPUT              -j limit-5
   inet6/filter/OUTPUT             -j limit-5
-  inet/filter/limit-5             -m recent --name limit-5 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
-  inet6/filter/limit-5            -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-5             -m recent --name limit-5 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-6
+  inet6/filter/limit-5            -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-6
+  inet/filter/logdrop-6           -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-6          -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-6           -j DROP
+  inet6/filter/logdrop-6          -j DROP
   inet/filter/limit-5             -m recent --name limit-5 --rsource --mask 255.255.255.255 --set 
   inet6/filter/limit-5            -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 
-Filter 13                         {"conn-limit":{"count":1,"log":false},"log":true}
+Filter 13                         {"conn-limit":{"count":1,"log":false}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-6
   inet6/filter/FORWARD            -j limit-6
@@ -174,12 +182,10 @@ Filter 13                         {"conn-limit":{"count":1,"log":false},"log":tr
   inet6/filter/OUTPUT             -j limit-6
   inet/filter/limit-6             -m recent --name limit-6 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
   inet6/filter/limit-6            -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
-  inet/filter/limit-6             -m limit --limit 1/second -j LOG
-  inet6/filter/limit-6            -m limit --limit 1/second -j LOG
   inet/filter/limit-6             -m recent --name limit-6 --rsource --mask 255.255.255.255 --set -j ACCEPT
   inet6/filter/limit-6            -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 
-Filter 14                         {"action":"pass","conn-limit":{"count":1,"log":false},"log":true}
+Filter 14                         {"action":"pass","conn-limit":{"count":1,"log":false}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-7
   inet6/filter/FORWARD            -j limit-7
@@ -189,10 +195,10 @@ Filter 14                         {"action":"pass","conn-limit":{"count":1,"log"
   inet6/filter/OUTPUT             -j limit-7
   inet/filter/limit-7             -m recent --name limit-7 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
   inet6/filter/limit-7            -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
-  inet/filter/limit-7             -m recent --name limit-7 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
-  inet6/filter/limit-7            -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+  inet/filter/limit-7             -m recent --name limit-7 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-7            -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 
-Filter 15                         {"conn-limit":30}
+Filter 15                         {"conn-limit":{"count":1,"log":false},"log":true}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-8
   inet6/filter/FORWARD            -j limit-8
@@ -200,14 +206,14 @@ Filter 15                         {"conn-limit":30}
   inet6/filter/INPUT              -j limit-8
   inet/filter/OUTPUT              -j limit-8
   inet6/filter/OUTPUT             -j limit-8
-  inet/filter/limit-8             -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-8 -j ACCEPT
-  inet6/filter/limit-8            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-8 -j ACCEPT
+  inet/filter/limit-8             -m recent --name limit-8 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-8            -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
   inet/filter/limit-8             -m limit --limit 1/second -j LOG
   inet6/filter/limit-8            -m limit --limit 1/second -j LOG
-  inet/filter/limit-8             -j DROP
-  inet6/filter/limit-8            -j DROP
+  inet/filter/limit-8             -m recent --name limit-8 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-8            -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 
-Filter 16                         {"action":"pass","conn-limit":30}
+Filter 16                         {"action":"pass","conn-limit":{"count":1,"log":false},"log":true}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-9
   inet6/filter/FORWARD            -j limit-9
@@ -215,14 +221,12 @@ Filter 16                         {"action":"pass","conn-limit":30}
   inet6/filter/INPUT              -j limit-9
   inet/filter/OUTPUT              -j limit-9
   inet6/filter/OUTPUT             -j limit-9
-  inet/filter/limit-9             -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-9 -j RETURN
-  inet6/filter/limit-9            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-9 -j RETURN
-  inet/filter/limit-9             -m limit --limit 1/second -j LOG
-  inet6/filter/limit-9            -m limit --limit 1/second -j LOG
-  inet/filter/limit-9             -j DROP
-  inet6/filter/limit-9            -j DROP
+  inet/filter/limit-9             -m recent --name limit-9 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-9            -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-9             -m recent --name limit-9 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-9            -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
 
-Filter 17                         {"conn-limit":30,"log":true}
+Filter 17                         {"conn-limit":{"count":1,"log":false},"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-10
   inet6/filter/FORWARD            -j limit-10
@@ -230,18 +234,12 @@ Filter 17                         {"conn-limit":30,"log":true}
   inet6/filter/INPUT              -j limit-10
   inet/filter/OUTPUT              -j limit-10
   inet6/filter/OUTPUT             -j limit-10
-  inet/filter/limit-10            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-10 -j logaccept-0
-  inet6/filter/limit-10           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-10 -j logaccept-0
-  inet/filter/logaccept-0         -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-0        -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-0         -j ACCEPT
-  inet6/filter/logaccept-0        -j ACCEPT
-  inet/filter/limit-10            -m limit --limit 1/second -j LOG
-  inet6/filter/limit-10           -m limit --limit 1/second -j LOG
-  inet/filter/limit-10            -j DROP
-  inet6/filter/limit-10           -j DROP
+  inet/filter/limit-10            -m recent --name limit-10 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-10           -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-10            -m recent --name limit-10 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-10           -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 
-Filter 18                         {"conn-limit":{"count":30,"log":false}}
+Filter 18                         {"action":"pass","conn-limit":{"count":1,"log":false},"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-11
   inet6/filter/FORWARD            -j limit-11
@@ -249,12 +247,12 @@ Filter 18                         {"conn-limit":{"count":30,"log":false}}
   inet6/filter/INPUT              -j limit-11
   inet/filter/OUTPUT              -j limit-11
   inet6/filter/OUTPUT             -j limit-11
-  inet/filter/limit-11            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-11 -j ACCEPT
-  inet6/filter/limit-11           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-11 -j ACCEPT
-  inet/filter/limit-11            -j DROP
-  inet6/filter/limit-11           -j DROP
+  inet/filter/limit-11            -m recent --name limit-11 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-11           -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-11            -m recent --name limit-11 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-11           -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 
-Filter 19                         {"action":"pass","conn-limit":{"count":30,"log":false}}
+Filter 19                         {"conn-limit":{"count":1,"log":"none"}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-12
   inet6/filter/FORWARD            -j limit-12
@@ -262,12 +260,12 @@ Filter 19                         {"action":"pass","conn-limit":{"count":30,"log
   inet6/filter/INPUT              -j limit-12
   inet/filter/OUTPUT              -j limit-12
   inet6/filter/OUTPUT             -j limit-12
-  inet/filter/limit-12            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-12 -j RETURN
-  inet6/filter/limit-12           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-12 -j RETURN
-  inet/filter/limit-12            -j DROP
-  inet6/filter/limit-12           -j DROP
+  inet/filter/limit-12            -m recent --name limit-12 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-12           -m recent --name limit-12 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-12            -m recent --name limit-12 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-12           -m recent --name limit-12 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 
-Filter 20                         {"conn-limit":{"count":30,"log":false},"log":true}
+Filter 20                         {"action":"pass","conn-limit":{"count":1,"log":"none"}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-13
   inet6/filter/FORWARD            -j limit-13
@@ -275,16 +273,12 @@ Filter 20                         {"conn-limit":{"count":30,"log":false},"log":t
   inet6/filter/INPUT              -j limit-13
   inet/filter/OUTPUT              -j limit-13
   inet6/filter/OUTPUT             -j limit-13
-  inet/filter/limit-13            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-13 -j logaccept-1
-  inet6/filter/limit-13           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-13 -j logaccept-1
-  inet/filter/logaccept-1         -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-1        -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-1         -j ACCEPT
-  inet6/filter/logaccept-1        -j ACCEPT
-  inet/filter/limit-13            -j DROP
-  inet6/filter/limit-13           -j DROP
+  inet/filter/limit-13            -m recent --name limit-13 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-13           -m recent --name limit-13 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-13            -m recent --name limit-13 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-13           -m recent --name limit-13 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 
-Filter 21                         {"flow-limit":1}
+Filter 21                         {"conn-limit":{"count":1,"log":"none"},"log":true}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-14
   inet6/filter/FORWARD            -j limit-14
@@ -292,22 +286,14 @@ Filter 21                         {"flow-limit":1}
   inet6/filter/INPUT              -j limit-14
   inet/filter/OUTPUT              -j limit-14
   inet6/filter/OUTPUT             -j limit-14
-  inet/filter/limit-14            -m recent --name limit-14 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-5
-  inet6/filter/limit-14           -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-5
-  inet/filter/logdrop-5           -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-5          -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-5           -j DROP
-  inet6/filter/logdrop-5          -j DROP
-  inet/filter/limit-14            -m recent --name limit-14 --rsource --mask 255.255.255.255 --set 
-  inet6/filter/limit-14           -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
-  inet/filter/FORWARD             -j ACCEPT
-  inet6/filter/FORWARD            -j ACCEPT
-  inet/filter/INPUT               -j ACCEPT
-  inet6/filter/INPUT              -j ACCEPT
-  inet/filter/OUTPUT              -j ACCEPT
-  inet6/filter/OUTPUT             -j ACCEPT
+  inet/filter/limit-14            -m recent --name limit-14 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-14           -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-14            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-14           -m limit --limit 1/second -j LOG
+  inet/filter/limit-14            -m recent --name limit-14 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-14           -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 
-Filter 22                         {"action":"pass","flow-limit":1}
+Filter 22                         {"action":"pass","conn-limit":{"count":1,"log":"none"},"log":true}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-15
   inet6/filter/FORWARD            -j limit-15
@@ -315,16 +301,12 @@ Filter 22                         {"action":"pass","flow-limit":1}
   inet6/filter/INPUT              -j limit-15
   inet/filter/OUTPUT              -j limit-15
   inet6/filter/OUTPUT             -j limit-15
-  inet/filter/limit-15            -m recent --name limit-15 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-6
-  inet6/filter/limit-15           -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-6
-  inet/filter/logdrop-6           -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-6          -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-6           -j DROP
-  inet6/filter/logdrop-6          -j DROP
-  inet/filter/limit-15            -m recent --name limit-15 --rsource --mask 255.255.255.255 --set 
-  inet6/filter/limit-15           -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/limit-15            -m recent --name limit-15 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-15           -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-15            -m recent --name limit-15 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-15           -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
 
-Filter 23                         {"flow-limit":1,"log":true}
+Filter 23                         {"conn-limit":{"count":1,"log":"none"},"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-16
   inet6/filter/FORWARD            -j limit-16
@@ -332,26 +314,12 @@ Filter 23                         {"flow-limit":1,"log":true}
   inet6/filter/INPUT              -j limit-16
   inet/filter/OUTPUT              -j limit-16
   inet6/filter/OUTPUT             -j limit-16
-  inet/filter/limit-16            -m recent --name limit-16 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-7
-  inet6/filter/limit-16           -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-7
-  inet/filter/logdrop-7           -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-7          -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-7           -j DROP
-  inet6/filter/logdrop-7          -j DROP
-  inet/filter/limit-16            -m recent --name limit-16 --rsource --mask 255.255.255.255 --set 
-  inet6/filter/limit-16           -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
-  inet/filter/FORWARD             -j logaccept-final-0
-  inet6/filter/FORWARD            -j logaccept-final-0
-  inet/filter/INPUT               -j logaccept-final-0
-  inet6/filter/INPUT              -j logaccept-final-0
-  inet/filter/OUTPUT              -j logaccept-final-0
-  inet6/filter/OUTPUT             -j logaccept-final-0
-  inet/filter/logaccept-final-0   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-final-0  -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-final-0   -j ACCEPT
-  inet6/filter/logaccept-final-0  -j ACCEPT
+  inet/filter/limit-16            -m recent --name limit-16 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-16           -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-16            -m recent --name limit-16 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-16           -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 
-Filter 24                         {"action":"pass","flow-limit":1,"log":true}
+Filter 24                         {"action":"pass","conn-limit":{"count":1,"log":"none"},"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-17
   inet6/filter/FORWARD            -j limit-17
@@ -359,16 +327,12 @@ Filter 24                         {"action":"pass","flow-limit":1,"log":true}
   inet6/filter/INPUT              -j limit-17
   inet/filter/OUTPUT              -j limit-17
   inet6/filter/OUTPUT             -j limit-17
-  inet/filter/limit-17            -m recent --name limit-17 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-8
-  inet6/filter/limit-17           -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-8
-  inet/filter/logdrop-8           -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-8          -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-8           -j DROP
-  inet6/filter/logdrop-8          -j DROP
-  inet/filter/limit-17            -m recent --name limit-17 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
-  inet6/filter/limit-17           -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+  inet/filter/limit-17            -m recent --name limit-17 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-17           -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-17            -m recent --name limit-17 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-17           -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 
-Filter 25                         {"flow-limit":{"count":1,"log":false}}
+Filter 25                         {"conn-limit":30}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-18
   inet6/filter/FORWARD            -j limit-18
@@ -376,18 +340,14 @@ Filter 25                         {"flow-limit":{"count":1,"log":false}}
   inet6/filter/INPUT              -j limit-18
   inet/filter/OUTPUT              -j limit-18
   inet6/filter/OUTPUT             -j limit-18
-  inet/filter/limit-18            -m recent --name limit-18 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
-  inet6/filter/limit-18           -m recent --name limit-18 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
-  inet/filter/limit-18            -m recent --name limit-18 --rsource --mask 255.255.255.255 --set 
-  inet6/filter/limit-18           -m recent --name limit-18 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
-  inet/filter/FORWARD             -j ACCEPT
-  inet6/filter/FORWARD            -j ACCEPT
-  inet/filter/INPUT               -j ACCEPT
-  inet6/filter/INPUT              -j ACCEPT
-  inet/filter/OUTPUT              -j ACCEPT
-  inet6/filter/OUTPUT             -j ACCEPT
+  inet/filter/limit-18            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-18 -j ACCEPT
+  inet6/filter/limit-18           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-18 -j ACCEPT
+  inet/filter/limit-18            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-18           -m limit --limit 1/second -j LOG
+  inet/filter/limit-18            -j DROP
+  inet6/filter/limit-18           -j DROP
 
-Filter 26                         {"action":"pass","flow-limit":{"count":1,"log":false}}
+Filter 26                         {"action":"pass","conn-limit":30}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-19
   inet6/filter/FORWARD            -j limit-19
@@ -395,12 +355,14 @@ Filter 26                         {"action":"pass","flow-limit":{"count":1,"log"
   inet6/filter/INPUT              -j limit-19
   inet/filter/OUTPUT              -j limit-19
   inet6/filter/OUTPUT             -j limit-19
-  inet/filter/limit-19            -m recent --name limit-19 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
-  inet6/filter/limit-19           -m recent --name limit-19 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
-  inet/filter/limit-19            -m recent --name limit-19 --rsource --mask 255.255.255.255 --set 
-  inet6/filter/limit-19           -m recent --name limit-19 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/limit-19            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-19 -j RETURN
+  inet6/filter/limit-19           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-19 -j RETURN
+  inet/filter/limit-19            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-19           -m limit --limit 1/second -j LOG
+  inet/filter/limit-19            -j DROP
+  inet6/filter/limit-19           -j DROP
 
-Filter 27                         {"flow-limit":{"count":1,"log":false},"log":true}
+Filter 27                         {"conn-limit":30,"log":true}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-20
   inet6/filter/FORWARD            -j limit-20
@@ -408,22 +370,18 @@ Filter 27                         {"flow-limit":{"count":1,"log":false},"log":tr
   inet6/filter/INPUT              -j limit-20
   inet/filter/OUTPUT              -j limit-20
   inet6/filter/OUTPUT             -j limit-20
-  inet/filter/limit-20            -m recent --name limit-20 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
-  inet6/filter/limit-20           -m recent --name limit-20 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
-  inet/filter/limit-20            -m recent --name limit-20 --rsource --mask 255.255.255.255 --set 
-  inet6/filter/limit-20           -m recent --name limit-20 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
-  inet/filter/FORWARD             -j logaccept-final-1
-  inet6/filter/FORWARD            -j logaccept-final-1
-  inet/filter/INPUT               -j logaccept-final-1
-  inet6/filter/INPUT              -j logaccept-final-1
-  inet/filter/OUTPUT              -j logaccept-final-1
-  inet6/filter/OUTPUT             -j logaccept-final-1
-  inet/filter/logaccept-final-1   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-final-1  -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-final-1   -j ACCEPT
-  inet6/filter/logaccept-final-1  -j ACCEPT
+  inet/filter/limit-20            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-20 -j logaccept-0
+  inet6/filter/limit-20           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-20 -j logaccept-0
+  inet/filter/logaccept-0         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-0        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-0         -j ACCEPT
+  inet6/filter/logaccept-0        -j ACCEPT
+  inet/filter/limit-20            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-20           -m limit --limit 1/second -j LOG
+  inet/filter/limit-20            -j DROP
+  inet6/filter/limit-20           -j DROP
 
-Filter 28                         {"action":"pass","flow-limit":{"count":1,"log":false},"log":true}
+Filter 28                         {"conn-limit":30,"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-21
   inet6/filter/FORWARD            -j limit-21
@@ -431,12 +389,14 @@ Filter 28                         {"action":"pass","flow-limit":{"count":1,"log"
   inet6/filter/INPUT              -j limit-21
   inet/filter/OUTPUT              -j limit-21
   inet6/filter/OUTPUT             -j limit-21
-  inet/filter/limit-21            -m recent --name limit-21 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
-  inet6/filter/limit-21           -m recent --name limit-21 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
-  inet/filter/limit-21            -m recent --name limit-21 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
-  inet6/filter/limit-21           -m recent --name limit-21 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+  inet/filter/limit-21            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-21 -j ACCEPT
+  inet6/filter/limit-21           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-21 -j ACCEPT
+  inet/filter/limit-21            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-21           -m limit --limit 1/second -j LOG
+  inet/filter/limit-21            -j DROP
+  inet6/filter/limit-21           -j DROP
 
-Filter 29                         {"flow-limit":30}
+Filter 29                         {"conn-limit":{"count":30,"log":false}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-22
   inet6/filter/FORWARD            -j limit-22
@@ -444,20 +404,12 @@ Filter 29                         {"flow-limit":30}
   inet6/filter/INPUT              -j limit-22
   inet/filter/OUTPUT              -j limit-22
   inet6/filter/OUTPUT             -j limit-22
-  inet/filter/limit-22            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-22 -j RETURN
-  inet6/filter/limit-22           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-22 -j RETURN
-  inet/filter/limit-22            -m limit --limit 1/second -j LOG
-  inet6/filter/limit-22           -m limit --limit 1/second -j LOG
+  inet/filter/limit-22            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-22 -j ACCEPT
+  inet6/filter/limit-22           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-22 -j ACCEPT
   inet/filter/limit-22            -j DROP
   inet6/filter/limit-22           -j DROP
-  inet/filter/FORWARD             -j ACCEPT
-  inet6/filter/FORWARD            -j ACCEPT
-  inet/filter/INPUT               -j ACCEPT
-  inet6/filter/INPUT              -j ACCEPT
-  inet/filter/OUTPUT              -j ACCEPT
-  inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 30                         {"action":"pass","flow-limit":30}
+Filter 30                         {"action":"pass","conn-limit":{"count":30,"log":false}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-23
   inet6/filter/FORWARD            -j limit-23
@@ -467,12 +419,10 @@ Filter 30                         {"action":"pass","flow-limit":30}
   inet6/filter/OUTPUT             -j limit-23
   inet/filter/limit-23            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-23 -j RETURN
   inet6/filter/limit-23           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-23 -j RETURN
-  inet/filter/limit-23            -m limit --limit 1/second -j LOG
-  inet6/filter/limit-23           -m limit --limit 1/second -j LOG
   inet/filter/limit-23            -j DROP
   inet6/filter/limit-23           -j DROP
 
-Filter 31                         {"flow-limit":30,"log":true}
+Filter 31                         {"conn-limit":{"count":30,"log":false},"log":true}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-24
   inet6/filter/FORWARD            -j limit-24
@@ -480,24 +430,16 @@ Filter 31                         {"flow-limit":30,"log":true}
   inet6/filter/INPUT              -j limit-24
   inet/filter/OUTPUT              -j limit-24
   inet6/filter/OUTPUT             -j limit-24
-  inet/filter/limit-24            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-24 -j RETURN
-  inet6/filter/limit-24           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-24 -j RETURN
-  inet/filter/limit-24            -m limit --limit 1/second -j LOG
-  inet6/filter/limit-24           -m limit --limit 1/second -j LOG
+  inet/filter/limit-24            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-24 -j logaccept-1
+  inet6/filter/limit-24           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-24 -j logaccept-1
+  inet/filter/logaccept-1         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-1        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-1         -j ACCEPT
+  inet6/filter/logaccept-1        -j ACCEPT
   inet/filter/limit-24            -j DROP
   inet6/filter/limit-24           -j DROP
-  inet/filter/FORWARD             -j logaccept-final-2
-  inet6/filter/FORWARD            -j logaccept-final-2
-  inet/filter/INPUT               -j logaccept-final-2
-  inet6/filter/INPUT              -j logaccept-final-2
-  inet/filter/OUTPUT              -j logaccept-final-2
-  inet6/filter/OUTPUT             -j logaccept-final-2
-  inet/filter/logaccept-final-2   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-final-2  -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-final-2   -j ACCEPT
-  inet6/filter/logaccept-final-2  -j ACCEPT
 
-Filter 32                         {"flow-limit":{"count":30,"log":false}}
+Filter 32                         {"conn-limit":{"count":30,"log":false},"log":"none"}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-25
   inet6/filter/FORWARD            -j limit-25
@@ -505,18 +447,12 @@ Filter 32                         {"flow-limit":{"count":30,"log":false}}
   inet6/filter/INPUT              -j limit-25
   inet/filter/OUTPUT              -j limit-25
   inet6/filter/OUTPUT             -j limit-25
-  inet/filter/limit-25            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-25 -j RETURN
-  inet6/filter/limit-25           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-25 -j RETURN
+  inet/filter/limit-25            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-25 -j ACCEPT
+  inet6/filter/limit-25           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-25 -j ACCEPT
   inet/filter/limit-25            -j DROP
   inet6/filter/limit-25           -j DROP
-  inet/filter/FORWARD             -j ACCEPT
-  inet6/filter/FORWARD            -j ACCEPT
-  inet/filter/INPUT               -j ACCEPT
-  inet6/filter/INPUT              -j ACCEPT
-  inet/filter/OUTPUT              -j ACCEPT
-  inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 33                         {"action":"pass","flow-limit":{"count":30,"log":false}}
+Filter 33                         {"conn-limit":{"count":30,"log":"none"}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-26
   inet6/filter/FORWARD            -j limit-26
@@ -524,12 +460,12 @@ Filter 33                         {"action":"pass","flow-limit":{"count":30,"log
   inet6/filter/INPUT              -j limit-26
   inet/filter/OUTPUT              -j limit-26
   inet6/filter/OUTPUT             -j limit-26
-  inet/filter/limit-26            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-26 -j RETURN
-  inet6/filter/limit-26           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-26 -j RETURN
+  inet/filter/limit-26            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-26 -j ACCEPT
+  inet6/filter/limit-26           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-26 -j ACCEPT
   inet/filter/limit-26            -j DROP
   inet6/filter/limit-26           -j DROP
 
-Filter 34                         {"flow-limit":{"count":30,"log":false},"log":true}
+Filter 34                         {"action":"pass","conn-limit":{"count":30,"log":"none"}}
 (filter-limit)                    
   inet/filter/FORWARD             -j limit-27
   inet6/filter/FORWARD            -j limit-27
@@ -541,6 +477,411 @@ Filter 34                         {"flow-limit":{"count":30,"log":false},"log":t
   inet6/filter/limit-27           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-27 -j RETURN
   inet/filter/limit-27            -j DROP
   inet6/filter/limit-27           -j DROP
+
+Filter 35                         {"conn-limit":{"count":30,"log":"none"},"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-28
+  inet6/filter/FORWARD            -j limit-28
+  inet/filter/INPUT               -j limit-28
+  inet6/filter/INPUT              -j limit-28
+  inet/filter/OUTPUT              -j limit-28
+  inet6/filter/OUTPUT             -j limit-28
+  inet/filter/limit-28            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-28 -j logaccept-2
+  inet6/filter/limit-28           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-28 -j logaccept-2
+  inet/filter/logaccept-2         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-2        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-2         -j ACCEPT
+  inet6/filter/logaccept-2        -j ACCEPT
+  inet/filter/limit-28            -j DROP
+  inet6/filter/limit-28           -j DROP
+
+Filter 36                         {"conn-limit":{"count":30,"log":"none"},"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-29
+  inet6/filter/FORWARD            -j limit-29
+  inet/filter/INPUT               -j limit-29
+  inet6/filter/INPUT              -j limit-29
+  inet/filter/OUTPUT              -j limit-29
+  inet6/filter/OUTPUT             -j limit-29
+  inet/filter/limit-29            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-29 -j ACCEPT
+  inet6/filter/limit-29           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-29 -j ACCEPT
+  inet/filter/limit-29            -j DROP
+  inet6/filter/limit-29           -j DROP
+
+Filter 37                         {"flow-limit":1}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-30
+  inet6/filter/FORWARD            -j limit-30
+  inet/filter/INPUT               -j limit-30
+  inet6/filter/INPUT              -j limit-30
+  inet/filter/OUTPUT              -j limit-30
+  inet6/filter/OUTPUT             -j limit-30
+  inet/filter/limit-30            -m recent --name limit-30 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-7
+  inet6/filter/limit-30           -m recent --name limit-30 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-7
+  inet/filter/logdrop-7           -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-7          -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-7           -j DROP
+  inet6/filter/logdrop-7          -j DROP
+  inet/filter/limit-30            -m recent --name limit-30 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-30           -m recent --name limit-30 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 38                         {"action":"pass","flow-limit":1}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-31
+  inet6/filter/FORWARD            -j limit-31
+  inet/filter/INPUT               -j limit-31
+  inet6/filter/INPUT              -j limit-31
+  inet/filter/OUTPUT              -j limit-31
+  inet6/filter/OUTPUT             -j limit-31
+  inet/filter/limit-31            -m recent --name limit-31 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-8
+  inet6/filter/limit-31           -m recent --name limit-31 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-8
+  inet/filter/logdrop-8           -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-8          -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-8           -j DROP
+  inet6/filter/logdrop-8          -j DROP
+  inet/filter/limit-31            -m recent --name limit-31 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-31           -m recent --name limit-31 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 39                         {"flow-limit":1,"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-32
+  inet6/filter/FORWARD            -j limit-32
+  inet/filter/INPUT               -j limit-32
+  inet6/filter/INPUT              -j limit-32
+  inet/filter/OUTPUT              -j limit-32
+  inet6/filter/OUTPUT             -j limit-32
+  inet/filter/limit-32            -m recent --name limit-32 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-9
+  inet6/filter/limit-32           -m recent --name limit-32 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-9
+  inet/filter/logdrop-9           -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-9          -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-9           -j DROP
+  inet6/filter/logdrop-9          -j DROP
+  inet/filter/limit-32            -m recent --name limit-32 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-32           -m recent --name limit-32 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j logaccept-final-0
+  inet6/filter/FORWARD            -j logaccept-final-0
+  inet/filter/INPUT               -j logaccept-final-0
+  inet6/filter/INPUT              -j logaccept-final-0
+  inet/filter/OUTPUT              -j logaccept-final-0
+  inet6/filter/OUTPUT             -j logaccept-final-0
+  inet/filter/logaccept-final-0   -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-final-0  -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-final-0   -j ACCEPT
+  inet6/filter/logaccept-final-0  -j ACCEPT
+
+Filter 40                         {"action":"pass","flow-limit":1,"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-33
+  inet6/filter/FORWARD            -j limit-33
+  inet/filter/INPUT               -j limit-33
+  inet6/filter/INPUT              -j limit-33
+  inet/filter/OUTPUT              -j limit-33
+  inet6/filter/OUTPUT             -j limit-33
+  inet/filter/limit-33            -m recent --name limit-33 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-10
+  inet6/filter/limit-33           -m recent --name limit-33 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-10
+  inet/filter/logdrop-10          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-10         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-10          -j DROP
+  inet6/filter/logdrop-10         -j DROP
+  inet/filter/limit-33            -m recent --name limit-33 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-33           -m recent --name limit-33 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+
+Filter 41                         {"flow-limit":1,"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-34
+  inet6/filter/FORWARD            -j limit-34
+  inet/filter/INPUT               -j limit-34
+  inet6/filter/INPUT              -j limit-34
+  inet/filter/OUTPUT              -j limit-34
+  inet6/filter/OUTPUT             -j limit-34
+  inet/filter/limit-34            -m recent --name limit-34 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-11
+  inet6/filter/limit-34           -m recent --name limit-34 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-11
+  inet/filter/logdrop-11          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-11         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-11          -j DROP
+  inet6/filter/logdrop-11         -j DROP
+  inet/filter/limit-34            -m recent --name limit-34 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-34           -m recent --name limit-34 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 42                         {"action":"pass","flow-limit":1,"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-35
+  inet6/filter/FORWARD            -j limit-35
+  inet/filter/INPUT               -j limit-35
+  inet6/filter/INPUT              -j limit-35
+  inet/filter/OUTPUT              -j limit-35
+  inet6/filter/OUTPUT             -j limit-35
+  inet/filter/limit-35            -m recent --name limit-35 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-12
+  inet6/filter/limit-35           -m recent --name limit-35 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-12
+  inet/filter/logdrop-12          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-12         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-12          -j DROP
+  inet6/filter/logdrop-12         -j DROP
+  inet/filter/limit-35            -m recent --name limit-35 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-35           -m recent --name limit-35 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 43                         {"flow-limit":{"count":1,"log":false}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-36
+  inet6/filter/FORWARD            -j limit-36
+  inet/filter/INPUT               -j limit-36
+  inet6/filter/INPUT              -j limit-36
+  inet/filter/OUTPUT              -j limit-36
+  inet6/filter/OUTPUT             -j limit-36
+  inet/filter/limit-36            -m recent --name limit-36 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-36           -m recent --name limit-36 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-36            -m recent --name limit-36 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-36           -m recent --name limit-36 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 44                         {"action":"pass","flow-limit":{"count":1,"log":false}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-37
+  inet6/filter/FORWARD            -j limit-37
+  inet/filter/INPUT               -j limit-37
+  inet6/filter/INPUT              -j limit-37
+  inet/filter/OUTPUT              -j limit-37
+  inet6/filter/OUTPUT             -j limit-37
+  inet/filter/limit-37            -m recent --name limit-37 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-37           -m recent --name limit-37 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-37            -m recent --name limit-37 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-37           -m recent --name limit-37 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 45                         {"flow-limit":{"count":1,"log":false},"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-38
+  inet6/filter/FORWARD            -j limit-38
+  inet/filter/INPUT               -j limit-38
+  inet6/filter/INPUT              -j limit-38
+  inet/filter/OUTPUT              -j limit-38
+  inet6/filter/OUTPUT             -j limit-38
+  inet/filter/limit-38            -m recent --name limit-38 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-38           -m recent --name limit-38 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-38            -m recent --name limit-38 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-38           -m recent --name limit-38 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j logaccept-final-1
+  inet6/filter/FORWARD            -j logaccept-final-1
+  inet/filter/INPUT               -j logaccept-final-1
+  inet6/filter/INPUT              -j logaccept-final-1
+  inet/filter/OUTPUT              -j logaccept-final-1
+  inet6/filter/OUTPUT             -j logaccept-final-1
+  inet/filter/logaccept-final-1   -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-final-1  -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-final-1   -j ACCEPT
+  inet6/filter/logaccept-final-1  -j ACCEPT
+
+Filter 46                         {"action":"pass","flow-limit":{"count":1,"log":false},"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-39
+  inet6/filter/FORWARD            -j limit-39
+  inet/filter/INPUT               -j limit-39
+  inet6/filter/INPUT              -j limit-39
+  inet/filter/OUTPUT              -j limit-39
+  inet6/filter/OUTPUT             -j limit-39
+  inet/filter/limit-39            -m recent --name limit-39 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-39           -m recent --name limit-39 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-39            -m recent --name limit-39 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-39           -m recent --name limit-39 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+
+Filter 47                         {"flow-limit":{"count":1,"log":false},"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-40
+  inet6/filter/FORWARD            -j limit-40
+  inet/filter/INPUT               -j limit-40
+  inet6/filter/INPUT              -j limit-40
+  inet/filter/OUTPUT              -j limit-40
+  inet6/filter/OUTPUT             -j limit-40
+  inet/filter/limit-40            -m recent --name limit-40 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-40           -m recent --name limit-40 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-40            -m recent --name limit-40 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-40           -m recent --name limit-40 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 48                         {"action":"pass","flow-limit":{"count":1,"log":false},"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-41
+  inet6/filter/FORWARD            -j limit-41
+  inet/filter/INPUT               -j limit-41
+  inet6/filter/INPUT              -j limit-41
+  inet/filter/OUTPUT              -j limit-41
+  inet6/filter/OUTPUT             -j limit-41
+  inet/filter/limit-41            -m recent --name limit-41 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-41           -m recent --name limit-41 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-41            -m recent --name limit-41 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-41           -m recent --name limit-41 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 49                         {"flow-limit":{"count":1,"log":"none"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-42
+  inet6/filter/FORWARD            -j limit-42
+  inet/filter/INPUT               -j limit-42
+  inet6/filter/INPUT              -j limit-42
+  inet/filter/OUTPUT              -j limit-42
+  inet6/filter/OUTPUT             -j limit-42
+  inet/filter/limit-42            -m recent --name limit-42 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-42           -m recent --name limit-42 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-42            -m recent --name limit-42 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-42           -m recent --name limit-42 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 50                         {"action":"pass","flow-limit":{"count":1,"log":"none"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-43
+  inet6/filter/FORWARD            -j limit-43
+  inet/filter/INPUT               -j limit-43
+  inet6/filter/INPUT              -j limit-43
+  inet/filter/OUTPUT              -j limit-43
+  inet6/filter/OUTPUT             -j limit-43
+  inet/filter/limit-43            -m recent --name limit-43 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-43           -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-43            -m recent --name limit-43 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-43           -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 51                         {"flow-limit":{"count":1,"log":"none"},"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-44
+  inet6/filter/FORWARD            -j limit-44
+  inet/filter/INPUT               -j limit-44
+  inet6/filter/INPUT              -j limit-44
+  inet/filter/OUTPUT              -j limit-44
+  inet6/filter/OUTPUT             -j limit-44
+  inet/filter/limit-44            -m recent --name limit-44 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-44           -m recent --name limit-44 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-44            -m recent --name limit-44 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-44           -m recent --name limit-44 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j logaccept-final-2
+  inet6/filter/FORWARD            -j logaccept-final-2
+  inet/filter/INPUT               -j logaccept-final-2
+  inet6/filter/INPUT              -j logaccept-final-2
+  inet/filter/OUTPUT              -j logaccept-final-2
+  inet6/filter/OUTPUT             -j logaccept-final-2
+  inet/filter/logaccept-final-2   -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-final-2  -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-final-2   -j ACCEPT
+  inet6/filter/logaccept-final-2  -j ACCEPT
+
+Filter 52                         {"action":"pass","flow-limit":{"count":1,"log":"none"},"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-45
+  inet6/filter/FORWARD            -j limit-45
+  inet/filter/INPUT               -j limit-45
+  inet6/filter/INPUT              -j limit-45
+  inet/filter/OUTPUT              -j limit-45
+  inet6/filter/OUTPUT             -j limit-45
+  inet/filter/limit-45            -m recent --name limit-45 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-45           -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-45            -m recent --name limit-45 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-45           -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+
+Filter 53                         {"flow-limit":{"count":1,"log":"none"},"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-46
+  inet6/filter/FORWARD            -j limit-46
+  inet/filter/INPUT               -j limit-46
+  inet6/filter/INPUT              -j limit-46
+  inet/filter/OUTPUT              -j limit-46
+  inet6/filter/OUTPUT             -j limit-46
+  inet/filter/limit-46            -m recent --name limit-46 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-46           -m recent --name limit-46 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-46            -m recent --name limit-46 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-46           -m recent --name limit-46 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 54                         {"action":"pass","flow-limit":{"count":1,"log":"none"},"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-47
+  inet6/filter/FORWARD            -j limit-47
+  inet/filter/INPUT               -j limit-47
+  inet6/filter/INPUT              -j limit-47
+  inet/filter/OUTPUT              -j limit-47
+  inet6/filter/OUTPUT             -j limit-47
+  inet/filter/limit-47            -m recent --name limit-47 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-47           -m recent --name limit-47 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-47            -m recent --name limit-47 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-47           -m recent --name limit-47 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 55                         {"flow-limit":30}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-48
+  inet6/filter/FORWARD            -j limit-48
+  inet/filter/INPUT               -j limit-48
+  inet6/filter/INPUT              -j limit-48
+  inet/filter/OUTPUT              -j limit-48
+  inet6/filter/OUTPUT             -j limit-48
+  inet/filter/limit-48            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-48 -j RETURN
+  inet6/filter/limit-48           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-48 -j RETURN
+  inet/filter/limit-48            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-48           -m limit --limit 1/second -j LOG
+  inet/filter/limit-48            -j DROP
+  inet6/filter/limit-48           -j DROP
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 56                         {"action":"pass","flow-limit":30}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-49
+  inet6/filter/FORWARD            -j limit-49
+  inet/filter/INPUT               -j limit-49
+  inet6/filter/INPUT              -j limit-49
+  inet/filter/OUTPUT              -j limit-49
+  inet6/filter/OUTPUT             -j limit-49
+  inet/filter/limit-49            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-49 -j RETURN
+  inet6/filter/limit-49           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-49 -j RETURN
+  inet/filter/limit-49            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-49           -m limit --limit 1/second -j LOG
+  inet/filter/limit-49            -j DROP
+  inet6/filter/limit-49           -j DROP
+
+Filter 57                         {"flow-limit":30,"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-50
+  inet6/filter/FORWARD            -j limit-50
+  inet/filter/INPUT               -j limit-50
+  inet6/filter/INPUT              -j limit-50
+  inet/filter/OUTPUT              -j limit-50
+  inet6/filter/OUTPUT             -j limit-50
+  inet/filter/limit-50            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-50 -j RETURN
+  inet6/filter/limit-50           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-50 -j RETURN
+  inet/filter/limit-50            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-50           -m limit --limit 1/second -j LOG
+  inet/filter/limit-50            -j DROP
+  inet6/filter/limit-50           -j DROP
   inet/filter/FORWARD             -j logaccept-final-3
   inet6/filter/FORWARD            -j logaccept-final-3
   inet/filter/INPUT               -j logaccept-final-3
@@ -552,7 +893,176 @@ Filter 34                         {"flow-limit":{"count":30,"log":false},"log":t
   inet/filter/logaccept-final-3   -j ACCEPT
   inet6/filter/logaccept-final-3  -j ACCEPT
 
-Filter 35                         {}
+Filter 58                         {"flow-limit":30,"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-51
+  inet6/filter/FORWARD            -j limit-51
+  inet/filter/INPUT               -j limit-51
+  inet6/filter/INPUT              -j limit-51
+  inet/filter/OUTPUT              -j limit-51
+  inet6/filter/OUTPUT             -j limit-51
+  inet/filter/limit-51            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-51 -j RETURN
+  inet6/filter/limit-51           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-51 -j RETURN
+  inet/filter/limit-51            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-51           -m limit --limit 1/second -j LOG
+  inet/filter/limit-51            -j DROP
+  inet6/filter/limit-51           -j DROP
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 59                         {"flow-limit":{"count":30,"log":false}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-52
+  inet6/filter/FORWARD            -j limit-52
+  inet/filter/INPUT               -j limit-52
+  inet6/filter/INPUT              -j limit-52
+  inet/filter/OUTPUT              -j limit-52
+  inet6/filter/OUTPUT             -j limit-52
+  inet/filter/limit-52            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-52 -j RETURN
+  inet6/filter/limit-52           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-52 -j RETURN
+  inet/filter/limit-52            -j DROP
+  inet6/filter/limit-52           -j DROP
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 60                         {"action":"pass","flow-limit":{"count":30,"log":false}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-53
+  inet6/filter/FORWARD            -j limit-53
+  inet/filter/INPUT               -j limit-53
+  inet6/filter/INPUT              -j limit-53
+  inet/filter/OUTPUT              -j limit-53
+  inet6/filter/OUTPUT             -j limit-53
+  inet/filter/limit-53            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-53 -j RETURN
+  inet6/filter/limit-53           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-53 -j RETURN
+  inet/filter/limit-53            -j DROP
+  inet6/filter/limit-53           -j DROP
+
+Filter 61                         {"flow-limit":{"count":30,"log":false},"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-54
+  inet6/filter/FORWARD            -j limit-54
+  inet/filter/INPUT               -j limit-54
+  inet6/filter/INPUT              -j limit-54
+  inet/filter/OUTPUT              -j limit-54
+  inet6/filter/OUTPUT             -j limit-54
+  inet/filter/limit-54            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-54 -j RETURN
+  inet6/filter/limit-54           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-54 -j RETURN
+  inet/filter/limit-54            -j DROP
+  inet6/filter/limit-54           -j DROP
+  inet/filter/FORWARD             -j logaccept-final-4
+  inet6/filter/FORWARD            -j logaccept-final-4
+  inet/filter/INPUT               -j logaccept-final-4
+  inet6/filter/INPUT              -j logaccept-final-4
+  inet/filter/OUTPUT              -j logaccept-final-4
+  inet6/filter/OUTPUT             -j logaccept-final-4
+  inet/filter/logaccept-final-4   -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-final-4  -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-final-4   -j ACCEPT
+  inet6/filter/logaccept-final-4  -j ACCEPT
+
+Filter 62                         {"flow-limit":{"count":30,"log":false},"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-55
+  inet6/filter/FORWARD            -j limit-55
+  inet/filter/INPUT               -j limit-55
+  inet6/filter/INPUT              -j limit-55
+  inet/filter/OUTPUT              -j limit-55
+  inet6/filter/OUTPUT             -j limit-55
+  inet/filter/limit-55            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-55 -j RETURN
+  inet6/filter/limit-55           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-55 -j RETURN
+  inet/filter/limit-55            -j DROP
+  inet6/filter/limit-55           -j DROP
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 63                         {"flow-limit":{"count":30,"log":"none"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-56
+  inet6/filter/FORWARD            -j limit-56
+  inet/filter/INPUT               -j limit-56
+  inet6/filter/INPUT              -j limit-56
+  inet/filter/OUTPUT              -j limit-56
+  inet6/filter/OUTPUT             -j limit-56
+  inet/filter/limit-56            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-56 -j RETURN
+  inet6/filter/limit-56           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-56 -j RETURN
+  inet/filter/limit-56            -j DROP
+  inet6/filter/limit-56           -j DROP
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 64                         {"action":"pass","flow-limit":{"count":30,"log":"none"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-57
+  inet6/filter/FORWARD            -j limit-57
+  inet/filter/INPUT               -j limit-57
+  inet6/filter/INPUT              -j limit-57
+  inet/filter/OUTPUT              -j limit-57
+  inet6/filter/OUTPUT             -j limit-57
+  inet/filter/limit-57            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-57 -j RETURN
+  inet6/filter/limit-57           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-57 -j RETURN
+  inet/filter/limit-57            -j DROP
+  inet6/filter/limit-57           -j DROP
+
+Filter 65                         {"flow-limit":{"count":30,"log":"none"},"log":true}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-58
+  inet6/filter/FORWARD            -j limit-58
+  inet/filter/INPUT               -j limit-58
+  inet6/filter/INPUT              -j limit-58
+  inet/filter/OUTPUT              -j limit-58
+  inet6/filter/OUTPUT             -j limit-58
+  inet/filter/limit-58            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-58 -j RETURN
+  inet6/filter/limit-58           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-58 -j RETURN
+  inet/filter/limit-58            -j DROP
+  inet6/filter/limit-58           -j DROP
+  inet/filter/FORWARD             -j logaccept-final-5
+  inet6/filter/FORWARD            -j logaccept-final-5
+  inet/filter/INPUT               -j logaccept-final-5
+  inet6/filter/INPUT              -j logaccept-final-5
+  inet/filter/OUTPUT              -j logaccept-final-5
+  inet6/filter/OUTPUT             -j logaccept-final-5
+  inet/filter/logaccept-final-5   -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-final-5  -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-final-5   -j ACCEPT
+  inet6/filter/logaccept-final-5  -j ACCEPT
+
+Filter 66                         {"flow-limit":{"count":30,"log":"none"},"log":"none"}
+(filter-limit)                    
+  inet/filter/FORWARD             -j limit-59
+  inet6/filter/FORWARD            -j limit-59
+  inet/filter/INPUT               -j limit-59
+  inet6/filter/INPUT              -j limit-59
+  inet/filter/OUTPUT              -j limit-59
+  inet6/filter/OUTPUT             -j limit-59
+  inet/filter/limit-59            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-59 -j RETURN
+  inet6/filter/limit-59           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-59 -j RETURN
+  inet/filter/limit-59            -j DROP
+  inet6/filter/limit-59           -j DROP
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 67                         {}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -561,20 +1071,20 @@ Filter 35                         {}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 36                         {"action":"drop"}
+Filter 68                         {"action":"drop"}
 (log)                             
-  inet/filter/FORWARD             -j logdrop-9
-  inet6/filter/FORWARD            -j logdrop-9
-  inet/filter/INPUT               -j logdrop-9
-  inet6/filter/INPUT              -j logdrop-9
-  inet/filter/OUTPUT              -j logdrop-9
-  inet6/filter/OUTPUT             -j logdrop-9
-  inet/filter/logdrop-9           -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-9          -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-9           -j DROP
-  inet6/filter/logdrop-9          -j DROP
+  inet/filter/FORWARD             -j logdrop-13
+  inet6/filter/FORWARD            -j logdrop-13
+  inet/filter/INPUT               -j logdrop-13
+  inet6/filter/INPUT              -j logdrop-13
+  inet/filter/OUTPUT              -j logdrop-13
+  inet6/filter/OUTPUT             -j logdrop-13
+  inet/filter/logdrop-13          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-13         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-13          -j DROP
+  inet6/filter/logdrop-13         -j DROP
 
-Filter 37                         {"action":"pass"}
+Filter 69                         {"action":"pass"}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -583,7 +1093,7 @@ Filter 37                         {"action":"pass"}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 38                         {"log":false}
+Filter 70                         {"log":false}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -592,7 +1102,7 @@ Filter 38                         {"log":false}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 39                         {"action":"drop","log":false}
+Filter 71                         {"action":"drop","log":false}
 (log)                             
   inet/filter/FORWARD             -j DROP
   inet6/filter/FORWARD            -j DROP
@@ -601,7 +1111,7 @@ Filter 39                         {"action":"drop","log":false}
   inet/filter/OUTPUT              -j DROP
   inet6/filter/OUTPUT             -j DROP
 
-Filter 40                         {"action":"pass","log":false}
+Filter 72                         {"action":"pass","log":false}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -610,33 +1120,33 @@ Filter 40                         {"action":"pass","log":false}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 41                         {"log":true}
+Filter 73                         {"log":true}
 (log)                             
-  inet/filter/FORWARD             -j logaccept-2
-  inet6/filter/FORWARD            -j logaccept-2
-  inet/filter/INPUT               -j logaccept-2
-  inet6/filter/INPUT              -j logaccept-2
-  inet/filter/OUTPUT              -j logaccept-2
-  inet6/filter/OUTPUT             -j logaccept-2
-  inet/filter/logaccept-2         -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-2        -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-2         -j ACCEPT
-  inet6/filter/logaccept-2        -j ACCEPT
+  inet/filter/FORWARD             -j logaccept-3
+  inet6/filter/FORWARD            -j logaccept-3
+  inet/filter/INPUT               -j logaccept-3
+  inet6/filter/INPUT              -j logaccept-3
+  inet/filter/OUTPUT              -j logaccept-3
+  inet6/filter/OUTPUT             -j logaccept-3
+  inet/filter/logaccept-3         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-3        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-3         -j ACCEPT
+  inet6/filter/logaccept-3        -j ACCEPT
 
-Filter 42                         {"action":"drop","log":true}
+Filter 74                         {"action":"drop","log":true}
 (log)                             
-  inet/filter/FORWARD             -j logdrop-10
-  inet6/filter/FORWARD            -j logdrop-10
-  inet/filter/INPUT               -j logdrop-10
-  inet6/filter/INPUT              -j logdrop-10
-  inet/filter/OUTPUT              -j logdrop-10
-  inet6/filter/OUTPUT             -j logdrop-10
-  inet/filter/logdrop-10          -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-10         -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-10          -j DROP
-  inet6/filter/logdrop-10         -j DROP
+  inet/filter/FORWARD             -j logdrop-14
+  inet6/filter/FORWARD            -j logdrop-14
+  inet/filter/INPUT               -j logdrop-14
+  inet6/filter/INPUT              -j logdrop-14
+  inet/filter/OUTPUT              -j logdrop-14
+  inet6/filter/OUTPUT             -j logdrop-14
+  inet/filter/logdrop-14          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-14         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-14          -j DROP
+  inet6/filter/logdrop-14         -j DROP
 
-Filter 43                         {"action":"pass","log":true}
+Filter 75                         {"action":"pass","log":true}
 (log)                             
   inet/filter/FORWARD             -j logpass-0
   inet6/filter/FORWARD            -j logpass-0
@@ -647,6 +1157,33 @@ Filter 43                         {"action":"pass","log":true}
   inet/filter/logpass-0           -m limit --limit 1/second -j LOG
   inet6/filter/logpass-0          -m limit --limit 1/second -j LOG
 
+Filter 76                         {"log":"none"}
+(log)                             
+  inet/filter/FORWARD             -j ACCEPT
+  inet6/filter/FORWARD            -j ACCEPT
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+
+Filter 77                         {"action":"drop","log":"none"}
+(log)                             
+  inet/filter/FORWARD             -j DROP
+  inet6/filter/FORWARD            -j DROP
+  inet/filter/INPUT               -j DROP
+  inet6/filter/INPUT              -j DROP
+  inet/filter/OUTPUT              -j DROP
+  inet6/filter/OUTPUT             -j DROP
+
+Filter 78                         {"action":"pass","log":"none"}
+(log)                             
+  inet/filter/FORWARD             
+  inet6/filter/FORWARD            
+  inet/filter/INPUT               
+  inet6/filter/INPUT              
+  inet/filter/OUTPUT              
+  inet6/filter/OUTPUT             
+
 
 Ipset awall-masquerade  {"family":"inet","type":"hash:net"}
 (masquerade)            
@@ -654,6 +1191,9 @@ Ipset awall-masquerade  {"family":"inet","type":"hash:net"}
 
 Log _default  {"limit":1}
 (defaults)    
+
+Log none      {"mode":"none"}
+(log)         
 
 
 Service babel         {"port":6697,"proto":"tcp"}
@@ -869,9 +1409,41 @@ hash:net family inet
 :limit-25 - [0:0]
 :limit-26 - [0:0]
 :limit-27 - [0:0]
+:limit-28 - [0:0]
+:limit-29 - [0:0]
 :limit-3 - [0:0]
+:limit-30 - [0:0]
+:limit-31 - [0:0]
+:limit-32 - [0:0]
+:limit-33 - [0:0]
+:limit-34 - [0:0]
+:limit-35 - [0:0]
+:limit-36 - [0:0]
+:limit-37 - [0:0]
+:limit-38 - [0:0]
+:limit-39 - [0:0]
 :limit-4 - [0:0]
+:limit-40 - [0:0]
+:limit-41 - [0:0]
+:limit-42 - [0:0]
+:limit-43 - [0:0]
+:limit-44 - [0:0]
+:limit-45 - [0:0]
+:limit-46 - [0:0]
+:limit-47 - [0:0]
+:limit-48 - [0:0]
+:limit-49 - [0:0]
 :limit-5 - [0:0]
+:limit-50 - [0:0]
+:limit-51 - [0:0]
+:limit-52 - [0:0]
+:limit-53 - [0:0]
+:limit-54 - [0:0]
+:limit-55 - [0:0]
+:limit-56 - [0:0]
+:limit-57 - [0:0]
+:limit-58 - [0:0]
+:limit-59 - [0:0]
 :limit-6 - [0:0]
 :limit-7 - [0:0]
 :limit-8 - [0:0]
@@ -879,13 +1451,20 @@ hash:net family inet
 :logaccept-0 - [0:0]
 :logaccept-1 - [0:0]
 :logaccept-2 - [0:0]
+:logaccept-3 - [0:0]
 :logaccept-final-0 - [0:0]
 :logaccept-final-1 - [0:0]
 :logaccept-final-2 - [0:0]
 :logaccept-final-3 - [0:0]
+:logaccept-final-4 - [0:0]
+:logaccept-final-5 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-10 - [0:0]
+:logdrop-11 - [0:0]
+:logdrop-12 - [0:0]
+:logdrop-13 - [0:0]
+:logdrop-14 - [0:0]
 :logdrop-2 - [0:0]
 :logdrop-3 - [0:0]
 :logdrop-4 - [0:0]
@@ -898,20 +1477,36 @@ hash:net family inet
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
--A FORWARD -j limit-27
--A FORWARD -j limit-26
--A FORWARD -j limit-25
--A FORWARD -j limit-24
--A FORWARD -j limit-23
--A FORWARD -j limit-22
--A FORWARD -j limit-21
--A FORWARD -j limit-20
--A FORWARD -j limit-19
--A FORWARD -j limit-18
--A FORWARD -j limit-17
--A FORWARD -j limit-16
--A FORWARD -j limit-15
--A FORWARD -j limit-14
+-A FORWARD -j limit-59
+-A FORWARD -j limit-58
+-A FORWARD -j limit-57
+-A FORWARD -j limit-56
+-A FORWARD -j limit-55
+-A FORWARD -j limit-54
+-A FORWARD -j limit-53
+-A FORWARD -j limit-52
+-A FORWARD -j limit-51
+-A FORWARD -j limit-50
+-A FORWARD -j limit-49
+-A FORWARD -j limit-48
+-A FORWARD -j limit-47
+-A FORWARD -j limit-46
+-A FORWARD -j limit-45
+-A FORWARD -j limit-44
+-A FORWARD -j limit-43
+-A FORWARD -j limit-42
+-A FORWARD -j limit-41
+-A FORWARD -j limit-40
+-A FORWARD -j limit-39
+-A FORWARD -j limit-38
+-A FORWARD -j limit-37
+-A FORWARD -j limit-36
+-A FORWARD -j limit-35
+-A FORWARD -j limit-34
+-A FORWARD -j limit-33
+-A FORWARD -j limit-32
+-A FORWARD -j limit-31
+-A FORWARD -j limit-30
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
@@ -933,38 +1528,83 @@ hash:net family inet
 -A FORWARD -j limit-11
 -A FORWARD -j limit-12
 -A FORWARD -j limit-13
+-A FORWARD -j limit-14
+-A FORWARD -j limit-15
+-A FORWARD -j limit-16
+-A FORWARD -j limit-17
+-A FORWARD -j limit-18
+-A FORWARD -j limit-19
+-A FORWARD -j limit-20
+-A FORWARD -j limit-21
+-A FORWARD -j limit-22
+-A FORWARD -j limit-23
+-A FORWARD -j limit-24
+-A FORWARD -j limit-25
+-A FORWARD -j limit-26
+-A FORWARD -j limit-27
+-A FORWARD -j limit-28
+-A FORWARD -j limit-29
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-0
 -A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-1
+-A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-2
 -A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-3
 -A FORWARD -j ACCEPT
--A FORWARD -j logdrop-9
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-4
+-A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-5
+-A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logdrop-13
 -A FORWARD 
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-2
--A FORWARD -j logdrop-10
+-A FORWARD -j logaccept-3
+-A FORWARD -j logdrop-14
 -A FORWARD -j logpass-0
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
 -A FORWARD -p icmp -j icmp-routing
--A INPUT -j limit-27
--A INPUT -j limit-26
--A INPUT -j limit-25
--A INPUT -j limit-24
--A INPUT -j limit-23
--A INPUT -j limit-22
--A INPUT -j limit-21
--A INPUT -j limit-20
--A INPUT -j limit-19
--A INPUT -j limit-18
--A INPUT -j limit-17
--A INPUT -j limit-16
--A INPUT -j limit-15
--A INPUT -j limit-14
+-A INPUT -j limit-59
+-A INPUT -j limit-58
+-A INPUT -j limit-57
+-A INPUT -j limit-56
+-A INPUT -j limit-55
+-A INPUT -j limit-54
+-A INPUT -j limit-53
+-A INPUT -j limit-52
+-A INPUT -j limit-51
+-A INPUT -j limit-50
+-A INPUT -j limit-49
+-A INPUT -j limit-48
+-A INPUT -j limit-47
+-A INPUT -j limit-46
+-A INPUT -j limit-45
+-A INPUT -j limit-44
+-A INPUT -j limit-43
+-A INPUT -j limit-42
+-A INPUT -j limit-41
+-A INPUT -j limit-40
+-A INPUT -j limit-39
+-A INPUT -j limit-38
+-A INPUT -j limit-37
+-A INPUT -j limit-36
+-A INPUT -j limit-35
+-A INPUT -j limit-34
+-A INPUT -j limit-33
+-A INPUT -j limit-32
+-A INPUT -j limit-31
+-A INPUT -j limit-30
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -j ACCEPT
@@ -987,38 +1627,83 @@ hash:net family inet
 -A INPUT -j limit-11
 -A INPUT -j limit-12
 -A INPUT -j limit-13
+-A INPUT -j limit-14
+-A INPUT -j limit-15
+-A INPUT -j limit-16
+-A INPUT -j limit-17
+-A INPUT -j limit-18
+-A INPUT -j limit-19
+-A INPUT -j limit-20
+-A INPUT -j limit-21
+-A INPUT -j limit-22
+-A INPUT -j limit-23
+-A INPUT -j limit-24
+-A INPUT -j limit-25
+-A INPUT -j limit-26
+-A INPUT -j limit-27
+-A INPUT -j limit-28
+-A INPUT -j limit-29
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-0
 -A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-1
+-A INPUT -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-2
 -A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-3
 -A INPUT -j ACCEPT
--A INPUT -j logdrop-9
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-4
+-A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-5
+-A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logdrop-13
 -A INPUT 
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-2
--A INPUT -j logdrop-10
+-A INPUT -j logaccept-3
+-A INPUT -j logdrop-14
 -A INPUT -j logpass-0
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
 -A INPUT -p icmp -j icmp-routing
--A OUTPUT -j limit-27
--A OUTPUT -j limit-26
--A OUTPUT -j limit-25
--A OUTPUT -j limit-24
--A OUTPUT -j limit-23
--A OUTPUT -j limit-22
--A OUTPUT -j limit-21
--A OUTPUT -j limit-20
--A OUTPUT -j limit-19
--A OUTPUT -j limit-18
--A OUTPUT -j limit-17
--A OUTPUT -j limit-16
--A OUTPUT -j limit-15
--A OUTPUT -j limit-14
+-A OUTPUT -j limit-59
+-A OUTPUT -j limit-58
+-A OUTPUT -j limit-57
+-A OUTPUT -j limit-56
+-A OUTPUT -j limit-55
+-A OUTPUT -j limit-54
+-A OUTPUT -j limit-53
+-A OUTPUT -j limit-52
+-A OUTPUT -j limit-51
+-A OUTPUT -j limit-50
+-A OUTPUT -j limit-49
+-A OUTPUT -j limit-48
+-A OUTPUT -j limit-47
+-A OUTPUT -j limit-46
+-A OUTPUT -j limit-45
+-A OUTPUT -j limit-44
+-A OUTPUT -j limit-43
+-A OUTPUT -j limit-42
+-A OUTPUT -j limit-41
+-A OUTPUT -j limit-40
+-A OUTPUT -j limit-39
+-A OUTPUT -j limit-38
+-A OUTPUT -j limit-37
+-A OUTPUT -j limit-36
+-A OUTPUT -j limit-35
+-A OUTPUT -j limit-34
+-A OUTPUT -j limit-33
+-A OUTPUT -j limit-32
+-A OUTPUT -j limit-31
+-A OUTPUT -j limit-30
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -j ACCEPT
@@ -1041,23 +1726,52 @@ hash:net family inet
 -A OUTPUT -j limit-11
 -A OUTPUT -j limit-12
 -A OUTPUT -j limit-13
+-A OUTPUT -j limit-14
+-A OUTPUT -j limit-15
+-A OUTPUT -j limit-16
+-A OUTPUT -j limit-17
+-A OUTPUT -j limit-18
+-A OUTPUT -j limit-19
+-A OUTPUT -j limit-20
+-A OUTPUT -j limit-21
+-A OUTPUT -j limit-22
+-A OUTPUT -j limit-23
+-A OUTPUT -j limit-24
+-A OUTPUT -j limit-25
+-A OUTPUT -j limit-26
+-A OUTPUT -j limit-27
+-A OUTPUT -j limit-28
+-A OUTPUT -j limit-29
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-0
 -A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-1
+-A OUTPUT -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-2
 -A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-3
 -A OUTPUT -j ACCEPT
--A OUTPUT -j logdrop-9
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-4
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-5
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logdrop-13
 -A OUTPUT 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-2
--A OUTPUT -j logdrop-10
+-A OUTPUT -j logaccept-3
+-A OUTPUT -j logdrop-14
 -A OUTPUT -j logpass-0
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
 -A OUTPUT -p icmp -j icmp-routing
 -A icmp-routing -p icmp --icmp-type 3 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 11 -j ACCEPT
@@ -1066,72 +1780,141 @@ hash:net family inet
 -A limit-0 -m recent --name limit-0 --rsource --mask 255.255.255.255 --set -j ACCEPT
 -A limit-1 -m recent --name limit-1 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-2
 -A limit-1 -m recent --name limit-1 --rsource --mask 255.255.255.255 --set 
--A limit-10 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-10 -j logaccept-0
--A limit-10 -m limit --limit 1/second -j LOG
--A limit-10 -j DROP
--A limit-11 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-11 -j ACCEPT
--A limit-11 -j DROP
--A limit-12 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-12 -j RETURN
--A limit-12 -j DROP
--A limit-13 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-13 -j logaccept-1
--A limit-13 -j DROP
--A limit-14 -m recent --name limit-14 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-5
--A limit-14 -m recent --name limit-14 --rsource --mask 255.255.255.255 --set 
--A limit-15 -m recent --name limit-15 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-6
--A limit-15 -m recent --name limit-15 --rsource --mask 255.255.255.255 --set 
--A limit-16 -m recent --name limit-16 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-7
--A limit-16 -m recent --name limit-16 --rsource --mask 255.255.255.255 --set 
--A limit-17 -m recent --name limit-17 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-8
--A limit-17 -m recent --name limit-17 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
--A limit-18 -m recent --name limit-18 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
--A limit-18 -m recent --name limit-18 --rsource --mask 255.255.255.255 --set 
--A limit-19 -m recent --name limit-19 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
--A limit-19 -m recent --name limit-19 --rsource --mask 255.255.255.255 --set 
+-A limit-10 -m recent --name limit-10 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-10 -m recent --name limit-10 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-11 -m recent --name limit-11 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-11 -m recent --name limit-11 --rsource --mask 255.255.255.255 --set 
+-A limit-12 -m recent --name limit-12 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-12 -m recent --name limit-12 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-13 -m recent --name limit-13 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-13 -m recent --name limit-13 --rsource --mask 255.255.255.255 --set 
+-A limit-14 -m recent --name limit-14 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-14 -m limit --limit 1/second -j LOG
+-A limit-14 -m recent --name limit-14 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-15 -m recent --name limit-15 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-15 -m recent --name limit-15 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-16 -m recent --name limit-16 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-16 -m recent --name limit-16 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-17 -m recent --name limit-17 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-17 -m recent --name limit-17 --rsource --mask 255.255.255.255 --set 
+-A limit-18 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-18 -j ACCEPT
+-A limit-18 -m limit --limit 1/second -j LOG
+-A limit-18 -j DROP
+-A limit-19 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-19 -j RETURN
+-A limit-19 -m limit --limit 1/second -j LOG
+-A limit-19 -j DROP
 -A limit-2 -m recent --name limit-2 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-3
 -A limit-2 -m limit --limit 1/second -j LOG
 -A limit-2 -m recent --name limit-2 --rsource --mask 255.255.255.255 --set -j ACCEPT
--A limit-20 -m recent --name limit-20 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
--A limit-20 -m recent --name limit-20 --rsource --mask 255.255.255.255 --set 
--A limit-21 -m recent --name limit-21 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
--A limit-21 -m recent --name limit-21 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
--A limit-22 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-22 -j RETURN
--A limit-22 -m limit --limit 1/second -j LOG
+-A limit-20 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-20 -j logaccept-0
+-A limit-20 -m limit --limit 1/second -j LOG
+-A limit-20 -j DROP
+-A limit-21 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-21 -j ACCEPT
+-A limit-21 -m limit --limit 1/second -j LOG
+-A limit-21 -j DROP
+-A limit-22 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-22 -j ACCEPT
 -A limit-22 -j DROP
 -A limit-23 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-23 -j RETURN
--A limit-23 -m limit --limit 1/second -j LOG
 -A limit-23 -j DROP
--A limit-24 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-24 -j RETURN
--A limit-24 -m limit --limit 1/second -j LOG
+-A limit-24 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-24 -j logaccept-1
 -A limit-24 -j DROP
--A limit-25 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-25 -j RETURN
+-A limit-25 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-25 -j ACCEPT
 -A limit-25 -j DROP
--A limit-26 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-26 -j RETURN
+-A limit-26 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-26 -j ACCEPT
 -A limit-26 -j DROP
 -A limit-27 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-27 -j RETURN
 -A limit-27 -j DROP
+-A limit-28 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-28 -j logaccept-2
+-A limit-28 -j DROP
+-A limit-29 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-29 -j ACCEPT
+-A limit-29 -j DROP
 -A limit-3 -m recent --name limit-3 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-4
 -A limit-3 -m recent --name limit-3 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
--A limit-4 -m recent --name limit-4 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-30 -m recent --name limit-30 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-7
+-A limit-30 -m recent --name limit-30 --rsource --mask 255.255.255.255 --set 
+-A limit-31 -m recent --name limit-31 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-8
+-A limit-31 -m recent --name limit-31 --rsource --mask 255.255.255.255 --set 
+-A limit-32 -m recent --name limit-32 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-9
+-A limit-32 -m recent --name limit-32 --rsource --mask 255.255.255.255 --set 
+-A limit-33 -m recent --name limit-33 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-10
+-A limit-33 -m recent --name limit-33 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-34 -m recent --name limit-34 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-11
+-A limit-34 -m recent --name limit-34 --rsource --mask 255.255.255.255 --set 
+-A limit-35 -m recent --name limit-35 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-12
+-A limit-35 -m recent --name limit-35 --rsource --mask 255.255.255.255 --set 
+-A limit-36 -m recent --name limit-36 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-36 -m recent --name limit-36 --rsource --mask 255.255.255.255 --set 
+-A limit-37 -m recent --name limit-37 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-37 -m recent --name limit-37 --rsource --mask 255.255.255.255 --set 
+-A limit-38 -m recent --name limit-38 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-38 -m recent --name limit-38 --rsource --mask 255.255.255.255 --set 
+-A limit-39 -m recent --name limit-39 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-39 -m recent --name limit-39 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-4 -m recent --name limit-4 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-5
 -A limit-4 -m recent --name limit-4 --rsource --mask 255.255.255.255 --set -j ACCEPT
--A limit-5 -m recent --name limit-5 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-40 -m recent --name limit-40 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-40 -m recent --name limit-40 --rsource --mask 255.255.255.255 --set 
+-A limit-41 -m recent --name limit-41 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-41 -m recent --name limit-41 --rsource --mask 255.255.255.255 --set 
+-A limit-42 -m recent --name limit-42 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-42 -m recent --name limit-42 --rsource --mask 255.255.255.255 --set 
+-A limit-43 -m recent --name limit-43 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-43 -m recent --name limit-43 --rsource --mask 255.255.255.255 --set 
+-A limit-44 -m recent --name limit-44 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-44 -m recent --name limit-44 --rsource --mask 255.255.255.255 --set 
+-A limit-45 -m recent --name limit-45 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-45 -m recent --name limit-45 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-46 -m recent --name limit-46 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-46 -m recent --name limit-46 --rsource --mask 255.255.255.255 --set 
+-A limit-47 -m recent --name limit-47 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-47 -m recent --name limit-47 --rsource --mask 255.255.255.255 --set 
+-A limit-48 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-48 -j RETURN
+-A limit-48 -m limit --limit 1/second -j LOG
+-A limit-48 -j DROP
+-A limit-49 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-49 -j RETURN
+-A limit-49 -m limit --limit 1/second -j LOG
+-A limit-49 -j DROP
+-A limit-5 -m recent --name limit-5 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-6
 -A limit-5 -m recent --name limit-5 --rsource --mask 255.255.255.255 --set 
+-A limit-50 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-50 -j RETURN
+-A limit-50 -m limit --limit 1/second -j LOG
+-A limit-50 -j DROP
+-A limit-51 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-51 -j RETURN
+-A limit-51 -m limit --limit 1/second -j LOG
+-A limit-51 -j DROP
+-A limit-52 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-52 -j RETURN
+-A limit-52 -j DROP
+-A limit-53 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-53 -j RETURN
+-A limit-53 -j DROP
+-A limit-54 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-54 -j RETURN
+-A limit-54 -j DROP
+-A limit-55 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-55 -j RETURN
+-A limit-55 -j DROP
+-A limit-56 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-56 -j RETURN
+-A limit-56 -j DROP
+-A limit-57 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-57 -j RETURN
+-A limit-57 -j DROP
+-A limit-58 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-58 -j RETURN
+-A limit-58 -j DROP
+-A limit-59 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-59 -j RETURN
+-A limit-59 -j DROP
 -A limit-6 -m recent --name limit-6 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
--A limit-6 -m limit --limit 1/second -j LOG
 -A limit-6 -m recent --name limit-6 --rsource --mask 255.255.255.255 --set -j ACCEPT
 -A limit-7 -m recent --name limit-7 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
--A limit-7 -m recent --name limit-7 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
--A limit-8 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-8 -j ACCEPT
+-A limit-7 -m recent --name limit-7 --rsource --mask 255.255.255.255 --set 
+-A limit-8 -m recent --name limit-8 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
 -A limit-8 -m limit --limit 1/second -j LOG
--A limit-8 -j DROP
--A limit-9 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-9 -j RETURN
--A limit-9 -m limit --limit 1/second -j LOG
--A limit-9 -j DROP
+-A limit-8 -m recent --name limit-8 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-9 -m recent --name limit-9 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-9 -m recent --name limit-9 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
 -A logaccept-1 -m limit --limit 1/second -j LOG
 -A logaccept-1 -j ACCEPT
 -A logaccept-2 -m limit --limit 1/second -j LOG
 -A logaccept-2 -j ACCEPT
+-A logaccept-3 -m limit --limit 1/second -j LOG
+-A logaccept-3 -j ACCEPT
 -A logaccept-final-0 -m limit --limit 1/second -j LOG
 -A logaccept-final-0 -j ACCEPT
 -A logaccept-final-1 -m limit --limit 1/second -j LOG
@@ -1140,12 +1923,24 @@ hash:net family inet
 -A logaccept-final-2 -j ACCEPT
 -A logaccept-final-3 -m limit --limit 1/second -j LOG
 -A logaccept-final-3 -j ACCEPT
+-A logaccept-final-4 -m limit --limit 1/second -j LOG
+-A logaccept-final-4 -j ACCEPT
+-A logaccept-final-5 -m limit --limit 1/second -j LOG
+-A logaccept-final-5 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
 -A logdrop-10 -m limit --limit 1/second -j LOG
 -A logdrop-10 -j DROP
+-A logdrop-11 -m limit --limit 1/second -j LOG
+-A logdrop-11 -j DROP
+-A logdrop-12 -m limit --limit 1/second -j LOG
+-A logdrop-12 -j DROP
+-A logdrop-13 -m limit --limit 1/second -j LOG
+-A logdrop-13 -j DROP
+-A logdrop-14 -m limit --limit 1/second -j LOG
+-A logdrop-14 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
 -A logdrop-3 -m limit --limit 1/second -j LOG
@@ -1210,9 +2005,41 @@ COMMIT
 :limit-25 - [0:0]
 :limit-26 - [0:0]
 :limit-27 - [0:0]
+:limit-28 - [0:0]
+:limit-29 - [0:0]
 :limit-3 - [0:0]
+:limit-30 - [0:0]
+:limit-31 - [0:0]
+:limit-32 - [0:0]
+:limit-33 - [0:0]
+:limit-34 - [0:0]
+:limit-35 - [0:0]
+:limit-36 - [0:0]
+:limit-37 - [0:0]
+:limit-38 - [0:0]
+:limit-39 - [0:0]
 :limit-4 - [0:0]
+:limit-40 - [0:0]
+:limit-41 - [0:0]
+:limit-42 - [0:0]
+:limit-43 - [0:0]
+:limit-44 - [0:0]
+:limit-45 - [0:0]
+:limit-46 - [0:0]
+:limit-47 - [0:0]
+:limit-48 - [0:0]
+:limit-49 - [0:0]
 :limit-5 - [0:0]
+:limit-50 - [0:0]
+:limit-51 - [0:0]
+:limit-52 - [0:0]
+:limit-53 - [0:0]
+:limit-54 - [0:0]
+:limit-55 - [0:0]
+:limit-56 - [0:0]
+:limit-57 - [0:0]
+:limit-58 - [0:0]
+:limit-59 - [0:0]
 :limit-6 - [0:0]
 :limit-7 - [0:0]
 :limit-8 - [0:0]
@@ -1220,13 +2047,20 @@ COMMIT
 :logaccept-0 - [0:0]
 :logaccept-1 - [0:0]
 :logaccept-2 - [0:0]
+:logaccept-3 - [0:0]
 :logaccept-final-0 - [0:0]
 :logaccept-final-1 - [0:0]
 :logaccept-final-2 - [0:0]
 :logaccept-final-3 - [0:0]
+:logaccept-final-4 - [0:0]
+:logaccept-final-5 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-10 - [0:0]
+:logdrop-11 - [0:0]
+:logdrop-12 - [0:0]
+:logdrop-13 - [0:0]
+:logdrop-14 - [0:0]
 :logdrop-2 - [0:0]
 :logdrop-3 - [0:0]
 :logdrop-4 - [0:0]
@@ -1239,20 +2073,36 @@ COMMIT
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
--A FORWARD -j limit-27
--A FORWARD -j limit-26
--A FORWARD -j limit-25
--A FORWARD -j limit-24
--A FORWARD -j limit-23
--A FORWARD -j limit-22
--A FORWARD -j limit-21
--A FORWARD -j limit-20
--A FORWARD -j limit-19
--A FORWARD -j limit-18
--A FORWARD -j limit-17
--A FORWARD -j limit-16
--A FORWARD -j limit-15
--A FORWARD -j limit-14
+-A FORWARD -j limit-59
+-A FORWARD -j limit-58
+-A FORWARD -j limit-57
+-A FORWARD -j limit-56
+-A FORWARD -j limit-55
+-A FORWARD -j limit-54
+-A FORWARD -j limit-53
+-A FORWARD -j limit-52
+-A FORWARD -j limit-51
+-A FORWARD -j limit-50
+-A FORWARD -j limit-49
+-A FORWARD -j limit-48
+-A FORWARD -j limit-47
+-A FORWARD -j limit-46
+-A FORWARD -j limit-45
+-A FORWARD -j limit-44
+-A FORWARD -j limit-43
+-A FORWARD -j limit-42
+-A FORWARD -j limit-41
+-A FORWARD -j limit-40
+-A FORWARD -j limit-39
+-A FORWARD -j limit-38
+-A FORWARD -j limit-37
+-A FORWARD -j limit-36
+-A FORWARD -j limit-35
+-A FORWARD -j limit-34
+-A FORWARD -j limit-33
+-A FORWARD -j limit-32
+-A FORWARD -j limit-31
+-A FORWARD -j limit-30
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
@@ -1274,38 +2124,83 @@ COMMIT
 -A FORWARD -j limit-11
 -A FORWARD -j limit-12
 -A FORWARD -j limit-13
+-A FORWARD -j limit-14
+-A FORWARD -j limit-15
+-A FORWARD -j limit-16
+-A FORWARD -j limit-17
+-A FORWARD -j limit-18
+-A FORWARD -j limit-19
+-A FORWARD -j limit-20
+-A FORWARD -j limit-21
+-A FORWARD -j limit-22
+-A FORWARD -j limit-23
+-A FORWARD -j limit-24
+-A FORWARD -j limit-25
+-A FORWARD -j limit-26
+-A FORWARD -j limit-27
+-A FORWARD -j limit-28
+-A FORWARD -j limit-29
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-0
 -A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-1
+-A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-2
 -A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-3
 -A FORWARD -j ACCEPT
--A FORWARD -j logdrop-9
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-4
+-A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-5
+-A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logdrop-13
 -A FORWARD 
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-2
--A FORWARD -j logdrop-10
+-A FORWARD -j logaccept-3
+-A FORWARD -j logdrop-14
 -A FORWARD -j logpass-0
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
 -A FORWARD -p icmpv6 -j icmp-routing
--A INPUT -j limit-27
--A INPUT -j limit-26
--A INPUT -j limit-25
--A INPUT -j limit-24
--A INPUT -j limit-23
--A INPUT -j limit-22
--A INPUT -j limit-21
--A INPUT -j limit-20
--A INPUT -j limit-19
--A INPUT -j limit-18
--A INPUT -j limit-17
--A INPUT -j limit-16
--A INPUT -j limit-15
--A INPUT -j limit-14
+-A INPUT -j limit-59
+-A INPUT -j limit-58
+-A INPUT -j limit-57
+-A INPUT -j limit-56
+-A INPUT -j limit-55
+-A INPUT -j limit-54
+-A INPUT -j limit-53
+-A INPUT -j limit-52
+-A INPUT -j limit-51
+-A INPUT -j limit-50
+-A INPUT -j limit-49
+-A INPUT -j limit-48
+-A INPUT -j limit-47
+-A INPUT -j limit-46
+-A INPUT -j limit-45
+-A INPUT -j limit-44
+-A INPUT -j limit-43
+-A INPUT -j limit-42
+-A INPUT -j limit-41
+-A INPUT -j limit-40
+-A INPUT -j limit-39
+-A INPUT -j limit-38
+-A INPUT -j limit-37
+-A INPUT -j limit-36
+-A INPUT -j limit-35
+-A INPUT -j limit-34
+-A INPUT -j limit-33
+-A INPUT -j limit-32
+-A INPUT -j limit-31
+-A INPUT -j limit-30
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -j ACCEPT
@@ -1328,38 +2223,83 @@ COMMIT
 -A INPUT -j limit-11
 -A INPUT -j limit-12
 -A INPUT -j limit-13
+-A INPUT -j limit-14
+-A INPUT -j limit-15
+-A INPUT -j limit-16
+-A INPUT -j limit-17
+-A INPUT -j limit-18
+-A INPUT -j limit-19
+-A INPUT -j limit-20
+-A INPUT -j limit-21
+-A INPUT -j limit-22
+-A INPUT -j limit-23
+-A INPUT -j limit-24
+-A INPUT -j limit-25
+-A INPUT -j limit-26
+-A INPUT -j limit-27
+-A INPUT -j limit-28
+-A INPUT -j limit-29
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-0
 -A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-1
+-A INPUT -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-2
 -A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-3
 -A INPUT -j ACCEPT
--A INPUT -j logdrop-9
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-4
+-A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-5
+-A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logdrop-13
 -A INPUT 
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-2
--A INPUT -j logdrop-10
+-A INPUT -j logaccept-3
+-A INPUT -j logdrop-14
 -A INPUT -j logpass-0
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
 -A INPUT -p icmpv6 -j ACCEPT
--A OUTPUT -j limit-27
--A OUTPUT -j limit-26
--A OUTPUT -j limit-25
--A OUTPUT -j limit-24
--A OUTPUT -j limit-23
--A OUTPUT -j limit-22
--A OUTPUT -j limit-21
--A OUTPUT -j limit-20
--A OUTPUT -j limit-19
--A OUTPUT -j limit-18
--A OUTPUT -j limit-17
--A OUTPUT -j limit-16
--A OUTPUT -j limit-15
--A OUTPUT -j limit-14
+-A OUTPUT -j limit-59
+-A OUTPUT -j limit-58
+-A OUTPUT -j limit-57
+-A OUTPUT -j limit-56
+-A OUTPUT -j limit-55
+-A OUTPUT -j limit-54
+-A OUTPUT -j limit-53
+-A OUTPUT -j limit-52
+-A OUTPUT -j limit-51
+-A OUTPUT -j limit-50
+-A OUTPUT -j limit-49
+-A OUTPUT -j limit-48
+-A OUTPUT -j limit-47
+-A OUTPUT -j limit-46
+-A OUTPUT -j limit-45
+-A OUTPUT -j limit-44
+-A OUTPUT -j limit-43
+-A OUTPUT -j limit-42
+-A OUTPUT -j limit-41
+-A OUTPUT -j limit-40
+-A OUTPUT -j limit-39
+-A OUTPUT -j limit-38
+-A OUTPUT -j limit-37
+-A OUTPUT -j limit-36
+-A OUTPUT -j limit-35
+-A OUTPUT -j limit-34
+-A OUTPUT -j limit-33
+-A OUTPUT -j limit-32
+-A OUTPUT -j limit-31
+-A OUTPUT -j limit-30
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -j ACCEPT
@@ -1382,23 +2322,52 @@ COMMIT
 -A OUTPUT -j limit-11
 -A OUTPUT -j limit-12
 -A OUTPUT -j limit-13
+-A OUTPUT -j limit-14
+-A OUTPUT -j limit-15
+-A OUTPUT -j limit-16
+-A OUTPUT -j limit-17
+-A OUTPUT -j limit-18
+-A OUTPUT -j limit-19
+-A OUTPUT -j limit-20
+-A OUTPUT -j limit-21
+-A OUTPUT -j limit-22
+-A OUTPUT -j limit-23
+-A OUTPUT -j limit-24
+-A OUTPUT -j limit-25
+-A OUTPUT -j limit-26
+-A OUTPUT -j limit-27
+-A OUTPUT -j limit-28
+-A OUTPUT -j limit-29
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-0
 -A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-1
+-A OUTPUT -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-2
 -A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-3
 -A OUTPUT -j ACCEPT
--A OUTPUT -j logdrop-9
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-4
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-5
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logdrop-13
 -A OUTPUT 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-2
--A OUTPUT -j logdrop-10
+-A OUTPUT -j logaccept-3
+-A OUTPUT -j logdrop-14
 -A OUTPUT -j logpass-0
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
 -A OUTPUT -p icmpv6 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 1 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 2 -j ACCEPT
@@ -1408,72 +2377,141 @@ COMMIT
 -A limit-0 -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 -A limit-1 -m recent --name limit-1 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-2
 -A limit-1 -m recent --name limit-1 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-10 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-10 -j logaccept-0
--A limit-10 -m limit --limit 1/second -j LOG
--A limit-10 -j DROP
--A limit-11 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-11 -j ACCEPT
--A limit-11 -j DROP
--A limit-12 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-12 -j RETURN
--A limit-12 -j DROP
--A limit-13 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-13 -j logaccept-1
--A limit-13 -j DROP
--A limit-14 -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-5
--A limit-14 -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-15 -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-6
--A limit-15 -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-16 -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-7
--A limit-16 -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-17 -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-8
--A limit-17 -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-18 -m recent --name limit-18 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-18 -m recent --name limit-18 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-19 -m recent --name limit-19 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-19 -m recent --name limit-19 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-12 -m recent --name limit-12 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-12 -m recent --name limit-12 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-13 -m recent --name limit-13 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-13 -m recent --name limit-13 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-14 -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-14 -m limit --limit 1/second -j LOG
+-A limit-14 -m recent --name limit-14 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-15 -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-15 -m recent --name limit-15 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-16 -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-16 -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-17 -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-17 -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-18 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-18 -j ACCEPT
+-A limit-18 -m limit --limit 1/second -j LOG
+-A limit-18 -j DROP
+-A limit-19 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-19 -j RETURN
+-A limit-19 -m limit --limit 1/second -j LOG
+-A limit-19 -j DROP
 -A limit-2 -m recent --name limit-2 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-3
 -A limit-2 -m limit --limit 1/second -j LOG
 -A limit-2 -m recent --name limit-2 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-20 -m recent --name limit-20 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-20 -m recent --name limit-20 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-21 -m recent --name limit-21 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-21 -m recent --name limit-21 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-22 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-22 -j RETURN
--A limit-22 -m limit --limit 1/second -j LOG
+-A limit-20 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-20 -j logaccept-0
+-A limit-20 -m limit --limit 1/second -j LOG
+-A limit-20 -j DROP
+-A limit-21 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-21 -j ACCEPT
+-A limit-21 -m limit --limit 1/second -j LOG
+-A limit-21 -j DROP
+-A limit-22 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-22 -j ACCEPT
 -A limit-22 -j DROP
 -A limit-23 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-23 -j RETURN
--A limit-23 -m limit --limit 1/second -j LOG
 -A limit-23 -j DROP
--A limit-24 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-24 -j RETURN
--A limit-24 -m limit --limit 1/second -j LOG
+-A limit-24 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-24 -j logaccept-1
 -A limit-24 -j DROP
--A limit-25 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-25 -j RETURN
+-A limit-25 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-25 -j ACCEPT
 -A limit-25 -j DROP
--A limit-26 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-26 -j RETURN
+-A limit-26 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-26 -j ACCEPT
 -A limit-26 -j DROP
 -A limit-27 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-27 -j RETURN
 -A limit-27 -j DROP
+-A limit-28 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-28 -j logaccept-2
+-A limit-28 -j DROP
+-A limit-29 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-29 -j ACCEPT
+-A limit-29 -j DROP
 -A limit-3 -m recent --name limit-3 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-4
 -A limit-3 -m recent --name limit-3 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-4 -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-30 -m recent --name limit-30 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-7
+-A limit-30 -m recent --name limit-30 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-31 -m recent --name limit-31 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-8
+-A limit-31 -m recent --name limit-31 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-32 -m recent --name limit-32 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-9
+-A limit-32 -m recent --name limit-32 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-33 -m recent --name limit-33 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-10
+-A limit-33 -m recent --name limit-33 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-34 -m recent --name limit-34 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-11
+-A limit-34 -m recent --name limit-34 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-35 -m recent --name limit-35 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-12
+-A limit-35 -m recent --name limit-35 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-36 -m recent --name limit-36 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-36 -m recent --name limit-36 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-37 -m recent --name limit-37 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-37 -m recent --name limit-37 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-38 -m recent --name limit-38 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-38 -m recent --name limit-38 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-39 -m recent --name limit-39 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-39 -m recent --name limit-39 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-4 -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-5
 -A limit-4 -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-5 -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-40 -m recent --name limit-40 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-40 -m recent --name limit-40 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-41 -m recent --name limit-41 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-41 -m recent --name limit-41 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-42 -m recent --name limit-42 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-42 -m recent --name limit-42 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-43 -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-43 -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-44 -m recent --name limit-44 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-44 -m recent --name limit-44 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-45 -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-45 -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-46 -m recent --name limit-46 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-46 -m recent --name limit-46 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-47 -m recent --name limit-47 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-47 -m recent --name limit-47 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-48 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-48 -j RETURN
+-A limit-48 -m limit --limit 1/second -j LOG
+-A limit-48 -j DROP
+-A limit-49 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-49 -j RETURN
+-A limit-49 -m limit --limit 1/second -j LOG
+-A limit-49 -j DROP
+-A limit-5 -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-6
 -A limit-5 -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-50 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-50 -j RETURN
+-A limit-50 -m limit --limit 1/second -j LOG
+-A limit-50 -j DROP
+-A limit-51 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-51 -j RETURN
+-A limit-51 -m limit --limit 1/second -j LOG
+-A limit-51 -j DROP
+-A limit-52 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-52 -j RETURN
+-A limit-52 -j DROP
+-A limit-53 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-53 -j RETURN
+-A limit-53 -j DROP
+-A limit-54 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-54 -j RETURN
+-A limit-54 -j DROP
+-A limit-55 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-55 -j RETURN
+-A limit-55 -j DROP
+-A limit-56 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-56 -j RETURN
+-A limit-56 -j DROP
+-A limit-57 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-57 -j RETURN
+-A limit-57 -j DROP
+-A limit-58 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-58 -j RETURN
+-A limit-58 -j DROP
+-A limit-59 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-59 -j RETURN
+-A limit-59 -j DROP
 -A limit-6 -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-6 -m limit --limit 1/second -j LOG
 -A limit-6 -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 -A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-8 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-8 -j ACCEPT
+-A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-8 -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-8 -m limit --limit 1/second -j LOG
--A limit-8 -j DROP
--A limit-9 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-9 -j RETURN
--A limit-9 -m limit --limit 1/second -j LOG
--A limit-9 -j DROP
+-A limit-8 -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-9 -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-9 -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
 -A logaccept-1 -m limit --limit 1/second -j LOG
 -A logaccept-1 -j ACCEPT
 -A logaccept-2 -m limit --limit 1/second -j LOG
 -A logaccept-2 -j ACCEPT
+-A logaccept-3 -m limit --limit 1/second -j LOG
+-A logaccept-3 -j ACCEPT
 -A logaccept-final-0 -m limit --limit 1/second -j LOG
 -A logaccept-final-0 -j ACCEPT
 -A logaccept-final-1 -m limit --limit 1/second -j LOG
@@ -1482,12 +2520,24 @@ COMMIT
 -A logaccept-final-2 -j ACCEPT
 -A logaccept-final-3 -m limit --limit 1/second -j LOG
 -A logaccept-final-3 -j ACCEPT
+-A logaccept-final-4 -m limit --limit 1/second -j LOG
+-A logaccept-final-4 -j ACCEPT
+-A logaccept-final-5 -m limit --limit 1/second -j LOG
+-A logaccept-final-5 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
 -A logdrop-10 -m limit --limit 1/second -j LOG
 -A logdrop-10 -j DROP
+-A logdrop-11 -m limit --limit 1/second -j LOG
+-A logdrop-11 -j DROP
+-A logdrop-12 -m limit --limit 1/second -j LOG
+-A logdrop-12 -j DROP
+-A logdrop-13 -m limit --limit 1/second -j LOG
+-A logdrop-13 -j DROP
+-A logdrop-14 -m limit --limit 1/second -j LOG
+-A logdrop-14 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
 -A logdrop-3 -m limit --limit 1/second -j LOG

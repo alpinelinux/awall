@@ -1,4 +1,5 @@
 {
+    "log": { "none": { "mode": "none" } },
     "filter": [
 	{},
 	{ "action": "drop" },
@@ -8,6 +9,9 @@
 	{ "log": false, "action": "pass" },
 	{ "log": true },
 	{ "log": true, "action": "drop" },
-	{ "log": true, "action": "pass" }
+	{ "log": true, "action": "pass" },
+	{ "log": "none" },
+	{ "log": "none", "action": "drop" },
+	{ "log": "none", "action": "pass" }
     ]
 }

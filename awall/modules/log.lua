@@ -70,6 +70,7 @@ function Log:target()
    }
 
    local mode = self.mode or 'log'
+   if mode == 'none' then return end
    if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
 
    local res = mode:upper()
@@ -84,7 +85,8 @@ function Log:target()
 end
 
 function Log:optfrags()
-   return combinations(self:matchofrags(), {{target=self:target()}})
+   local target = self:target()
+   return combinations(self:matchofrags(), {target and {target=target}})
 end
 
 function Log.get(rule, spec, default)

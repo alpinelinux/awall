@@ -244,7 +244,8 @@ logging class names to setting objects.
 
 A setting object may have an attribute named **mode**, which specifies
 which logging facility to use. Allowed values are **log**, **nflog**,
-and **ulog**. The default is **log**, i.e. in-kernel logging.
+**ulog**, and **none**. The default is **log**, i.e. in-kernel
+logging.
 
 The following table shows the optional attributes valid for all
 logging modes:

@@ -4,6 +4,8 @@
 	{ "conn-limit": 1, "action": "pass" },
 	{ "conn-limit": 1, "log": true },
 	{ "conn-limit": 1, "log": true, "action": "pass" },
+	{ "conn-limit": 1, "log": "none" },
+	{ "conn-limit": 1, "log": "none", "action": "pass" },
 	{ "conn-limit": { "count": 1, "log": false } },
 	{ "conn-limit": { "count": 1, "log": false }, "action": "pass" },
 	{ "conn-limit": { "count": 1, "log": false }, "log": true },
@@ -12,17 +14,46 @@
 	    "log": true,
 	    "action": "pass"
 	},
+	{ "conn-limit": { "count": 1, "log": false }, "log": "none" },
+	{
+	    "conn-limit": { "count": 1, "log": false },
+	    "log": "none",
+	    "action": "pass"
+	},
+	{ "conn-limit": { "count": 1, "log": "none" } },
+	{ "conn-limit": { "count": 1, "log": "none" }, "action": "pass" },
+	{ "conn-limit": { "count": 1, "log": "none" }, "log": true },
+	{
+	    "conn-limit": { "count": 1, "log": "none" },
+	    "log": true,
+	    "action": "pass"
+	},
+	{ "conn-limit": { "count": 1, "log": "none" }, "log": "none" },
+	{
+	    "conn-limit": { "count": 1, "log": "none" },
+	    "log": "none",
+	    "action": "pass"
+	},
+	
 	{ "conn-limit": 30 },
 	{ "conn-limit": 30, "action": "pass" },
 	{ "conn-limit": 30, "log": true },
+	{ "conn-limit": 30, "log": "none" },
 	{ "conn-limit": { "count": 30, "log": false } },
 	{ "conn-limit": { "count": 30, "log": false }, "action": "pass" },
 	{ "conn-limit": { "count": 30, "log": false }, "log": true },
+	{ "conn-limit": { "count": 30, "log": false }, "log": "none" },
+	{ "conn-limit": { "count": 30, "log": "none" } },
+	{ "conn-limit": { "count": 30, "log": "none" }, "action": "pass" },
+	{ "conn-limit": { "count": 30, "log": "none" }, "log": true },
+	{ "conn-limit": { "count": 30, "log": "none" }, "log": "none" },
 
 	{ "flow-limit": 1 },
 	{ "flow-limit": 1, "action": "pass" },
 	{ "flow-limit": 1, "log": true },
 	{ "flow-limit": 1, "log": true, "action": "pass" },
+	{ "flow-limit": 1, "log": "none" },
+	{ "flow-limit": 1, "log": "none", "action": "pass" },
 	{ "flow-limit": { "count": 1, "log": false } },
 	{ "flow-limit": { "count": 1, "log": false }, "action": "pass" },
 	{ "flow-limit": { "count": 1, "log": false }, "log": true },
@@ -31,11 +62,38 @@
 	    "log": true,
 	    "action": "pass"
 	},
+	{ "flow-limit": { "count": 1, "log": false }, "log": "none" },
+	{
+	    "flow-limit": { "count": 1, "log": false },
+	    "log": "none",
+	    "action": "pass"
+	},
+	{ "flow-limit": { "count": 1, "log": "none" } },
+	{ "flow-limit": { "count": 1, "log": "none" }, "action": "pass" },
+	{ "flow-limit": { "count": 1, "log": "none" }, "log": true },
+	{
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "log": true,
+	    "action": "pass"
+	},
+	{ "flow-limit": { "count": 1, "log": "none" }, "log": "none" },
+	{
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "log": "none",
+	    "action": "pass"
+	},
+	
 	{ "flow-limit": 30 },
 	{ "flow-limit": 30, "action": "pass" },
 	{ "flow-limit": 30, "log": true },
+	{ "flow-limit": 30, "log": "none" },
 	{ "flow-limit": { "count": 30, "log": false } },
 	{ "flow-limit": { "count": 30, "log": false }, "action": "pass" },
-	{ "flow-limit": { "count": 30, "log": false }, "log": true }
+	{ "flow-limit": { "count": 30, "log": false }, "log": true },
+	{ "flow-limit": { "count": 30, "log": false }, "log": "none" },
+	{ "flow-limit": { "count": 30, "log": "none" } },
+	{ "flow-limit": { "count": 30, "log": "none" }, "action": "pass" },
+	{ "flow-limit": { "count": 30, "log": "none" }, "log": true },
+	{ "flow-limit": { "count": 30, "log": "none" }, "log": "none" }
     ]
 }
