@@ -1,3 +1,13 @@
+Dnat 1                 {"in":["_fw","A"]}
+(zone)                 
+  inet/nat/OUTPUT      -j REDIRECT
+  inet/nat/PREROUTING  -i eth0 -j REDIRECT
+
+Dnat 2                 {"in":"B"}
+(zone)                 
+  inet/nat/PREROUTING  -i eth1 -s 10.0.0.0/12 -j REDIRECT
+
+
 Filter 1                          {}
 (filter)                          
   inet/filter/FORWARD             -j ACCEPT
@@ -1184,6 +1194,100 @@ Filter 78                         {"action":"pass","log":"none"}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
+Filter 79                         {"in":["_fw","A"]}
+(zone)                            
+  inet/filter/OUTPUT              -j ACCEPT
+  inet6/filter/OUTPUT             -j ACCEPT
+  inet/filter/FORWARD             -i eth0 -j ACCEPT
+  inet6/filter/FORWARD            -i eth0 -j ACCEPT
+  inet/filter/INPUT               -i eth0 -j ACCEPT
+  inet6/filter/INPUT              -i eth0 -j ACCEPT
+
+Filter 80                         {"in":"B","out":"C"}
+(zone)                            
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+
+Filter 81                         {"out":["_fw","B"]}
+(zone)                            
+  inet/filter/INPUT               -j ACCEPT
+  inet6/filter/INPUT              -j ACCEPT
+  inet/filter/FORWARD             -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/OUTPUT              -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet6/filter/FORWARD            -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth1 -d fc00::/7 -j ACCEPT
+
+Filter 82                         {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+(zone)                            
+  inet/filter/FORWARD             -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet6/filter/FORWARD            -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+  inet/filter/FORWARD             -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth0 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD            -i eth0 -o eth4 -j ACCEPT
+  inet/filter/FORWARD             -i eth0 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD            -i eth0 -o eth5 -j ACCEPT
+  inet/filter/FORWARD             -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD            -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD            -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD            -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD            -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
+  inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD            -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD             -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD             -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD             -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth2 -s 10.1.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth3 -s 10.1.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth2 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD             -i eth2 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD             -i eth3 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD             -i eth3 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD             -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD             -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD             -i eth4 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD            -i eth4 -o eth0 -j ACCEPT
+  inet/filter/FORWARD             -i eth5 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD            -i eth5 -o eth0 -j ACCEPT
+  inet/filter/FORWARD             -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet6/filter/FORWARD            -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
+  inet/filter/FORWARD             -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet6/filter/FORWARD            -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
+  inet/filter/FORWARD             -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -i eth4 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD            -i eth4 -o eth4 -j ACCEPT
+  inet/filter/FORWARD             -i eth4 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD            -i eth4 -o eth5 -j ACCEPT
+  inet/filter/FORWARD             -i eth5 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD            -i eth5 -o eth4 -j ACCEPT
+  inet/filter/FORWARD             -i eth5 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD            -i eth5 -o eth5 -j ACCEPT
+  inet/filter/FORWARD             -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD            -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD             -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD            -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD             -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet6/filter/FORWARD            -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet/filter/FORWARD             -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet6/filter/FORWARD            -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
+  inet/filter/FORWARD             -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD             -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet6/filter/FORWARD            -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet/filter/FORWARD             -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+  inet6/filter/FORWARD            -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+  inet/filter/FORWARD             -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD            -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+
 
 Ipset awall-masquerade  {"family":"inet","type":"hash:net"}
 (masquerade)            
@@ -1194,6 +1298,44 @@ Log _default  {"limit":1}
 
 Log none      {"mode":"none"}
 (log)         
+
+
+Mark 1                      {"in":["_fw","A"],"mark":0}
+(zone)                      
+  inet/mangle/OUTPUT        -j MARK --set-mark 0
+  inet6/mangle/OUTPUT       -j MARK --set-mark 0
+  inet/mangle/PREROUTING    -i eth0 -j MARK --set-mark 0
+  inet6/mangle/PREROUTING   -i eth0 -j MARK --set-mark 0
+
+Mark 2                      {"in":"B","mark":1,"out":"C"}
+(zone)                      
+  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 1
+  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 1
+
+Mark 3                      {"mark":2,"out":["_fw","B"]}
+(zone)                      
+  inet/mangle/INPUT         -j MARK --set-mark 2
+  inet6/mangle/INPUT        -j MARK --set-mark 2
+  inet/mangle/POSTROUTING   -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
+  inet6/mangle/POSTROUTING  -o eth1 -d fc00::/7 -j MARK --set-mark 2
+
+
+No-track 1              {"in":["_fw","A"]}
+(zone)                  
+  inet/raw/OUTPUT       -j CT --notrack
+  inet6/raw/OUTPUT      -j CT --notrack
+  inet/raw/PREROUTING   -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING  -i eth0 -j CT --notrack
+
+No-track 2              {"in":"B"}
+(zone)                  
+  inet/raw/PREROUTING   -i eth1 -s 10.0.0.0/12 -j CT --notrack
+  inet6/raw/PREROUTING  -i eth1 -s fc00::/7 -j CT --notrack
+
+No-track 3              {"out":"_fw"}
+(zone)                  
+  inet/raw/PREROUTING   -m addrtype --dst-type LOCAL -j CT --notrack
+  inet6/raw/PREROUTING  -m addrtype --dst-type LOCAL -j CT --notrack
 
 
 Service babel         {"port":6697,"proto":"tcp"}
@@ -1374,8 +1516,30 @@ Service vnc           {"port":5900,"proto":"tcp"}
 (services)            
 
 
+Snat 1                  {"out":["_fw","B"]}
+(zone)                  
+  inet/nat/INPUT        -j MASQUERADE
+  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -j MASQUERADE
+
+
 Variable awall_tproxy_mark  1
 (defaults)                  
+
+
+Zone A  {"iface":"eth0"}
+(zone)  
+
+Zone B  {"addr":["10.0.0.0\/12","fc00::\/7"],"iface":"eth1"}
+(zone)  
+
+Zone C  {"addr":"10.1.0.0\/12","iface":["eth2","eth3"]}
+(zone)  
+
+Zone D  {"iface":["eth4","eth5"],"route-back":true}
+(zone)  
+
+Zone E  {"ipsec":true}
+(zone)  
 
 
 # ipset awall-masquerade
@@ -1574,6 +1738,55 @@ hash:net family inet
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -i eth0 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth4 -j ACCEPT
+-A FORWARD -i eth0 -o eth5 -j ACCEPT
+-A FORWARD -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth4 -o eth0 -j ACCEPT
+-A FORWARD -i eth5 -o eth0 -j ACCEPT
+-A FORWARD -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth4 -j ACCEPT
+-A FORWARD -i eth4 -o eth5 -j ACCEPT
+-A FORWARD -i eth5 -o eth4 -j ACCEPT
+-A FORWARD -i eth5 -o eth5 -j ACCEPT
+-A FORWARD -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
 -A INPUT -j limit-59
 -A INPUT -j limit-58
@@ -1673,6 +1886,8 @@ hash:net family inet
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -i eth0 -j ACCEPT
+-A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
 -A OUTPUT -j limit-59
 -A OUTPUT -j limit-58
@@ -1772,6 +1987,8 @@ hash:net family inet
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -j ACCEPT
+-A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing
 -A icmp-routing -p icmp --icmp-type 3 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 11 -j ACCEPT
@@ -1965,17 +2182,42 @@ hash:net family inet
 -A tarpit -p tcp -j TARPIT
 -A tarpit -j DROP
 COMMIT
-*nat
+*mangle
+:FORWARD ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 1
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 1
+-A INPUT -j MARK --set-mark 2
+-A OUTPUT -j MARK --set-mark 0
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
+-A PREROUTING -i eth0 -j MARK --set-mark 0
+COMMIT
+*nat
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
 :awall-masquerade - [0:0]
+-A INPUT -j MASQUERADE
+-A OUTPUT -j REDIRECT
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MASQUERADE
 -A POSTROUTING -m set --match-set awall-masquerade src -j awall-masquerade
+-A PREROUTING -i eth0 -j REDIRECT
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT
 -A awall-masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
 COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -i eth0 -j CT --notrack
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
 COMMIT
 
 # rules6-save generated by awall
@@ -2170,6 +2412,31 @@ COMMIT
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -i eth0 -j ACCEPT
+-A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth0 -o eth4 -j ACCEPT
+-A FORWARD -i eth0 -o eth5 -j ACCEPT
+-A FORWARD -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth4 -o eth0 -j ACCEPT
+-A FORWARD -i eth5 -o eth0 -j ACCEPT
+-A FORWARD -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth4 -o eth4 -j ACCEPT
+-A FORWARD -i eth4 -o eth5 -j ACCEPT
+-A FORWARD -i eth5 -o eth4 -j ACCEPT
+-A FORWARD -i eth5 -o eth5 -j ACCEPT
+-A FORWARD -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
 -A INPUT -j limit-59
 -A INPUT -j limit-58
@@ -2269,6 +2536,8 @@ COMMIT
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -i eth0 -j ACCEPT
+-A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
 -A OUTPUT -j limit-59
 -A OUTPUT -j limit-58
@@ -2368,6 +2637,8 @@ COMMIT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -j ACCEPT
+-A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 1 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 2 -j ACCEPT
@@ -2562,10 +2833,24 @@ COMMIT
 -A tarpit -p tcp -j TARPIT
 -A tarpit -j DROP
 COMMIT
+*mangle
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A INPUT -j MARK --set-mark 2
+-A OUTPUT -j MARK --set-mark 0
+-A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 2
+-A PREROUTING -i eth0 -j MARK --set-mark 0
+COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -i eth0 -j CT --notrack
+-A PREROUTING -i eth1 -s fc00::/7 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
 COMMIT
 

@@ -1,0 +1,34 @@
+{
+    "zone": {
+	"A": { "iface": "eth0" },
+	"B": { "iface": "eth1", "addr": [ "10.0.0.0/12", "fc00::/7" ] },
+	"C": { "iface": [ "eth2", "eth3" ], "addr": "10.1.0.0/12" },
+	"D": { "iface": [ "eth4", "eth5" ], "route-back": true },
+	"E": { "ipsec": true }
+    },
+    "dnat": [
+	{ "in": [ "_fw", "A" ] },
+	{ "in": "B" }
+    ],
+    "filter": [
+	{ "in": [ "_fw", "A" ] },
+	{ "in": "B", "out": "C" },
+	{ "out": [ "_fw", "B" ] },
+	
+	{
+	    "in": [ "A", "B", "C", "D", "E" ],
+	    "out": [ "A", "B", "C", "D", "E" ]
+	}
+    ],
+    "mark": [
+	{ "in": [ "_fw", "A" ], "mark": 0 },
+	{ "in": "B", "out": "C", "mark": 1 },
+	{ "out": [ "_fw", "B" ], "mark": 2 }
+    ],
+    "no-track": [
+	{ "in": [ "_fw", "A" ] },
+	{ "in": "B" },
+	{ "out": "_fw" }
+    ],
+    "snat": [ { "out": [ "_fw", "B" ] } ]
+}

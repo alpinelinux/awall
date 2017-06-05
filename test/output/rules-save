@@ -190,6 +190,55 @@
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -i eth0 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth4 -j ACCEPT
+-A FORWARD -i eth0 -o eth5 -j ACCEPT
+-A FORWARD -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth4 -o eth0 -j ACCEPT
+-A FORWARD -i eth5 -o eth0 -j ACCEPT
+-A FORWARD -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth4 -j ACCEPT
+-A FORWARD -i eth4 -o eth5 -j ACCEPT
+-A FORWARD -i eth5 -o eth4 -j ACCEPT
+-A FORWARD -i eth5 -o eth5 -j ACCEPT
+-A FORWARD -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
 -A INPUT -j limit-59
 -A INPUT -j limit-58
@@ -289,6 +338,8 @@
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -i eth0 -j ACCEPT
+-A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
 -A OUTPUT -j limit-59
 -A OUTPUT -j limit-58
@@ -388,6 +439,8 @@
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -j ACCEPT
+-A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing
 -A icmp-routing -p icmp --icmp-type 3 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 11 -j ACCEPT
@@ -581,15 +634,40 @@
 -A tarpit -p tcp -j TARPIT
 -A tarpit -j DROP
 COMMIT
-*nat
+*mangle
+:FORWARD ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 1
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 1
+-A INPUT -j MARK --set-mark 2
+-A OUTPUT -j MARK --set-mark 0
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
+-A PREROUTING -i eth0 -j MARK --set-mark 0
+COMMIT
+*nat
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
 :awall-masquerade - [0:0]
+-A INPUT -j MASQUERADE
+-A OUTPUT -j REDIRECT
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MASQUERADE
 -A POSTROUTING -m set --match-set awall-masquerade src -j awall-masquerade
+-A PREROUTING -i eth0 -j REDIRECT
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT
 -A awall-masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
 COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -i eth0 -j CT --notrack
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
 COMMIT
