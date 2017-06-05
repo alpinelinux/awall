@@ -314,6 +314,9 @@
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -p tcp --sport 80 -j ACCEPT
+-A INPUT -p esp -j ACCEPT
+-A INPUT -p udp -m multiport --dports 500,4500 -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -415,6 +418,9 @@
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -p tcp --dport 80 -j ACCEPT
+-A OUTPUT -p esp -j ACCEPT
+-A OUTPUT -p udp -m multiport --sports 500,4500 -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -625,8 +631,14 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -p tcp --dport 80 -j CT --notrack
+-A OUTPUT -p esp -j CT --notrack
+-A OUTPUT -p udp -m multiport --sports 500,4500 -j CT --notrack
 -A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p esp -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
 -A PREROUTING -i eth0 -j CT --notrack
 -A PREROUTING -i eth1 -s fc00::/7 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack

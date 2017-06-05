@@ -1,0 +1,17 @@
+{
+    "filter": [
+	{ "in": "_fw", "service": "http", "no-track": true },
+	{
+	    "src": "172.16.0.0/16",
+	    "dest": "172.17.0.0/16",
+	    "service": "radius",
+	    "no-track": true
+	},
+	{
+	    "dest": "172.18.0.0/16",
+	    "service": "ssh",
+	    "no-track": true
+	},
+	{ "out": "_fw", "service": "ipsec", "no-track": true }
+    ]
+}

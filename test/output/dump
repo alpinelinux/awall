@@ -1194,7 +1194,73 @@ Filter 78                         {"action":"pass","log":"none"}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 79                         {"in":["_fw","A"]}
+Filter 79                         {"in":"_fw","no-track":true,"service":"http"}
+(no-track)                        
+  inet/filter/OUTPUT              -p tcp --dport 80 -j ACCEPT
+  inet6/filter/OUTPUT             -p tcp --dport 80 -j ACCEPT
+  inet/raw/OUTPUT                 -p tcp --dport 80 -j CT --notrack
+  inet6/raw/OUTPUT                -p tcp --dport 80 -j CT --notrack
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
+  inet/filter/INPUT               -p tcp --sport 80 -j ACCEPT
+  inet6/filter/INPUT              -p tcp --sport 80 -j ACCEPT
+
+Filter 80                         {"dest":"172.17.0.0\/16","no-track":true,"service":"radius","src":"172.16.0.0\/16"}
+(no-track)                        
+  inet/filter/FORWARD             -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+  inet/filter/INPUT               -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+  inet/filter/FORWARD             -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+  inet/filter/INPUT               -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+  inet/filter/OUTPUT              -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+  inet/filter/OUTPUT              -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+  inet/raw/PREROUTING             -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+  inet/raw/PREROUTING             -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+  inet/raw/OUTPUT                 -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+  inet/raw/OUTPUT                 -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+  inet/raw/PREROUTING             -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+  inet/raw/PREROUTING             -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+  inet/raw/OUTPUT                 -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+  inet/raw/OUTPUT                 -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+  inet/filter/FORWARD             -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+  inet/filter/INPUT               -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+  inet/filter/FORWARD             -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+  inet/filter/INPUT               -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+  inet/filter/OUTPUT              -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+  inet/filter/OUTPUT              -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+
+Filter 81                         {"dest":"172.18.0.0\/16","no-track":true,"service":"ssh"}
+(no-track)                        
+  inet/filter/FORWARD             -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
+  inet/filter/INPUT               -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
+  inet/filter/OUTPUT              -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
+  inet/raw/PREROUTING             -p tcp --dport 22 -d 172.18.0.0/16 -j CT --notrack
+  inet/raw/OUTPUT                 -p tcp --dport 22 -d 172.18.0.0/16 -j CT --notrack
+  inet/raw/PREROUTING             -p tcp --sport 22 -s 172.18.0.0/16 -j CT --notrack
+  inet/raw/OUTPUT                 -p tcp --sport 22 -s 172.18.0.0/16 -j CT --notrack
+  inet/filter/FORWARD             -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
+  inet/filter/INPUT               -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
+  inet/filter/OUTPUT              -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
+
+Filter 82                         {"no-track":true,"out":"_fw","service":"ipsec"}
+(no-track)                        
+  inet/filter/INPUT               -p esp -j ACCEPT
+  inet6/filter/INPUT              -p esp -j ACCEPT
+  inet/filter/INPUT               -p udp -m multiport --dports 500,4500 -j ACCEPT
+  inet6/filter/INPUT              -p udp -m multiport --dports 500,4500 -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -p esp -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -p esp -j CT --notrack
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
+  inet/raw/OUTPUT                 -p esp -j CT --notrack
+  inet6/raw/OUTPUT                -p esp -j CT --notrack
+  inet/raw/OUTPUT                 -p udp -m multiport --sports 500,4500 -j CT --notrack
+  inet6/raw/OUTPUT                -p udp -m multiport --sports 500,4500 -j CT --notrack
+  inet/filter/OUTPUT              -p esp -j ACCEPT
+  inet6/filter/OUTPUT             -p esp -j ACCEPT
+  inet/filter/OUTPUT              -p udp -m multiport --sports 500,4500 -j ACCEPT
+  inet6/filter/OUTPUT             -p udp -m multiport --sports 500,4500 -j ACCEPT
+
+Filter 83                         {"in":["_fw","A"]}
 (zone)                            
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
@@ -1203,12 +1269,12 @@ Filter 79                         {"in":["_fw","A"]}
   inet/filter/INPUT               -i eth0 -j ACCEPT
   inet6/filter/INPUT              -i eth0 -j ACCEPT
 
-Filter 80                         {"in":"B","out":"C"}
+Filter 84                         {"in":"B","out":"C"}
 (zone)                            
   inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 81                         {"out":["_fw","B"]}
+Filter 85                         {"out":["_fw","B"]}
 (zone)                            
   inet/filter/INPUT               -j ACCEPT
   inet6/filter/INPUT              -j ACCEPT
@@ -1217,7 +1283,7 @@ Filter 81                         {"out":["_fw","B"]}
   inet6/filter/FORWARD            -o eth1 -d fc00::/7 -j ACCEPT
   inet6/filter/OUTPUT             -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 82                         {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 86                         {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                            
   inet/filter/FORWARD             -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet6/filter/FORWARD            -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -1738,6 +1804,12 @@ hash:net family inet
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+-A FORWARD -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+-A FORWARD -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+-A FORWARD -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+-A FORWARD -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
+-A FORWARD -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -1886,6 +1958,15 @@ hash:net family inet
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -p tcp --sport 80 -j ACCEPT
+-A INPUT -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+-A INPUT -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+-A INPUT -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+-A INPUT -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+-A INPUT -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
+-A INPUT -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
+-A INPUT -p esp -j ACCEPT
+-A INPUT -p udp -m multiport --dports 500,4500 -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -1987,6 +2068,15 @@ hash:net family inet
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -p tcp --dport 80 -j ACCEPT
+-A OUTPUT -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+-A OUTPUT -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
+-A OUTPUT -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+-A OUTPUT -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
+-A OUTPUT -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
+-A OUTPUT -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
+-A OUTPUT -p esp -j ACCEPT
+-A OUTPUT -p udp -m multiport --sports 500,4500 -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing
@@ -2213,8 +2303,26 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -p tcp --dport 80 -j CT --notrack
+-A OUTPUT -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+-A OUTPUT -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+-A OUTPUT -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+-A OUTPUT -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+-A OUTPUT -p tcp --dport 22 -d 172.18.0.0/16 -j CT --notrack
+-A OUTPUT -p tcp --sport 22 -s 172.18.0.0/16 -j CT --notrack
+-A OUTPUT -p esp -j CT --notrack
+-A OUTPUT -p udp -m multiport --sports 500,4500 -j CT --notrack
 -A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
+-A PREROUTING -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+-A PREROUTING -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
+-A PREROUTING -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+-A PREROUTING -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j CT --notrack
+-A PREROUTING -p tcp --dport 22 -d 172.18.0.0/16 -j CT --notrack
+-A PREROUTING -p tcp --sport 22 -s 172.18.0.0/16 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p esp -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
 -A PREROUTING -i eth0 -j CT --notrack
 -A PREROUTING -i eth1 -s 10.0.0.0/12 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
@@ -2536,6 +2644,9 @@ COMMIT
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -p tcp --sport 80 -j ACCEPT
+-A INPUT -p esp -j ACCEPT
+-A INPUT -p udp -m multiport --dports 500,4500 -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -2637,6 +2748,9 @@ COMMIT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -p tcp --dport 80 -j ACCEPT
+-A OUTPUT -p esp -j ACCEPT
+-A OUTPUT -p udp -m multiport --sports 500,4500 -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -2847,8 +2961,14 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -p tcp --dport 80 -j CT --notrack
+-A OUTPUT -p esp -j CT --notrack
+-A OUTPUT -p udp -m multiport --sports 500,4500 -j CT --notrack
 -A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p esp -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
 -A PREROUTING -i eth0 -j CT --notrack
 -A PREROUTING -i eth1 -s fc00::/7 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
