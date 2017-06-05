@@ -114,6 +114,12 @@ if not mode then
 end
 
 
+dev_mode = stringy.endswith(arg[0], '/awall-cli')
+if dev_mode then
+   basedir = arg[0]:sub(1, -11)
+   package.path = basedir..'/?/init.lua;'..basedir..'/?.lua;'..package.path
+end
+
 util = require('awall.util')
 contains = util.contains
 printmsg = util.printmsg
@@ -139,8 +145,7 @@ for i, cls in ipairs{'mandatory', 'optional', 'private'} do
    if path then pol_paths[cls] = util.split(path, ':') end
 end
 
-if stringy.endswith(arg[0], '/awall-cli') then
-   basedir = arg[0]:sub(1, -11)
+if dev_mode then
    util.setdefault(pol_paths, 'mandatory', {'/etc/awall'})
    table.insert(pol_paths.mandatory, basedir..'/json')
 end
