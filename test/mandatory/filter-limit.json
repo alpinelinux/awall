@@ -94,6 +94,208 @@
 	{ "flow-limit": { "count": 30, "log": "none" } },
 	{ "flow-limit": { "count": 30, "log": "none" }, "action": "pass" },
 	{ "flow-limit": { "count": 30, "log": "none" }, "log": true },
-	{ "flow-limit": { "count": 30, "log": "none" }, "log": "none" }
+	{ "flow-limit": { "count": 30, "log": "none" }, "log": "none" },
+
+	{ "in": "A", "out": "_fw", "flow-limit": 1, "no-track": true },
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 1,
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 1,
+	    "log": true,
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 1,
+	    "log": true,
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 1,
+	    "log": "none",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 1,
+	    "log": "none",
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": false },
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": false },
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": false },
+	    "log": true,
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": false },
+	    "log": true,
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": false },
+	    "log": "none",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": false },
+	    "log": "none",
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "log": true,
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "log": true,
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "log": "none",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 1, "log": "none" },
+	    "log": "none",
+	    "action": "pass",
+	    "no-track": true
+	},
+
+	{ "in": "A", "out": "_fw", "flow-limit": 30, "no-track": true },
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 30,
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 30,
+	    "log": true,
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": 30,
+	    "log": "none",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": false },
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": false },
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": false },
+	    "log": true,
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": false },
+	    "log": "none",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": "none" },
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": "none" },
+	    "action": "pass",
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": "none" },
+	    "log": true,
+	    "no-track": true
+	},
+	{
+	    "in": "A",
+	    "out": "_fw",
+	    "flow-limit": { "count": 30, "log": "none" },
+	    "log": "none",
+	    "no-track": true
+	}
     ]
 }

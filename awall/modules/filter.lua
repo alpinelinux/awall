@@ -394,9 +394,9 @@ function Filter:mangleoptfrags(ofrags)
    local limitobj = self:create(FilterLimit, self[limit], 'limit')
 
    local ofs
-   local conn = limit == 'conn-limit'
+   local final = self:position() == 'append'
    local target = self:target()
-   local ct = conn and target
+   local ft = final and target
    local pl = not target and self.log
 
    local cofs, sofs = limitobj:recentofrags(limitchain)
@@ -405,7 +405,7 @@ function Filter:mangleoptfrags(ofrags)
       ofs = self:combinelog(cofs, limitlog, 'drop', 'DROP')
 
       local nxt
-      if ct then
+      if ft then
 	 extend(ofs, self:actofrags(self.log))
 	 nxt = target
       elseif sofs and not (pl and pl:target()) then nxt = false end
@@ -415,7 +415,7 @@ function Filter:mangleoptfrags(ofrags)
       if pl then incompatible('action or log') end
 
       local limofs = limitobj:limitofrags(limitchain)
-      ofs = ct and Filter.super(self):mangleoptfrags(limofs) or
+      ofs = ft and Filter.super(self):mangleoptfrags(limofs) or
 	 combinations(limofs, {{target='RETURN'}})
 
       extend(ofs, self:actofrags(limitlog, 'DROP'))

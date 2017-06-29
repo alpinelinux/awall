@@ -1072,7 +1072,459 @@ Filter 66                         {"flow-limit":{"count":30,"log":"none"},"log":
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 67                         {}
+Filter 67                         {"flow-limit":1,"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-60
+  inet6/filter/INPUT              -i eth0 -j limit-60
+  inet/filter/limit-60            -m recent --name limit-60 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-13
+  inet6/filter/limit-60           -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-13
+  inet/filter/logdrop-13          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-13         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-13          -j DROP
+  inet6/filter/logdrop-13         -j DROP
+  inet/filter/limit-60            -m recent --name limit-60 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-60           -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 68                         {"action":"pass","flow-limit":1,"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-61
+  inet6/filter/INPUT              -i eth0 -j limit-61
+  inet/filter/limit-61            -m recent --name limit-61 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-14
+  inet6/filter/limit-61           -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-14
+  inet/filter/logdrop-14          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-14         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-14          -j DROP
+  inet6/filter/logdrop-14         -j DROP
+  inet/filter/limit-61            -m recent --name limit-61 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-61           -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 69                         {"flow-limit":1,"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-62
+  inet6/filter/INPUT              -i eth0 -j limit-62
+  inet/filter/limit-62            -m recent --name limit-62 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-15
+  inet6/filter/limit-62           -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-15
+  inet/filter/logdrop-15          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-15         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-15          -j DROP
+  inet6/filter/logdrop-15         -j DROP
+  inet/filter/limit-62            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-62           -m limit --limit 1/second -j LOG
+  inet/filter/limit-62            -m recent --name limit-62 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-62           -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 70                         {"action":"pass","flow-limit":1,"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-63
+  inet6/filter/INPUT              -i eth0 -j limit-63
+  inet/filter/limit-63            -m recent --name limit-63 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-16
+  inet6/filter/limit-63           -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-16
+  inet/filter/logdrop-16          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-16         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-16          -j DROP
+  inet6/filter/logdrop-16         -j DROP
+  inet/filter/limit-63            -m recent --name limit-63 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-63           -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 71                         {"flow-limit":1,"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-64
+  inet6/filter/INPUT              -i eth0 -j limit-64
+  inet/filter/limit-64            -m recent --name limit-64 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-17
+  inet6/filter/limit-64           -m recent --name limit-64 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-17
+  inet/filter/logdrop-17          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-17         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-17          -j DROP
+  inet6/filter/logdrop-17         -j DROP
+  inet/filter/limit-64            -m recent --name limit-64 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-64           -m recent --name limit-64 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 72                         {"action":"pass","flow-limit":1,"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-65
+  inet6/filter/INPUT              -i eth0 -j limit-65
+  inet/filter/limit-65            -m recent --name limit-65 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-18
+  inet6/filter/limit-65           -m recent --name limit-65 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-18
+  inet/filter/logdrop-18          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-18         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-18          -j DROP
+  inet6/filter/logdrop-18         -j DROP
+  inet/filter/limit-65            -m recent --name limit-65 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-65           -m recent --name limit-65 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 73                         {"flow-limit":{"count":1,"log":false},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-66
+  inet6/filter/INPUT              -i eth0 -j limit-66
+  inet/filter/limit-66            -m recent --name limit-66 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-66           -m recent --name limit-66 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-66            -m recent --name limit-66 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-66           -m recent --name limit-66 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 74                         {"action":"pass","flow-limit":{"count":1,"log":false},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-67
+  inet6/filter/INPUT              -i eth0 -j limit-67
+  inet/filter/limit-67            -m recent --name limit-67 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-67           -m recent --name limit-67 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-67            -m recent --name limit-67 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-67           -m recent --name limit-67 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 75                         {"flow-limit":{"count":1,"log":false},"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-68
+  inet6/filter/INPUT              -i eth0 -j limit-68
+  inet/filter/limit-68            -m recent --name limit-68 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-68           -m recent --name limit-68 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-68            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-68           -m limit --limit 1/second -j LOG
+  inet/filter/limit-68            -m recent --name limit-68 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-68           -m recent --name limit-68 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 76                         {"action":"pass","flow-limit":{"count":1,"log":false},"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-69
+  inet6/filter/INPUT              -i eth0 -j limit-69
+  inet/filter/limit-69            -m recent --name limit-69 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-69           -m recent --name limit-69 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-69            -m recent --name limit-69 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-69           -m recent --name limit-69 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 77                         {"flow-limit":{"count":1,"log":false},"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-70
+  inet6/filter/INPUT              -i eth0 -j limit-70
+  inet/filter/limit-70            -m recent --name limit-70 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-70           -m recent --name limit-70 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-70            -m recent --name limit-70 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-70           -m recent --name limit-70 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 78                         {"action":"pass","flow-limit":{"count":1,"log":false},"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-71
+  inet6/filter/INPUT              -i eth0 -j limit-71
+  inet/filter/limit-71            -m recent --name limit-71 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-71           -m recent --name limit-71 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-71            -m recent --name limit-71 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-71           -m recent --name limit-71 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 79                         {"flow-limit":{"count":1,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-72
+  inet6/filter/INPUT              -i eth0 -j limit-72
+  inet/filter/limit-72            -m recent --name limit-72 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-72           -m recent --name limit-72 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-72            -m recent --name limit-72 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-72           -m recent --name limit-72 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 80                         {"action":"pass","flow-limit":{"count":1,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-73
+  inet6/filter/INPUT              -i eth0 -j limit-73
+  inet/filter/limit-73            -m recent --name limit-73 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-73           -m recent --name limit-73 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-73            -m recent --name limit-73 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-73           -m recent --name limit-73 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 81                         {"flow-limit":{"count":1,"log":"none"},"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-74
+  inet6/filter/INPUT              -i eth0 -j limit-74
+  inet/filter/limit-74            -m recent --name limit-74 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-74           -m recent --name limit-74 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-74            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-74           -m limit --limit 1/second -j LOG
+  inet/filter/limit-74            -m recent --name limit-74 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-74           -m recent --name limit-74 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 82                         {"action":"pass","flow-limit":{"count":1,"log":"none"},"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-75
+  inet6/filter/INPUT              -i eth0 -j limit-75
+  inet/filter/limit-75            -m recent --name limit-75 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-75           -m recent --name limit-75 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-75            -m recent --name limit-75 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+  inet6/filter/limit-75           -m recent --name limit-75 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 83                         {"flow-limit":{"count":1,"log":"none"},"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-76
+  inet6/filter/INPUT              -i eth0 -j limit-76
+  inet/filter/limit-76            -m recent --name limit-76 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-76           -m recent --name limit-76 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-76            -m recent --name limit-76 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet6/filter/limit-76           -m recent --name limit-76 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 84                         {"action":"pass","flow-limit":{"count":1,"log":"none"},"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-77
+  inet6/filter/INPUT              -i eth0 -j limit-77
+  inet/filter/limit-77            -m recent --name limit-77 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+  inet6/filter/limit-77           -m recent --name limit-77 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+  inet/filter/limit-77            -m recent --name limit-77 --rsource --mask 255.255.255.255 --set 
+  inet6/filter/limit-77           -m recent --name limit-77 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 85                         {"flow-limit":30,"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-78
+  inet6/filter/INPUT              -i eth0 -j limit-78
+  inet/filter/limit-78            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-78 -j ACCEPT
+  inet6/filter/limit-78           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-78 -j ACCEPT
+  inet/filter/limit-78            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-78           -m limit --limit 1/second -j LOG
+  inet/filter/limit-78            -j DROP
+  inet6/filter/limit-78           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 86                         {"action":"pass","flow-limit":30,"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-79
+  inet6/filter/INPUT              -i eth0 -j limit-79
+  inet/filter/limit-79            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-79 -j RETURN
+  inet6/filter/limit-79           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-79 -j RETURN
+  inet/filter/limit-79            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-79           -m limit --limit 1/second -j LOG
+  inet/filter/limit-79            -j DROP
+  inet6/filter/limit-79           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 87                         {"flow-limit":30,"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-80
+  inet6/filter/INPUT              -i eth0 -j limit-80
+  inet/filter/limit-80            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-80 -j logaccept-3
+  inet6/filter/limit-80           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-80 -j logaccept-3
+  inet/filter/logaccept-3         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-3        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-3         -j ACCEPT
+  inet6/filter/logaccept-3        -j ACCEPT
+  inet/filter/limit-80            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-80           -m limit --limit 1/second -j LOG
+  inet/filter/limit-80            -j DROP
+  inet6/filter/limit-80           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 88                         {"flow-limit":30,"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-81
+  inet6/filter/INPUT              -i eth0 -j limit-81
+  inet/filter/limit-81            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-81 -j ACCEPT
+  inet6/filter/limit-81           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-81 -j ACCEPT
+  inet/filter/limit-81            -m limit --limit 1/second -j LOG
+  inet6/filter/limit-81           -m limit --limit 1/second -j LOG
+  inet/filter/limit-81            -j DROP
+  inet6/filter/limit-81           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 89                         {"flow-limit":{"count":30,"log":false},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-82
+  inet6/filter/INPUT              -i eth0 -j limit-82
+  inet/filter/limit-82            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-82 -j ACCEPT
+  inet6/filter/limit-82           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-82 -j ACCEPT
+  inet/filter/limit-82            -j DROP
+  inet6/filter/limit-82           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 90                         {"action":"pass","flow-limit":{"count":30,"log":false},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-83
+  inet6/filter/INPUT              -i eth0 -j limit-83
+  inet/filter/limit-83            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-83 -j RETURN
+  inet6/filter/limit-83           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-83 -j RETURN
+  inet/filter/limit-83            -j DROP
+  inet6/filter/limit-83           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 91                         {"flow-limit":{"count":30,"log":false},"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-84
+  inet6/filter/INPUT              -i eth0 -j limit-84
+  inet/filter/limit-84            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-84 -j logaccept-4
+  inet6/filter/limit-84           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-84 -j logaccept-4
+  inet/filter/logaccept-4         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-4        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-4         -j ACCEPT
+  inet6/filter/logaccept-4        -j ACCEPT
+  inet/filter/limit-84            -j DROP
+  inet6/filter/limit-84           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 92                         {"flow-limit":{"count":30,"log":false},"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-85
+  inet6/filter/INPUT              -i eth0 -j limit-85
+  inet/filter/limit-85            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-85 -j ACCEPT
+  inet6/filter/limit-85           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-85 -j ACCEPT
+  inet/filter/limit-85            -j DROP
+  inet6/filter/limit-85           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 93                         {"flow-limit":{"count":30,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-86
+  inet6/filter/INPUT              -i eth0 -j limit-86
+  inet/filter/limit-86            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-86 -j ACCEPT
+  inet6/filter/limit-86           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-86 -j ACCEPT
+  inet/filter/limit-86            -j DROP
+  inet6/filter/limit-86           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 94                         {"action":"pass","flow-limit":{"count":30,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-87
+  inet6/filter/INPUT              -i eth0 -j limit-87
+  inet/filter/limit-87            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-87 -j RETURN
+  inet6/filter/limit-87           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-87 -j RETURN
+  inet/filter/limit-87            -j DROP
+  inet6/filter/limit-87           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+
+Filter 95                         {"flow-limit":{"count":30,"log":"none"},"in":"A","log":true,"no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-88
+  inet6/filter/INPUT              -i eth0 -j limit-88
+  inet/filter/limit-88            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-88 -j logaccept-5
+  inet6/filter/limit-88           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-88 -j logaccept-5
+  inet/filter/logaccept-5         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-5        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-5         -j ACCEPT
+  inet6/filter/logaccept-5        -j ACCEPT
+  inet/filter/limit-88            -j DROP
+  inet6/filter/limit-88           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 96                         {"flow-limit":{"count":30,"log":"none"},"in":"A","log":"none","no-track":true,"out":"_fw"}
+(filter-limit)                    
+  inet/filter/INPUT               -i eth0 -j limit-89
+  inet6/filter/INPUT              -i eth0 -j limit-89
+  inet/filter/limit-89            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-89 -j ACCEPT
+  inet6/filter/limit-89           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-89 -j ACCEPT
+  inet/filter/limit-89            -j DROP
+  inet6/filter/limit-89           -j DROP
+  inet/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet6/raw/PREROUTING            -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+  inet/raw/OUTPUT                 -o eth0 -j CT --notrack
+  inet6/raw/OUTPUT                -o eth0 -j CT --notrack
+  inet/filter/OUTPUT              -o eth0 -j ACCEPT
+  inet6/filter/OUTPUT             -o eth0 -j ACCEPT
+
+Filter 97                         {}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -1081,20 +1533,20 @@ Filter 67                         {}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 68                         {"action":"drop"}
+Filter 98                         {"action":"drop"}
 (log)                             
-  inet/filter/FORWARD             -j logdrop-13
-  inet6/filter/FORWARD            -j logdrop-13
-  inet/filter/INPUT               -j logdrop-13
-  inet6/filter/INPUT              -j logdrop-13
-  inet/filter/OUTPUT              -j logdrop-13
-  inet6/filter/OUTPUT             -j logdrop-13
-  inet/filter/logdrop-13          -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-13         -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-13          -j DROP
-  inet6/filter/logdrop-13         -j DROP
+  inet/filter/FORWARD             -j logdrop-19
+  inet6/filter/FORWARD            -j logdrop-19
+  inet/filter/INPUT               -j logdrop-19
+  inet6/filter/INPUT              -j logdrop-19
+  inet/filter/OUTPUT              -j logdrop-19
+  inet6/filter/OUTPUT             -j logdrop-19
+  inet/filter/logdrop-19          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-19         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-19          -j DROP
+  inet6/filter/logdrop-19         -j DROP
 
-Filter 69                         {"action":"pass"}
+Filter 99                         {"action":"pass"}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -1103,7 +1555,7 @@ Filter 69                         {"action":"pass"}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 70                         {"log":false}
+Filter 100                        {"log":false}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -1112,7 +1564,7 @@ Filter 70                         {"log":false}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 71                         {"action":"drop","log":false}
+Filter 101                        {"action":"drop","log":false}
 (log)                             
   inet/filter/FORWARD             -j DROP
   inet6/filter/FORWARD            -j DROP
@@ -1121,7 +1573,7 @@ Filter 71                         {"action":"drop","log":false}
   inet/filter/OUTPUT              -j DROP
   inet6/filter/OUTPUT             -j DROP
 
-Filter 72                         {"action":"pass","log":false}
+Filter 102                        {"action":"pass","log":false}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -1130,33 +1582,33 @@ Filter 72                         {"action":"pass","log":false}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 73                         {"log":true}
+Filter 103                        {"log":true}
 (log)                             
-  inet/filter/FORWARD             -j logaccept-3
-  inet6/filter/FORWARD            -j logaccept-3
-  inet/filter/INPUT               -j logaccept-3
-  inet6/filter/INPUT              -j logaccept-3
-  inet/filter/OUTPUT              -j logaccept-3
-  inet6/filter/OUTPUT             -j logaccept-3
-  inet/filter/logaccept-3         -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-3        -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-3         -j ACCEPT
-  inet6/filter/logaccept-3        -j ACCEPT
+  inet/filter/FORWARD             -j logaccept-6
+  inet6/filter/FORWARD            -j logaccept-6
+  inet/filter/INPUT               -j logaccept-6
+  inet6/filter/INPUT              -j logaccept-6
+  inet/filter/OUTPUT              -j logaccept-6
+  inet6/filter/OUTPUT             -j logaccept-6
+  inet/filter/logaccept-6         -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-6        -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-6         -j ACCEPT
+  inet6/filter/logaccept-6        -j ACCEPT
 
-Filter 74                         {"action":"drop","log":true}
+Filter 104                        {"action":"drop","log":true}
 (log)                             
-  inet/filter/FORWARD             -j logdrop-14
-  inet6/filter/FORWARD            -j logdrop-14
-  inet/filter/INPUT               -j logdrop-14
-  inet6/filter/INPUT              -j logdrop-14
-  inet/filter/OUTPUT              -j logdrop-14
-  inet6/filter/OUTPUT             -j logdrop-14
-  inet/filter/logdrop-14          -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-14         -m limit --limit 1/second -j LOG
-  inet/filter/logdrop-14          -j DROP
-  inet6/filter/logdrop-14         -j DROP
+  inet/filter/FORWARD             -j logdrop-20
+  inet6/filter/FORWARD            -j logdrop-20
+  inet/filter/INPUT               -j logdrop-20
+  inet6/filter/INPUT              -j logdrop-20
+  inet/filter/OUTPUT              -j logdrop-20
+  inet6/filter/OUTPUT             -j logdrop-20
+  inet/filter/logdrop-20          -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-20         -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-20          -j DROP
+  inet6/filter/logdrop-20         -j DROP
 
-Filter 75                         {"action":"pass","log":true}
+Filter 105                        {"action":"pass","log":true}
 (log)                             
   inet/filter/FORWARD             -j logpass-0
   inet6/filter/FORWARD            -j logpass-0
@@ -1167,7 +1619,7 @@ Filter 75                         {"action":"pass","log":true}
   inet/filter/logpass-0           -m limit --limit 1/second -j LOG
   inet6/filter/logpass-0          -m limit --limit 1/second -j LOG
 
-Filter 76                         {"log":"none"}
+Filter 106                        {"log":"none"}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -1176,7 +1628,7 @@ Filter 76                         {"log":"none"}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 77                         {"action":"drop","log":"none"}
+Filter 107                        {"action":"drop","log":"none"}
 (log)                             
   inet/filter/FORWARD             -j DROP
   inet6/filter/FORWARD            -j DROP
@@ -1185,7 +1637,7 @@ Filter 77                         {"action":"drop","log":"none"}
   inet/filter/OUTPUT              -j DROP
   inet6/filter/OUTPUT             -j DROP
 
-Filter 78                         {"action":"pass","log":"none"}
+Filter 108                        {"action":"pass","log":"none"}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -1194,7 +1646,7 @@ Filter 78                         {"action":"pass","log":"none"}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 79                         {"in":"_fw","no-track":true,"service":"http"}
+Filter 109                        {"in":"_fw","no-track":true,"service":"http"}
 (no-track)                        
   inet/filter/OUTPUT              -p tcp --dport 80 -j ACCEPT
   inet6/filter/OUTPUT             -p tcp --dport 80 -j ACCEPT
@@ -1205,7 +1657,7 @@ Filter 79                         {"in":"_fw","no-track":true,"service":"http"}
   inet/filter/INPUT               -p tcp --sport 80 -j ACCEPT
   inet6/filter/INPUT              -p tcp --sport 80 -j ACCEPT
 
-Filter 80                         {"dest":"172.17.0.0\/16","no-track":true,"service":"radius","src":"172.16.0.0\/16"}
+Filter 110                        {"dest":"172.17.0.0\/16","no-track":true,"service":"radius","src":"172.16.0.0\/16"}
 (no-track)                        
   inet/filter/FORWARD             -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
   inet/filter/INPUT               -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
@@ -1228,7 +1680,7 @@ Filter 80                         {"dest":"172.17.0.0\/16","no-track":true,"serv
   inet/filter/OUTPUT              -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
   inet/filter/OUTPUT              -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
 
-Filter 81                         {"dest":"172.18.0.0\/16","no-track":true,"service":"ssh"}
+Filter 111                        {"dest":"172.18.0.0\/16","no-track":true,"service":"ssh"}
 (no-track)                        
   inet/filter/FORWARD             -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
   inet/filter/INPUT               -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
@@ -1241,7 +1693,7 @@ Filter 81                         {"dest":"172.18.0.0\/16","no-track":true,"serv
   inet/filter/INPUT               -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
   inet/filter/OUTPUT              -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
 
-Filter 82                         {"no-track":true,"out":"_fw","service":"ipsec"}
+Filter 112                        {"no-track":true,"out":"_fw","service":"ipsec"}
 (no-track)                        
   inet/filter/INPUT               -p esp -j ACCEPT
   inet6/filter/INPUT              -p esp -j ACCEPT
@@ -1260,7 +1712,7 @@ Filter 82                         {"no-track":true,"out":"_fw","service":"ipsec"
   inet/filter/OUTPUT              -p udp -m multiport --sports 500,4500 -j ACCEPT
   inet6/filter/OUTPUT             -p udp -m multiport --sports 500,4500 -j ACCEPT
 
-Filter 83                         {"in":["_fw","A"]}
+Filter 113                        {"in":["_fw","A"]}
 (zone)                            
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
@@ -1269,12 +1721,12 @@ Filter 83                         {"in":["_fw","A"]}
   inet/filter/INPUT               -i eth0 -j ACCEPT
   inet6/filter/INPUT              -i eth0 -j ACCEPT
 
-Filter 84                         {"in":"B","out":"C"}
+Filter 114                        {"in":"B","out":"C"}
 (zone)                            
   inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 85                         {"out":["_fw","B"]}
+Filter 115                        {"out":["_fw","B"]}
 (zone)                            
   inet/filter/INPUT               -j ACCEPT
   inet6/filter/INPUT              -j ACCEPT
@@ -1283,7 +1735,7 @@ Filter 85                         {"out":["_fw","B"]}
   inet6/filter/FORWARD            -o eth1 -d fc00::/7 -j ACCEPT
   inet6/filter/OUTPUT             -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 86                         {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 116                        {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                            
   inet/filter/FORWARD             -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet6/filter/FORWARD            -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -1675,13 +2127,46 @@ hash:net family inet
 :limit-58 - [0:0]
 :limit-59 - [0:0]
 :limit-6 - [0:0]
+:limit-60 - [0:0]
+:limit-61 - [0:0]
+:limit-62 - [0:0]
+:limit-63 - [0:0]
+:limit-64 - [0:0]
+:limit-65 - [0:0]
+:limit-66 - [0:0]
+:limit-67 - [0:0]
+:limit-68 - [0:0]
+:limit-69 - [0:0]
 :limit-7 - [0:0]
+:limit-70 - [0:0]
+:limit-71 - [0:0]
+:limit-72 - [0:0]
+:limit-73 - [0:0]
+:limit-74 - [0:0]
+:limit-75 - [0:0]
+:limit-76 - [0:0]
+:limit-77 - [0:0]
+:limit-78 - [0:0]
+:limit-79 - [0:0]
 :limit-8 - [0:0]
+:limit-80 - [0:0]
+:limit-81 - [0:0]
+:limit-82 - [0:0]
+:limit-83 - [0:0]
+:limit-84 - [0:0]
+:limit-85 - [0:0]
+:limit-86 - [0:0]
+:limit-87 - [0:0]
+:limit-88 - [0:0]
+:limit-89 - [0:0]
 :limit-9 - [0:0]
 :logaccept-0 - [0:0]
 :logaccept-1 - [0:0]
 :logaccept-2 - [0:0]
 :logaccept-3 - [0:0]
+:logaccept-4 - [0:0]
+:logaccept-5 - [0:0]
+:logaccept-6 - [0:0]
 :logaccept-final-0 - [0:0]
 :logaccept-final-1 - [0:0]
 :logaccept-final-2 - [0:0]
@@ -1695,7 +2180,13 @@ hash:net family inet
 :logdrop-12 - [0:0]
 :logdrop-13 - [0:0]
 :logdrop-14 - [0:0]
+:logdrop-15 - [0:0]
+:logdrop-16 - [0:0]
+:logdrop-17 - [0:0]
+:logdrop-18 - [0:0]
+:logdrop-19 - [0:0]
 :logdrop-2 - [0:0]
+:logdrop-20 - [0:0]
 :logdrop-3 - [0:0]
 :logdrop-4 - [0:0]
 :logdrop-5 - [0:0]
@@ -1793,13 +2284,13 @@ hash:net family inet
 -A FORWARD -j logaccept-final-5
 -A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
--A FORWARD -j logdrop-13
+-A FORWARD -j logdrop-19
 -A FORWARD 
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-3
--A FORWARD -j logdrop-14
+-A FORWARD -j logaccept-6
+-A FORWARD -j logdrop-20
 -A FORWARD -j logpass-0
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
@@ -1946,14 +2437,44 @@ hash:net family inet
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-5
 -A INPUT -j ACCEPT
+-A INPUT -i eth0 -j limit-60
+-A INPUT -i eth0 -j limit-61
+-A INPUT -i eth0 -j limit-62
+-A INPUT -i eth0 -j limit-63
+-A INPUT -i eth0 -j limit-64
+-A INPUT -i eth0 -j limit-65
+-A INPUT -i eth0 -j limit-66
+-A INPUT -i eth0 -j limit-67
+-A INPUT -i eth0 -j limit-68
+-A INPUT -i eth0 -j limit-69
+-A INPUT -i eth0 -j limit-70
+-A INPUT -i eth0 -j limit-71
+-A INPUT -i eth0 -j limit-72
+-A INPUT -i eth0 -j limit-73
+-A INPUT -i eth0 -j limit-74
+-A INPUT -i eth0 -j limit-75
+-A INPUT -i eth0 -j limit-76
+-A INPUT -i eth0 -j limit-77
+-A INPUT -i eth0 -j limit-78
+-A INPUT -i eth0 -j limit-79
+-A INPUT -i eth0 -j limit-80
+-A INPUT -i eth0 -j limit-81
+-A INPUT -i eth0 -j limit-82
+-A INPUT -i eth0 -j limit-83
+-A INPUT -i eth0 -j limit-84
+-A INPUT -i eth0 -j limit-85
+-A INPUT -i eth0 -j limit-86
+-A INPUT -i eth0 -j limit-87
+-A INPUT -i eth0 -j limit-88
+-A INPUT -i eth0 -j limit-89
 -A INPUT -j ACCEPT
--A INPUT -j logdrop-13
+-A INPUT -j logdrop-19
 -A INPUT 
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-3
--A INPUT -j logdrop-14
+-A INPUT -j logaccept-6
+-A INPUT -j logdrop-20
 -A INPUT -j logpass-0
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
@@ -2056,14 +2577,32 @@ hash:net family inet
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-5
 -A OUTPUT -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -j ACCEPT
--A OUTPUT -j logdrop-13
+-A OUTPUT -j logdrop-19
 -A OUTPUT 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-3
--A OUTPUT -j logdrop-14
+-A OUTPUT -j logaccept-6
+-A OUTPUT -j logdrop-20
 -A OUTPUT -j logpass-0
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
@@ -2207,11 +2746,78 @@ hash:net family inet
 -A limit-59 -j DROP
 -A limit-6 -m recent --name limit-6 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
 -A limit-6 -m recent --name limit-6 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-60 -m recent --name limit-60 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-13
+-A limit-60 -m recent --name limit-60 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-61 -m recent --name limit-61 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-14
+-A limit-61 -m recent --name limit-61 --rsource --mask 255.255.255.255 --set 
+-A limit-62 -m recent --name limit-62 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-15
+-A limit-62 -m limit --limit 1/second -j LOG
+-A limit-62 -m recent --name limit-62 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-63 -m recent --name limit-63 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-16
+-A limit-63 -m recent --name limit-63 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-64 -m recent --name limit-64 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-17
+-A limit-64 -m recent --name limit-64 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-65 -m recent --name limit-65 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-18
+-A limit-65 -m recent --name limit-65 --rsource --mask 255.255.255.255 --set 
+-A limit-66 -m recent --name limit-66 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-66 -m recent --name limit-66 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-67 -m recent --name limit-67 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-67 -m recent --name limit-67 --rsource --mask 255.255.255.255 --set 
+-A limit-68 -m recent --name limit-68 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-68 -m limit --limit 1/second -j LOG
+-A limit-68 -m recent --name limit-68 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-69 -m recent --name limit-69 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-69 -m recent --name limit-69 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
 -A limit-7 -m recent --name limit-7 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
 -A limit-7 -m recent --name limit-7 --rsource --mask 255.255.255.255 --set 
+-A limit-70 -m recent --name limit-70 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-70 -m recent --name limit-70 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-71 -m recent --name limit-71 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-71 -m recent --name limit-71 --rsource --mask 255.255.255.255 --set 
+-A limit-72 -m recent --name limit-72 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-72 -m recent --name limit-72 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-73 -m recent --name limit-73 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-73 -m recent --name limit-73 --rsource --mask 255.255.255.255 --set 
+-A limit-74 -m recent --name limit-74 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-74 -m limit --limit 1/second -j LOG
+-A limit-74 -m recent --name limit-74 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-75 -m recent --name limit-75 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-75 -m recent --name limit-75 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
+-A limit-76 -m recent --name limit-76 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-76 -m recent --name limit-76 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-77 -m recent --name limit-77 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
+-A limit-77 -m recent --name limit-77 --rsource --mask 255.255.255.255 --set 
+-A limit-78 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-78 -j ACCEPT
+-A limit-78 -m limit --limit 1/second -j LOG
+-A limit-78 -j DROP
+-A limit-79 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-79 -j RETURN
+-A limit-79 -m limit --limit 1/second -j LOG
+-A limit-79 -j DROP
 -A limit-8 -m recent --name limit-8 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
 -A limit-8 -m limit --limit 1/second -j LOG
 -A limit-8 -m recent --name limit-8 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-80 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-80 -j logaccept-3
+-A limit-80 -m limit --limit 1/second -j LOG
+-A limit-80 -j DROP
+-A limit-81 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-81 -j ACCEPT
+-A limit-81 -m limit --limit 1/second -j LOG
+-A limit-81 -j DROP
+-A limit-82 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-82 -j ACCEPT
+-A limit-82 -j DROP
+-A limit-83 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-83 -j RETURN
+-A limit-83 -j DROP
+-A limit-84 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-84 -j logaccept-4
+-A limit-84 -j DROP
+-A limit-85 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-85 -j ACCEPT
+-A limit-85 -j DROP
+-A limit-86 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-86 -j ACCEPT
+-A limit-86 -j DROP
+-A limit-87 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-87 -j RETURN
+-A limit-87 -j DROP
+-A limit-88 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-88 -j logaccept-5
+-A limit-88 -j DROP
+-A limit-89 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-89 -j ACCEPT
+-A limit-89 -j DROP
 -A limit-9 -m recent --name limit-9 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j DROP
 -A limit-9 -m recent --name limit-9 --rsource --mask 255.255.255.255 --set -m limit --limit 1/second -j LOG
 -A logaccept-0 -m limit --limit 1/second -j LOG
@@ -2222,6 +2828,12 @@ hash:net family inet
 -A logaccept-2 -j ACCEPT
 -A logaccept-3 -m limit --limit 1/second -j LOG
 -A logaccept-3 -j ACCEPT
+-A logaccept-4 -m limit --limit 1/second -j LOG
+-A logaccept-4 -j ACCEPT
+-A logaccept-5 -m limit --limit 1/second -j LOG
+-A logaccept-5 -j ACCEPT
+-A logaccept-6 -m limit --limit 1/second -j LOG
+-A logaccept-6 -j ACCEPT
 -A logaccept-final-0 -m limit --limit 1/second -j LOG
 -A logaccept-final-0 -j ACCEPT
 -A logaccept-final-1 -m limit --limit 1/second -j LOG
@@ -2248,8 +2860,20 @@ hash:net family inet
 -A logdrop-13 -j DROP
 -A logdrop-14 -m limit --limit 1/second -j LOG
 -A logdrop-14 -j DROP
+-A logdrop-15 -m limit --limit 1/second -j LOG
+-A logdrop-15 -j DROP
+-A logdrop-16 -m limit --limit 1/second -j LOG
+-A logdrop-16 -j DROP
+-A logdrop-17 -m limit --limit 1/second -j LOG
+-A logdrop-17 -j DROP
+-A logdrop-18 -m limit --limit 1/second -j LOG
+-A logdrop-18 -j DROP
+-A logdrop-19 -m limit --limit 1/second -j LOG
+-A logdrop-19 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
+-A logdrop-20 -m limit --limit 1/second -j LOG
+-A logdrop-20 -j DROP
 -A logdrop-3 -m limit --limit 1/second -j LOG
 -A logdrop-3 -j DROP
 -A logdrop-4 -m limit --limit 1/second -j LOG
@@ -2303,6 +2927,24 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
 -A OUTPUT -p tcp --dport 80 -j CT --notrack
 -A OUTPUT -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
 -A OUTPUT -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
@@ -2314,6 +2956,36 @@ COMMIT
 -A OUTPUT -p udp -m multiport --sports 500,4500 -j CT --notrack
 -A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
 -A PREROUTING -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
 -A PREROUTING -p udp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j CT --notrack
@@ -2391,13 +3063,46 @@ COMMIT
 :limit-58 - [0:0]
 :limit-59 - [0:0]
 :limit-6 - [0:0]
+:limit-60 - [0:0]
+:limit-61 - [0:0]
+:limit-62 - [0:0]
+:limit-63 - [0:0]
+:limit-64 - [0:0]
+:limit-65 - [0:0]
+:limit-66 - [0:0]
+:limit-67 - [0:0]
+:limit-68 - [0:0]
+:limit-69 - [0:0]
 :limit-7 - [0:0]
+:limit-70 - [0:0]
+:limit-71 - [0:0]
+:limit-72 - [0:0]
+:limit-73 - [0:0]
+:limit-74 - [0:0]
+:limit-75 - [0:0]
+:limit-76 - [0:0]
+:limit-77 - [0:0]
+:limit-78 - [0:0]
+:limit-79 - [0:0]
 :limit-8 - [0:0]
+:limit-80 - [0:0]
+:limit-81 - [0:0]
+:limit-82 - [0:0]
+:limit-83 - [0:0]
+:limit-84 - [0:0]
+:limit-85 - [0:0]
+:limit-86 - [0:0]
+:limit-87 - [0:0]
+:limit-88 - [0:0]
+:limit-89 - [0:0]
 :limit-9 - [0:0]
 :logaccept-0 - [0:0]
 :logaccept-1 - [0:0]
 :logaccept-2 - [0:0]
 :logaccept-3 - [0:0]
+:logaccept-4 - [0:0]
+:logaccept-5 - [0:0]
+:logaccept-6 - [0:0]
 :logaccept-final-0 - [0:0]
 :logaccept-final-1 - [0:0]
 :logaccept-final-2 - [0:0]
@@ -2411,7 +3116,13 @@ COMMIT
 :logdrop-12 - [0:0]
 :logdrop-13 - [0:0]
 :logdrop-14 - [0:0]
+:logdrop-15 - [0:0]
+:logdrop-16 - [0:0]
+:logdrop-17 - [0:0]
+:logdrop-18 - [0:0]
+:logdrop-19 - [0:0]
 :logdrop-2 - [0:0]
+:logdrop-20 - [0:0]
 :logdrop-3 - [0:0]
 :logdrop-4 - [0:0]
 :logdrop-5 - [0:0]
@@ -2509,13 +3220,13 @@ COMMIT
 -A FORWARD -j logaccept-final-5
 -A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
--A FORWARD -j logdrop-13
+-A FORWARD -j logdrop-19
 -A FORWARD 
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-3
--A FORWARD -j logdrop-14
+-A FORWARD -j logaccept-6
+-A FORWARD -j logdrop-20
 -A FORWARD -j logpass-0
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
@@ -2632,14 +3343,44 @@ COMMIT
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-5
 -A INPUT -j ACCEPT
+-A INPUT -i eth0 -j limit-60
+-A INPUT -i eth0 -j limit-61
+-A INPUT -i eth0 -j limit-62
+-A INPUT -i eth0 -j limit-63
+-A INPUT -i eth0 -j limit-64
+-A INPUT -i eth0 -j limit-65
+-A INPUT -i eth0 -j limit-66
+-A INPUT -i eth0 -j limit-67
+-A INPUT -i eth0 -j limit-68
+-A INPUT -i eth0 -j limit-69
+-A INPUT -i eth0 -j limit-70
+-A INPUT -i eth0 -j limit-71
+-A INPUT -i eth0 -j limit-72
+-A INPUT -i eth0 -j limit-73
+-A INPUT -i eth0 -j limit-74
+-A INPUT -i eth0 -j limit-75
+-A INPUT -i eth0 -j limit-76
+-A INPUT -i eth0 -j limit-77
+-A INPUT -i eth0 -j limit-78
+-A INPUT -i eth0 -j limit-79
+-A INPUT -i eth0 -j limit-80
+-A INPUT -i eth0 -j limit-81
+-A INPUT -i eth0 -j limit-82
+-A INPUT -i eth0 -j limit-83
+-A INPUT -i eth0 -j limit-84
+-A INPUT -i eth0 -j limit-85
+-A INPUT -i eth0 -j limit-86
+-A INPUT -i eth0 -j limit-87
+-A INPUT -i eth0 -j limit-88
+-A INPUT -i eth0 -j limit-89
 -A INPUT -j ACCEPT
--A INPUT -j logdrop-13
+-A INPUT -j logdrop-19
 -A INPUT 
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-3
--A INPUT -j logdrop-14
+-A INPUT -j logaccept-6
+-A INPUT -j logdrop-20
 -A INPUT -j logpass-0
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
@@ -2736,14 +3477,32 @@ COMMIT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-5
 -A OUTPUT -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -j ACCEPT
--A OUTPUT -j logdrop-13
+-A OUTPUT -j logdrop-19
 -A OUTPUT 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-3
--A OUTPUT -j logdrop-14
+-A OUTPUT -j logaccept-6
+-A OUTPUT -j logdrop-20
 -A OUTPUT -j logpass-0
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
@@ -2882,11 +3641,78 @@ COMMIT
 -A limit-59 -j DROP
 -A limit-6 -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-6 -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-60 -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-13
+-A limit-60 -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-61 -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-14
+-A limit-61 -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-62 -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-15
+-A limit-62 -m limit --limit 1/second -j LOG
+-A limit-62 -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-63 -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-16
+-A limit-63 -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-64 -m recent --name limit-64 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-17
+-A limit-64 -m recent --name limit-64 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-65 -m recent --name limit-65 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-18
+-A limit-65 -m recent --name limit-65 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-66 -m recent --name limit-66 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-66 -m recent --name limit-66 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-67 -m recent --name limit-67 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-67 -m recent --name limit-67 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-68 -m recent --name limit-68 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-68 -m limit --limit 1/second -j LOG
+-A limit-68 -m recent --name limit-68 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-69 -m recent --name limit-69 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-69 -m recent --name limit-69 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
 -A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-70 -m recent --name limit-70 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-70 -m recent --name limit-70 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-71 -m recent --name limit-71 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-71 -m recent --name limit-71 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-72 -m recent --name limit-72 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-72 -m recent --name limit-72 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-73 -m recent --name limit-73 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-73 -m recent --name limit-73 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-74 -m recent --name limit-74 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-74 -m limit --limit 1/second -j LOG
+-A limit-74 -m recent --name limit-74 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-75 -m recent --name limit-75 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-75 -m recent --name limit-75 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-76 -m recent --name limit-76 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-76 -m recent --name limit-76 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-77 -m recent --name limit-77 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-77 -m recent --name limit-77 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-78 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-78 -j ACCEPT
+-A limit-78 -m limit --limit 1/second -j LOG
+-A limit-78 -j DROP
+-A limit-79 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-79 -j RETURN
+-A limit-79 -m limit --limit 1/second -j LOG
+-A limit-79 -j DROP
 -A limit-8 -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-8 -m limit --limit 1/second -j LOG
 -A limit-8 -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-80 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-80 -j logaccept-3
+-A limit-80 -m limit --limit 1/second -j LOG
+-A limit-80 -j DROP
+-A limit-81 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-81 -j ACCEPT
+-A limit-81 -m limit --limit 1/second -j LOG
+-A limit-81 -j DROP
+-A limit-82 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-82 -j ACCEPT
+-A limit-82 -j DROP
+-A limit-83 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-83 -j RETURN
+-A limit-83 -j DROP
+-A limit-84 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-84 -j logaccept-4
+-A limit-84 -j DROP
+-A limit-85 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-85 -j ACCEPT
+-A limit-85 -j DROP
+-A limit-86 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-86 -j ACCEPT
+-A limit-86 -j DROP
+-A limit-87 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-87 -j RETURN
+-A limit-87 -j DROP
+-A limit-88 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-88 -j logaccept-5
+-A limit-88 -j DROP
+-A limit-89 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-89 -j ACCEPT
+-A limit-89 -j DROP
 -A limit-9 -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-9 -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
 -A logaccept-0 -m limit --limit 1/second -j LOG
@@ -2897,6 +3723,12 @@ COMMIT
 -A logaccept-2 -j ACCEPT
 -A logaccept-3 -m limit --limit 1/second -j LOG
 -A logaccept-3 -j ACCEPT
+-A logaccept-4 -m limit --limit 1/second -j LOG
+-A logaccept-4 -j ACCEPT
+-A logaccept-5 -m limit --limit 1/second -j LOG
+-A logaccept-5 -j ACCEPT
+-A logaccept-6 -m limit --limit 1/second -j LOG
+-A logaccept-6 -j ACCEPT
 -A logaccept-final-0 -m limit --limit 1/second -j LOG
 -A logaccept-final-0 -j ACCEPT
 -A logaccept-final-1 -m limit --limit 1/second -j LOG
@@ -2923,8 +3755,20 @@ COMMIT
 -A logdrop-13 -j DROP
 -A logdrop-14 -m limit --limit 1/second -j LOG
 -A logdrop-14 -j DROP
+-A logdrop-15 -m limit --limit 1/second -j LOG
+-A logdrop-15 -j DROP
+-A logdrop-16 -m limit --limit 1/second -j LOG
+-A logdrop-16 -j DROP
+-A logdrop-17 -m limit --limit 1/second -j LOG
+-A logdrop-17 -j DROP
+-A logdrop-18 -m limit --limit 1/second -j LOG
+-A logdrop-18 -j DROP
+-A logdrop-19 -m limit --limit 1/second -j LOG
+-A logdrop-19 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
+-A logdrop-20 -m limit --limit 1/second -j LOG
+-A logdrop-20 -j DROP
 -A logdrop-3 -m limit --limit 1/second -j LOG
 -A logdrop-3 -j DROP
 -A logdrop-4 -m limit --limit 1/second -j LOG
@@ -2961,11 +3805,59 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 -A OUTPUT -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
 -A OUTPUT -p tcp --dport 80 -j CT --notrack
 -A OUTPUT -p esp -j CT --notrack
 -A OUTPUT -p udp -m multiport --sports 500,4500 -j CT --notrack
 -A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p esp -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
