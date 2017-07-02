@@ -48,7 +48,7 @@ function PolicyConfig:expand()
 	 local var = self.data.variable[name]
 	 if var == nil then raise('Invalid variable reference: '..name) end
 	 
-	 if si == 1 and ei == value:len() then value = var
+	 if si == 1 and ei == value:len() then value = util.copy(var)
 	 elseif contains({'number', 'string'}, type(var)) then
 	    value = value:sub(1, si - 1)..var..value:sub(ei + 1, -1)
 	 else

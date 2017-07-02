@@ -85,7 +85,9 @@ function M.setdefault(t, k, v)
    return t[k]
 end
 
-function M.copy(tbl) return M.update({}, tbl) end
+function M.copy(var)
+   return type(var) == 'table' and M.update({}, var) or var
+end
 
 function M.compare(a, b)
    local t = type(a)
