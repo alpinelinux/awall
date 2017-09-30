@@ -33,4 +33,12 @@ add('conn')
 add('flow')
 add('flow', {['in']='A', out='_fw', ['no-track']=true})
 
+for _, measure in ipairs{'conn', 'flow'} do
+   for _, addr in ipairs{'src', 'dest'} do
+      table.insert(
+         res, {['update-limit']={name='foo', measure=measure, addr=addr}}
+      )
+   end
+end
+
 print(json.encode{filter=res})

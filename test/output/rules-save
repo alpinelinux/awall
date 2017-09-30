@@ -132,6 +132,8 @@
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
+-A FORWARD -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+-A FORWARD -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
 -A FORWARD -j limit-59
 -A FORWARD -j limit-58
 -A FORWARD -j limit-57
@@ -217,6 +219,8 @@
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-5
 -A FORWARD -j ACCEPT
+-A FORWARD -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+-A FORWARD -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-19
 -A FORWARD 
@@ -285,6 +289,8 @@
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
+-A INPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+-A INPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
 -A INPUT -j limit-59
 -A INPUT -j limit-58
 -A INPUT -j limit-57
@@ -401,6 +407,8 @@
 -A INPUT -i eth0 -j limit-87
 -A INPUT -i eth0 -j limit-88
 -A INPUT -i eth0 -j limit-89
+-A INPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+-A INPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
 -A INPUT -j ACCEPT
 -A INPUT -j logdrop-19
 -A INPUT 
@@ -425,6 +433,8 @@
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
+-A OUTPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+-A OUTPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
 -A OUTPUT -j limit-59
 -A OUTPUT -j limit-58
 -A OUTPUT -j limit-57
@@ -529,6 +539,8 @@
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+-A OUTPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logdrop-19
 -A OUTPUT 

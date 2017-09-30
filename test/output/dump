@@ -1524,7 +1524,43 @@ Filter 96                         {"flow-limit":{"count":30,"log":"none"},"in":"
   inet/filter/OUTPUT              -o eth0 -j ACCEPT
   inet6/filter/OUTPUT             -o eth0 -j ACCEPT
 
-Filter 97                         {}
+Filter 97                         {"update-limit":{"addr":"src","measure":"conn","name":"foo"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+  inet/filter/INPUT               -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+  inet6/filter/FORWARD            -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet6/filter/INPUT              -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/OUTPUT              -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+  inet6/filter/OUTPUT             -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 98                         {"update-limit":{"addr":"dest","measure":"conn","name":"foo"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+  inet/filter/INPUT               -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+  inet6/filter/FORWARD            -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet6/filter/INPUT              -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/OUTPUT              -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+  inet6/filter/OUTPUT             -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 99                         {"update-limit":{"addr":"src","measure":"flow","name":"foo"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+  inet/filter/INPUT               -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+  inet6/filter/FORWARD            -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet6/filter/INPUT              -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/OUTPUT              -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+  inet6/filter/OUTPUT             -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 100                        {"update-limit":{"addr":"dest","measure":"flow","name":"foo"}}
+(filter-limit)                    
+  inet/filter/FORWARD             -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+  inet/filter/INPUT               -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+  inet6/filter/FORWARD            -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet6/filter/INPUT              -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+  inet/filter/OUTPUT              -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+  inet6/filter/OUTPUT             -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+
+Filter 101                        {}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -1533,7 +1569,7 @@ Filter 97                         {}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 98                         {"action":"drop"}
+Filter 102                        {"action":"drop"}
 (log)                             
   inet/filter/FORWARD             -j logdrop-19
   inet6/filter/FORWARD            -j logdrop-19
@@ -1546,7 +1582,7 @@ Filter 98                         {"action":"drop"}
   inet/filter/logdrop-19          -j DROP
   inet6/filter/logdrop-19         -j DROP
 
-Filter 99                         {"action":"pass"}
+Filter 103                        {"action":"pass"}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -1555,7 +1591,7 @@ Filter 99                         {"action":"pass"}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 100                        {"log":false}
+Filter 104                        {"log":false}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -1564,7 +1600,7 @@ Filter 100                        {"log":false}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 101                        {"action":"drop","log":false}
+Filter 105                        {"action":"drop","log":false}
 (log)                             
   inet/filter/FORWARD             -j DROP
   inet6/filter/FORWARD            -j DROP
@@ -1573,7 +1609,7 @@ Filter 101                        {"action":"drop","log":false}
   inet/filter/OUTPUT              -j DROP
   inet6/filter/OUTPUT             -j DROP
 
-Filter 102                        {"action":"pass","log":false}
+Filter 106                        {"action":"pass","log":false}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -1582,7 +1618,7 @@ Filter 102                        {"action":"pass","log":false}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 103                        {"log":true}
+Filter 107                        {"log":true}
 (log)                             
   inet/filter/FORWARD             -j logaccept-6
   inet6/filter/FORWARD            -j logaccept-6
@@ -1595,7 +1631,7 @@ Filter 103                        {"log":true}
   inet/filter/logaccept-6         -j ACCEPT
   inet6/filter/logaccept-6        -j ACCEPT
 
-Filter 104                        {"action":"drop","log":true}
+Filter 108                        {"action":"drop","log":true}
 (log)                             
   inet/filter/FORWARD             -j logdrop-20
   inet6/filter/FORWARD            -j logdrop-20
@@ -1608,7 +1644,7 @@ Filter 104                        {"action":"drop","log":true}
   inet/filter/logdrop-20          -j DROP
   inet6/filter/logdrop-20         -j DROP
 
-Filter 105                        {"action":"pass","log":true}
+Filter 109                        {"action":"pass","log":true}
 (log)                             
   inet/filter/FORWARD             -j logpass-0
   inet6/filter/FORWARD            -j logpass-0
@@ -1619,7 +1655,7 @@ Filter 105                        {"action":"pass","log":true}
   inet/filter/logpass-0           -m limit --limit 1/second -j LOG
   inet6/filter/logpass-0          -m limit --limit 1/second -j LOG
 
-Filter 106                        {"log":"none"}
+Filter 110                        {"log":"none"}
 (log)                             
   inet/filter/FORWARD             -j ACCEPT
   inet6/filter/FORWARD            -j ACCEPT
@@ -1628,7 +1664,7 @@ Filter 106                        {"log":"none"}
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
 
-Filter 107                        {"action":"drop","log":"none"}
+Filter 111                        {"action":"drop","log":"none"}
 (log)                             
   inet/filter/FORWARD             -j DROP
   inet6/filter/FORWARD            -j DROP
@@ -1637,7 +1673,7 @@ Filter 107                        {"action":"drop","log":"none"}
   inet/filter/OUTPUT              -j DROP
   inet6/filter/OUTPUT             -j DROP
 
-Filter 108                        {"action":"pass","log":"none"}
+Filter 112                        {"action":"pass","log":"none"}
 (log)                             
   inet/filter/FORWARD             
   inet6/filter/FORWARD            
@@ -1646,7 +1682,7 @@ Filter 108                        {"action":"pass","log":"none"}
   inet/filter/OUTPUT              
   inet6/filter/OUTPUT             
 
-Filter 109                        {"in":"_fw","no-track":true,"service":"http"}
+Filter 113                        {"in":"_fw","no-track":true,"service":"http"}
 (no-track)                        
   inet/filter/OUTPUT              -p tcp --dport 80 -j ACCEPT
   inet6/filter/OUTPUT             -p tcp --dport 80 -j ACCEPT
@@ -1657,7 +1693,7 @@ Filter 109                        {"in":"_fw","no-track":true,"service":"http"}
   inet/filter/INPUT               -p tcp --sport 80 -j ACCEPT
   inet6/filter/INPUT              -p tcp --sport 80 -j ACCEPT
 
-Filter 110                        {"dest":"172.17.0.0\/16","no-track":true,"service":"radius","src":"172.16.0.0\/16"}
+Filter 114                        {"dest":"172.17.0.0\/16","no-track":true,"service":"radius","src":"172.16.0.0\/16"}
 (no-track)                        
   inet/filter/FORWARD             -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
   inet/filter/INPUT               -p tcp --dport 1812 -s 172.16.0.0/16 -d 172.17.0.0/16 -j ACCEPT
@@ -1680,7 +1716,7 @@ Filter 110                        {"dest":"172.17.0.0\/16","no-track":true,"serv
   inet/filter/OUTPUT              -p tcp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
   inet/filter/OUTPUT              -p udp --sport 1812 -d 172.16.0.0/16 -s 172.17.0.0/16 -j ACCEPT
 
-Filter 111                        {"dest":"172.18.0.0\/16","no-track":true,"service":"ssh"}
+Filter 115                        {"dest":"172.18.0.0\/16","no-track":true,"service":"ssh"}
 (no-track)                        
   inet/filter/FORWARD             -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
   inet/filter/INPUT               -p tcp --dport 22 -d 172.18.0.0/16 -j ACCEPT
@@ -1693,7 +1729,7 @@ Filter 111                        {"dest":"172.18.0.0\/16","no-track":true,"serv
   inet/filter/INPUT               -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
   inet/filter/OUTPUT              -p tcp --sport 22 -s 172.18.0.0/16 -j ACCEPT
 
-Filter 112                        {"no-track":true,"out":"_fw","service":"ipsec"}
+Filter 116                        {"no-track":true,"out":"_fw","service":"ipsec"}
 (no-track)                        
   inet/filter/INPUT               -p esp -j ACCEPT
   inet6/filter/INPUT              -p esp -j ACCEPT
@@ -1712,7 +1748,7 @@ Filter 112                        {"no-track":true,"out":"_fw","service":"ipsec"
   inet/filter/OUTPUT              -p udp -m multiport --sports 500,4500 -j ACCEPT
   inet6/filter/OUTPUT             -p udp -m multiport --sports 500,4500 -j ACCEPT
 
-Filter 113                        {"in":["_fw","A"]}
+Filter 117                        {"in":["_fw","A"]}
 (zone)                            
   inet/filter/OUTPUT              -j ACCEPT
   inet6/filter/OUTPUT             -j ACCEPT
@@ -1721,12 +1757,12 @@ Filter 113                        {"in":["_fw","A"]}
   inet/filter/INPUT               -i eth0 -j ACCEPT
   inet6/filter/INPUT              -i eth0 -j ACCEPT
 
-Filter 114                        {"in":"B","out":"C"}
+Filter 118                        {"in":"B","out":"C"}
 (zone)                            
   inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD             -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 115                        {"out":["_fw","B"]}
+Filter 119                        {"out":["_fw","B"]}
 (zone)                            
   inet/filter/INPUT               -j ACCEPT
   inet6/filter/INPUT              -j ACCEPT
@@ -1735,7 +1771,7 @@ Filter 115                        {"out":["_fw","B"]}
   inet6/filter/FORWARD            -o eth1 -d fc00::/7 -j ACCEPT
   inet6/filter/OUTPUT             -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 116                        {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 120                        {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                            
   inet/filter/FORWARD             -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet6/filter/FORWARD            -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -2198,6 +2234,8 @@ hash:net family inet
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
+-A FORWARD -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+-A FORWARD -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
 -A FORWARD -j limit-59
 -A FORWARD -j limit-58
 -A FORWARD -j limit-57
@@ -2283,6 +2321,8 @@ hash:net family inet
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-5
 -A FORWARD -j ACCEPT
+-A FORWARD -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+-A FORWARD -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-19
 -A FORWARD 
@@ -2351,6 +2391,8 @@ hash:net family inet
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
+-A INPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+-A INPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
 -A INPUT -j limit-59
 -A INPUT -j limit-58
 -A INPUT -j limit-57
@@ -2467,6 +2509,8 @@ hash:net family inet
 -A INPUT -i eth0 -j limit-87
 -A INPUT -i eth0 -j limit-88
 -A INPUT -i eth0 -j limit-89
+-A INPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+-A INPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
 -A INPUT -j ACCEPT
 -A INPUT -j logdrop-19
 -A INPUT 
@@ -2491,6 +2535,8 @@ hash:net family inet
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
+-A OUTPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
+-A OUTPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
 -A OUTPUT -j limit-59
 -A OUTPUT -j limit-58
 -A OUTPUT -j limit-57
@@ -2595,6 +2641,8 @@ hash:net family inet
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -m recent --name user:foo --rsource --mask 255.255.255.255 --set 
+-A OUTPUT -m recent --name user:foo --rdest --mask 255.255.255.255 --set 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logdrop-19
 -A OUTPUT 
@@ -3134,6 +3182,8 @@ COMMIT
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
+-A FORWARD -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A FORWARD -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -j limit-59
 -A FORWARD -j limit-58
 -A FORWARD -j limit-57
@@ -3219,6 +3269,8 @@ COMMIT
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-5
 -A FORWARD -j ACCEPT
+-A FORWARD -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A FORWARD -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-19
 -A FORWARD 
@@ -3257,6 +3309,8 @@ COMMIT
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A INPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -j limit-59
 -A INPUT -j limit-58
 -A INPUT -j limit-57
@@ -3373,6 +3427,8 @@ COMMIT
 -A INPUT -i eth0 -j limit-87
 -A INPUT -i eth0 -j limit-88
 -A INPUT -i eth0 -j limit-89
+-A INPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A INPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -j ACCEPT
 -A INPUT -j logdrop-19
 -A INPUT 
@@ -3391,6 +3447,8 @@ COMMIT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
+-A OUTPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A OUTPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -j limit-59
 -A OUTPUT -j limit-58
 -A OUTPUT -j limit-57
@@ -3495,6 +3553,8 @@ COMMIT
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A OUTPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logdrop-19
 -A OUTPUT 
