@@ -38,16 +38,18 @@ function add(limit_type, filter)
             add_limit(limit)
 
 	    if not high_rate then
-	       limit.name = 'A'
+	       for _, name in ipairs{'A', 'C'} do
+	          limit.name = name
 
-	       for _, addr in ipairs{false, 'dest'} do
-	          limit.addr = addr or nil
+	          for _, addr in ipairs{false, 'dest'} do
+	             limit.addr = addr or nil
 
-	          limit.update = nil
-	          add_limit(limit)
+	             limit.update = nil
+	             add_limit(limit)
 
-	          limit.update = false
-	          add_limit(limit)
+	             limit.update = false
+	             add_limit(limit)
+	          end
 	       end
 	    end
 	 end
@@ -59,7 +61,9 @@ add('conn', {out='B'})
 add('flow')
 add('flow', {['in']='A', out='_fw', ['no-track']=true})
 
-table.insert(res, {['update-limit']='A'})
+for _, name in ipairs{'A', 'B', 'C', 'D'} do
+   table.insert(res, {['update-limit']=name})
+end
 
 for _, measure in ipairs{'conn', 'flow'} do
    for _, addr in ipairs{'src', 'dest'} do
