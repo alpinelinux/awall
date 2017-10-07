@@ -29,7 +29,7 @@ function add(limit_type, base)
    end
 end
 
-add('conn')
+add('conn', {out='B'})
 add('flow')
 add('flow', {['in']='A', out='_fw', ['no-track']=true})
 
