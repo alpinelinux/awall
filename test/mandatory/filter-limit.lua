@@ -30,23 +30,25 @@ function add(limit_type, filter)
       local count = high_rate and 150 or 1
       add_limit(count)
 
-      for _, log in ipairs{true, false, 'none'} do
-	 local limit = {count=count}
-	 if log ~= true then limit.log = log end
+      for _, interval in ipairs{false, 5} do
+         for _, log in ipairs{true, false, 'none'} do
+	    local limit = {count=count, interval=interval or nil}
+	    if log ~= true then limit.log = log end
 
-         add_limit(limit)
+            add_limit(limit)
 
-	 if not high_rate then
-	    limit.name = 'foo'
+	    if not high_rate then
+	       limit.name = 'foo'
 
-	    for _, addr in ipairs{false, 'dest'} do
-	       limit.addr = addr or nil
+	       for _, addr in ipairs{false, 'dest'} do
+	          limit.addr = addr or nil
 
-	       limit.update = nil
-	       add_limit(limit)
+	          limit.update = nil
+	          add_limit(limit)
 
-	       limit.update = false
-	       add_limit(limit)
+	          limit.update = false
+	          add_limit(limit)
+	       end
 	    end
 	 end
       end
