@@ -1486,35 +1486,35 @@
 -A limit-1 -m recent --name limit-1 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-11
 -A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-100 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-100 -j ACCEPT
+-A limit-100 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-100 -j ACCEPT
 -A limit-100 -m limit --limit 1/second -j LOG
 -A limit-100 -j DROP
--A limit-101 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-101 -j RETURN
+-A limit-101 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-101 -j RETURN
 -A limit-101 -m limit --limit 1/second -j LOG
 -A limit-101 -j DROP
--A limit-102 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-102 -j logaccept-1
+-A limit-102 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-102 -j logaccept-1
 -A limit-102 -m limit --limit 1/second -j LOG
 -A limit-102 -j DROP
--A limit-103 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-103 -j ACCEPT
+-A limit-103 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-103 -j ACCEPT
 -A limit-103 -m limit --limit 1/second -j LOG
 -A limit-103 -j DROP
--A limit-104 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-104 -j ACCEPT
+-A limit-104 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-104 -j ACCEPT
 -A limit-104 -j DROP
--A limit-105 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-105 -j RETURN
+-A limit-105 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-105 -j RETURN
 -A limit-105 -j DROP
--A limit-106 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-106 -j logaccept-2
+-A limit-106 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-106 -j logaccept-2
 -A limit-106 -j DROP
--A limit-107 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-107 -j ACCEPT
+-A limit-107 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-107 -j ACCEPT
 -A limit-107 -j DROP
--A limit-108 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-108 -j ACCEPT
+-A limit-108 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-108 -j ACCEPT
 -A limit-108 -j DROP
--A limit-109 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-109 -j RETURN
+-A limit-109 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-109 -j RETURN
 -A limit-109 -j DROP
 -A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-12
 -A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-110 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-110 -j logaccept-3
+-A limit-110 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-110 -j logaccept-3
 -A limit-110 -j DROP
--A limit-111 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-111 -j ACCEPT
+-A limit-111 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-111 -j ACCEPT
 -A limit-111 -j DROP
 -A limit-112 -m recent --name limit-112 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-37
 -A limit-112 -m recent --name limit-112 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
@@ -1699,49 +1699,49 @@
 -A limit-205 -m limit --limit 1/second -j LOG
 -A limit-206 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
 -A limit-207 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
--A limit-208 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-208 -j RETURN
+-A limit-208 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-208 -j RETURN
 -A limit-208 -m limit --limit 1/second -j LOG
 -A limit-208 -j DROP
--A limit-209 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-209 -j RETURN
+-A limit-209 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-209 -j RETURN
 -A limit-209 -m limit --limit 1/second -j LOG
 -A limit-209 -j DROP
 -A limit-21 -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-22
 -A limit-21 -m limit --limit 1/second -j LOG
--A limit-210 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-210 -j RETURN
+-A limit-210 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-210 -j RETURN
 -A limit-210 -m limit --limit 1/second -j LOG
 -A limit-210 -j DROP
--A limit-211 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-211 -j RETURN
+-A limit-211 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-211 -j RETURN
 -A limit-211 -m limit --limit 1/second -j LOG
 -A limit-211 -j DROP
--A limit-212 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-212 -j RETURN
+-A limit-212 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-212 -j RETURN
 -A limit-212 -m limit --limit 1/second -j LOG
 -A limit-212 -j DROP
--A limit-213 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-213 -j RETURN
+-A limit-213 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-213 -j RETURN
 -A limit-213 -m limit --limit 1/second -j LOG
 -A limit-213 -j DROP
--A limit-214 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-214 -j RETURN
+-A limit-214 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-214 -j RETURN
 -A limit-214 -m limit --limit 1/second -j LOG
 -A limit-214 -j DROP
--A limit-215 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-215 -j RETURN
+-A limit-215 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-215 -j RETURN
 -A limit-215 -m limit --limit 1/second -j LOG
 -A limit-215 -j DROP
--A limit-216 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-216 -j RETURN
+-A limit-216 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-216 -j RETURN
 -A limit-216 -j DROP
--A limit-217 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-217 -j RETURN
+-A limit-217 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-217 -j RETURN
 -A limit-217 -j DROP
--A limit-218 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-218 -j RETURN
+-A limit-218 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-218 -j RETURN
 -A limit-218 -j DROP
--A limit-219 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-219 -j RETURN
+-A limit-219 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-219 -j RETURN
 -A limit-219 -j DROP
 -A limit-22 -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-23
 -A limit-22 -j ACCEPT
--A limit-220 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-220 -j RETURN
+-A limit-220 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-220 -j RETURN
 -A limit-220 -j DROP
--A limit-221 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-221 -j RETURN
+-A limit-221 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-221 -j RETURN
 -A limit-221 -j DROP
--A limit-222 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-222 -j RETURN
+-A limit-222 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-222 -j RETURN
 -A limit-222 -j DROP
--A limit-223 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-223 -j RETURN
+-A limit-223 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-223 -j RETURN
 -A limit-223 -j DROP
 -A limit-224 -m recent --name limit-224 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-73
 -A limit-224 -m recent --name limit-224 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
@@ -1947,47 +1947,47 @@
 -A limit-32 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-33
 -A limit-32 -m limit --limit 1/second -j LOG
 -A limit-32 -j ACCEPT
--A limit-320 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-320 -j ACCEPT
+-A limit-320 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-320 -j ACCEPT
 -A limit-320 -m limit --limit 1/second -j LOG
 -A limit-320 -j DROP
--A limit-321 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-321 -j RETURN
+-A limit-321 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-321 -j RETURN
 -A limit-321 -m limit --limit 1/second -j LOG
 -A limit-321 -j DROP
--A limit-322 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-322 -j logaccept-4
+-A limit-322 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-322 -j logaccept-4
 -A limit-322 -m limit --limit 1/second -j LOG
 -A limit-322 -j DROP
--A limit-323 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-323 -j ACCEPT
+-A limit-323 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-323 -j ACCEPT
 -A limit-323 -m limit --limit 1/second -j LOG
 -A limit-323 -j DROP
--A limit-324 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-324 -j ACCEPT
+-A limit-324 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-324 -j ACCEPT
 -A limit-324 -m limit --limit 1/second -j LOG
 -A limit-324 -j DROP
--A limit-325 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-325 -j RETURN
+-A limit-325 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-325 -j RETURN
 -A limit-325 -m limit --limit 1/second -j LOG
 -A limit-325 -j DROP
--A limit-326 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-326 -j logaccept-5
+-A limit-326 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-326 -j logaccept-5
 -A limit-326 -m limit --limit 1/second -j LOG
 -A limit-326 -j DROP
--A limit-327 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-327 -j ACCEPT
+-A limit-327 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-327 -j ACCEPT
 -A limit-327 -m limit --limit 1/second -j LOG
 -A limit-327 -j DROP
--A limit-328 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-328 -j ACCEPT
+-A limit-328 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-328 -j ACCEPT
 -A limit-328 -j DROP
--A limit-329 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-329 -j RETURN
+-A limit-329 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-329 -j RETURN
 -A limit-329 -j DROP
 -A limit-33 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-34
 -A limit-33 -m limit --limit 1/second -j LOG
--A limit-330 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-330 -j logaccept-6
+-A limit-330 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-330 -j logaccept-6
 -A limit-330 -j DROP
--A limit-331 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-331 -j ACCEPT
+-A limit-331 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-331 -j ACCEPT
 -A limit-331 -j DROP
--A limit-332 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j ACCEPT
+-A limit-332 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j ACCEPT
 -A limit-332 -j DROP
--A limit-333 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-333 -j RETURN
+-A limit-333 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-333 -j RETURN
 -A limit-333 -j DROP
--A limit-334 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-334 -j logaccept-7
+-A limit-334 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-334 -j logaccept-7
 -A limit-334 -j DROP
--A limit-335 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-335 -j ACCEPT
+-A limit-335 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-335 -j ACCEPT
 -A limit-335 -j DROP
 -A limit-34 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-35
 -A limit-34 -j ACCEPT
@@ -2118,16 +2118,16 @@
 -A limit-93 -m limit --limit 1/second -j LOG
 -A limit-94 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
 -A limit-94 -j ACCEPT
--A limit-96 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-96 -j ACCEPT
+-A limit-96 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-96 -j ACCEPT
 -A limit-96 -m limit --limit 1/second -j LOG
 -A limit-96 -j DROP
--A limit-97 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-97 -j RETURN
+-A limit-97 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-97 -j RETURN
 -A limit-97 -m limit --limit 1/second -j LOG
 -A limit-97 -j DROP
--A limit-98 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-98 -j logaccept-0
+-A limit-98 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-98 -j logaccept-0
 -A limit-98 -m limit --limit 1/second -j LOG
 -A limit-98 -j DROP
--A limit-99 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-99 -j ACCEPT
+-A limit-99 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-99 -j ACCEPT
 -A limit-99 -m limit --limit 1/second -j LOG
 -A limit-99 -j DROP
 -A logaccept-0 -m limit --limit 1/second -j LOG

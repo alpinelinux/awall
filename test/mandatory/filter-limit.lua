@@ -27,7 +27,7 @@ function add(limit_type, filter)
          end
       end
 
-      local count = high_rate and 30 or 1
+      local count = high_rate and 150 or 1
       add_limit(count)
 
       for _, log in ipairs{true, false, 'none'} do

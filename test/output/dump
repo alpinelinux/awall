@@ -1246,40 +1246,40 @@ Filter 102                         {"action":"pass","conn-limit":{"addr":"dest",
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
 
-Filter 103                         {"conn-limit":30,"out":"B"}
+Filter 103                         {"conn-limit":150,"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-96
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-96
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-96
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-96
-  inet/filter/limit-96             -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-96 -j ACCEPT
-  inet6/filter/limit-96            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-96 -j ACCEPT
+  inet/filter/limit-96             -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-96 -j ACCEPT
+  inet6/filter/limit-96            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-96 -j ACCEPT
   inet/filter/limit-96             -m limit --limit 1/second -j LOG
   inet6/filter/limit-96            -m limit --limit 1/second -j LOG
   inet/filter/limit-96             -j DROP
   inet6/filter/limit-96            -j DROP
 
-Filter 104                         {"action":"pass","conn-limit":30,"out":"B"}
+Filter 104                         {"action":"pass","conn-limit":150,"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-97
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-97
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-97
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-97
-  inet/filter/limit-97             -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-97 -j RETURN
-  inet6/filter/limit-97            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-97 -j RETURN
+  inet/filter/limit-97             -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-97 -j RETURN
+  inet6/filter/limit-97            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-97 -j RETURN
   inet/filter/limit-97             -m limit --limit 1/second -j LOG
   inet6/filter/limit-97            -m limit --limit 1/second -j LOG
   inet/filter/limit-97             -j DROP
   inet6/filter/limit-97            -j DROP
 
-Filter 105                         {"conn-limit":30,"log":true,"out":"B"}
+Filter 105                         {"conn-limit":150,"log":true,"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-98
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-98
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-98
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-98
-  inet/filter/limit-98             -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-98 -j logaccept-0
-  inet6/filter/limit-98            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-98 -j logaccept-0
+  inet/filter/limit-98             -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-98 -j logaccept-0
+  inet6/filter/limit-98            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-98 -j logaccept-0
   inet/filter/logaccept-0          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-0         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-0          -j ACCEPT
@@ -1289,53 +1289,53 @@ Filter 105                         {"conn-limit":30,"log":true,"out":"B"}
   inet/filter/limit-98             -j DROP
   inet6/filter/limit-98            -j DROP
 
-Filter 106                         {"conn-limit":30,"log":"none","out":"B"}
+Filter 106                         {"conn-limit":150,"log":"none","out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-99
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-99
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-99
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-99
-  inet/filter/limit-99             -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-99 -j ACCEPT
-  inet6/filter/limit-99            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-99 -j ACCEPT
+  inet/filter/limit-99             -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-99 -j ACCEPT
+  inet6/filter/limit-99            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-99 -j ACCEPT
   inet/filter/limit-99             -m limit --limit 1/second -j LOG
   inet6/filter/limit-99            -m limit --limit 1/second -j LOG
   inet/filter/limit-99             -j DROP
   inet6/filter/limit-99            -j DROP
 
-Filter 107                         {"conn-limit":{"count":30},"out":"B"}
+Filter 107                         {"conn-limit":{"count":150},"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-100
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-100
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-100
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-100
-  inet/filter/limit-100            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-100 -j ACCEPT
-  inet6/filter/limit-100           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-100 -j ACCEPT
+  inet/filter/limit-100            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-100 -j ACCEPT
+  inet6/filter/limit-100           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-100 -j ACCEPT
   inet/filter/limit-100            -m limit --limit 1/second -j LOG
   inet6/filter/limit-100           -m limit --limit 1/second -j LOG
   inet/filter/limit-100            -j DROP
   inet6/filter/limit-100           -j DROP
 
-Filter 108                         {"action":"pass","conn-limit":{"count":30},"out":"B"}
+Filter 108                         {"action":"pass","conn-limit":{"count":150},"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-101
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-101
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-101
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-101
-  inet/filter/limit-101            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-101 -j RETURN
-  inet6/filter/limit-101           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-101 -j RETURN
+  inet/filter/limit-101            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-101 -j RETURN
+  inet6/filter/limit-101           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-101 -j RETURN
   inet/filter/limit-101            -m limit --limit 1/second -j LOG
   inet6/filter/limit-101           -m limit --limit 1/second -j LOG
   inet/filter/limit-101            -j DROP
   inet6/filter/limit-101           -j DROP
 
-Filter 109                         {"conn-limit":{"count":30},"log":true,"out":"B"}
+Filter 109                         {"conn-limit":{"count":150},"log":true,"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-102
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-102
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-102
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-102
-  inet/filter/limit-102            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-102 -j logaccept-1
-  inet6/filter/limit-102           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-102 -j logaccept-1
+  inet/filter/limit-102            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-102 -j logaccept-1
+  inet6/filter/limit-102           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-102 -j logaccept-1
   inet/filter/logaccept-1          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-1         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-1          -j ACCEPT
@@ -1345,49 +1345,49 @@ Filter 109                         {"conn-limit":{"count":30},"log":true,"out":"
   inet/filter/limit-102            -j DROP
   inet6/filter/limit-102           -j DROP
 
-Filter 110                         {"conn-limit":{"count":30},"log":"none","out":"B"}
+Filter 110                         {"conn-limit":{"count":150},"log":"none","out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-103
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-103
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-103
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-103
-  inet/filter/limit-103            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-103 -j ACCEPT
-  inet6/filter/limit-103           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-103 -j ACCEPT
+  inet/filter/limit-103            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-103 -j ACCEPT
+  inet6/filter/limit-103           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-103 -j ACCEPT
   inet/filter/limit-103            -m limit --limit 1/second -j LOG
   inet6/filter/limit-103           -m limit --limit 1/second -j LOG
   inet/filter/limit-103            -j DROP
   inet6/filter/limit-103           -j DROP
 
-Filter 111                         {"conn-limit":{"count":30,"log":false},"out":"B"}
+Filter 111                         {"conn-limit":{"count":150,"log":false},"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-104
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-104
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-104
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-104
-  inet/filter/limit-104            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-104 -j ACCEPT
-  inet6/filter/limit-104           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-104 -j ACCEPT
+  inet/filter/limit-104            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-104 -j ACCEPT
+  inet6/filter/limit-104           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-104 -j ACCEPT
   inet/filter/limit-104            -j DROP
   inet6/filter/limit-104           -j DROP
 
-Filter 112                         {"action":"pass","conn-limit":{"count":30,"log":false},"out":"B"}
+Filter 112                         {"action":"pass","conn-limit":{"count":150,"log":false},"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-105
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-105
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-105
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-105
-  inet/filter/limit-105            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-105 -j RETURN
-  inet6/filter/limit-105           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-105 -j RETURN
+  inet/filter/limit-105            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-105 -j RETURN
+  inet6/filter/limit-105           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-105 -j RETURN
   inet/filter/limit-105            -j DROP
   inet6/filter/limit-105           -j DROP
 
-Filter 113                         {"conn-limit":{"count":30,"log":false},"log":true,"out":"B"}
+Filter 113                         {"conn-limit":{"count":150,"log":false},"log":true,"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-106
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-106
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-106
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-106
-  inet/filter/limit-106            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-106 -j logaccept-2
-  inet6/filter/limit-106           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-106 -j logaccept-2
+  inet/filter/limit-106            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-106 -j logaccept-2
+  inet6/filter/limit-106           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-106 -j logaccept-2
   inet/filter/logaccept-2          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-2         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-2          -j ACCEPT
@@ -1395,47 +1395,47 @@ Filter 113                         {"conn-limit":{"count":30,"log":false},"log":
   inet/filter/limit-106            -j DROP
   inet6/filter/limit-106           -j DROP
 
-Filter 114                         {"conn-limit":{"count":30,"log":false},"log":"none","out":"B"}
+Filter 114                         {"conn-limit":{"count":150,"log":false},"log":"none","out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-107
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-107
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-107
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-107
-  inet/filter/limit-107            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-107 -j ACCEPT
-  inet6/filter/limit-107           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-107 -j ACCEPT
+  inet/filter/limit-107            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-107 -j ACCEPT
+  inet6/filter/limit-107           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-107 -j ACCEPT
   inet/filter/limit-107            -j DROP
   inet6/filter/limit-107           -j DROP
 
-Filter 115                         {"conn-limit":{"count":30,"log":"none"},"out":"B"}
+Filter 115                         {"conn-limit":{"count":150,"log":"none"},"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-108
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-108
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-108
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-108
-  inet/filter/limit-108            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-108 -j ACCEPT
-  inet6/filter/limit-108           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-108 -j ACCEPT
+  inet/filter/limit-108            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-108 -j ACCEPT
+  inet6/filter/limit-108           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-108 -j ACCEPT
   inet/filter/limit-108            -j DROP
   inet6/filter/limit-108           -j DROP
 
-Filter 116                         {"action":"pass","conn-limit":{"count":30,"log":"none"},"out":"B"}
+Filter 116                         {"action":"pass","conn-limit":{"count":150,"log":"none"},"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-109
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-109
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-109
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-109
-  inet/filter/limit-109            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-109 -j RETURN
-  inet6/filter/limit-109           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-109 -j RETURN
+  inet/filter/limit-109            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-109 -j RETURN
+  inet6/filter/limit-109           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-109 -j RETURN
   inet/filter/limit-109            -j DROP
   inet6/filter/limit-109           -j DROP
 
-Filter 117                         {"conn-limit":{"count":30,"log":"none"},"log":true,"out":"B"}
+Filter 117                         {"conn-limit":{"count":150,"log":"none"},"log":true,"out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-110
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-110
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-110
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-110
-  inet/filter/limit-110            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-110 -j logaccept-3
-  inet6/filter/limit-110           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-110 -j logaccept-3
+  inet/filter/limit-110            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-110 -j logaccept-3
+  inet6/filter/limit-110           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-110 -j logaccept-3
   inet/filter/logaccept-3          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-3         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-3          -j ACCEPT
@@ -1443,14 +1443,14 @@ Filter 117                         {"conn-limit":{"count":30,"log":"none"},"log"
   inet/filter/limit-110            -j DROP
   inet6/filter/limit-110           -j DROP
 
-Filter 118                         {"conn-limit":{"count":30,"log":"none"},"log":"none","out":"B"}
+Filter 118                         {"conn-limit":{"count":150,"log":"none"},"log":"none","out":"B"}
 (filter-limit)                     
   inet/filter/FORWARD              -o eth1 -d 10.0.0.0/12 -j limit-111
   inet/filter/OUTPUT               -o eth1 -d 10.0.0.0/12 -j limit-111
   inet6/filter/FORWARD             -o eth1 -d fc00::/7 -j limit-111
   inet6/filter/OUTPUT              -o eth1 -d fc00::/7 -j limit-111
-  inet/filter/limit-111            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-111 -j ACCEPT
-  inet6/filter/limit-111           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-111 -j ACCEPT
+  inet/filter/limit-111            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-111 -j ACCEPT
+  inet6/filter/limit-111           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-111 -j ACCEPT
   inet/filter/limit-111            -j DROP
   inet6/filter/limit-111           -j DROP
 
@@ -3138,7 +3138,7 @@ Filter 214                         {"action":"pass","flow-limit":{"addr":"dest",
   inet/filter/limit-207            -m recent --name user:foo --rdest --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j DROP
   inet6/filter/limit-207           -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
 
-Filter 215                         {"flow-limit":30}
+Filter 215                         {"flow-limit":150}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-208
   inet6/filter/FORWARD             -j limit-208
@@ -3146,8 +3146,8 @@ Filter 215                         {"flow-limit":30}
   inet6/filter/INPUT               -j limit-208
   inet/filter/OUTPUT               -j limit-208
   inet6/filter/OUTPUT              -j limit-208
-  inet/filter/limit-208            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-208 -j RETURN
-  inet6/filter/limit-208           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-208 -j RETURN
+  inet/filter/limit-208            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-208 -j RETURN
+  inet6/filter/limit-208           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-208 -j RETURN
   inet/filter/limit-208            -m limit --limit 1/second -j LOG
   inet6/filter/limit-208           -m limit --limit 1/second -j LOG
   inet/filter/limit-208            -j DROP
@@ -3159,7 +3159,7 @@ Filter 215                         {"flow-limit":30}
   inet/filter/OUTPUT               -j ACCEPT
   inet6/filter/OUTPUT              -j ACCEPT
 
-Filter 216                         {"action":"pass","flow-limit":30}
+Filter 216                         {"action":"pass","flow-limit":150}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-209
   inet6/filter/FORWARD             -j limit-209
@@ -3167,14 +3167,14 @@ Filter 216                         {"action":"pass","flow-limit":30}
   inet6/filter/INPUT               -j limit-209
   inet/filter/OUTPUT               -j limit-209
   inet6/filter/OUTPUT              -j limit-209
-  inet/filter/limit-209            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-209 -j RETURN
-  inet6/filter/limit-209           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-209 -j RETURN
+  inet/filter/limit-209            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-209 -j RETURN
+  inet6/filter/limit-209           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-209 -j RETURN
   inet/filter/limit-209            -m limit --limit 1/second -j LOG
   inet6/filter/limit-209           -m limit --limit 1/second -j LOG
   inet/filter/limit-209            -j DROP
   inet6/filter/limit-209           -j DROP
 
-Filter 217                         {"flow-limit":30,"log":true}
+Filter 217                         {"flow-limit":150,"log":true}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-210
   inet6/filter/FORWARD             -j limit-210
@@ -3182,8 +3182,8 @@ Filter 217                         {"flow-limit":30,"log":true}
   inet6/filter/INPUT               -j limit-210
   inet/filter/OUTPUT               -j limit-210
   inet6/filter/OUTPUT              -j limit-210
-  inet/filter/limit-210            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-210 -j RETURN
-  inet6/filter/limit-210           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-210 -j RETURN
+  inet/filter/limit-210            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-210 -j RETURN
+  inet6/filter/limit-210           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-210 -j RETURN
   inet/filter/limit-210            -m limit --limit 1/second -j LOG
   inet6/filter/limit-210           -m limit --limit 1/second -j LOG
   inet/filter/limit-210            -j DROP
@@ -3199,7 +3199,7 @@ Filter 217                         {"flow-limit":30,"log":true}
   inet/filter/logaccept-final-16   -j ACCEPT
   inet6/filter/logaccept-final-16  -j ACCEPT
 
-Filter 218                         {"flow-limit":30,"log":"none"}
+Filter 218                         {"flow-limit":150,"log":"none"}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-211
   inet6/filter/FORWARD             -j limit-211
@@ -3207,8 +3207,8 @@ Filter 218                         {"flow-limit":30,"log":"none"}
   inet6/filter/INPUT               -j limit-211
   inet/filter/OUTPUT               -j limit-211
   inet6/filter/OUTPUT              -j limit-211
-  inet/filter/limit-211            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-211 -j RETURN
-  inet6/filter/limit-211           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-211 -j RETURN
+  inet/filter/limit-211            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-211 -j RETURN
+  inet6/filter/limit-211           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-211 -j RETURN
   inet/filter/limit-211            -m limit --limit 1/second -j LOG
   inet6/filter/limit-211           -m limit --limit 1/second -j LOG
   inet/filter/limit-211            -j DROP
@@ -3220,7 +3220,7 @@ Filter 218                         {"flow-limit":30,"log":"none"}
   inet/filter/OUTPUT               -j ACCEPT
   inet6/filter/OUTPUT              -j ACCEPT
 
-Filter 219                         {"flow-limit":{"count":30}}
+Filter 219                         {"flow-limit":{"count":150}}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-212
   inet6/filter/FORWARD             -j limit-212
@@ -3228,8 +3228,8 @@ Filter 219                         {"flow-limit":{"count":30}}
   inet6/filter/INPUT               -j limit-212
   inet/filter/OUTPUT               -j limit-212
   inet6/filter/OUTPUT              -j limit-212
-  inet/filter/limit-212            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-212 -j RETURN
-  inet6/filter/limit-212           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-212 -j RETURN
+  inet/filter/limit-212            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-212 -j RETURN
+  inet6/filter/limit-212           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-212 -j RETURN
   inet/filter/limit-212            -m limit --limit 1/second -j LOG
   inet6/filter/limit-212           -m limit --limit 1/second -j LOG
   inet/filter/limit-212            -j DROP
@@ -3241,7 +3241,7 @@ Filter 219                         {"flow-limit":{"count":30}}
   inet/filter/OUTPUT               -j ACCEPT
   inet6/filter/OUTPUT              -j ACCEPT
 
-Filter 220                         {"action":"pass","flow-limit":{"count":30}}
+Filter 220                         {"action":"pass","flow-limit":{"count":150}}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-213
   inet6/filter/FORWARD             -j limit-213
@@ -3249,14 +3249,14 @@ Filter 220                         {"action":"pass","flow-limit":{"count":30}}
   inet6/filter/INPUT               -j limit-213
   inet/filter/OUTPUT               -j limit-213
   inet6/filter/OUTPUT              -j limit-213
-  inet/filter/limit-213            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-213 -j RETURN
-  inet6/filter/limit-213           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-213 -j RETURN
+  inet/filter/limit-213            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-213 -j RETURN
+  inet6/filter/limit-213           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-213 -j RETURN
   inet/filter/limit-213            -m limit --limit 1/second -j LOG
   inet6/filter/limit-213           -m limit --limit 1/second -j LOG
   inet/filter/limit-213            -j DROP
   inet6/filter/limit-213           -j DROP
 
-Filter 221                         {"flow-limit":{"count":30},"log":true}
+Filter 221                         {"flow-limit":{"count":150},"log":true}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-214
   inet6/filter/FORWARD             -j limit-214
@@ -3264,8 +3264,8 @@ Filter 221                         {"flow-limit":{"count":30},"log":true}
   inet6/filter/INPUT               -j limit-214
   inet/filter/OUTPUT               -j limit-214
   inet6/filter/OUTPUT              -j limit-214
-  inet/filter/limit-214            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-214 -j RETURN
-  inet6/filter/limit-214           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-214 -j RETURN
+  inet/filter/limit-214            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-214 -j RETURN
+  inet6/filter/limit-214           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-214 -j RETURN
   inet/filter/limit-214            -m limit --limit 1/second -j LOG
   inet6/filter/limit-214           -m limit --limit 1/second -j LOG
   inet/filter/limit-214            -j DROP
@@ -3281,7 +3281,7 @@ Filter 221                         {"flow-limit":{"count":30},"log":true}
   inet/filter/logaccept-final-17   -j ACCEPT
   inet6/filter/logaccept-final-17  -j ACCEPT
 
-Filter 222                         {"flow-limit":{"count":30},"log":"none"}
+Filter 222                         {"flow-limit":{"count":150},"log":"none"}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-215
   inet6/filter/FORWARD             -j limit-215
@@ -3289,8 +3289,8 @@ Filter 222                         {"flow-limit":{"count":30},"log":"none"}
   inet6/filter/INPUT               -j limit-215
   inet/filter/OUTPUT               -j limit-215
   inet6/filter/OUTPUT              -j limit-215
-  inet/filter/limit-215            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-215 -j RETURN
-  inet6/filter/limit-215           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-215 -j RETURN
+  inet/filter/limit-215            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-215 -j RETURN
+  inet6/filter/limit-215           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-215 -j RETURN
   inet/filter/limit-215            -m limit --limit 1/second -j LOG
   inet6/filter/limit-215           -m limit --limit 1/second -j LOG
   inet/filter/limit-215            -j DROP
@@ -3302,7 +3302,7 @@ Filter 222                         {"flow-limit":{"count":30},"log":"none"}
   inet/filter/OUTPUT               -j ACCEPT
   inet6/filter/OUTPUT              -j ACCEPT
 
-Filter 223                         {"flow-limit":{"count":30,"log":false}}
+Filter 223                         {"flow-limit":{"count":150,"log":false}}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-216
   inet6/filter/FORWARD             -j limit-216
@@ -3310,8 +3310,8 @@ Filter 223                         {"flow-limit":{"count":30,"log":false}}
   inet6/filter/INPUT               -j limit-216
   inet/filter/OUTPUT               -j limit-216
   inet6/filter/OUTPUT              -j limit-216
-  inet/filter/limit-216            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-216 -j RETURN
-  inet6/filter/limit-216           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-216 -j RETURN
+  inet/filter/limit-216            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-216 -j RETURN
+  inet6/filter/limit-216           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-216 -j RETURN
   inet/filter/limit-216            -j DROP
   inet6/filter/limit-216           -j DROP
   inet/filter/FORWARD              -j ACCEPT
@@ -3321,7 +3321,7 @@ Filter 223                         {"flow-limit":{"count":30,"log":false}}
   inet/filter/OUTPUT               -j ACCEPT
   inet6/filter/OUTPUT              -j ACCEPT
 
-Filter 224                         {"action":"pass","flow-limit":{"count":30,"log":false}}
+Filter 224                         {"action":"pass","flow-limit":{"count":150,"log":false}}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-217
   inet6/filter/FORWARD             -j limit-217
@@ -3329,12 +3329,12 @@ Filter 224                         {"action":"pass","flow-limit":{"count":30,"lo
   inet6/filter/INPUT               -j limit-217
   inet/filter/OUTPUT               -j limit-217
   inet6/filter/OUTPUT              -j limit-217
-  inet/filter/limit-217            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-217 -j RETURN
-  inet6/filter/limit-217           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-217 -j RETURN
+  inet/filter/limit-217            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-217 -j RETURN
+  inet6/filter/limit-217           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-217 -j RETURN
   inet/filter/limit-217            -j DROP
   inet6/filter/limit-217           -j DROP
 
-Filter 225                         {"flow-limit":{"count":30,"log":false},"log":true}
+Filter 225                         {"flow-limit":{"count":150,"log":false},"log":true}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-218
   inet6/filter/FORWARD             -j limit-218
@@ -3342,8 +3342,8 @@ Filter 225                         {"flow-limit":{"count":30,"log":false},"log":
   inet6/filter/INPUT               -j limit-218
   inet/filter/OUTPUT               -j limit-218
   inet6/filter/OUTPUT              -j limit-218
-  inet/filter/limit-218            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-218 -j RETURN
-  inet6/filter/limit-218           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-218 -j RETURN
+  inet/filter/limit-218            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-218 -j RETURN
+  inet6/filter/limit-218           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-218 -j RETURN
   inet/filter/limit-218            -j DROP
   inet6/filter/limit-218           -j DROP
   inet/filter/FORWARD              -j logaccept-final-18
@@ -3357,7 +3357,7 @@ Filter 225                         {"flow-limit":{"count":30,"log":false},"log":
   inet/filter/logaccept-final-18   -j ACCEPT
   inet6/filter/logaccept-final-18  -j ACCEPT
 
-Filter 226                         {"flow-limit":{"count":30,"log":false},"log":"none"}
+Filter 226                         {"flow-limit":{"count":150,"log":false},"log":"none"}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-219
   inet6/filter/FORWARD             -j limit-219
@@ -3365,8 +3365,8 @@ Filter 226                         {"flow-limit":{"count":30,"log":false},"log":
   inet6/filter/INPUT               -j limit-219
   inet/filter/OUTPUT               -j limit-219
   inet6/filter/OUTPUT              -j limit-219
-  inet/filter/limit-219            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-219 -j RETURN
-  inet6/filter/limit-219           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-219 -j RETURN
+  inet/filter/limit-219            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-219 -j RETURN
+  inet6/filter/limit-219           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-219 -j RETURN
   inet/filter/limit-219            -j DROP
   inet6/filter/limit-219           -j DROP
   inet/filter/FORWARD              -j ACCEPT
@@ -3376,7 +3376,7 @@ Filter 226                         {"flow-limit":{"count":30,"log":false},"log":
   inet/filter/OUTPUT               -j ACCEPT
   inet6/filter/OUTPUT              -j ACCEPT
 
-Filter 227                         {"flow-limit":{"count":30,"log":"none"}}
+Filter 227                         {"flow-limit":{"count":150,"log":"none"}}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-220
   inet6/filter/FORWARD             -j limit-220
@@ -3384,8 +3384,8 @@ Filter 227                         {"flow-limit":{"count":30,"log":"none"}}
   inet6/filter/INPUT               -j limit-220
   inet/filter/OUTPUT               -j limit-220
   inet6/filter/OUTPUT              -j limit-220
-  inet/filter/limit-220            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-220 -j RETURN
-  inet6/filter/limit-220           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-220 -j RETURN
+  inet/filter/limit-220            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-220 -j RETURN
+  inet6/filter/limit-220           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-220 -j RETURN
   inet/filter/limit-220            -j DROP
   inet6/filter/limit-220           -j DROP
   inet/filter/FORWARD              -j ACCEPT
@@ -3395,7 +3395,7 @@ Filter 227                         {"flow-limit":{"count":30,"log":"none"}}
   inet/filter/OUTPUT               -j ACCEPT
   inet6/filter/OUTPUT              -j ACCEPT
 
-Filter 228                         {"action":"pass","flow-limit":{"count":30,"log":"none"}}
+Filter 228                         {"action":"pass","flow-limit":{"count":150,"log":"none"}}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-221
   inet6/filter/FORWARD             -j limit-221
@@ -3403,12 +3403,12 @@ Filter 228                         {"action":"pass","flow-limit":{"count":30,"lo
   inet6/filter/INPUT               -j limit-221
   inet/filter/OUTPUT               -j limit-221
   inet6/filter/OUTPUT              -j limit-221
-  inet/filter/limit-221            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-221 -j RETURN
-  inet6/filter/limit-221           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-221 -j RETURN
+  inet/filter/limit-221            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-221 -j RETURN
+  inet6/filter/limit-221           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-221 -j RETURN
   inet/filter/limit-221            -j DROP
   inet6/filter/limit-221           -j DROP
 
-Filter 229                         {"flow-limit":{"count":30,"log":"none"},"log":true}
+Filter 229                         {"flow-limit":{"count":150,"log":"none"},"log":true}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-222
   inet6/filter/FORWARD             -j limit-222
@@ -3416,8 +3416,8 @@ Filter 229                         {"flow-limit":{"count":30,"log":"none"},"log"
   inet6/filter/INPUT               -j limit-222
   inet/filter/OUTPUT               -j limit-222
   inet6/filter/OUTPUT              -j limit-222
-  inet/filter/limit-222            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-222 -j RETURN
-  inet6/filter/limit-222           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-222 -j RETURN
+  inet/filter/limit-222            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-222 -j RETURN
+  inet6/filter/limit-222           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-222 -j RETURN
   inet/filter/limit-222            -j DROP
   inet6/filter/limit-222           -j DROP
   inet/filter/FORWARD              -j logaccept-final-19
@@ -3431,7 +3431,7 @@ Filter 229                         {"flow-limit":{"count":30,"log":"none"},"log"
   inet/filter/logaccept-final-19   -j ACCEPT
   inet6/filter/logaccept-final-19  -j ACCEPT
 
-Filter 230                         {"flow-limit":{"count":30,"log":"none"},"log":"none"}
+Filter 230                         {"flow-limit":{"count":150,"log":"none"},"log":"none"}
 (filter-limit)                     
   inet/filter/FORWARD              -j limit-223
   inet6/filter/FORWARD             -j limit-223
@@ -3439,8 +3439,8 @@ Filter 230                         {"flow-limit":{"count":30,"log":"none"},"log"
   inet6/filter/INPUT               -j limit-223
   inet/filter/OUTPUT               -j limit-223
   inet6/filter/OUTPUT              -j limit-223
-  inet/filter/limit-223            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-223 -j RETURN
-  inet6/filter/limit-223           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-223 -j RETURN
+  inet/filter/limit-223            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-223 -j RETURN
+  inet6/filter/limit-223           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-223 -j RETURN
   inet/filter/limit-223            -j DROP
   inet6/filter/limit-223           -j DROP
   inet/filter/FORWARD              -j ACCEPT
@@ -4810,12 +4810,12 @@ Filter 326                         {"action":"pass","flow-limit":{"addr":"dest",
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
   inet6/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 
-Filter 327                         {"flow-limit":30,"in":"A","no-track":true,"out":"_fw"}
+Filter 327                         {"flow-limit":150,"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-320
   inet6/filter/INPUT               -i eth0 -j limit-320
-  inet/filter/limit-320            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-320 -j ACCEPT
-  inet6/filter/limit-320           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-320 -j ACCEPT
+  inet/filter/limit-320            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-320 -j ACCEPT
+  inet6/filter/limit-320           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-320 -j ACCEPT
   inet/filter/limit-320            -m limit --limit 1/second -j LOG
   inet6/filter/limit-320           -m limit --limit 1/second -j LOG
   inet/filter/limit-320            -j DROP
@@ -4827,12 +4827,12 @@ Filter 327                         {"flow-limit":30,"in":"A","no-track":true,"ou
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 328                         {"action":"pass","flow-limit":30,"in":"A","no-track":true,"out":"_fw"}
+Filter 328                         {"action":"pass","flow-limit":150,"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-321
   inet6/filter/INPUT               -i eth0 -j limit-321
-  inet/filter/limit-321            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-321 -j RETURN
-  inet6/filter/limit-321           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-321 -j RETURN
+  inet/filter/limit-321            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-321 -j RETURN
+  inet6/filter/limit-321           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-321 -j RETURN
   inet/filter/limit-321            -m limit --limit 1/second -j LOG
   inet6/filter/limit-321           -m limit --limit 1/second -j LOG
   inet/filter/limit-321            -j DROP
@@ -4840,12 +4840,12 @@ Filter 328                         {"action":"pass","flow-limit":30,"in":"A","no
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
   inet6/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 
-Filter 329                         {"flow-limit":30,"in":"A","log":true,"no-track":true,"out":"_fw"}
+Filter 329                         {"flow-limit":150,"in":"A","log":true,"no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-322
   inet6/filter/INPUT               -i eth0 -j limit-322
-  inet/filter/limit-322            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-322 -j logaccept-4
-  inet6/filter/limit-322           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-322 -j logaccept-4
+  inet/filter/limit-322            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-322 -j logaccept-4
+  inet6/filter/limit-322           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-322 -j logaccept-4
   inet/filter/logaccept-4          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-4         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-4          -j ACCEPT
@@ -4861,12 +4861,12 @@ Filter 329                         {"flow-limit":30,"in":"A","log":true,"no-trac
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 330                         {"flow-limit":30,"in":"A","log":"none","no-track":true,"out":"_fw"}
+Filter 330                         {"flow-limit":150,"in":"A","log":"none","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-323
   inet6/filter/INPUT               -i eth0 -j limit-323
-  inet/filter/limit-323            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-323 -j ACCEPT
-  inet6/filter/limit-323           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-323 -j ACCEPT
+  inet/filter/limit-323            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-323 -j ACCEPT
+  inet6/filter/limit-323           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-323 -j ACCEPT
   inet/filter/limit-323            -m limit --limit 1/second -j LOG
   inet6/filter/limit-323           -m limit --limit 1/second -j LOG
   inet/filter/limit-323            -j DROP
@@ -4878,12 +4878,12 @@ Filter 330                         {"flow-limit":30,"in":"A","log":"none","no-tr
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 331                         {"flow-limit":{"count":30},"in":"A","no-track":true,"out":"_fw"}
+Filter 331                         {"flow-limit":{"count":150},"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-324
   inet6/filter/INPUT               -i eth0 -j limit-324
-  inet/filter/limit-324            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-324 -j ACCEPT
-  inet6/filter/limit-324           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-324 -j ACCEPT
+  inet/filter/limit-324            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-324 -j ACCEPT
+  inet6/filter/limit-324           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-324 -j ACCEPT
   inet/filter/limit-324            -m limit --limit 1/second -j LOG
   inet6/filter/limit-324           -m limit --limit 1/second -j LOG
   inet/filter/limit-324            -j DROP
@@ -4895,12 +4895,12 @@ Filter 331                         {"flow-limit":{"count":30},"in":"A","no-track
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 332                         {"action":"pass","flow-limit":{"count":30},"in":"A","no-track":true,"out":"_fw"}
+Filter 332                         {"action":"pass","flow-limit":{"count":150},"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-325
   inet6/filter/INPUT               -i eth0 -j limit-325
-  inet/filter/limit-325            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-325 -j RETURN
-  inet6/filter/limit-325           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-325 -j RETURN
+  inet/filter/limit-325            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-325 -j RETURN
+  inet6/filter/limit-325           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-325 -j RETURN
   inet/filter/limit-325            -m limit --limit 1/second -j LOG
   inet6/filter/limit-325           -m limit --limit 1/second -j LOG
   inet/filter/limit-325            -j DROP
@@ -4908,12 +4908,12 @@ Filter 332                         {"action":"pass","flow-limit":{"count":30},"i
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
   inet6/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 
-Filter 333                         {"flow-limit":{"count":30},"in":"A","log":true,"no-track":true,"out":"_fw"}
+Filter 333                         {"flow-limit":{"count":150},"in":"A","log":true,"no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-326
   inet6/filter/INPUT               -i eth0 -j limit-326
-  inet/filter/limit-326            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-326 -j logaccept-5
-  inet6/filter/limit-326           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-326 -j logaccept-5
+  inet/filter/limit-326            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-326 -j logaccept-5
+  inet6/filter/limit-326           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-326 -j logaccept-5
   inet/filter/logaccept-5          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-5         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-5          -j ACCEPT
@@ -4929,12 +4929,12 @@ Filter 333                         {"flow-limit":{"count":30},"in":"A","log":tru
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 334                         {"flow-limit":{"count":30},"in":"A","log":"none","no-track":true,"out":"_fw"}
+Filter 334                         {"flow-limit":{"count":150},"in":"A","log":"none","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-327
   inet6/filter/INPUT               -i eth0 -j limit-327
-  inet/filter/limit-327            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-327 -j ACCEPT
-  inet6/filter/limit-327           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-327 -j ACCEPT
+  inet/filter/limit-327            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-327 -j ACCEPT
+  inet6/filter/limit-327           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-327 -j ACCEPT
   inet/filter/limit-327            -m limit --limit 1/second -j LOG
   inet6/filter/limit-327           -m limit --limit 1/second -j LOG
   inet/filter/limit-327            -j DROP
@@ -4946,12 +4946,12 @@ Filter 334                         {"flow-limit":{"count":30},"in":"A","log":"no
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 335                         {"flow-limit":{"count":30,"log":false},"in":"A","no-track":true,"out":"_fw"}
+Filter 335                         {"flow-limit":{"count":150,"log":false},"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-328
   inet6/filter/INPUT               -i eth0 -j limit-328
-  inet/filter/limit-328            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-328 -j ACCEPT
-  inet6/filter/limit-328           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-328 -j ACCEPT
+  inet/filter/limit-328            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-328 -j ACCEPT
+  inet6/filter/limit-328           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-328 -j ACCEPT
   inet/filter/limit-328            -j DROP
   inet6/filter/limit-328           -j DROP
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
@@ -4961,23 +4961,23 @@ Filter 335                         {"flow-limit":{"count":30,"log":false},"in":"
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 336                         {"action":"pass","flow-limit":{"count":30,"log":false},"in":"A","no-track":true,"out":"_fw"}
+Filter 336                         {"action":"pass","flow-limit":{"count":150,"log":false},"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-329
   inet6/filter/INPUT               -i eth0 -j limit-329
-  inet/filter/limit-329            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-329 -j RETURN
-  inet6/filter/limit-329           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-329 -j RETURN
+  inet/filter/limit-329            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-329 -j RETURN
+  inet6/filter/limit-329           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-329 -j RETURN
   inet/filter/limit-329            -j DROP
   inet6/filter/limit-329           -j DROP
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
   inet6/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 
-Filter 337                         {"flow-limit":{"count":30,"log":false},"in":"A","log":true,"no-track":true,"out":"_fw"}
+Filter 337                         {"flow-limit":{"count":150,"log":false},"in":"A","log":true,"no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-330
   inet6/filter/INPUT               -i eth0 -j limit-330
-  inet/filter/limit-330            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-330 -j logaccept-6
-  inet6/filter/limit-330           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-330 -j logaccept-6
+  inet/filter/limit-330            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-330 -j logaccept-6
+  inet6/filter/limit-330           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-330 -j logaccept-6
   inet/filter/logaccept-6          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-6         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-6          -j ACCEPT
@@ -4991,12 +4991,12 @@ Filter 337                         {"flow-limit":{"count":30,"log":false},"in":"
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 338                         {"flow-limit":{"count":30,"log":false},"in":"A","log":"none","no-track":true,"out":"_fw"}
+Filter 338                         {"flow-limit":{"count":150,"log":false},"in":"A","log":"none","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-331
   inet6/filter/INPUT               -i eth0 -j limit-331
-  inet/filter/limit-331            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-331 -j ACCEPT
-  inet6/filter/limit-331           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-331 -j ACCEPT
+  inet/filter/limit-331            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-331 -j ACCEPT
+  inet6/filter/limit-331           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-331 -j ACCEPT
   inet/filter/limit-331            -j DROP
   inet6/filter/limit-331           -j DROP
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
@@ -5006,12 +5006,12 @@ Filter 338                         {"flow-limit":{"count":30,"log":false},"in":"
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 339                         {"flow-limit":{"count":30,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
+Filter 339                         {"flow-limit":{"count":150,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-332
   inet6/filter/INPUT               -i eth0 -j limit-332
-  inet/filter/limit-332            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-332 -j ACCEPT
-  inet6/filter/limit-332           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j ACCEPT
+  inet/filter/limit-332            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-332 -j ACCEPT
+  inet6/filter/limit-332           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j ACCEPT
   inet/filter/limit-332            -j DROP
   inet6/filter/limit-332           -j DROP
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
@@ -5021,23 +5021,23 @@ Filter 339                         {"flow-limit":{"count":30,"log":"none"},"in":
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 340                         {"action":"pass","flow-limit":{"count":30,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
+Filter 340                         {"action":"pass","flow-limit":{"count":150,"log":"none"},"in":"A","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-333
   inet6/filter/INPUT               -i eth0 -j limit-333
-  inet/filter/limit-333            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-333 -j RETURN
-  inet6/filter/limit-333           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-333 -j RETURN
+  inet/filter/limit-333            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-333 -j RETURN
+  inet6/filter/limit-333           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-333 -j RETURN
   inet/filter/limit-333            -j DROP
   inet6/filter/limit-333           -j DROP
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
   inet6/raw/PREROUTING             -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 
-Filter 341                         {"flow-limit":{"count":30,"log":"none"},"in":"A","log":true,"no-track":true,"out":"_fw"}
+Filter 341                         {"flow-limit":{"count":150,"log":"none"},"in":"A","log":true,"no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-334
   inet6/filter/INPUT               -i eth0 -j limit-334
-  inet/filter/limit-334            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-334 -j logaccept-7
-  inet6/filter/limit-334           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-334 -j logaccept-7
+  inet/filter/limit-334            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-334 -j logaccept-7
+  inet6/filter/limit-334           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-334 -j logaccept-7
   inet/filter/logaccept-7          -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-7         -m limit --limit 1/second -j LOG
   inet/filter/logaccept-7          -j ACCEPT
@@ -5051,12 +5051,12 @@ Filter 341                         {"flow-limit":{"count":30,"log":"none"},"in":
   inet/filter/OUTPUT               -o eth0 -j ACCEPT
   inet6/filter/OUTPUT              -o eth0 -j ACCEPT
 
-Filter 342                         {"flow-limit":{"count":30,"log":"none"},"in":"A","log":"none","no-track":true,"out":"_fw"}
+Filter 342                         {"flow-limit":{"count":150,"log":"none"},"in":"A","log":"none","no-track":true,"out":"_fw"}
 (filter-limit)                     
   inet/filter/INPUT                -i eth0 -j limit-335
   inet6/filter/INPUT               -i eth0 -j limit-335
-  inet/filter/limit-335            -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-335 -j ACCEPT
-  inet6/filter/limit-335           -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-335 -j ACCEPT
+  inet/filter/limit-335            -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-335 -j ACCEPT
+  inet6/filter/limit-335           -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-335 -j ACCEPT
   inet/filter/limit-335            -j DROP
   inet6/filter/limit-335           -j DROP
   inet/raw/PREROUTING              -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
@@ -7180,35 +7180,35 @@ hash:net family inet
 -A limit-1 -m recent --name limit-1 --rsource --mask 255.255.255.255 --set 
 -A limit-10 -m recent --name limit-10 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-11
 -A limit-10 -m recent --name limit-10 --rsource --mask 255.255.255.255 --set -j ACCEPT
--A limit-100 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-100 -j ACCEPT
+-A limit-100 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-100 -j ACCEPT
 -A limit-100 -m limit --limit 1/second -j LOG
 -A limit-100 -j DROP
--A limit-101 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-101 -j RETURN
+-A limit-101 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-101 -j RETURN
 -A limit-101 -m limit --limit 1/second -j LOG
 -A limit-101 -j DROP
--A limit-102 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-102 -j logaccept-1
+-A limit-102 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-102 -j logaccept-1
 -A limit-102 -m limit --limit 1/second -j LOG
 -A limit-102 -j DROP
--A limit-103 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-103 -j ACCEPT
+-A limit-103 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-103 -j ACCEPT
 -A limit-103 -m limit --limit 1/second -j LOG
 -A limit-103 -j DROP
--A limit-104 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-104 -j ACCEPT
+-A limit-104 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-104 -j ACCEPT
 -A limit-104 -j DROP
--A limit-105 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-105 -j RETURN
+-A limit-105 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-105 -j RETURN
 -A limit-105 -j DROP
--A limit-106 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-106 -j logaccept-2
+-A limit-106 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-106 -j logaccept-2
 -A limit-106 -j DROP
--A limit-107 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-107 -j ACCEPT
+-A limit-107 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-107 -j ACCEPT
 -A limit-107 -j DROP
--A limit-108 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-108 -j ACCEPT
+-A limit-108 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-108 -j ACCEPT
 -A limit-108 -j DROP
--A limit-109 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-109 -j RETURN
+-A limit-109 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-109 -j RETURN
 -A limit-109 -j DROP
 -A limit-11 -m recent --name limit-11 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-12
 -A limit-11 -m recent --name limit-11 --rsource --mask 255.255.255.255 --set 
--A limit-110 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-110 -j logaccept-3
+-A limit-110 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-110 -j logaccept-3
 -A limit-110 -j DROP
--A limit-111 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-111 -j ACCEPT
+-A limit-111 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-111 -j ACCEPT
 -A limit-111 -j DROP
 -A limit-112 -m recent --name limit-112 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-37
 -A limit-112 -m recent --name limit-112 --rsource --mask 255.255.255.255 --set 
@@ -7393,49 +7393,49 @@ hash:net family inet
 -A limit-205 -m limit --limit 1/second -j LOG
 -A limit-206 -m recent --name user:foo --rdest --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j DROP
 -A limit-207 -m recent --name user:foo --rdest --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j DROP
--A limit-208 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-208 -j RETURN
+-A limit-208 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-208 -j RETURN
 -A limit-208 -m limit --limit 1/second -j LOG
 -A limit-208 -j DROP
--A limit-209 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-209 -j RETURN
+-A limit-209 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-209 -j RETURN
 -A limit-209 -m limit --limit 1/second -j LOG
 -A limit-209 -j DROP
 -A limit-21 -m recent --name user:foo --rsource --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j logdrop-22
 -A limit-21 -m limit --limit 1/second -j LOG
--A limit-210 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-210 -j RETURN
+-A limit-210 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-210 -j RETURN
 -A limit-210 -m limit --limit 1/second -j LOG
 -A limit-210 -j DROP
--A limit-211 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-211 -j RETURN
+-A limit-211 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-211 -j RETURN
 -A limit-211 -m limit --limit 1/second -j LOG
 -A limit-211 -j DROP
--A limit-212 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-212 -j RETURN
+-A limit-212 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-212 -j RETURN
 -A limit-212 -m limit --limit 1/second -j LOG
 -A limit-212 -j DROP
--A limit-213 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-213 -j RETURN
+-A limit-213 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-213 -j RETURN
 -A limit-213 -m limit --limit 1/second -j LOG
 -A limit-213 -j DROP
--A limit-214 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-214 -j RETURN
+-A limit-214 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-214 -j RETURN
 -A limit-214 -m limit --limit 1/second -j LOG
 -A limit-214 -j DROP
--A limit-215 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-215 -j RETURN
+-A limit-215 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-215 -j RETURN
 -A limit-215 -m limit --limit 1/second -j LOG
 -A limit-215 -j DROP
--A limit-216 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-216 -j RETURN
+-A limit-216 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-216 -j RETURN
 -A limit-216 -j DROP
--A limit-217 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-217 -j RETURN
+-A limit-217 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-217 -j RETURN
 -A limit-217 -j DROP
--A limit-218 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-218 -j RETURN
+-A limit-218 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-218 -j RETURN
 -A limit-218 -j DROP
--A limit-219 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-219 -j RETURN
+-A limit-219 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-219 -j RETURN
 -A limit-219 -j DROP
 -A limit-22 -m recent --name user:foo --rsource --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j logdrop-23
 -A limit-22 -j ACCEPT
--A limit-220 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-220 -j RETURN
+-A limit-220 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-220 -j RETURN
 -A limit-220 -j DROP
--A limit-221 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-221 -j RETURN
+-A limit-221 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-221 -j RETURN
 -A limit-221 -j DROP
--A limit-222 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-222 -j RETURN
+-A limit-222 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-222 -j RETURN
 -A limit-222 -j DROP
--A limit-223 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-223 -j RETURN
+-A limit-223 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-223 -j RETURN
 -A limit-223 -j DROP
 -A limit-224 -m recent --name limit-224 --rsource --mask 255.255.255.255 --update --hitcount 1 --seconds 1 -j logdrop-73
 -A limit-224 -m recent --name limit-224 --rsource --mask 255.255.255.255 --set -j ACCEPT
@@ -7641,47 +7641,47 @@ hash:net family inet
 -A limit-32 -m recent --name user:foo --rdest --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j logdrop-33
 -A limit-32 -m limit --limit 1/second -j LOG
 -A limit-32 -j ACCEPT
--A limit-320 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-320 -j ACCEPT
+-A limit-320 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-320 -j ACCEPT
 -A limit-320 -m limit --limit 1/second -j LOG
 -A limit-320 -j DROP
--A limit-321 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-321 -j RETURN
+-A limit-321 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-321 -j RETURN
 -A limit-321 -m limit --limit 1/second -j LOG
 -A limit-321 -j DROP
--A limit-322 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-322 -j logaccept-4
+-A limit-322 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-322 -j logaccept-4
 -A limit-322 -m limit --limit 1/second -j LOG
 -A limit-322 -j DROP
--A limit-323 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-323 -j ACCEPT
+-A limit-323 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-323 -j ACCEPT
 -A limit-323 -m limit --limit 1/second -j LOG
 -A limit-323 -j DROP
--A limit-324 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-324 -j ACCEPT
+-A limit-324 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-324 -j ACCEPT
 -A limit-324 -m limit --limit 1/second -j LOG
 -A limit-324 -j DROP
--A limit-325 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-325 -j RETURN
+-A limit-325 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-325 -j RETURN
 -A limit-325 -m limit --limit 1/second -j LOG
 -A limit-325 -j DROP
--A limit-326 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-326 -j logaccept-5
+-A limit-326 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-326 -j logaccept-5
 -A limit-326 -m limit --limit 1/second -j LOG
 -A limit-326 -j DROP
--A limit-327 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-327 -j ACCEPT
+-A limit-327 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-327 -j ACCEPT
 -A limit-327 -m limit --limit 1/second -j LOG
 -A limit-327 -j DROP
--A limit-328 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-328 -j ACCEPT
+-A limit-328 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-328 -j ACCEPT
 -A limit-328 -j DROP
--A limit-329 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-329 -j RETURN
+-A limit-329 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-329 -j RETURN
 -A limit-329 -j DROP
 -A limit-33 -m recent --name user:foo --rdest --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j logdrop-34
 -A limit-33 -m limit --limit 1/second -j LOG
--A limit-330 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-330 -j logaccept-6
+-A limit-330 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-330 -j logaccept-6
 -A limit-330 -j DROP
--A limit-331 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-331 -j ACCEPT
+-A limit-331 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-331 -j ACCEPT
 -A limit-331 -j DROP
--A limit-332 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-332 -j ACCEPT
+-A limit-332 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-332 -j ACCEPT
 -A limit-332 -j DROP
--A limit-333 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-333 -j RETURN
+-A limit-333 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-333 -j RETURN
 -A limit-333 -j DROP
--A limit-334 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-334 -j logaccept-7
+-A limit-334 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-334 -j logaccept-7
 -A limit-334 -j DROP
--A limit-335 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-335 -j ACCEPT
+-A limit-335 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-335 -j ACCEPT
 -A limit-335 -j DROP
 -A limit-34 -m recent --name user:foo --rdest --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j logdrop-35
 -A limit-34 -j ACCEPT
@@ -7812,16 +7812,16 @@ hash:net family inet
 -A limit-93 -m limit --limit 1/second -j LOG
 -A limit-94 -m recent --name user:foo --rdest --mask 255.255.255.255 --rcheck --hitcount 1 --seconds 1 -j DROP
 -A limit-94 -j ACCEPT
--A limit-96 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-96 -j ACCEPT
+-A limit-96 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-96 -j ACCEPT
 -A limit-96 -m limit --limit 1/second -j LOG
 -A limit-96 -j DROP
--A limit-97 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-97 -j RETURN
+-A limit-97 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-97 -j RETURN
 -A limit-97 -m limit --limit 1/second -j LOG
 -A limit-97 -j DROP
--A limit-98 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-98 -j logaccept-0
+-A limit-98 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-98 -j logaccept-0
 -A limit-98 -m limit --limit 1/second -j LOG
 -A limit-98 -j DROP
--A limit-99 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-99 -j ACCEPT
+-A limit-99 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-99 -j ACCEPT
 -A limit-99 -m limit --limit 1/second -j LOG
 -A limit-99 -j DROP
 -A logaccept-0 -m limit --limit 1/second -j LOG
@@ -9812,35 +9812,35 @@ COMMIT
 -A limit-1 -m recent --name limit-1 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-11
 -A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-100 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-100 -j ACCEPT
+-A limit-100 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-100 -j ACCEPT
 -A limit-100 -m limit --limit 1/second -j LOG
 -A limit-100 -j DROP
--A limit-101 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-101 -j RETURN
+-A limit-101 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-101 -j RETURN
 -A limit-101 -m limit --limit 1/second -j LOG
 -A limit-101 -j DROP
--A limit-102 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-102 -j logaccept-1
+-A limit-102 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-102 -j logaccept-1
 -A limit-102 -m limit --limit 1/second -j LOG
 -A limit-102 -j DROP
--A limit-103 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-103 -j ACCEPT
+-A limit-103 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-103 -j ACCEPT
 -A limit-103 -m limit --limit 1/second -j LOG
 -A limit-103 -j DROP
--A limit-104 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-104 -j ACCEPT
+-A limit-104 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-104 -j ACCEPT
 -A limit-104 -j DROP
--A limit-105 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-105 -j RETURN
+-A limit-105 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-105 -j RETURN
 -A limit-105 -j DROP
--A limit-106 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-106 -j logaccept-2
+-A limit-106 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-106 -j logaccept-2
 -A limit-106 -j DROP
--A limit-107 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-107 -j ACCEPT
+-A limit-107 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-107 -j ACCEPT
 -A limit-107 -j DROP
--A limit-108 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-108 -j ACCEPT
+-A limit-108 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-108 -j ACCEPT
 -A limit-108 -j DROP
--A limit-109 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-109 -j RETURN
+-A limit-109 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-109 -j RETURN
 -A limit-109 -j DROP
 -A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-12
 -A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-110 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-110 -j logaccept-3
+-A limit-110 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-110 -j logaccept-3
 -A limit-110 -j DROP
--A limit-111 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-111 -j ACCEPT
+-A limit-111 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-111 -j ACCEPT
 -A limit-111 -j DROP
 -A limit-112 -m recent --name limit-112 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-37
 -A limit-112 -m recent --name limit-112 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
@@ -10025,49 +10025,49 @@ COMMIT
 -A limit-205 -m limit --limit 1/second -j LOG
 -A limit-206 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
 -A limit-207 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
--A limit-208 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-208 -j RETURN
+-A limit-208 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-208 -j RETURN
 -A limit-208 -m limit --limit 1/second -j LOG
 -A limit-208 -j DROP
--A limit-209 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-209 -j RETURN
+-A limit-209 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-209 -j RETURN
 -A limit-209 -m limit --limit 1/second -j LOG
 -A limit-209 -j DROP
 -A limit-21 -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-22
 -A limit-21 -m limit --limit 1/second -j LOG
--A limit-210 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-210 -j RETURN
+-A limit-210 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-210 -j RETURN
 -A limit-210 -m limit --limit 1/second -j LOG
 -A limit-210 -j DROP
--A limit-211 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-211 -j RETURN
+-A limit-211 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-211 -j RETURN
 -A limit-211 -m limit --limit 1/second -j LOG
 -A limit-211 -j DROP
--A limit-212 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-212 -j RETURN
+-A limit-212 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-212 -j RETURN
 -A limit-212 -m limit --limit 1/second -j LOG
 -A limit-212 -j DROP
--A limit-213 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-213 -j RETURN
+-A limit-213 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-213 -j RETURN
 -A limit-213 -m limit --limit 1/second -j LOG
 -A limit-213 -j DROP
--A limit-214 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-214 -j RETURN
+-A limit-214 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-214 -j RETURN
 -A limit-214 -m limit --limit 1/second -j LOG
 -A limit-214 -j DROP
--A limit-215 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-215 -j RETURN
+-A limit-215 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-215 -j RETURN
 -A limit-215 -m limit --limit 1/second -j LOG
 -A limit-215 -j DROP
--A limit-216 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-216 -j RETURN
+-A limit-216 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-216 -j RETURN
 -A limit-216 -j DROP
--A limit-217 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-217 -j RETURN
+-A limit-217 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-217 -j RETURN
 -A limit-217 -j DROP
--A limit-218 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-218 -j RETURN
+-A limit-218 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-218 -j RETURN
 -A limit-218 -j DROP
--A limit-219 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-219 -j RETURN
+-A limit-219 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-219 -j RETURN
 -A limit-219 -j DROP
 -A limit-22 -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-23
 -A limit-22 -j ACCEPT
--A limit-220 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-220 -j RETURN
+-A limit-220 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-220 -j RETURN
 -A limit-220 -j DROP
--A limit-221 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-221 -j RETURN
+-A limit-221 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-221 -j RETURN
 -A limit-221 -j DROP
--A limit-222 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-222 -j RETURN
+-A limit-222 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-222 -j RETURN
 -A limit-222 -j DROP
--A limit-223 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-223 -j RETURN
+-A limit-223 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-223 -j RETURN
 -A limit-223 -j DROP
 -A limit-224 -m recent --name limit-224 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-73
 -A limit-224 -m recent --name limit-224 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
@@ -10273,47 +10273,47 @@ COMMIT
 -A limit-32 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-33
 -A limit-32 -m limit --limit 1/second -j LOG
 -A limit-32 -j ACCEPT
--A limit-320 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-320 -j ACCEPT
+-A limit-320 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-320 -j ACCEPT
 -A limit-320 -m limit --limit 1/second -j LOG
 -A limit-320 -j DROP
--A limit-321 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-321 -j RETURN
+-A limit-321 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-321 -j RETURN
 -A limit-321 -m limit --limit 1/second -j LOG
 -A limit-321 -j DROP
--A limit-322 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-322 -j logaccept-4
+-A limit-322 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-322 -j logaccept-4
 -A limit-322 -m limit --limit 1/second -j LOG
 -A limit-322 -j DROP
--A limit-323 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-323 -j ACCEPT
+-A limit-323 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-323 -j ACCEPT
 -A limit-323 -m limit --limit 1/second -j LOG
 -A limit-323 -j DROP
--A limit-324 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-324 -j ACCEPT
+-A limit-324 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-324 -j ACCEPT
 -A limit-324 -m limit --limit 1/second -j LOG
 -A limit-324 -j DROP
--A limit-325 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-325 -j RETURN
+-A limit-325 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-325 -j RETURN
 -A limit-325 -m limit --limit 1/second -j LOG
 -A limit-325 -j DROP
--A limit-326 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-326 -j logaccept-5
+-A limit-326 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-326 -j logaccept-5
 -A limit-326 -m limit --limit 1/second -j LOG
 -A limit-326 -j DROP
--A limit-327 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-327 -j ACCEPT
+-A limit-327 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-327 -j ACCEPT
 -A limit-327 -m limit --limit 1/second -j LOG
 -A limit-327 -j DROP
--A limit-328 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-328 -j ACCEPT
+-A limit-328 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-328 -j ACCEPT
 -A limit-328 -j DROP
--A limit-329 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-329 -j RETURN
+-A limit-329 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-329 -j RETURN
 -A limit-329 -j DROP
 -A limit-33 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-34
 -A limit-33 -m limit --limit 1/second -j LOG
--A limit-330 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-330 -j logaccept-6
+-A limit-330 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-330 -j logaccept-6
 -A limit-330 -j DROP
--A limit-331 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-331 -j ACCEPT
+-A limit-331 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-331 -j ACCEPT
 -A limit-331 -j DROP
--A limit-332 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j ACCEPT
+-A limit-332 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j ACCEPT
 -A limit-332 -j DROP
--A limit-333 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-333 -j RETURN
+-A limit-333 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-333 -j RETURN
 -A limit-333 -j DROP
--A limit-334 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-334 -j logaccept-7
+-A limit-334 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-334 -j logaccept-7
 -A limit-334 -j DROP
--A limit-335 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-335 -j ACCEPT
+-A limit-335 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-335 -j ACCEPT
 -A limit-335 -j DROP
 -A limit-34 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-35
 -A limit-34 -j ACCEPT
@@ -10444,16 +10444,16 @@ COMMIT
 -A limit-93 -m limit --limit 1/second -j LOG
 -A limit-94 -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j DROP
 -A limit-94 -j ACCEPT
--A limit-96 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-96 -j ACCEPT
+-A limit-96 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-96 -j ACCEPT
 -A limit-96 -m limit --limit 1/second -j LOG
 -A limit-96 -j DROP
--A limit-97 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-97 -j RETURN
+-A limit-97 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-97 -j RETURN
 -A limit-97 -m limit --limit 1/second -j LOG
 -A limit-97 -j DROP
--A limit-98 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-98 -j logaccept-0
+-A limit-98 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-98 -j logaccept-0
 -A limit-98 -m limit --limit 1/second -j LOG
 -A limit-98 -j DROP
--A limit-99 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-99 -j ACCEPT
+-A limit-99 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-99 -j ACCEPT
 -A limit-99 -m limit --limit 1/second -j LOG
 -A limit-99 -j DROP
 -A logaccept-0 -m limit --limit 1/second -j LOG
