@@ -746,6 +746,7 @@
 -A FORWARD -j logaccept-final-19
 -A FORWARD -j ACCEPT
 -A FORWARD -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A FORWARD -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-109
@@ -1079,6 +1080,7 @@
 -A INPUT -i eth0 -j limit-333
 -A INPUT -i eth0 -j limit-334
 -A INPUT -i eth0 -j limit-335
+-A INPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -j ACCEPT
@@ -1453,6 +1455,7 @@
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -j ACCEPT

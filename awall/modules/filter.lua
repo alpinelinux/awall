@@ -234,20 +234,25 @@ function Filter:init(...)
       self[limit].log = loadclass('log').get(self, self[limit].log, true)
    end
 
-   if ul then
-      if self.action ~= 'pass' then
-	 self:error('Cannot specify action with update-limit')
-      end
+   if ul and self.action ~= 'pass' then
+      self:error('Cannot specify action with update-limit')
+   end
+end
 
+function Filter:updatelimit()
+   local ul = util.copy(self['update-limit'])
+
+   if type(ul) == 'table' then
       if not contains({'conn', 'flow'}, setdefault(ul, 'measure', 'conn')) then
 	 self:error('Invalid value for measure: '..ul.measure)
       end
+
       if self['no-track'] and ul.measure == 'conn' then
 	 self:error('Tracking required when measuring connection rate')
       end
-
-      self:create(LimitReference, ul, 'update-limit')
    end
+
+   return ul and self:create(LimitReference, ul, 'update-limit')
 end
 
 function Filter:extratrules()
@@ -351,10 +356,9 @@ function Filter:limit()
 end
 
 function Filter:position()
+   local ul = self:updatelimit()
    return not self['no-track'] and (
-      self:limit() == 'flow-limit' or (
-	 self['update-limit'] and self['update-limit'].measure == 'flow'
-      )
+      self:limit() == 'flow-limit' or (ul and ul.measure == 'flow')
    ) and 'prepend' or 'append'
 end
 
@@ -372,9 +376,11 @@ end
 
 function Filter:mangleoptfrags(ofrags)
    local limit = self:limit()
+   local ul = self:updatelimit()
+
    if not limit then
-      if self['update-limit'] then
-	 ofrags = self:combine(ofrags, self['update-limit']:recentofrags())
+      if ul then
+	 ofrags = self:combine(ofrags, ul:recentofrags())
       end
       return Filter.super(self):mangleoptfrags(ofrags)
    end
@@ -383,7 +389,7 @@ function Filter:mangleoptfrags(ofrags)
       self:error('Limit incompatible with '..item)
    end
 
-   if self['update-limit'] then incompatible('update-limit') end
+   if ul then incompatible('update-limit') end
 
    if self:customtarget() or self:logdefault() then
       incompatible('action: '..self.action)
