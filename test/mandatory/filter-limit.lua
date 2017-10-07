@@ -1,3 +1,10 @@
+--[[
+Filter limit test cases for Alpine Wall
+Copyright (C) 2012-2017 Kaarle Ritvanen
+See LICENSE file for license details
+]]--
+
+
 util = require('awall.util')
 json = require('cjson')
 
