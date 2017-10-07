@@ -14,22 +14,26 @@ function add(limit_type, base)
          for _, name in ipairs{
             false, type(limit) == 'table' and count == 1 and 'foo' or nil
          } do
-            for _, log in ipairs{false, true, 'none'} do
-               for _, action in ipairs{false, 'pass'} do
-	          if not (count == 30 and log and action) then
-	             table.insert(
-	                res,
-		        update(
-		           {
-		              [limit_type..'-limit']=type(limit) == 'table' and update(
-			         {name=name or nil}, limit
-		              ) or limit,
-		              log=log or nil,
-		              action=action or nil
-		           },
-		           base or {}
-		        )
-                     )
+	    for _, no_update in ipairs{false, name or nil} do
+	       local upd
+	       if no_update then upd = false end
+               for _, log in ipairs{false, true, 'none'} do
+                  for _, action in ipairs{false, 'pass'} do
+	             if not (count == 30 and log and action) then
+	                table.insert(
+	                   res,
+		           update(
+		              {
+		                 [limit_type..'-limit']=type(limit) == 'table' and update(
+			            {name=name or nil, update=upd}, limit
+		                 ) or limit,
+		                 log=log or nil,
+		                 action=action or nil
+		              },
+		              base or {}
+		           )
+                        )
+		     end
 	          end
                end
 	    end
