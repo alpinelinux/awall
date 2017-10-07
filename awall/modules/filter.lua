@@ -90,7 +90,8 @@ end
 
 function LimitReference:recentofrags()
    local ofs = self:recentmask()
-   return ofs and combinations(ofs, {{match='--set'}}) or self:error(MASK_ERROR)
+   return ofs and combinations(ofs, {{match='--set'}}) or
+      self:error('Invalid address mask for limit')
 end
 
 
