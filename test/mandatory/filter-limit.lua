@@ -38,7 +38,7 @@ function add(limit_type, filter)
             add_limit(limit)
 
 	    if not high_rate then
-	       limit.name = 'foo'
+	       limit.name = 'A'
 
 	       for _, addr in ipairs{false, 'dest'} do
 	          limit.addr = addr or nil
@@ -59,12 +59,12 @@ add('conn', {out='B'})
 add('flow')
 add('flow', {['in']='A', out='_fw', ['no-track']=true})
 
-table.insert(res, {['update-limit']='foo'})
+table.insert(res, {['update-limit']='A'})
 
 for _, measure in ipairs{'conn', 'flow'} do
    for _, addr in ipairs{'src', 'dest'} do
       table.insert(
-         res, {['update-limit']={name='foo', measure=measure, addr=addr}}
+         res, {['update-limit']={name='A', measure=measure, addr=addr}}
       )
    end
 end
