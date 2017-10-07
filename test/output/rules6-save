@@ -7,7 +7,27 @@
 :limit-0 - [0:0]
 :limit-1 - [0:0]
 :limit-10 - [0:0]
+:limit-100 - [0:0]
+:limit-101 - [0:0]
+:limit-102 - [0:0]
+:limit-103 - [0:0]
+:limit-104 - [0:0]
+:limit-105 - [0:0]
+:limit-106 - [0:0]
+:limit-107 - [0:0]
+:limit-108 - [0:0]
+:limit-109 - [0:0]
 :limit-11 - [0:0]
+:limit-110 - [0:0]
+:limit-111 - [0:0]
+:limit-112 - [0:0]
+:limit-113 - [0:0]
+:limit-114 - [0:0]
+:limit-115 - [0:0]
+:limit-116 - [0:0]
+:limit-117 - [0:0]
+:limit-118 - [0:0]
+:limit-119 - [0:0]
 :limit-12 - [0:0]
 :limit-13 - [0:0]
 :limit-14 - [0:0]
@@ -94,6 +114,16 @@
 :limit-88 - [0:0]
 :limit-89 - [0:0]
 :limit-9 - [0:0]
+:limit-90 - [0:0]
+:limit-91 - [0:0]
+:limit-92 - [0:0]
+:limit-93 - [0:0]
+:limit-94 - [0:0]
+:limit-95 - [0:0]
+:limit-96 - [0:0]
+:limit-97 - [0:0]
+:limit-98 - [0:0]
+:limit-99 - [0:0]
 :logaccept-0 - [0:0]
 :logaccept-1 - [0:0]
 :logaccept-2 - [0:0]
@@ -101,12 +131,16 @@
 :logaccept-4 - [0:0]
 :logaccept-5 - [0:0]
 :logaccept-6 - [0:0]
+:logaccept-7 - [0:0]
+:logaccept-8 - [0:0]
 :logaccept-final-0 - [0:0]
 :logaccept-final-1 - [0:0]
 :logaccept-final-2 - [0:0]
 :logaccept-final-3 - [0:0]
 :logaccept-final-4 - [0:0]
 :logaccept-final-5 - [0:0]
+:logaccept-final-6 - [0:0]
+:logaccept-final-7 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-10 - [0:0]
@@ -121,7 +155,25 @@
 :logdrop-19 - [0:0]
 :logdrop-2 - [0:0]
 :logdrop-20 - [0:0]
+:logdrop-21 - [0:0]
+:logdrop-22 - [0:0]
+:logdrop-23 - [0:0]
+:logdrop-24 - [0:0]
+:logdrop-25 - [0:0]
+:logdrop-26 - [0:0]
+:logdrop-27 - [0:0]
+:logdrop-28 - [0:0]
+:logdrop-29 - [0:0]
 :logdrop-3 - [0:0]
+:logdrop-30 - [0:0]
+:logdrop-31 - [0:0]
+:logdrop-32 - [0:0]
+:logdrop-33 - [0:0]
+:logdrop-34 - [0:0]
+:logdrop-35 - [0:0]
+:logdrop-36 - [0:0]
+:logdrop-37 - [0:0]
+:logdrop-38 - [0:0]
 :logdrop-4 - [0:0]
 :logdrop-5 - [0:0]
 :logdrop-6 - [0:0]
@@ -134,6 +186,26 @@
 :tarpit - [0:0]
 -A FORWARD -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A FORWARD -j limit-79
+-A FORWARD -j limit-78
+-A FORWARD -j limit-77
+-A FORWARD -j limit-76
+-A FORWARD -j limit-75
+-A FORWARD -j limit-74
+-A FORWARD -j limit-73
+-A FORWARD -j limit-72
+-A FORWARD -j limit-71
+-A FORWARD -j limit-70
+-A FORWARD -j limit-69
+-A FORWARD -j limit-68
+-A FORWARD -j limit-67
+-A FORWARD -j limit-66
+-A FORWARD -j limit-65
+-A FORWARD -j limit-64
+-A FORWARD -j limit-63
+-A FORWARD -j limit-62
+-A FORWARD -j limit-61
+-A FORWARD -j limit-60
 -A FORWARD -j limit-59
 -A FORWARD -j limit-58
 -A FORWARD -j limit-57
@@ -154,16 +226,6 @@
 -A FORWARD -j limit-42
 -A FORWARD -j limit-41
 -A FORWARD -j limit-40
--A FORWARD -j limit-39
--A FORWARD -j limit-38
--A FORWARD -j limit-37
--A FORWARD -j limit-36
--A FORWARD -j limit-35
--A FORWARD -j limit-34
--A FORWARD -j limit-33
--A FORWARD -j limit-32
--A FORWARD -j limit-31
--A FORWARD -j limit-30
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
@@ -201,6 +263,16 @@
 -A FORWARD -o eth1 -d fc00::/7 -j limit-27
 -A FORWARD -o eth1 -d fc00::/7 -j limit-28
 -A FORWARD -o eth1 -d fc00::/7 -j limit-29
+-A FORWARD -o eth1 -d fc00::/7 -j limit-30
+-A FORWARD -o eth1 -d fc00::/7 -j limit-31
+-A FORWARD -o eth1 -d fc00::/7 -j limit-32
+-A FORWARD -o eth1 -d fc00::/7 -j limit-33
+-A FORWARD -o eth1 -d fc00::/7 -j limit-34
+-A FORWARD -o eth1 -d fc00::/7 -j limit-35
+-A FORWARD -o eth1 -d fc00::/7 -j limit-36
+-A FORWARD -o eth1 -d fc00::/7 -j limit-37
+-A FORWARD -o eth1 -d fc00::/7 -j limit-38
+-A FORWARD -o eth1 -d fc00::/7 -j limit-39
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-0
 -A FORWARD -j ACCEPT
@@ -219,16 +291,22 @@
 -A FORWARD -j ACCEPT
 -A FORWARD -j logaccept-final-5
 -A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-6
+-A FORWARD -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logaccept-final-7
+-A FORWARD -j ACCEPT
 -A FORWARD -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -j ACCEPT
--A FORWARD -j logdrop-19
+-A FORWARD -j logdrop-37
 -A FORWARD 
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-6
--A FORWARD -j logdrop-20
+-A FORWARD -j logaccept-8
+-A FORWARD -j logdrop-38
 -A FORWARD -j logpass-0
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
@@ -261,6 +339,26 @@
 -A FORWARD -p icmpv6 -j icmp-routing
 -A INPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A INPUT -j limit-79
+-A INPUT -j limit-78
+-A INPUT -j limit-77
+-A INPUT -j limit-76
+-A INPUT -j limit-75
+-A INPUT -j limit-74
+-A INPUT -j limit-73
+-A INPUT -j limit-72
+-A INPUT -j limit-71
+-A INPUT -j limit-70
+-A INPUT -j limit-69
+-A INPUT -j limit-68
+-A INPUT -j limit-67
+-A INPUT -j limit-66
+-A INPUT -j limit-65
+-A INPUT -j limit-64
+-A INPUT -j limit-63
+-A INPUT -j limit-62
+-A INPUT -j limit-61
+-A INPUT -j limit-60
 -A INPUT -j limit-59
 -A INPUT -j limit-58
 -A INPUT -j limit-57
@@ -281,16 +379,6 @@
 -A INPUT -j limit-42
 -A INPUT -j limit-41
 -A INPUT -j limit-40
--A INPUT -j limit-39
--A INPUT -j limit-38
--A INPUT -j limit-37
--A INPUT -j limit-36
--A INPUT -j limit-35
--A INPUT -j limit-34
--A INPUT -j limit-33
--A INPUT -j limit-32
--A INPUT -j limit-31
--A INPUT -j limit-30
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -j ACCEPT
@@ -317,26 +405,12 @@
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-5
 -A INPUT -j ACCEPT
--A INPUT -i eth0 -j limit-60
--A INPUT -i eth0 -j limit-61
--A INPUT -i eth0 -j limit-62
--A INPUT -i eth0 -j limit-63
--A INPUT -i eth0 -j limit-64
--A INPUT -i eth0 -j limit-65
--A INPUT -i eth0 -j limit-66
--A INPUT -i eth0 -j limit-67
--A INPUT -i eth0 -j limit-68
--A INPUT -i eth0 -j limit-69
--A INPUT -i eth0 -j limit-70
--A INPUT -i eth0 -j limit-71
--A INPUT -i eth0 -j limit-72
--A INPUT -i eth0 -j limit-73
--A INPUT -i eth0 -j limit-74
--A INPUT -i eth0 -j limit-75
--A INPUT -i eth0 -j limit-76
--A INPUT -i eth0 -j limit-77
--A INPUT -i eth0 -j limit-78
--A INPUT -i eth0 -j limit-79
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-6
+-A INPUT -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logaccept-final-7
+-A INPUT -j ACCEPT
 -A INPUT -i eth0 -j limit-80
 -A INPUT -i eth0 -j limit-81
 -A INPUT -i eth0 -j limit-82
@@ -347,16 +421,46 @@
 -A INPUT -i eth0 -j limit-87
 -A INPUT -i eth0 -j limit-88
 -A INPUT -i eth0 -j limit-89
+-A INPUT -i eth0 -j limit-90
+-A INPUT -i eth0 -j limit-91
+-A INPUT -i eth0 -j limit-92
+-A INPUT -i eth0 -j limit-93
+-A INPUT -i eth0 -j limit-94
+-A INPUT -i eth0 -j limit-95
+-A INPUT -i eth0 -j limit-96
+-A INPUT -i eth0 -j limit-97
+-A INPUT -i eth0 -j limit-98
+-A INPUT -i eth0 -j limit-99
+-A INPUT -i eth0 -j limit-100
+-A INPUT -i eth0 -j limit-101
+-A INPUT -i eth0 -j limit-102
+-A INPUT -i eth0 -j limit-103
+-A INPUT -i eth0 -j limit-104
+-A INPUT -i eth0 -j limit-105
+-A INPUT -i eth0 -j limit-106
+-A INPUT -i eth0 -j limit-107
+-A INPUT -i eth0 -j limit-108
+-A INPUT -i eth0 -j limit-109
+-A INPUT -i eth0 -j limit-110
+-A INPUT -i eth0 -j limit-111
+-A INPUT -i eth0 -j limit-112
+-A INPUT -i eth0 -j limit-113
+-A INPUT -i eth0 -j limit-114
+-A INPUT -i eth0 -j limit-115
+-A INPUT -i eth0 -j limit-116
+-A INPUT -i eth0 -j limit-117
+-A INPUT -i eth0 -j limit-118
+-A INPUT -i eth0 -j limit-119
 -A INPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -j ACCEPT
--A INPUT -j logdrop-19
+-A INPUT -j logdrop-37
 -A INPUT 
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-6
--A INPUT -j logdrop-20
+-A INPUT -j logaccept-8
+-A INPUT -j logdrop-38
 -A INPUT -j logpass-0
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
@@ -369,6 +473,26 @@
 -A INPUT -p icmpv6 -j ACCEPT
 -A OUTPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A OUTPUT -j limit-79
+-A OUTPUT -j limit-78
+-A OUTPUT -j limit-77
+-A OUTPUT -j limit-76
+-A OUTPUT -j limit-75
+-A OUTPUT -j limit-74
+-A OUTPUT -j limit-73
+-A OUTPUT -j limit-72
+-A OUTPUT -j limit-71
+-A OUTPUT -j limit-70
+-A OUTPUT -j limit-69
+-A OUTPUT -j limit-68
+-A OUTPUT -j limit-67
+-A OUTPUT -j limit-66
+-A OUTPUT -j limit-65
+-A OUTPUT -j limit-64
+-A OUTPUT -j limit-63
+-A OUTPUT -j limit-62
+-A OUTPUT -j limit-61
+-A OUTPUT -j limit-60
 -A OUTPUT -j limit-59
 -A OUTPUT -j limit-58
 -A OUTPUT -j limit-57
@@ -389,16 +513,6 @@
 -A OUTPUT -j limit-42
 -A OUTPUT -j limit-41
 -A OUTPUT -j limit-40
--A OUTPUT -j limit-39
--A OUTPUT -j limit-38
--A OUTPUT -j limit-37
--A OUTPUT -j limit-36
--A OUTPUT -j limit-35
--A OUTPUT -j limit-34
--A OUTPUT -j limit-33
--A OUTPUT -j limit-32
--A OUTPUT -j limit-31
--A OUTPUT -j limit-30
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -j ACCEPT
@@ -437,6 +551,16 @@
 -A OUTPUT -o eth1 -d fc00::/7 -j limit-27
 -A OUTPUT -o eth1 -d fc00::/7 -j limit-28
 -A OUTPUT -o eth1 -d fc00::/7 -j limit-29
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-30
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-31
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-32
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-33
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-34
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-35
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-36
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-37
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-38
+-A OUTPUT -o eth1 -d fc00::/7 -j limit-39
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-0
 -A OUTPUT -j ACCEPT
@@ -455,6 +579,18 @@
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logaccept-final-5
 -A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-6
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logaccept-final-7
+-A OUTPUT -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
+-A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
 -A OUTPUT -o eth0 -j ACCEPT
@@ -476,13 +612,13 @@
 -A OUTPUT -m recent --name user:foo --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -m recent --name user:foo --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -j ACCEPT
--A OUTPUT -j logdrop-19
+-A OUTPUT -j logdrop-37
 -A OUTPUT 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-6
--A OUTPUT -j logdrop-20
+-A OUTPUT -j logaccept-8
+-A OUTPUT -j logdrop-38
 -A OUTPUT -j logpass-0
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
@@ -501,10 +637,59 @@
 -A limit-0 -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 -A limit-1 -m recent --name limit-1 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-2
 -A limit-1 -m recent --name limit-1 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-11
 -A limit-10 -m recent --name limit-10 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-100 -m recent --name limit-100 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-100 -m limit --limit 1/second -j LOG
+-A limit-100 -m recent --name limit-100 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-101 -m recent --name limit-101 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-101 -m recent --name limit-101 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-102 -m recent --name limit-102 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-102 -m recent --name limit-102 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-103 -m recent --name limit-103 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-103 -m recent --name limit-103 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-104 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-104 -j ACCEPT
+-A limit-104 -m limit --limit 1/second -j LOG
+-A limit-104 -j DROP
+-A limit-105 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-105 -j RETURN
+-A limit-105 -m limit --limit 1/second -j LOG
+-A limit-105 -j DROP
+-A limit-106 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-106 -j logaccept-4
+-A limit-106 -m limit --limit 1/second -j LOG
+-A limit-106 -j DROP
+-A limit-107 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-107 -j ACCEPT
+-A limit-107 -m limit --limit 1/second -j LOG
+-A limit-107 -j DROP
+-A limit-108 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-108 -j ACCEPT
+-A limit-108 -m limit --limit 1/second -j LOG
+-A limit-108 -j DROP
+-A limit-109 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-109 -j RETURN
+-A limit-109 -m limit --limit 1/second -j LOG
+-A limit-109 -j DROP
+-A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-12
 -A limit-11 -m recent --name limit-11 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-110 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-110 -j logaccept-5
+-A limit-110 -m limit --limit 1/second -j LOG
+-A limit-110 -j DROP
+-A limit-111 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-111 -j ACCEPT
+-A limit-111 -m limit --limit 1/second -j LOG
+-A limit-111 -j DROP
+-A limit-112 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-112 -j ACCEPT
+-A limit-112 -j DROP
+-A limit-113 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-113 -j RETURN
+-A limit-113 -j DROP
+-A limit-114 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-114 -j logaccept-6
+-A limit-114 -j DROP
+-A limit-115 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-115 -j ACCEPT
+-A limit-115 -j DROP
+-A limit-116 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-116 -j ACCEPT
+-A limit-116 -j DROP
+-A limit-117 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-117 -j RETURN
+-A limit-117 -j DROP
+-A limit-118 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-118 -j logaccept-7
+-A limit-118 -j DROP
+-A limit-119 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-119 -j ACCEPT
+-A limit-119 -j DROP
 -A limit-12 -m recent --name limit-12 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-12 -m recent --name limit-12 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 -A limit-13 -m recent --name limit-13 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
@@ -518,183 +703,208 @@
 -A limit-16 -m recent --name limit-16 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
 -A limit-17 -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-17 -m recent --name limit-17 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-18 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-18 -j ACCEPT
--A limit-18 -m limit --limit 1/second -j LOG
--A limit-18 -j DROP
--A limit-19 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-19 -j RETURN
--A limit-19 -m limit --limit 1/second -j LOG
--A limit-19 -j DROP
+-A limit-18 -m recent --name limit-18 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-18 -m recent --name limit-18 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-19 -m recent --name limit-19 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-19 -m recent --name limit-19 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A limit-2 -m recent --name limit-2 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-3
 -A limit-2 -m limit --limit 1/second -j LOG
 -A limit-2 -m recent --name limit-2 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-20 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-20 -j logaccept-0
+-A limit-20 -m recent --name limit-20 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
 -A limit-20 -m limit --limit 1/second -j LOG
--A limit-20 -j DROP
--A limit-21 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-21 -j ACCEPT
--A limit-21 -m limit --limit 1/second -j LOG
--A limit-21 -j DROP
--A limit-22 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-22 -j ACCEPT
--A limit-22 -j DROP
--A limit-23 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-23 -j RETURN
--A limit-23 -j DROP
--A limit-24 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-24 -j logaccept-1
+-A limit-20 -m recent --name limit-20 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-21 -m recent --name limit-21 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-21 -m recent --name limit-21 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-22 -m recent --name limit-22 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-22 -m recent --name limit-22 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-23 -m recent --name limit-23 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-23 -m recent --name limit-23 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-24 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-24 -j ACCEPT
+-A limit-24 -m limit --limit 1/second -j LOG
 -A limit-24 -j DROP
--A limit-25 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-25 -j ACCEPT
+-A limit-25 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-25 -j RETURN
+-A limit-25 -m limit --limit 1/second -j LOG
 -A limit-25 -j DROP
--A limit-26 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-26 -j ACCEPT
+-A limit-26 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-26 -j logaccept-0
+-A limit-26 -m limit --limit 1/second -j LOG
 -A limit-26 -j DROP
--A limit-27 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-27 -j RETURN
+-A limit-27 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-27 -j ACCEPT
+-A limit-27 -m limit --limit 1/second -j LOG
 -A limit-27 -j DROP
--A limit-28 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-28 -j logaccept-2
+-A limit-28 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-28 -j ACCEPT
+-A limit-28 -m limit --limit 1/second -j LOG
 -A limit-28 -j DROP
--A limit-29 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-29 -j ACCEPT
+-A limit-29 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-29 -j RETURN
+-A limit-29 -m limit --limit 1/second -j LOG
 -A limit-29 -j DROP
 -A limit-3 -m recent --name limit-3 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-4
 -A limit-3 -m recent --name limit-3 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-30 -m recent --name limit-30 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-7
--A limit-30 -m recent --name limit-30 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-31 -m recent --name limit-31 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-8
--A limit-31 -m recent --name limit-31 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-32 -m recent --name limit-32 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-9
--A limit-32 -m recent --name limit-32 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-33 -m recent --name limit-33 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-10
--A limit-33 -m recent --name limit-33 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-34 -m recent --name limit-34 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-11
--A limit-34 -m recent --name limit-34 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-35 -m recent --name limit-35 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-12
--A limit-35 -m recent --name limit-35 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-36 -m recent --name limit-36 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-36 -m recent --name limit-36 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-37 -m recent --name limit-37 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-37 -m recent --name limit-37 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-38 -m recent --name limit-38 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-38 -m recent --name limit-38 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-39 -m recent --name limit-39 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-39 -m recent --name limit-39 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-30 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-30 -j logaccept-1
+-A limit-30 -m limit --limit 1/second -j LOG
+-A limit-30 -j DROP
+-A limit-31 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-31 -j ACCEPT
+-A limit-31 -m limit --limit 1/second -j LOG
+-A limit-31 -j DROP
+-A limit-32 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-32 -j ACCEPT
+-A limit-32 -j DROP
+-A limit-33 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-33 -j RETURN
+-A limit-33 -j DROP
+-A limit-34 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-34 -j logaccept-2
+-A limit-34 -j DROP
+-A limit-35 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-35 -j ACCEPT
+-A limit-35 -j DROP
+-A limit-36 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-36 -j ACCEPT
+-A limit-36 -j DROP
+-A limit-37 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-37 -j RETURN
+-A limit-37 -j DROP
+-A limit-38 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-38 -j logaccept-3
+-A limit-38 -j DROP
+-A limit-39 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-39 -j ACCEPT
+-A limit-39 -j DROP
 -A limit-4 -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-5
 -A limit-4 -m recent --name limit-4 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-40 -m recent --name limit-40 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-40 -m recent --name limit-40 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-13
 -A limit-40 -m recent --name limit-40 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-41 -m recent --name limit-41 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-41 -m recent --name limit-41 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-14
 -A limit-41 -m recent --name limit-41 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-42 -m recent --name limit-42 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-42 -m recent --name limit-42 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-15
 -A limit-42 -m recent --name limit-42 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-43 -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-43 -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-44 -m recent --name limit-44 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-43 -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-16
+-A limit-43 -m recent --name limit-43 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-44 -m recent --name limit-44 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-17
 -A limit-44 -m recent --name limit-44 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-45 -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-45 -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-46 -m recent --name limit-46 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-45 -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-18
+-A limit-45 -m recent --name limit-45 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-46 -m recent --name limit-46 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-19
 -A limit-46 -m recent --name limit-46 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-47 -m recent --name limit-47 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-47 -m recent --name limit-47 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-20
 -A limit-47 -m recent --name limit-47 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-48 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-48 -j RETURN
--A limit-48 -m limit --limit 1/second -j LOG
--A limit-48 -j DROP
--A limit-49 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-49 -j RETURN
--A limit-49 -m limit --limit 1/second -j LOG
--A limit-49 -j DROP
+-A limit-48 -m recent --name limit-48 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-21
+-A limit-48 -m recent --name limit-48 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-49 -m recent --name limit-49 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-22
+-A limit-49 -m recent --name limit-49 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
 -A limit-5 -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-6
 -A limit-5 -m recent --name limit-5 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-50 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-50 -j RETURN
--A limit-50 -m limit --limit 1/second -j LOG
--A limit-50 -j DROP
--A limit-51 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-51 -j RETURN
--A limit-51 -m limit --limit 1/second -j LOG
--A limit-51 -j DROP
--A limit-52 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-52 -j RETURN
--A limit-52 -j DROP
--A limit-53 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-53 -j RETURN
--A limit-53 -j DROP
--A limit-54 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-54 -j RETURN
--A limit-54 -j DROP
--A limit-55 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-55 -j RETURN
--A limit-55 -j DROP
--A limit-56 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-56 -j RETURN
--A limit-56 -j DROP
--A limit-57 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-57 -j RETURN
--A limit-57 -j DROP
--A limit-58 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-58 -j RETURN
--A limit-58 -j DROP
--A limit-59 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-59 -j RETURN
--A limit-59 -j DROP
--A limit-6 -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-50 -m recent --name limit-50 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-23
+-A limit-50 -m recent --name limit-50 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-51 -m recent --name limit-51 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-24
+-A limit-51 -m recent --name limit-51 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-52 -m recent --name limit-52 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-52 -m recent --name limit-52 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-53 -m recent --name limit-53 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-53 -m recent --name limit-53 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-54 -m recent --name limit-54 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-54 -m recent --name limit-54 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-55 -m recent --name limit-55 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-55 -m recent --name limit-55 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-56 -m recent --name limit-56 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-56 -m recent --name limit-56 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-57 -m recent --name limit-57 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-57 -m recent --name limit-57 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-58 -m recent --name limit-58 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-58 -m recent --name limit-58 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-59 -m recent --name limit-59 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-59 -m recent --name limit-59 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-6 -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-7
 -A limit-6 -m recent --name limit-6 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-60 -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-13
--A limit-60 -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-61 -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-14
--A limit-61 -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-62 -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-15
--A limit-62 -m limit --limit 1/second -j LOG
--A limit-62 -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-63 -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-16
--A limit-63 -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-64 -m recent --name limit-64 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-17
--A limit-64 -m recent --name limit-64 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-65 -m recent --name limit-65 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-18
--A limit-65 -m recent --name limit-65 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-66 -m recent --name limit-66 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-66 -m recent --name limit-66 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-67 -m recent --name limit-67 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-67 -m recent --name limit-67 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-68 -m recent --name limit-68 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-60 -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-60 -m recent --name limit-60 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-61 -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-61 -m recent --name limit-61 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-62 -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-62 -m recent --name limit-62 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-63 -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-63 -m recent --name limit-63 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-64 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-64 -j RETURN
+-A limit-64 -m limit --limit 1/second -j LOG
+-A limit-64 -j DROP
+-A limit-65 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-65 -j RETURN
+-A limit-65 -m limit --limit 1/second -j LOG
+-A limit-65 -j DROP
+-A limit-66 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-66 -j RETURN
+-A limit-66 -m limit --limit 1/second -j LOG
+-A limit-66 -j DROP
+-A limit-67 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-67 -j RETURN
+-A limit-67 -m limit --limit 1/second -j LOG
+-A limit-67 -j DROP
+-A limit-68 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-68 -j RETURN
 -A limit-68 -m limit --limit 1/second -j LOG
--A limit-68 -m recent --name limit-68 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-69 -m recent --name limit-69 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-69 -m recent --name limit-69 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-68 -j DROP
+-A limit-69 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-69 -j RETURN
+-A limit-69 -m limit --limit 1/second -j LOG
+-A limit-69 -j DROP
+-A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-8
 -A limit-7 -m recent --name limit-7 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-70 -m recent --name limit-70 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-70 -m recent --name limit-70 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-71 -m recent --name limit-71 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-71 -m recent --name limit-71 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-72 -m recent --name limit-72 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-72 -m recent --name limit-72 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-73 -m recent --name limit-73 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-73 -m recent --name limit-73 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-74 -m recent --name limit-74 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-74 -m limit --limit 1/second -j LOG
--A limit-74 -m recent --name limit-74 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-75 -m recent --name limit-75 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-75 -m recent --name limit-75 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
--A limit-76 -m recent --name limit-76 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-76 -m recent --name limit-76 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-77 -m recent --name limit-77 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
--A limit-77 -m recent --name limit-77 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A limit-78 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-78 -j ACCEPT
--A limit-78 -m limit --limit 1/second -j LOG
+-A limit-70 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-70 -j RETURN
+-A limit-70 -m limit --limit 1/second -j LOG
+-A limit-70 -j DROP
+-A limit-71 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-71 -j RETURN
+-A limit-71 -m limit --limit 1/second -j LOG
+-A limit-71 -j DROP
+-A limit-72 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-72 -j RETURN
+-A limit-72 -j DROP
+-A limit-73 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-73 -j RETURN
+-A limit-73 -j DROP
+-A limit-74 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-74 -j RETURN
+-A limit-74 -j DROP
+-A limit-75 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-75 -j RETURN
+-A limit-75 -j DROP
+-A limit-76 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-76 -j RETURN
+-A limit-76 -j DROP
+-A limit-77 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-77 -j RETURN
+-A limit-77 -j DROP
+-A limit-78 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-78 -j RETURN
 -A limit-78 -j DROP
 -A limit-79 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-79 -j RETURN
--A limit-79 -m limit --limit 1/second -j LOG
 -A limit-79 -j DROP
--A limit-8 -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-8 -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-9
 -A limit-8 -m limit --limit 1/second -j LOG
 -A limit-8 -m recent --name limit-8 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
--A limit-80 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-80 -j logaccept-3
--A limit-80 -m limit --limit 1/second -j LOG
--A limit-80 -j DROP
--A limit-81 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-81 -j ACCEPT
--A limit-81 -m limit --limit 1/second -j LOG
--A limit-81 -j DROP
--A limit-82 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-82 -j ACCEPT
--A limit-82 -j DROP
--A limit-83 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-83 -j RETURN
--A limit-83 -j DROP
--A limit-84 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-84 -j logaccept-4
--A limit-84 -j DROP
--A limit-85 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-85 -j ACCEPT
--A limit-85 -j DROP
--A limit-86 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-86 -j ACCEPT
--A limit-86 -j DROP
--A limit-87 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-87 -j RETURN
--A limit-87 -j DROP
--A limit-88 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-88 -j logaccept-5
--A limit-88 -j DROP
--A limit-89 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-89 -j ACCEPT
--A limit-89 -j DROP
--A limit-9 -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-80 -m recent --name limit-80 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-25
+-A limit-80 -m recent --name limit-80 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-81 -m recent --name limit-81 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-26
+-A limit-81 -m recent --name limit-81 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-82 -m recent --name limit-82 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-27
+-A limit-82 -m limit --limit 1/second -j LOG
+-A limit-82 -m recent --name limit-82 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-83 -m recent --name limit-83 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-28
+-A limit-83 -m recent --name limit-83 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-84 -m recent --name limit-84 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-29
+-A limit-84 -m recent --name limit-84 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-85 -m recent --name limit-85 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-30
+-A limit-85 -m recent --name limit-85 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-86 -m recent --name limit-86 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-31
+-A limit-86 -m recent --name limit-86 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-87 -m recent --name limit-87 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-32
+-A limit-87 -m recent --name limit-87 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-88 -m recent --name limit-88 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-33
+-A limit-88 -m limit --limit 1/second -j LOG
+-A limit-88 -m recent --name limit-88 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-89 -m recent --name limit-89 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-34
+-A limit-89 -m recent --name limit-89 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-9 -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-10
 -A limit-9 -m recent --name limit-9 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-90 -m recent --name limit-90 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-35
+-A limit-90 -m recent --name limit-90 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-91 -m recent --name limit-91 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j logdrop-36
+-A limit-91 -m recent --name limit-91 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-92 -m recent --name limit-92 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-92 -m recent --name limit-92 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-93 -m recent --name limit-93 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-93 -m recent --name limit-93 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-94 -m recent --name limit-94 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-94 -m limit --limit 1/second -j LOG
+-A limit-94 -m recent --name limit-94 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-95 -m recent --name limit-95 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-95 -m recent --name limit-95 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -m limit --limit 1/second -j LOG
+-A limit-96 -m recent --name limit-96 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-96 -m recent --name limit-96 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-97 -m recent --name limit-97 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-97 -m recent --name limit-97 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A limit-98 -m recent --name limit-98 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-98 -m recent --name limit-98 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A limit-99 -m recent --name limit-99 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 1 --seconds 1 -j DROP
+-A limit-99 -m recent --name limit-99 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
 -A logaccept-1 -m limit --limit 1/second -j LOG
@@ -709,6 +919,10 @@
 -A logaccept-5 -j ACCEPT
 -A logaccept-6 -m limit --limit 1/second -j LOG
 -A logaccept-6 -j ACCEPT
+-A logaccept-7 -m limit --limit 1/second -j LOG
+-A logaccept-7 -j ACCEPT
+-A logaccept-8 -m limit --limit 1/second -j LOG
+-A logaccept-8 -j ACCEPT
 -A logaccept-final-0 -m limit --limit 1/second -j LOG
 -A logaccept-final-0 -j ACCEPT
 -A logaccept-final-1 -m limit --limit 1/second -j LOG
@@ -721,6 +935,10 @@
 -A logaccept-final-4 -j ACCEPT
 -A logaccept-final-5 -m limit --limit 1/second -j LOG
 -A logaccept-final-5 -j ACCEPT
+-A logaccept-final-6 -m limit --limit 1/second -j LOG
+-A logaccept-final-6 -j ACCEPT
+-A logaccept-final-7 -m limit --limit 1/second -j LOG
+-A logaccept-final-7 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
@@ -749,8 +967,44 @@
 -A logdrop-2 -j DROP
 -A logdrop-20 -m limit --limit 1/second -j LOG
 -A logdrop-20 -j DROP
+-A logdrop-21 -m limit --limit 1/second -j LOG
+-A logdrop-21 -j DROP
+-A logdrop-22 -m limit --limit 1/second -j LOG
+-A logdrop-22 -j DROP
+-A logdrop-23 -m limit --limit 1/second -j LOG
+-A logdrop-23 -j DROP
+-A logdrop-24 -m limit --limit 1/second -j LOG
+-A logdrop-24 -j DROP
+-A logdrop-25 -m limit --limit 1/second -j LOG
+-A logdrop-25 -j DROP
+-A logdrop-26 -m limit --limit 1/second -j LOG
+-A logdrop-26 -j DROP
+-A logdrop-27 -m limit --limit 1/second -j LOG
+-A logdrop-27 -j DROP
+-A logdrop-28 -m limit --limit 1/second -j LOG
+-A logdrop-28 -j DROP
+-A logdrop-29 -m limit --limit 1/second -j LOG
+-A logdrop-29 -j DROP
 -A logdrop-3 -m limit --limit 1/second -j LOG
 -A logdrop-3 -j DROP
+-A logdrop-30 -m limit --limit 1/second -j LOG
+-A logdrop-30 -j DROP
+-A logdrop-31 -m limit --limit 1/second -j LOG
+-A logdrop-31 -j DROP
+-A logdrop-32 -m limit --limit 1/second -j LOG
+-A logdrop-32 -j DROP
+-A logdrop-33 -m limit --limit 1/second -j LOG
+-A logdrop-33 -j DROP
+-A logdrop-34 -m limit --limit 1/second -j LOG
+-A logdrop-34 -j DROP
+-A logdrop-35 -m limit --limit 1/second -j LOG
+-A logdrop-35 -j DROP
+-A logdrop-36 -m limit --limit 1/second -j LOG
+-A logdrop-36 -j DROP
+-A logdrop-37 -m limit --limit 1/second -j LOG
+-A logdrop-37 -j DROP
+-A logdrop-38 -m limit --limit 1/second -j LOG
+-A logdrop-38 -j DROP
 -A logdrop-4 -m limit --limit 1/second -j LOG
 -A logdrop-4 -j DROP
 -A logdrop-5 -m limit --limit 1/second -j LOG
@@ -803,11 +1057,27 @@ COMMIT
 -A OUTPUT -o eth0 -j CT --notrack
 -A OUTPUT -o eth0 -j CT --notrack
 -A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
+-A OUTPUT -o eth0 -j CT --notrack
 -A OUTPUT -p tcp --dport 80 -j CT --notrack
 -A OUTPUT -p esp -j CT --notrack
 -A OUTPUT -p udp -m multiport --sports 500,4500 -j CT --notrack
 -A OUTPUT -j CT --notrack
 -A PREROUTING -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -i eth0 -j CT --notrack

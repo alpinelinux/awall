@@ -6,7 +6,10 @@ res = {}
 function add(limit_type, base)
    for _, count in ipairs{1, 30} do
       for _, limit in ipairs{
-         count, {count=count, log=false}, {count=count, log='none'}
+         count,
+	 {count=count},
+	 {count=count, log=false},
+	 {count=count, log='none'}
       } do
          for _, log in ipairs{false, true, 'none'} do
             for _, action in ipairs{false, 'pass'} do
