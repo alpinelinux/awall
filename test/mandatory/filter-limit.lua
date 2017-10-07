@@ -1,48 +1,52 @@
-update = require('awall.util').update
+util = require('awall.util')
 json = require('cjson')
 
 res = {}
 
-function add(limit_type, base)
-   for _, count in ipairs{1, 30} do
-      for _, limit in ipairs{
-         count,
-	 {count=count},
-	 {count=count, log=false},
-	 {count=count, log='none'}
-      } do
-         for _, name in ipairs{
-            false, type(limit) == 'table' and count == 1 and 'foo' or nil
-         } do
-	    for _, addr in ipairs{false, name and 'dest' or nil} do
-	       for _, no_update in ipairs{false, name or nil} do
-	          local upd
-	          if no_update then upd = false end
-                  for _, log in ipairs{false, true, 'none'} do
-                     for _, action in ipairs{false, 'pass'} do
-	                if not (count == 30 and log and action) then
-	                   table.insert(
-	                      res,
-		              update(
-		                 {
-		                    [limit_type..'-limit']=type(limit) == 'table' and update(
-			               {
-				          name=name or nil,
-					  addr=addr or nil,
-					  update=upd
-				       },
-				       limit
-		                    ) or limit,
-		                    log=log or nil,
-		                    action=action or nil
-		                 },
-		                 base or {}
-		              )
-                           )
-		        end
-		     end
-	          end
-               end
+function add(limit_type, filter)
+
+   for _, high_rate in ipairs{false, true} do
+
+      local function add_limit(limit)
+         for _, log in ipairs{false, true, 'none'} do
+            for _, action in ipairs{false, 'pass'} do
+               if not (high_rate and log and action) then
+	          table.insert(
+	             res,
+	             util.update(
+	                {
+		           [limit_type..'-limit']=util.copy(limit),
+		           log=log or nil,
+		           action=action or nil
+	                },
+		        filter or {}
+	             )
+                  )
+	       end
+            end
+         end
+      end
+
+      local count = high_rate and 30 or 1
+      add_limit(count)
+
+      for _, log in ipairs{true, false, 'none'} do
+	 local limit = {count=count}
+	 if log ~= true then limit.log = log end
+
+         add_limit(limit)
+
+	 if not high_rate then
+	    limit.name = 'foo'
+
+	    for _, addr in ipairs{false, 'dest'} do
+	       limit.addr = addr or nil
+
+	       limit.update = nil
+	       add_limit(limit)
+
+	       limit.update = false
+	       add_limit(limit)
 	    end
 	 end
       end
