@@ -784,13 +784,7 @@ end
 M.Limit = M.class(M.Maskable)
 
 function M.Limit:init(...)
-   if not self.count then
-      if not self[1] then
-	 self:error('Packet count not defined for limit')
-      end
-      self.count = self[1]
-   end
-
+   setdefault(self, 'count', self[1] or 1)
    setdefault(self, 'interval', 1)
 
    M.Limit.super(self):init(...)

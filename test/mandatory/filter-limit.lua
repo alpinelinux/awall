@@ -27,8 +27,8 @@ function add(limit_type, filter)
          end
       end
 
-      local count = high_rate and 150 or 1
-      add_limit(count)
+      local count = high_rate and 150 or nil
+      add_limit(count or 1)
 
       for _, interval in ipairs{false, 5} do
          for _, log in ipairs{true, false, 'none'} do

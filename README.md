@@ -201,10 +201,10 @@ members of a top-level dictionary but are embedded into other objects.
 
 In its simplest form, a limit definition is an integer specifying the
 maximum number of packets or connections per second. More complex
-limits are defined as objects, where the **count** attribute define
+limits are defined as objects, where the **count** attribute defines
 the maximum during an interval defined by the **interval**
 attribute. The unit of the **interval** attribute is second, and the
-default value is 1.
+default value is 1. The default value for **count** is 1 as well.
 
 The maximum rate defined by a limit may be absolute or specific to
 blocks of IP addresses or pairs thereof. The number of most
