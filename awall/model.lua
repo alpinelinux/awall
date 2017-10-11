@@ -590,46 +590,8 @@ function M.Rule:trules()
       setdefault(ofrag, 'target', custom or self:target())
    end
 
-   local tbl = self:table()
-
-   local function convertchains(ofrags)
-      local res = {}
-
-      for i, ofrag in ipairs(ofrags) do
-
-	 if contains(builtin[tbl], ofrag.chain) then table.insert(res, ofrag)
-	 else
-	    local ofs, recursive
-	    if ofrag.chain == 'PREROUTING' then
-	       ofs = {{chain='FORWARD'}, {chain='INPUT'}}
-	    elseif ofrag.chain == 'POSTROUTING' then
-	       ofs = {{chain='FORWARD'}, {chain='OUTPUT'}}
-	       recursive = true
-	    elseif ofrag.chain == 'INPUT' then
-	       ofs = {
-	          {match='-m addrtype --dst-type LOCAL', chain='PREROUTING'}
-	       }
-	    elseif ofrag.chain == 'FORWARD' then
-	       ofs = {
-		  {match='-m addrtype ! --dst-type LOCAL', chain='PREROUTING'}
-	       }
-	    end
-
-	    if ofs then
-	       ofrag.chain = nil
-	       ofs = combinations(ofs, {ofrag})
-	       if recursive then ofs = convertchains(ofs) end
-	       extend(res, ofs)
-
-	    else table.insert(res, ofrag) end
-	 end
-      end
-
-      return res
-   end
-
-   ofrags = convertchains(ffilter(ofrags))
-   tag(ofrags, 'table', tbl, false)
+   ofrags = self:convertchains(ffilter(ofrags))
+   tag(ofrags, 'table', self:table(), false)
 
    local function checkzof(ofrag, dir, chains)
       if ofrag[dir] and contains(chains, ofrag.chain) then
@@ -666,6 +628,40 @@ function M.Rule:mangleoptfrags(ofrags) return ofrags end
 function M.Rule:trulefilter(rule) return true end
 
 function M.Rule:extratrules(rules) return {} end
+
+function M.Rule:convertchains(ofrags)
+   local res = {}
+
+   for _, ofrag in ipairs(ofrags) do
+
+      if contains(builtin[self:table()], ofrag.chain) then
+	 table.insert(res, ofrag)
+
+      else
+	 local ofs, recursive
+	 if ofrag.chain == 'PREROUTING' then
+	    ofs = {{chain='FORWARD'}, {chain='INPUT'}}
+	 elseif ofrag.chain == 'POSTROUTING' then
+	    ofs = {{chain='FORWARD'}, {chain='OUTPUT'}}
+	    recursive = true
+	 elseif ofrag.chain == 'INPUT' then
+	    ofs = {{match='-m addrtype --dst-type LOCAL', chain='PREROUTING'}}
+	 elseif ofrag.chain == 'FORWARD' then
+	    ofs = {{match='-m addrtype ! --dst-type LOCAL', chain='PREROUTING'}}
+	 end
+
+	 if ofs then
+	    ofrag.chain = nil
+	    ofs = combinations(ofs, {ofrag})
+	    if recursive then ofs = self:convertchains(ofs) end
+	    extend(res, ofs)
+
+	 else table.insert(res, ofrag) end
+      end
+   end
+
+   return res
+end
 
 function M.Rule:extrarules(label, cls, options)
    local params = {}
