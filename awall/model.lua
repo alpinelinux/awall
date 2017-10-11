@@ -464,6 +464,8 @@ function M.Rule:combine(ofs1, ofs2, key, unique)
 	 if #comb < #ofs then return connect() end
 
 	 if unique then
+	    if #self:convertchains{of} > 1 then return connect() end
+
 	    for _, c in ipairs(comb) do
 	       if c.family then
 	          if not created then created = {}
