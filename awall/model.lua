@@ -20,6 +20,7 @@ local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
 local contains = util.contains
+local copy = util.copy
 local extend = util.extend
 local filter = util.filter
 local join = util.join
@@ -440,8 +441,9 @@ function M.Rule:combine(ofs1, ofs2, key, unique)
       local chain = self:uniqueid(key)
       local function setvar(name)
 	 return function(of)
-	    setdefault(of, name, chain)
-	    return of
+	    local res = copy(of)
+	    setdefault(res, name, chain)
+	    return res
 	 end
       end
 
@@ -651,8 +653,9 @@ function M.Rule:convertchains(ofrags)
 	 end
 
 	 if ofs then
-	    ofrag.chain = nil
-	    ofs = combinations(ofs, {ofrag})
+	    local of = copy(ofrag)
+	    of.chain = nil
+	    ofs = combinations(ofs, {of})
 	    if recursive then ofs = self:convertchains(ofs) end
 	    extend(res, ofs)
 
@@ -696,7 +699,7 @@ function M.Maskable:init(...)
       self['dest-mask'] = {}
       if type(self.mask) == 'number' then self.mask = {src=self.mask} end
       for _, family in ipairs{'inet', 'inet6'} do
-	 setdefault(self.mask, family, util.copy(self.mask))
+	 setdefault(self.mask, family, copy(self.mask))
 	 for _, attr in ipairs{'src', 'dest'} do
 	    self[attr..'-mask'][family] = self.mask[family][attr] or
 	       ({src=({inet=32, inet6=128})[family], dest=0})[attr]
