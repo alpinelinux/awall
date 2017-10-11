@@ -983,19 +983,25 @@
 :limit-998 - [0:0]
 :limit-999 - [0:0]
 :logaccept-0 - [0:0]
-:logaccept-1 - [0:0]
-:logaccept-10 - [0:0]
-:logaccept-11 - [0:0]
-:logaccept-12 - [0:0]
-:logaccept-13 - [0:0]
-:logaccept-14 - [0:0]
-:logaccept-2 - [0:0]
-:logaccept-3 - [0:0]
-:logaccept-4 - [0:0]
-:logaccept-5 - [0:0]
-:logaccept-6 - [0:0]
-:logaccept-7 - [0:0]
-:logaccept-8 - [0:0]
+:logaccept-18 - [0:0]
+:logaccept-27 - [0:0]
+:logaccept-36 - [0:0]
+:logaccept-45 - [0:0]
+:logaccept-63 - [0:0]
+:logaccept-64 - [0:0]
+:logaccept-65 - [0:0]
+:logaccept-66 - [0:0]
+:logaccept-67 - [0:0]
+:logaccept-68 - [0:0]
+:logaccept-69 - [0:0]
+:logaccept-70 - [0:0]
+:logaccept-71 - [0:0]
+:logaccept-72 - [0:0]
+:logaccept-73 - [0:0]
+:logaccept-74 - [0:0]
+:logaccept-75 - [0:0]
+:logaccept-76 - [0:0]
+:logaccept-77 - [0:0]
 :logaccept-9 - [0:0]
 :logaccept-final-0 - [0:0]
 :logaccept-final-1 - [0:0]
@@ -1405,6 +1411,8 @@
 :logdrop-98 - [0:0]
 :logdrop-99 - [0:0]
 :logpass-0 - [0:0]
+:logpass-29 - [0:0]
+:logpass-42 - [0:0]
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
@@ -1769,6 +1777,30 @@
 -A FORWARD -j limit-359
 -A FORWARD -j limit-358
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD 
+-A FORWARD -j logaccept-0
+-A FORWARD -j logpass-0
+-A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -o eth1 -d fc00::/7 
+-A FORWARD -o eth1 -d fc00::/7 -j logaccept-9
+-A FORWARD -o eth1 -d fc00::/7 -m limit --limit 1/second -j LOG
+-A FORWARD -i eth0 -j ACCEPT
+-A FORWARD -i eth0 
+-A FORWARD -i eth0 -j logaccept-18
+-A FORWARD -i eth0 -m limit --limit 1/second -j LOG
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j logaccept-27
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -m limit --limit 1/second -j LOG
+-A FORWARD -i eth1 -s fc00::/7 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 
+-A FORWARD -i eth1 -s fc00::/7 -j logaccept-36
+-A FORWARD -i eth1 -s fc00::/7 -m limit --limit 1/second -j LOG
+-A FORWARD -i eth1 -s fc00::/7 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 
+-A FORWARD -i eth1 -s fc00::/7 -j logaccept-45
+-A FORWARD -i eth1 -s fc00::/7 -j logpass-29
 -A FORWARD -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-0
@@ -2331,9 +2363,9 @@
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-14
+-A FORWARD -j logaccept-77
 -A FORWARD -j logdrop-344
--A FORWARD -j logpass-0
+-A FORWARD -j logpass-42
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
@@ -2725,6 +2757,22 @@
 -A INPUT -j limit-358
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT 
+-A INPUT -j logaccept-0
+-A INPUT -j logpass-0
+-A INPUT -i eth0 -j ACCEPT
+-A INPUT -i eth0 
+-A INPUT -i eth0 -j logaccept-18
+-A INPUT -i eth0 -m limit --limit 1/second -j LOG
+-A INPUT -i eth1 -s fc00::/7 -j ACCEPT
+-A INPUT -i eth1 -s fc00::/7 
+-A INPUT -i eth1 -s fc00::/7 -j logaccept-36
+-A INPUT -i eth1 -s fc00::/7 -m limit --limit 1/second -j LOG
+-A INPUT -i eth1 -s fc00::/7 -j ACCEPT
+-A INPUT -i eth1 -s fc00::/7 
+-A INPUT -i eth1 -s fc00::/7 -j logaccept-45
+-A INPUT -i eth1 -s fc00::/7 -j logpass-29
 -A INPUT -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -j logdrop-0
@@ -3287,9 +3335,9 @@
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-14
+-A INPUT -j logaccept-77
 -A INPUT -j logdrop-344
--A INPUT -j logpass-0
+-A INPUT -j logpass-42
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
@@ -3661,6 +3709,14 @@
 -A OUTPUT -j limit-358
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT 
+-A OUTPUT -j logaccept-0
+-A OUTPUT -j logpass-0
+-A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
+-A OUTPUT -o eth1 -d fc00::/7 
+-A OUTPUT -o eth1 -d fc00::/7 -j logaccept-9
+-A OUTPUT -o eth1 -d fc00::/7 -m limit --limit 1/second -j LOG
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logdrop-0
@@ -4409,9 +4465,9 @@
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-14
+-A OUTPUT -j logaccept-77
 -A OUTPUT -j logdrop-344
--A OUTPUT -j logpass-0
+-A OUTPUT -j logpass-42
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
@@ -4530,7 +4586,7 @@
 -A limit-1047 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1047 -j RETURN
 -A limit-1047 -m limit --limit 1/second -j LOG
 -A limit-1047 -j DROP
--A limit-1048 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1048 -j logaccept-7
+-A limit-1048 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1048 -j logaccept-70
 -A limit-1048 -m limit --limit 1/second -j LOG
 -A limit-1048 -j DROP
 -A limit-1049 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1049 -j ACCEPT
@@ -4544,7 +4600,7 @@
 -A limit-1051 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1051 -j RETURN
 -A limit-1051 -m limit --limit 1/second -j LOG
 -A limit-1051 -j DROP
--A limit-1052 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1052 -j logaccept-8
+-A limit-1052 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1052 -j logaccept-71
 -A limit-1052 -m limit --limit 1/second -j LOG
 -A limit-1052 -j DROP
 -A limit-1053 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1053 -j ACCEPT
@@ -4554,7 +4610,7 @@
 -A limit-1054 -j DROP
 -A limit-1055 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1055 -j RETURN
 -A limit-1055 -j DROP
--A limit-1056 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1056 -j logaccept-9
+-A limit-1056 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1056 -j logaccept-72
 -A limit-1056 -j DROP
 -A limit-1057 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1057 -j ACCEPT
 -A limit-1057 -j DROP
@@ -4564,7 +4620,7 @@
 -A limit-1059 -j DROP
 -A limit-106 -m recent --name user:C --rdest --mask fe00:: --update --hitcount 1 --seconds 1 -j DROP
 -A limit-106 -m recent --name user:C --rdest --mask fe00:: --set -j ACCEPT
--A limit-1060 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1060 -j logaccept-10
+-A limit-1060 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1060 -j logaccept-73
 -A limit-1060 -j DROP
 -A limit-1061 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1061 -j ACCEPT
 -A limit-1061 -j DROP
@@ -4574,7 +4630,7 @@
 -A limit-1063 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1063 -j RETURN
 -A limit-1063 -m limit --limit 1/second -j LOG
 -A limit-1063 -j DROP
--A limit-1064 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1064 -j logaccept-11
+-A limit-1064 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1064 -j logaccept-74
 -A limit-1064 -m limit --limit 1/second -j LOG
 -A limit-1064 -j DROP
 -A limit-1065 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1065 -j ACCEPT
@@ -4584,7 +4640,7 @@
 -A limit-1066 -j DROP
 -A limit-1067 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1067 -j RETURN
 -A limit-1067 -j DROP
--A limit-1068 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1068 -j logaccept-12
+-A limit-1068 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1068 -j logaccept-75
 -A limit-1068 -j DROP
 -A limit-1069 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1069 -j ACCEPT
 -A limit-1069 -j DROP
@@ -4594,7 +4650,7 @@
 -A limit-1070 -j DROP
 -A limit-1071 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1071 -j RETURN
 -A limit-1071 -j DROP
--A limit-1072 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1072 -j logaccept-13
+-A limit-1072 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1072 -j logaccept-76
 -A limit-1072 -j DROP
 -A limit-1073 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-1073 -j ACCEPT
 -A limit-1073 -j DROP
@@ -5066,7 +5122,7 @@
 -A limit-331 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-331 -j RETURN
 -A limit-331 -m limit --limit 1/second -j LOG
 -A limit-331 -j DROP
--A limit-332 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j logaccept-0
+-A limit-332 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-332 -j logaccept-63
 -A limit-332 -m limit --limit 1/second -j LOG
 -A limit-332 -j DROP
 -A limit-333 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-333 -j ACCEPT
@@ -5078,7 +5134,7 @@
 -A limit-335 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-335 -j RETURN
 -A limit-335 -m limit --limit 1/second -j LOG
 -A limit-335 -j DROP
--A limit-336 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-336 -j logaccept-1
+-A limit-336 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-336 -j logaccept-64
 -A limit-336 -m limit --limit 1/second -j LOG
 -A limit-336 -j DROP
 -A limit-337 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-337 -j ACCEPT
@@ -5090,7 +5146,7 @@
 -A limit-339 -j DROP
 -A limit-34 -m recent --name user:A --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --rcheck --hitcount 1 --seconds 1 -j logdrop-35
 -A limit-34 -j ACCEPT
--A limit-340 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-340 -j logaccept-2
+-A limit-340 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-340 -j logaccept-65
 -A limit-340 -j DROP
 -A limit-341 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-341 -j ACCEPT
 -A limit-341 -j DROP
@@ -5098,7 +5154,7 @@
 -A limit-342 -j DROP
 -A limit-343 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-343 -j RETURN
 -A limit-343 -j DROP
--A limit-344 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-344 -j logaccept-3
+-A limit-344 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-344 -j logaccept-66
 -A limit-344 -j DROP
 -A limit-345 -m hashlimit --hashlimit-upto 150/second --hashlimit-burst 150 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-345 -j ACCEPT
 -A limit-345 -j DROP
@@ -5108,7 +5164,7 @@
 -A limit-347 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-347 -j RETURN
 -A limit-347 -m limit --limit 1/second -j LOG
 -A limit-347 -j DROP
--A limit-348 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-348 -j logaccept-4
+-A limit-348 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-348 -j logaccept-67
 -A limit-348 -m limit --limit 1/second -j LOG
 -A limit-348 -j DROP
 -A limit-349 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-349 -j ACCEPT
@@ -5118,7 +5174,7 @@
 -A limit-350 -j DROP
 -A limit-351 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-351 -j RETURN
 -A limit-351 -j DROP
--A limit-352 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-352 -j logaccept-5
+-A limit-352 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-352 -j logaccept-68
 -A limit-352 -j DROP
 -A limit-353 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-353 -j ACCEPT
 -A limit-353 -j DROP
@@ -5126,7 +5182,7 @@
 -A limit-354 -j DROP
 -A limit-355 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-355 -j RETURN
 -A limit-355 -j DROP
--A limit-356 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-356 -j logaccept-6
+-A limit-356 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-356 -j logaccept-69
 -A limit-356 -j DROP
 -A limit-357 -m hashlimit --hashlimit-upto 30/second --hashlimit-burst 30 --hashlimit-mode srcip --hashlimit-srcmask 128 --hashlimit-name limit-357 -j ACCEPT
 -A limit-357 -j DROP
@@ -6409,32 +6465,44 @@
 -A limit-999 -m recent --name user:A --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
--A logaccept-1 -m limit --limit 1/second -j LOG
--A logaccept-1 -j ACCEPT
--A logaccept-10 -m limit --limit 1/second -j LOG
--A logaccept-10 -j ACCEPT
--A logaccept-11 -m limit --limit 1/second -j LOG
--A logaccept-11 -j ACCEPT
--A logaccept-12 -m limit --limit 1/second -j LOG
--A logaccept-12 -j ACCEPT
--A logaccept-13 -m limit --limit 1/second -j LOG
--A logaccept-13 -j ACCEPT
--A logaccept-14 -m limit --limit 1/second -j LOG
--A logaccept-14 -j ACCEPT
--A logaccept-2 -m limit --limit 1/second -j LOG
--A logaccept-2 -j ACCEPT
--A logaccept-3 -m limit --limit 1/second -j LOG
--A logaccept-3 -j ACCEPT
--A logaccept-4 -m limit --limit 1/second -j LOG
--A logaccept-4 -j ACCEPT
--A logaccept-5 -m limit --limit 1/second -j LOG
--A logaccept-5 -j ACCEPT
--A logaccept-6 -m limit --limit 1/second -j LOG
--A logaccept-6 -j ACCEPT
--A logaccept-7 -m limit --limit 1/second -j LOG
--A logaccept-7 -j ACCEPT
--A logaccept-8 -m limit --limit 1/second -j LOG
--A logaccept-8 -j ACCEPT
+-A logaccept-18 -m limit --limit 1/second -j LOG
+-A logaccept-18 -j ACCEPT
+-A logaccept-27 -m limit --limit 1/second -j LOG
+-A logaccept-27 -j ACCEPT
+-A logaccept-36 -m limit --limit 1/second -j LOG
+-A logaccept-36 -j ACCEPT
+-A logaccept-45 -m limit --limit 1/second -j LOG
+-A logaccept-45 -j ACCEPT
+-A logaccept-63 -m limit --limit 1/second -j LOG
+-A logaccept-63 -j ACCEPT
+-A logaccept-64 -m limit --limit 1/second -j LOG
+-A logaccept-64 -j ACCEPT
+-A logaccept-65 -m limit --limit 1/second -j LOG
+-A logaccept-65 -j ACCEPT
+-A logaccept-66 -m limit --limit 1/second -j LOG
+-A logaccept-66 -j ACCEPT
+-A logaccept-67 -m limit --limit 1/second -j LOG
+-A logaccept-67 -j ACCEPT
+-A logaccept-68 -m limit --limit 1/second -j LOG
+-A logaccept-68 -j ACCEPT
+-A logaccept-69 -m limit --limit 1/second -j LOG
+-A logaccept-69 -j ACCEPT
+-A logaccept-70 -m limit --limit 1/second -j LOG
+-A logaccept-70 -j ACCEPT
+-A logaccept-71 -m limit --limit 1/second -j LOG
+-A logaccept-71 -j ACCEPT
+-A logaccept-72 -m limit --limit 1/second -j LOG
+-A logaccept-72 -j ACCEPT
+-A logaccept-73 -m limit --limit 1/second -j LOG
+-A logaccept-73 -j ACCEPT
+-A logaccept-74 -m limit --limit 1/second -j LOG
+-A logaccept-74 -j ACCEPT
+-A logaccept-75 -m limit --limit 1/second -j LOG
+-A logaccept-75 -j ACCEPT
+-A logaccept-76 -m limit --limit 1/second -j LOG
+-A logaccept-76 -j ACCEPT
+-A logaccept-77 -m limit --limit 1/second -j LOG
+-A logaccept-77 -j ACCEPT
 -A logaccept-9 -m limit --limit 1/second -j LOG
 -A logaccept-9 -j ACCEPT
 -A logaccept-final-0 -m limit --limit 1/second -j LOG
@@ -7252,6 +7320,8 @@
 -A logdrop-99 -m limit --limit 1/second -j LOG
 -A logdrop-99 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
+-A logpass-29 -m limit --limit 1/second -j LOG
+-A logpass-42 -m limit --limit 1/second -j LOG
 -A logreject-0 -m limit --limit 1/second -j LOG
 -A logreject-0 -j REJECT
 -A logtarpit-0 -m limit --limit 1/second -j LOG
