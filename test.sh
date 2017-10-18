@@ -9,13 +9,29 @@ cd "$(dirname "$0")"
 
 export LUA_PATH="./?.lua;;"
 LUA=lua${LUA_VERSION}
+AWALL="$LUA ./awall-cli"
 
 for cls in mandatory optional private; do
     eval "export AWALL_PATH_$(echo $cls | tr a-z A-Z)=test/$cls"
     mkdir -p test/$cls
     for script in test/$cls/*.lua; do
-        [ -f "$script" ] && $LUA "$script" > "${script%.lua}.json"
+        [ -f $script ] && $LUA $script > ${script%.lua}.json
     done
 done
 
-exec $LUA ./awall-cli ${1:-diff} -o test/output
+POLICIES=$(ls test/optional/*.json | sed -E 's:^.*/([^/]+).json$:\1:')
+
+for pol in $POLICIES; do
+    $AWALL disable $pol 2>/dev/null
+done
+
+RC=0
+for pol in $POLICIES; do
+    dir=test/output/$pol
+    mkdir -p $dir
+
+    $AWALL enable $pol
+    $AWALL ${1:-diff} -o $dir || RC=1
+    $AWALL disable $pol
+done
+exit $RC

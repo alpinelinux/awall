@@ -1,0 +1,2 @@
+# ipset awall-masquerade
+hash:net family inet
