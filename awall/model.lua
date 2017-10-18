@@ -481,7 +481,7 @@ function M.Rule:combine(ofs1, ofs2, key, unique)
       else table.insert(res, of) end
    end
 
-   return res
+   return extend(res, filter(ofs2, function(of) return of.chain end))
 end
 
 
