@@ -65,6 +65,7 @@ function add(limit_type, filter)
 end
 
 add('conn', {out='B'})
+add('conn', {['in']='_fw', out='B'})
 add('flow')
 add('flow', {['in']='A', out='_fw', ['no-track']=true})
 
