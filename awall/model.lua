@@ -34,6 +34,9 @@ local sortedkeys = util.sortedkeys
 local startswith = require('stringy').startswith
 
 
+local ADDRLEN = {inet=32, inet6=128}
+
+
 M.ConfigObject = M.class()
 
 function M.ConfigObject:init(context, location)
@@ -710,7 +713,7 @@ function M.Maskable:init(...)
 	 setdefault(self.mask, family, copy(self.mask))
 	 for _, attr in ipairs{'src', 'dest'} do
 	    self[attr..'-mask'][family] = self.mask[family][attr] or
-	       ({src=({inet=32, inet6=128})[family], dest=0})[attr]
+	       ({src=ADDRLEN[family], dest=0})[attr]
 	 end
       end
    end
@@ -730,9 +733,7 @@ function M.Maskable:initmask()
       for _, family in ipairs{'inet', 'inet6'} do
 	 local value = self[mask][family]
 	 if not value then self[mask][family] = 0
-	 elseif value == true then
-	    self[mask][family] = ({inet=32, inet6=128})[family]
-	 end
+	 elseif value == true then self[mask][family] = ADDRLEN[family] end
       end
    end
 end
