@@ -93,10 +93,16 @@ end
 function M.ConfigObject:trules() return {} end
 
 function M.ConfigObject:info()
-   local res = {}
-   for i, trule in ipairs(self:trules()) do
-      table.insert(res, {'  '..optfrag.location(trule), optfrag.command(trule)})
+   local rules = {}
+   for _, trule in ipairs(self:trules()) do
+      local loc = optfrag.location(trule)
+      table.insert(
+	 setdefault(rules, loc, {}), {'  '..loc, optfrag.command(trule)}
+      )
    end
+
+   local res = {}
+   for _, loc in sortedkeys(rules) do extend(res, rules[loc]) end
    return res
 end
 

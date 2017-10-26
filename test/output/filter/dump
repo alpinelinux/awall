@@ -11,203 +11,203 @@ Dnat 2                 {"in":"B"}
 Filter 1                    {}
 (filter)                    
   inet/filter/FORWARD       -j ACCEPT
-  inet6/filter/FORWARD      -j ACCEPT
   inet/filter/INPUT         -j ACCEPT
-  inet6/filter/INPUT        -j ACCEPT
   inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -j ACCEPT
 
 Filter 2                    {"action":"accept"}
 (filter)                    
   inet/filter/FORWARD       -j ACCEPT
-  inet6/filter/FORWARD      -j ACCEPT
   inet/filter/INPUT         -j ACCEPT
-  inet6/filter/INPUT        -j ACCEPT
   inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -j ACCEPT
 
 Filter 3                    {"action":"drop"}
 (filter)                    
   inet/filter/FORWARD       -j logdrop-0
-  inet6/filter/FORWARD      -j logdrop-0
   inet/filter/INPUT         -j logdrop-0
-  inet6/filter/INPUT        -j logdrop-0
   inet/filter/OUTPUT        -j logdrop-0
-  inet6/filter/OUTPUT       -j logdrop-0
   inet/filter/logdrop-0     -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-0    -m limit --limit 1/second -j LOG
   inet/filter/logdrop-0     -j DROP
+  inet6/filter/FORWARD      -j logdrop-0
+  inet6/filter/INPUT        -j logdrop-0
+  inet6/filter/OUTPUT       -j logdrop-0
+  inet6/filter/logdrop-0    -m limit --limit 1/second -j LOG
   inet6/filter/logdrop-0    -j DROP
 
 Filter 4                    {"action":"pass"}
 (filter)                    
   inet/filter/FORWARD       
-  inet6/filter/FORWARD      
   inet/filter/INPUT         
-  inet6/filter/INPUT        
   inet/filter/OUTPUT        
+  inet6/filter/FORWARD      
+  inet6/filter/INPUT        
   inet6/filter/OUTPUT       
 
 Filter 5                    {"action":"reject"}
 (filter)                    
   inet/filter/FORWARD       -j logreject-0
-  inet6/filter/FORWARD      -j logreject-0
   inet/filter/INPUT         -j logreject-0
-  inet6/filter/INPUT        -j logreject-0
   inet/filter/OUTPUT        -j logreject-0
-  inet6/filter/OUTPUT       -j logreject-0
   inet/filter/logreject-0   -m limit --limit 1/second -j LOG
-  inet6/filter/logreject-0  -m limit --limit 1/second -j LOG
   inet/filter/logreject-0   -j REJECT
+  inet6/filter/FORWARD      -j logreject-0
+  inet6/filter/INPUT        -j logreject-0
+  inet6/filter/OUTPUT       -j logreject-0
+  inet6/filter/logreject-0  -m limit --limit 1/second -j LOG
   inet6/filter/logreject-0  -j REJECT
 
 Filter 6                    {"action":"tarpit"}
 (filter)                    
   inet/filter/FORWARD       -j logtarpit-0
-  inet6/filter/FORWARD      -j logtarpit-0
   inet/filter/INPUT         -j logtarpit-0
-  inet6/filter/INPUT        -j logtarpit-0
   inet/filter/OUTPUT        -j logtarpit-0
-  inet6/filter/OUTPUT       -j logtarpit-0
   inet/filter/logtarpit-0   -m limit --limit 1/second -j LOG
-  inet6/filter/logtarpit-0  -m limit --limit 1/second -j LOG
   inet/filter/logtarpit-0   -j tarpit
-  inet6/filter/logtarpit-0  -j tarpit
-  inet/raw/PREROUTING       -j CT --notrack
-  inet6/raw/PREROUTING      -j CT --notrack
   inet/raw/OUTPUT           -j CT --notrack
+  inet/raw/PREROUTING       -j CT --notrack
+  inet6/filter/FORWARD      -j logtarpit-0
+  inet6/filter/INPUT        -j logtarpit-0
+  inet6/filter/OUTPUT       -j logtarpit-0
+  inet6/filter/logtarpit-0  -m limit --limit 1/second -j LOG
+  inet6/filter/logtarpit-0  -j tarpit
   inet6/raw/OUTPUT          -j CT --notrack
+  inet6/raw/PREROUTING      -j CT --notrack
 
 Filter 7                    {}
 (log)                       
   inet/filter/FORWARD       -j ACCEPT
-  inet6/filter/FORWARD      -j ACCEPT
   inet/filter/INPUT         -j ACCEPT
-  inet6/filter/INPUT        -j ACCEPT
   inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -j ACCEPT
 
 Filter 8                    {"action":"drop"}
 (log)                       
   inet/filter/FORWARD       -j logdrop-1
-  inet6/filter/FORWARD      -j logdrop-1
   inet/filter/INPUT         -j logdrop-1
-  inet6/filter/INPUT        -j logdrop-1
   inet/filter/OUTPUT        -j logdrop-1
-  inet6/filter/OUTPUT       -j logdrop-1
   inet/filter/logdrop-1     -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-1    -m limit --limit 1/second -j LOG
   inet/filter/logdrop-1     -j DROP
+  inet6/filter/FORWARD      -j logdrop-1
+  inet6/filter/INPUT        -j logdrop-1
+  inet6/filter/OUTPUT       -j logdrop-1
+  inet6/filter/logdrop-1    -m limit --limit 1/second -j LOG
   inet6/filter/logdrop-1    -j DROP
 
 Filter 9                    {"action":"pass"}
 (log)                       
   inet/filter/FORWARD       
-  inet6/filter/FORWARD      
   inet/filter/INPUT         
-  inet6/filter/INPUT        
   inet/filter/OUTPUT        
+  inet6/filter/FORWARD      
+  inet6/filter/INPUT        
   inet6/filter/OUTPUT       
 
 Filter 10                   {"log":false}
 (log)                       
   inet/filter/FORWARD       -j ACCEPT
-  inet6/filter/FORWARD      -j ACCEPT
   inet/filter/INPUT         -j ACCEPT
-  inet6/filter/INPUT        -j ACCEPT
   inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -j ACCEPT
 
 Filter 11                   {"action":"drop","log":false}
 (log)                       
   inet/filter/FORWARD       -j DROP
-  inet6/filter/FORWARD      -j DROP
   inet/filter/INPUT         -j DROP
-  inet6/filter/INPUT        -j DROP
   inet/filter/OUTPUT        -j DROP
+  inet6/filter/FORWARD      -j DROP
+  inet6/filter/INPUT        -j DROP
   inet6/filter/OUTPUT       -j DROP
 
 Filter 12                   {"action":"pass","log":false}
 (log)                       
   inet/filter/FORWARD       
-  inet6/filter/FORWARD      
   inet/filter/INPUT         
-  inet6/filter/INPUT        
   inet/filter/OUTPUT        
+  inet6/filter/FORWARD      
+  inet6/filter/INPUT        
   inet6/filter/OUTPUT       
 
 Filter 13                   {"log":true}
 (log)                       
   inet/filter/FORWARD       -j logaccept-0
-  inet6/filter/FORWARD      -j logaccept-0
   inet/filter/INPUT         -j logaccept-0
-  inet6/filter/INPUT        -j logaccept-0
   inet/filter/OUTPUT        -j logaccept-0
-  inet6/filter/OUTPUT       -j logaccept-0
   inet/filter/logaccept-0   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-0  -m limit --limit 1/second -j LOG
   inet/filter/logaccept-0   -j ACCEPT
+  inet6/filter/FORWARD      -j logaccept-0
+  inet6/filter/INPUT        -j logaccept-0
+  inet6/filter/OUTPUT       -j logaccept-0
+  inet6/filter/logaccept-0  -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-0  -j ACCEPT
 
 Filter 14                   {"action":"drop","log":true}
 (log)                       
   inet/filter/FORWARD       -j logdrop-2
-  inet6/filter/FORWARD      -j logdrop-2
   inet/filter/INPUT         -j logdrop-2
-  inet6/filter/INPUT        -j logdrop-2
   inet/filter/OUTPUT        -j logdrop-2
-  inet6/filter/OUTPUT       -j logdrop-2
   inet/filter/logdrop-2     -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-2    -m limit --limit 1/second -j LOG
   inet/filter/logdrop-2     -j DROP
+  inet6/filter/FORWARD      -j logdrop-2
+  inet6/filter/INPUT        -j logdrop-2
+  inet6/filter/OUTPUT       -j logdrop-2
+  inet6/filter/logdrop-2    -m limit --limit 1/second -j LOG
   inet6/filter/logdrop-2    -j DROP
 
 Filter 15                   {"action":"pass","log":true}
 (log)                       
   inet/filter/FORWARD       -j logpass-0
-  inet6/filter/FORWARD      -j logpass-0
   inet/filter/INPUT         -j logpass-0
-  inet6/filter/INPUT        -j logpass-0
   inet/filter/OUTPUT        -j logpass-0
-  inet6/filter/OUTPUT       -j logpass-0
   inet/filter/logpass-0     -m limit --limit 1/second -j LOG
+  inet6/filter/FORWARD      -j logpass-0
+  inet6/filter/INPUT        -j logpass-0
+  inet6/filter/OUTPUT       -j logpass-0
   inet6/filter/logpass-0    -m limit --limit 1/second -j LOG
 
 Filter 16                   {"log":"none"}
 (log)                       
   inet/filter/FORWARD       -j ACCEPT
-  inet6/filter/FORWARD      -j ACCEPT
   inet/filter/INPUT         -j ACCEPT
-  inet6/filter/INPUT        -j ACCEPT
   inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -j ACCEPT
 
 Filter 17                   {"action":"drop","log":"none"}
 (log)                       
   inet/filter/FORWARD       -j DROP
-  inet6/filter/FORWARD      -j DROP
   inet/filter/INPUT         -j DROP
-  inet6/filter/INPUT        -j DROP
   inet/filter/OUTPUT        -j DROP
+  inet6/filter/FORWARD      -j DROP
+  inet6/filter/INPUT        -j DROP
   inet6/filter/OUTPUT       -j DROP
 
 Filter 18                   {"action":"pass","log":"none"}
 (log)                       
   inet/filter/FORWARD       
-  inet6/filter/FORWARD      
   inet/filter/INPUT         
-  inet6/filter/INPUT        
   inet/filter/OUTPUT        
+  inet6/filter/FORWARD      
+  inet6/filter/INPUT        
   inet6/filter/OUTPUT       
 
 Filter 19                   {"in":["_fw","A"]}
 (zone)                      
-  inet/filter/OUTPUT        -j ACCEPT
-  inet6/filter/OUTPUT       -j ACCEPT
   inet/filter/FORWARD       -i eth0 -j ACCEPT
-  inet6/filter/FORWARD      -i eth0 -j ACCEPT
   inet/filter/INPUT         -i eth0 -j ACCEPT
+  inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -j ACCEPT
   inet6/filter/INPUT        -i eth0 -j ACCEPT
+  inet6/filter/OUTPUT       -j ACCEPT
 
 Filter 20                   {"in":"B","out":"C"}
 (zone)                      
@@ -216,35 +216,27 @@ Filter 20                   {"in":"B","out":"C"}
 
 Filter 21                   {"out":["_fw","B"]}
 (zone)                      
-  inet/filter/INPUT         -j ACCEPT
-  inet6/filter/INPUT        -j ACCEPT
   inet/filter/FORWARD       -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/INPUT         -j ACCEPT
   inet/filter/OUTPUT        -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet6/filter/FORWARD      -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -o eth1 -d fc00::/7 -j ACCEPT
 
 Filter 22                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                      
   inet/filter/FORWARD       -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD      -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD       -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth0 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD      -i eth0 -o eth4 -j ACCEPT
   inet/filter/FORWARD       -i eth0 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD      -i eth0 -o eth5 -j ACCEPT
   inet/filter/FORWARD       -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD      -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
   inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
   inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
@@ -258,40 +250,48 @@ Filter 22                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","
   inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD       -i eth4 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD      -i eth4 -o eth0 -j ACCEPT
   inet/filter/FORWARD       -i eth5 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD      -i eth5 -o eth0 -j ACCEPT
   inet/filter/FORWARD       -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD      -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD       -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD      -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD       -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth4 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD      -i eth4 -o eth4 -j ACCEPT
   inet/filter/FORWARD       -i eth4 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD      -i eth4 -o eth5 -j ACCEPT
   inet/filter/FORWARD       -i eth5 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD      -i eth5 -o eth4 -j ACCEPT
   inet/filter/FORWARD       -i eth5 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD      -i eth5 -o eth5 -j ACCEPT
   inet/filter/FORWARD       -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD      -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD       -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD      -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
-  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
   inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
-  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
   inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
-  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
   inet/filter/FORWARD       -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
   inet6/filter/FORWARD      -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 
 
@@ -319,8 +319,8 @@ Log none      {"mode":"none"}
 Mark 1                      {"in":["_fw","A"],"mark":0}
 (zone)                      
   inet/mangle/OUTPUT        -j MARK --set-mark 0
-  inet6/mangle/OUTPUT       -j MARK --set-mark 0
   inet/mangle/PREROUTING    -i eth0 -j MARK --set-mark 0
+  inet6/mangle/OUTPUT       -j MARK --set-mark 0
   inet6/mangle/PREROUTING   -i eth0 -j MARK --set-mark 0
 
 Mark 2                      {"in":"B","mark":1,"out":"C"}
@@ -331,16 +331,16 @@ Mark 2                      {"in":"B","mark":1,"out":"C"}
 Mark 3                      {"mark":2,"out":["_fw","B"]}
 (zone)                      
   inet/mangle/INPUT         -j MARK --set-mark 2
-  inet6/mangle/INPUT        -j MARK --set-mark 2
   inet/mangle/POSTROUTING   -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
+  inet6/mangle/INPUT        -j MARK --set-mark 2
   inet6/mangle/POSTROUTING  -o eth1 -d fc00::/7 -j MARK --set-mark 2
 
 
 No-track 1              {"in":["_fw","A"]}
 (zone)                  
   inet/raw/OUTPUT       -j CT --notrack
-  inet6/raw/OUTPUT      -j CT --notrack
   inet/raw/PREROUTING   -i eth0 -j CT --notrack
+  inet6/raw/OUTPUT      -j CT --notrack
   inet6/raw/PREROUTING  -i eth0 -j CT --notrack
 
 No-track 2              {"in":"B"}

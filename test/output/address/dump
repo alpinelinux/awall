@@ -11,43 +11,43 @@ Dnat 2                 {"in":"B"}
 Filter 1                     {}
 (address)                    
   inet/filter/FORWARD        -j ACCEPT
-  inet6/filter/FORWARD       -j ACCEPT
   inet/filter/INPUT          -j ACCEPT
-  inet6/filter/INPUT         -j ACCEPT
   inet/filter/OUTPUT         -j ACCEPT
+  inet6/filter/FORWARD       -j ACCEPT
+  inet6/filter/INPUT         -j ACCEPT
   inet6/filter/OUTPUT        -j ACCEPT
 
 Filter 2                     {"action":"pass"}
 (address)                    
   inet/filter/FORWARD        
-  inet6/filter/FORWARD       
   inet/filter/INPUT          
-  inet6/filter/INPUT         
   inet/filter/OUTPUT         
+  inet6/filter/FORWARD       
+  inet6/filter/INPUT         
   inet6/filter/OUTPUT        
 
 Filter 3                     {"log":true}
 (address)                    
   inet/filter/FORWARD        -j logaccept-0
-  inet6/filter/FORWARD       -j logaccept-0
   inet/filter/INPUT          -j logaccept-0
-  inet6/filter/INPUT         -j logaccept-0
   inet/filter/OUTPUT         -j logaccept-0
-  inet6/filter/OUTPUT        -j logaccept-0
   inet/filter/logaccept-0    -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-0   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-0    -j ACCEPT
+  inet6/filter/FORWARD       -j logaccept-0
+  inet6/filter/INPUT         -j logaccept-0
+  inet6/filter/OUTPUT        -j logaccept-0
+  inet6/filter/logaccept-0   -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-0   -j ACCEPT
 
 Filter 4                     {"action":"pass","log":true}
 (address)                    
   inet/filter/FORWARD        -j logpass-0
-  inet6/filter/FORWARD       -j logpass-0
   inet/filter/INPUT          -j logpass-0
-  inet6/filter/INPUT         -j logpass-0
   inet/filter/OUTPUT         -j logpass-0
-  inet6/filter/OUTPUT        -j logpass-0
   inet/filter/logpass-0      -m limit --limit 1/second -j LOG
+  inet6/filter/FORWARD       -j logpass-0
+  inet6/filter/INPUT         -j logpass-0
+  inet6/filter/OUTPUT        -j logpass-0
   inet6/filter/logpass-0     -m limit --limit 1/second -j LOG
 
 Filter 5                     {"dest":"172.16.0.0\/16"}
@@ -80,8 +80,8 @@ Filter 8                     {"action":"pass","dest":"172.16.0.0\/16","log":true
 Filter 9                     {"dest":["172.16.0.0\/16","172.16.2.0\/16"]}
 (address)                    
   inet/filter/FORWARD        -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -d 172.16.2.0/16 -j ACCEPT
   inet/filter/OUTPUT         -d 172.16.0.0/16 -j ACCEPT
   inet/filter/OUTPUT         -d 172.16.2.0/16 -j ACCEPT
@@ -89,8 +89,8 @@ Filter 9                     {"dest":["172.16.0.0\/16","172.16.2.0\/16"]}
 Filter 10                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"]}
 (address)                    
   inet/filter/FORWARD        -d 172.16.0.0/16 
-  inet/filter/INPUT          -d 172.16.0.0/16 
   inet/filter/FORWARD        -d 172.16.2.0/16 
+  inet/filter/INPUT          -d 172.16.0.0/16 
   inet/filter/INPUT          -d 172.16.2.0/16 
   inet/filter/OUTPUT         -d 172.16.0.0/16 
   inet/filter/OUTPUT         -d 172.16.2.0/16 
@@ -98,8 +98,8 @@ Filter 10                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 11                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":true}
 (address)                    
   inet/filter/FORWARD        -d 172.16.0.0/16 -j logaccept-2
-  inet/filter/INPUT          -d 172.16.0.0/16 -j logaccept-2
   inet/filter/FORWARD        -d 172.16.2.0/16 -j logaccept-2
+  inet/filter/INPUT          -d 172.16.0.0/16 -j logaccept-2
   inet/filter/INPUT          -d 172.16.2.0/16 -j logaccept-2
   inet/filter/OUTPUT         -d 172.16.0.0/16 -j logaccept-2
   inet/filter/OUTPUT         -d 172.16.2.0/16 -j logaccept-2
@@ -109,8 +109,8 @@ Filter 11                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":t
 Filter 12                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":true}
 (address)                    
   inet/filter/FORWARD        -d 172.16.0.0/16 -j logpass-2
-  inet/filter/INPUT          -d 172.16.0.0/16 -j logpass-2
   inet/filter/FORWARD        -d 172.16.2.0/16 -j logpass-2
+  inet/filter/INPUT          -d 172.16.0.0/16 -j logpass-2
   inet/filter/INPUT          -d 172.16.2.0/16 -j logpass-2
   inet/filter/OUTPUT         -d 172.16.0.0/16 -j logpass-2
   inet/filter/OUTPUT         -d 172.16.2.0/16 -j logpass-2
@@ -173,8 +173,8 @@ Filter 20                    {"action":"pass","dest":"172.16.0.0\/16","log":true
 Filter 21                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
@@ -182,8 +182,8 @@ Filter 21                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"src":"
 Filter 22                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 
@@ -191,8 +191,8 @@ Filter 22                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 23                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-5
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-5
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-5
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-5
   inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-5
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-5
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-5
@@ -202,8 +202,8 @@ Filter 23                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":t
 Filter 24                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-5
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-5
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-5
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-5
   inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-5
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-5
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-5
@@ -212,8 +212,8 @@ Filter 24                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 25                    {"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -j ACCEPT
-  inet/filter/INPUT          -s 10.0.0.1 -j ACCEPT
   inet/filter/FORWARD        -s 10.0.0.2 -j ACCEPT
+  inet/filter/INPUT          -s 10.0.0.1 -j ACCEPT
   inet/filter/INPUT          -s 10.0.0.2 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.1 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.2 -j ACCEPT
@@ -221,8 +221,8 @@ Filter 25                    {"src":["10.0.0.1","10.0.0.2"]}
 Filter 26                    {"action":"pass","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 
-  inet/filter/INPUT          -s 10.0.0.1 
   inet/filter/FORWARD        -s 10.0.0.2 
+  inet/filter/INPUT          -s 10.0.0.1 
   inet/filter/INPUT          -s 10.0.0.2 
   inet/filter/OUTPUT         -s 10.0.0.1 
   inet/filter/OUTPUT         -s 10.0.0.2 
@@ -230,8 +230,8 @@ Filter 26                    {"action":"pass","src":["10.0.0.1","10.0.0.2"]}
 Filter 27                    {"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -j logaccept-6
-  inet/filter/INPUT          -s 10.0.0.1 -j logaccept-6
   inet/filter/FORWARD        -s 10.0.0.2 -j logaccept-6
+  inet/filter/INPUT          -s 10.0.0.1 -j logaccept-6
   inet/filter/INPUT          -s 10.0.0.2 -j logaccept-6
   inet/filter/OUTPUT         -s 10.0.0.1 -j logaccept-6
   inet/filter/OUTPUT         -s 10.0.0.2 -j logaccept-6
@@ -241,8 +241,8 @@ Filter 27                    {"log":true,"src":["10.0.0.1","10.0.0.2"]}
 Filter 28                    {"action":"pass","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -j logpass-6
-  inet/filter/INPUT          -s 10.0.0.1 -j logpass-6
   inet/filter/FORWARD        -s 10.0.0.2 -j logpass-6
+  inet/filter/INPUT          -s 10.0.0.1 -j logpass-6
   inet/filter/INPUT          -s 10.0.0.2 -j logpass-6
   inet/filter/OUTPUT         -s 10.0.0.1 -j logpass-6
   inet/filter/OUTPUT         -s 10.0.0.2 -j logpass-6
@@ -251,8 +251,8 @@ Filter 28                    {"action":"pass","log":true,"src":["10.0.0.1","10.0
 Filter 29                    {"dest":"172.16.0.0\/16","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
@@ -260,8 +260,8 @@ Filter 29                    {"dest":"172.16.0.0\/16","src":["10.0.0.1","10.0.0.
 Filter 30                    {"action":"pass","dest":"172.16.0.0\/16","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/OUTPUT         -s 10.0.0.2 -d 172.16.0.0/16 
@@ -269,8 +269,8 @@ Filter 30                    {"action":"pass","dest":"172.16.0.0\/16","src":["10
 Filter 31                    {"dest":"172.16.0.0\/16","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-7
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-7
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-7
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-7
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-7
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-7
   inet/filter/OUTPUT         -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-7
@@ -280,8 +280,8 @@ Filter 31                    {"dest":"172.16.0.0\/16","log":true,"src":["10.0.0.
 Filter 32                    {"action":"pass","dest":"172.16.0.0\/16","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-7
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-7
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-7
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-7
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-7
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-7
   inet/filter/OUTPUT         -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-7
@@ -290,12 +290,12 @@ Filter 32                    {"action":"pass","dest":"172.16.0.0\/16","log":true
 Filter 33                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.2.0/16 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
@@ -305,12 +305,12 @@ Filter 33                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"src":[
 Filter 34                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 
-  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.2.0/16 
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 
+  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.2.0/16 
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 
@@ -320,12 +320,12 @@ Filter 34                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 35                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-8
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-8
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-8
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-8
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-8
-  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-8
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.2.0/16 -j logaccept-8
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-8
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-8
+  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-8
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.2.0/16 -j logaccept-8
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-8
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-8
@@ -337,12 +337,12 @@ Filter 35                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":t
 Filter 36                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-8
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-8
   inet/filter/FORWARD        -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-8
-  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-8
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-8
-  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-8
   inet/filter/FORWARD        -s 10.0.0.2 -d 172.16.2.0/16 -j logpass-8
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-8
+  inet/filter/INPUT          -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-8
+  inet/filter/INPUT          -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-8
   inet/filter/INPUT          -s 10.0.0.2 -d 172.16.2.0/16 -j logpass-8
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-8
   inet/filter/OUTPUT         -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-8
@@ -368,20 +368,20 @@ Filter 39                    {"log":true,"out":"B"}
 (address)                    
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -j logaccept-9
   inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -j logaccept-9
+  inet/filter/logaccept-9    -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-9    -j ACCEPT
   inet6/filter/FORWARD       -o eth1 -d fc00::/7 -j logaccept-9
   inet6/filter/OUTPUT        -o eth1 -d fc00::/7 -j logaccept-9
-  inet/filter/logaccept-9    -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-9   -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-9    -j ACCEPT
   inet6/filter/logaccept-9   -j ACCEPT
 
 Filter 40                    {"action":"pass","log":true,"out":"B"}
 (address)                    
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -j logpass-9
   inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -j logpass-9
+  inet/filter/logpass-9      -m limit --limit 1/second -j LOG
   inet6/filter/FORWARD       -o eth1 -d fc00::/7 -j logpass-9
   inet6/filter/OUTPUT        -o eth1 -d fc00::/7 -j logpass-9
-  inet/filter/logpass-9      -m limit --limit 1/second -j LOG
   inet6/filter/logpass-9     -m limit --limit 1/second -j LOG
 
 Filter 41                    {"dest":"172.16.0.0\/16","out":"B"}
@@ -524,22 +524,22 @@ Filter 60                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 61                    {"out":"B","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j ACCEPT
-  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j ACCEPT
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 -j ACCEPT
+  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j ACCEPT
   inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 -j ACCEPT
 
 Filter 62                    {"action":"pass","out":"B","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 
-  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 
+  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 
   inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 
 
 Filter 63                    {"log":true,"out":"B","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j logaccept-15
-  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j logaccept-15
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 -j logaccept-15
+  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j logaccept-15
   inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 -j logaccept-15
   inet/filter/logaccept-15   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-15   -j ACCEPT
@@ -547,8 +547,8 @@ Filter 63                    {"log":true,"out":"B","src":["10.0.0.1","10.0.0.2"]
 Filter 64                    {"action":"pass","log":true,"out":"B","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j logpass-13
-  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j logpass-13
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 -j logpass-13
+  inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.1 -j logpass-13
   inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -s 10.0.0.2 -j logpass-13
   inet/filter/logpass-13     -m limit --limit 1/second -j LOG
 
@@ -625,35 +625,35 @@ Filter 72                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 73                    {"in":"A"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -j ACCEPT
-  inet6/filter/FORWARD       -i eth0 -j ACCEPT
   inet/filter/INPUT          -i eth0 -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -j ACCEPT
   inet6/filter/INPUT         -i eth0 -j ACCEPT
 
 Filter 74                    {"action":"pass","in":"A"}
 (address)                    
   inet/filter/FORWARD        -i eth0 
-  inet6/filter/FORWARD       -i eth0 
   inet/filter/INPUT          -i eth0 
+  inet6/filter/FORWARD       -i eth0 
   inet6/filter/INPUT         -i eth0 
 
 Filter 75                    {"in":"A","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth0 -j logaccept-18
-  inet6/filter/FORWARD       -i eth0 -j logaccept-18
   inet/filter/INPUT          -i eth0 -j logaccept-18
-  inet6/filter/INPUT         -i eth0 -j logaccept-18
   inet/filter/logaccept-18   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-18  -m limit --limit 1/second -j LOG
   inet/filter/logaccept-18   -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -j logaccept-18
+  inet6/filter/INPUT         -i eth0 -j logaccept-18
+  inet6/filter/logaccept-18  -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-18  -j ACCEPT
 
 Filter 76                    {"action":"pass","in":"A","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth0 -j logpass-16
-  inet6/filter/FORWARD       -i eth0 -j logpass-16
   inet/filter/INPUT          -i eth0 -j logpass-16
-  inet6/filter/INPUT         -i eth0 -j logpass-16
   inet/filter/logpass-16     -m limit --limit 1/second -j LOG
+  inet6/filter/FORWARD       -i eth0 -j logpass-16
+  inet6/filter/INPUT         -i eth0 -j logpass-16
   inet6/filter/logpass-16    -m limit --limit 1/second -j LOG
 
 Filter 77                    {"dest":"172.16.0.0\/16","in":"A"}
@@ -682,22 +682,22 @@ Filter 80                    {"action":"pass","dest":"172.16.0.0\/16","in":"A","
 Filter 81                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -i eth0 -d 172.16.2.0/16 -j ACCEPT
 
 Filter 82                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth0 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 
   inet/filter/INPUT          -i eth0 -d 172.16.2.0/16 
 
 Filter 83                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth0 -d 172.16.0.0/16 -j logaccept-20
-  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 -j logaccept-20
   inet/filter/FORWARD        -i eth0 -d 172.16.2.0/16 -j logaccept-20
+  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 -j logaccept-20
   inet/filter/INPUT          -i eth0 -d 172.16.2.0/16 -j logaccept-20
   inet/filter/logaccept-20   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-20   -j ACCEPT
@@ -705,8 +705,8 @@ Filter 83                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A
 Filter 84                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth0 -d 172.16.0.0/16 -j logpass-18
-  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 -j logpass-18
   inet/filter/FORWARD        -i eth0 -d 172.16.2.0/16 -j logpass-18
+  inet/filter/INPUT          -i eth0 -d 172.16.0.0/16 -j logpass-18
   inet/filter/INPUT          -i eth0 -d 172.16.2.0/16 -j logpass-18
   inet/filter/logpass-18     -m limit --limit 1/second -j LOG
 
@@ -759,22 +759,22 @@ Filter 92                    {"action":"pass","dest":"172.16.0.0\/16","in":"A","
 Filter 93                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
 
 Filter 94                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 
 
 Filter 95                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-23
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-23
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-23
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-23
   inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-23
   inet/filter/logaccept-23   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-23   -j ACCEPT
@@ -782,30 +782,30 @@ Filter 95                    {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A
 Filter 96                    {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-21
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-21
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-21
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-21
   inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-21
   inet/filter/logpass-21     -m limit --limit 1/second -j LOG
 
 Filter 97                    {"in":"A","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -j ACCEPT
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -j ACCEPT
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -j ACCEPT
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -j ACCEPT
 
 Filter 98                    {"action":"pass","in":"A","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 
 
 Filter 99                    {"in":"A","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -j logaccept-24
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -j logaccept-24
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -j logaccept-24
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -j logaccept-24
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -j logaccept-24
   inet/filter/logaccept-24   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-24   -j ACCEPT
@@ -813,30 +813,30 @@ Filter 99                    {"in":"A","log":true,"src":["10.0.0.1","10.0.0.2"]}
 Filter 100                   {"action":"pass","in":"A","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -j logpass-22
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -j logpass-22
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -j logpass-22
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -j logpass-22
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -j logpass-22
   inet/filter/logpass-22     -m limit --limit 1/second -j LOG
 
 Filter 101                   {"dest":"172.16.0.0\/16","in":"A","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
 
 Filter 102                   {"action":"pass","dest":"172.16.0.0\/16","in":"A","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 
 
 Filter 103                   {"dest":"172.16.0.0\/16","in":"A","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-25
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-25
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-25
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-25
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-25
   inet/filter/logaccept-25   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-25   -j ACCEPT
@@ -844,42 +844,42 @@ Filter 103                   {"dest":"172.16.0.0\/16","in":"A","log":true,"src":
 Filter 104                   {"action":"pass","dest":"172.16.0.0\/16","in":"A","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-23
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-23
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-23
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-23
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-23
   inet/filter/logpass-23     -m limit --limit 1/second -j LOG
 
 Filter 105                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 -j ACCEPT
 
 Filter 106                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 
 
 Filter 107                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-26
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-26
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-26
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-26
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-26
-  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-26
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 -j logaccept-26
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-26
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-26
+  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-26
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 -j logaccept-26
   inet/filter/logaccept-26   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-26   -j ACCEPT
@@ -887,12 +887,12 @@ Filter 107                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A
 Filter 108                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"A","log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-24
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-24
   inet/filter/FORWARD        -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-24
-  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-24
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-24
-  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-24
   inet/filter/FORWARD        -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 -j logpass-24
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-24
+  inet/filter/INPUT          -i eth0 -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-24
+  inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-24
   inet/filter/INPUT          -i eth0 -s 10.0.0.2 -d 172.16.2.0/16 -j logpass-24
   inet/filter/logpass-24     -m limit --limit 1/second -j LOG
 
@@ -909,10 +909,10 @@ Filter 110                   {"action":"pass","in":"A","out":"B"}
 Filter 111                   {"in":"A","log":true,"out":"B"}
 (address)                    
   inet/filter/FORWARD        -i eth0 -o eth1 -d 10.0.0.0/12 -j logaccept-27
-  inet6/filter/FORWARD       -i eth0 -o eth1 -d fc00::/7 -j logaccept-27
   inet/filter/logaccept-27   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-27  -m limit --limit 1/second -j LOG
   inet/filter/logaccept-27   -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -o eth1 -d fc00::/7 -j logaccept-27
+  inet6/filter/logaccept-27  -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-27  -j ACCEPT
 
 Filter 112                   {"action":"pass","in":"A","log":true,"out":"B"}
@@ -1139,20 +1139,20 @@ Filter 147                   {"in":"B","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j logaccept-36
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j logaccept-36
+  inet/filter/logaccept-36   -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-36   -j ACCEPT
   inet6/filter/FORWARD       -i eth1 -s fc00::/7 -j logaccept-36
   inet6/filter/INPUT         -i eth1 -s fc00::/7 -j logaccept-36
-  inet/filter/logaccept-36   -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-36  -m limit --limit 1/second -j LOG
-  inet/filter/logaccept-36   -j ACCEPT
   inet6/filter/logaccept-36  -j ACCEPT
 
 Filter 148                   {"action":"pass","in":"B","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j logpass-30
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j logpass-30
+  inet/filter/logpass-30     -m limit --limit 1/second -j LOG
   inet6/filter/FORWARD       -i eth1 -s fc00::/7 -j logpass-30
   inet6/filter/INPUT         -i eth1 -s fc00::/7 -j logpass-30
-  inet/filter/logpass-30     -m limit --limit 1/second -j LOG
   inet6/filter/logpass-30    -m limit --limit 1/second -j LOG
 
 Filter 149                   {"dest":"172.16.0.0\/16","in":"B"}
@@ -1181,22 +1181,22 @@ Filter 152                   {"action":"pass","dest":"172.16.0.0\/16","in":"B","
 Filter 153                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"B"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j ACCEPT
 
 Filter 154                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"B"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 
 
 Filter 155                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"B","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-38
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-38
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logaccept-38
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-38
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logaccept-38
   inet/filter/logaccept-38   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-38   -j ACCEPT
@@ -1204,8 +1204,8 @@ Filter 155                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"B
 Filter 156                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":"B","log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-32
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-32
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logpass-32
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-32
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logpass-32
   inet/filter/logpass-32     -m limit --limit 1/second -j LOG
 
@@ -1504,78 +1504,78 @@ Filter 216                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 217                   {"in":["B","C"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j ACCEPT
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j ACCEPT
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j ACCEPT
+  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j ACCEPT
   inet6/filter/FORWARD       -i eth1 -s fc00::/7 -j ACCEPT
   inet6/filter/INPUT         -i eth1 -s fc00::/7 -j ACCEPT
-  inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j ACCEPT
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j ACCEPT
-  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j ACCEPT
 
 Filter 218                   {"action":"pass","in":["B","C"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 
+  inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 
+  inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 
   inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 
+  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 
   inet6/filter/FORWARD       -i eth1 -s fc00::/7 
   inet6/filter/INPUT         -i eth1 -s fc00::/7 
-  inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 
-  inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 
-  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 
 
 Filter 219                   {"in":["B","C"],"log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j logaccept-45
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j logaccept-45
-  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -j logaccept-45
-  inet6/filter/INPUT         -i eth1 -s fc00::/7 -j logaccept-45
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j logaccept-45
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j logaccept-45
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j logaccept-45
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j logaccept-45
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j logaccept-45
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j logaccept-45
   inet/filter/logaccept-45   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-45  -m limit --limit 1/second -j LOG
   inet/filter/logaccept-45   -j ACCEPT
+  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -j logaccept-45
+  inet6/filter/INPUT         -i eth1 -s fc00::/7 -j logaccept-45
+  inet6/filter/logaccept-45  -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-45  -j ACCEPT
 
 Filter 220                   {"action":"pass","in":["B","C"],"log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j logpass-37
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j logpass-37
-  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -j logpass-37
-  inet6/filter/INPUT         -i eth1 -s fc00::/7 -j logpass-37
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j logpass-37
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j logpass-37
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j logpass-37
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j logpass-37
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j logpass-37
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j logpass-37
   inet/filter/logpass-37     -m limit --limit 1/second -j LOG
+  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -j logpass-37
+  inet6/filter/INPUT         -i eth1 -s fc00::/7 -j logpass-37
   inet6/filter/logpass-37    -m limit --limit 1/second -j LOG
 
 Filter 221                   {"dest":"172.16.0.0\/16","in":["B","C"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
 
 Filter 222                   {"action":"pass","dest":"172.16.0.0\/16","in":["B","C"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 
 
 Filter 223                   {"dest":"172.16.0.0\/16","in":["B","C"],"log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-46
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-46
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-46
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-46
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-46
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-46
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-46
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-46
   inet/filter/logaccept-46   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-46   -j ACCEPT
@@ -1583,56 +1583,56 @@ Filter 223                   {"dest":"172.16.0.0\/16","in":["B","C"],"log":true}
 Filter 224                   {"action":"pass","dest":"172.16.0.0\/16","in":["B","C"],"log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-38
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-38
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-38
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-38
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-38
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-38
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-38
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-38
   inet/filter/logpass-38     -m limit --limit 1/second -j LOG
 
 Filter 225                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
-  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j ACCEPT
+  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 -j ACCEPT
 
 Filter 226                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 
-  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 
+  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 
 
 Filter 227                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-47
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-47
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logaccept-47
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logaccept-47
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-47
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-47
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logaccept-47
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logaccept-47
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-47
-  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-47
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logaccept-47
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logaccept-47
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logaccept-47
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-47
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logaccept-47
+  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logaccept-47
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logaccept-47
   inet/filter/logaccept-47   -m limit --limit 1/second -j LOG
   inet/filter/logaccept-47   -j ACCEPT
@@ -1640,46 +1640,46 @@ Filter 227                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["
 Filter 228                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"log":true}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-39
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-39
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logpass-39
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logpass-39
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-39
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-39
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logpass-39
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logpass-39
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-39
-  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-39
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logpass-39
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.0.0/16 -j logpass-39
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -d 172.16.2.0/16 -j logpass-39
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-39
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logpass-39
+  inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.0.0/16 -j logpass-39
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -d 172.16.2.0/16 -j logpass-39
   inet/filter/logpass-39     -m limit --limit 1/second -j LOG
 
 Filter 229                   {"in":["B","C"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-72
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-72
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-72
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-72
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-72
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-72
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-72
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-72
   inet/filter/address-72     -s 10.0.0.1 -j ACCEPT
 
 Filter 230                   {"action":"pass","in":["B","C"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-73
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-73
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-73
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-73
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-73
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-73
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-73
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-73
   inet/filter/address-73     -s 10.0.0.1 
 
 Filter 231                   {"in":["B","C"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-74
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-74
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-74
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-74
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-74
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-74
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-74
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-74
   inet/filter/address-74     -s 10.0.0.1 -j logaccept-48
   inet/filter/logaccept-48   -m limit --limit 1/second -j LOG
@@ -1688,40 +1688,40 @@ Filter 231                   {"in":["B","C"],"log":true,"src":"10.0.0.1"}
 Filter 232                   {"action":"pass","in":["B","C"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-75
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-75
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-75
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-75
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-75
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-75
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-75
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-75
   inet/filter/address-75     -s 10.0.0.1 -m limit --limit 1/second -j LOG
 
 Filter 233                   {"dest":"172.16.0.0\/16","in":["B","C"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-76
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-76
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-76
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-76
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-76
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-76
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-76
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-76
   inet/filter/address-76     -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
 
 Filter 234                   {"action":"pass","dest":"172.16.0.0\/16","in":["B","C"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-77
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-77
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-77
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-77
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-77
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-77
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-77
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-77
   inet/filter/address-77     -s 10.0.0.1 -d 172.16.0.0/16 
 
 Filter 235                   {"dest":"172.16.0.0\/16","in":["B","C"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-78
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-78
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-78
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-78
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-78
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-78
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-78
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-78
   inet/filter/address-78     -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-49
   inet/filter/logaccept-49   -m limit --limit 1/second -j LOG
@@ -1730,20 +1730,20 @@ Filter 235                   {"dest":"172.16.0.0\/16","in":["B","C"],"log":true,
 Filter 236                   {"action":"pass","dest":"172.16.0.0\/16","in":["B","C"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-79
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-79
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-79
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-79
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-79
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-79
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-79
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-79
   inet/filter/address-79     -s 10.0.0.1 -d 172.16.0.0/16 -m limit --limit 1/second -j LOG
 
 Filter 237                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-80
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-80
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-80
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-80
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-80
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-80
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-80
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-80
   inet/filter/address-80     -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/address-80     -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
@@ -1751,10 +1751,10 @@ Filter 237                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["
 Filter 238                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-81
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-81
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-81
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-81
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-81
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-81
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-81
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-81
   inet/filter/address-81     -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/address-81     -s 10.0.0.1 -d 172.16.2.0/16 
@@ -1762,10 +1762,10 @@ Filter 238                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 239                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-82
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-82
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-82
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-82
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-82
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-82
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-82
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-82
   inet/filter/address-82     -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-50
   inet/filter/address-82     -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-50
@@ -1775,10 +1775,10 @@ Filter 239                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["
 Filter 240                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"log":true,"src":"10.0.0.1"}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-83
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-83
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-83
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-83
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-83
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-83
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-83
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-83
   inet/filter/address-83     -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-40
   inet/filter/address-83     -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-40
@@ -1787,10 +1787,10 @@ Filter 240                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 241                   {"in":["B","C"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-84
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-84
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-84
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-84
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-84
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-84
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-84
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-84
   inet/filter/address-84     -s 10.0.0.1 -j ACCEPT
   inet/filter/address-84     -s 10.0.0.2 -j ACCEPT
@@ -1798,10 +1798,10 @@ Filter 241                   {"in":["B","C"],"src":["10.0.0.1","10.0.0.2"]}
 Filter 242                   {"action":"pass","in":["B","C"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-85
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-85
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-85
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-85
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-85
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-85
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-85
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-85
   inet/filter/address-85     -s 10.0.0.1 
   inet/filter/address-85     -s 10.0.0.2 
@@ -1809,10 +1809,10 @@ Filter 242                   {"action":"pass","in":["B","C"],"src":["10.0.0.1","
 Filter 243                   {"in":["B","C"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-86
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-86
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-86
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-86
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-86
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-86
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-86
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-86
   inet/filter/address-86     -s 10.0.0.1 -j logaccept-51
   inet/filter/address-86     -s 10.0.0.2 -j logaccept-51
@@ -1822,10 +1822,10 @@ Filter 243                   {"in":["B","C"],"log":true,"src":["10.0.0.1","10.0.
 Filter 244                   {"action":"pass","in":["B","C"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-87
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-87
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-87
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-87
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-87
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-87
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-87
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-87
   inet/filter/address-87     -s 10.0.0.1 -j logpass-41
   inet/filter/address-87     -s 10.0.0.2 -j logpass-41
@@ -1834,10 +1834,10 @@ Filter 244                   {"action":"pass","in":["B","C"],"log":true,"src":["
 Filter 245                   {"dest":"172.16.0.0\/16","in":["B","C"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-88
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-88
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-88
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-88
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-88
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-88
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-88
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-88
   inet/filter/address-88     -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/address-88     -s 10.0.0.2 -d 172.16.0.0/16 -j ACCEPT
@@ -1845,10 +1845,10 @@ Filter 245                   {"dest":"172.16.0.0\/16","in":["B","C"],"src":["10.
 Filter 246                   {"action":"pass","dest":"172.16.0.0\/16","in":["B","C"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-89
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-89
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-89
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-89
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-89
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-89
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-89
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-89
   inet/filter/address-89     -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/address-89     -s 10.0.0.2 -d 172.16.0.0/16 
@@ -1856,10 +1856,10 @@ Filter 246                   {"action":"pass","dest":"172.16.0.0\/16","in":["B",
 Filter 247                   {"dest":"172.16.0.0\/16","in":["B","C"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-90
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-90
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-90
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-90
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-90
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-90
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-90
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-90
   inet/filter/address-90     -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-52
   inet/filter/address-90     -s 10.0.0.2 -d 172.16.0.0/16 -j logaccept-52
@@ -1869,10 +1869,10 @@ Filter 247                   {"dest":"172.16.0.0\/16","in":["B","C"],"log":true,
 Filter 248                   {"action":"pass","dest":"172.16.0.0\/16","in":["B","C"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-91
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-91
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-91
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-91
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-91
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-91
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-91
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-91
   inet/filter/address-91     -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-42
   inet/filter/address-91     -s 10.0.0.2 -d 172.16.0.0/16 -j logpass-42
@@ -1881,10 +1881,10 @@ Filter 248                   {"action":"pass","dest":"172.16.0.0\/16","in":["B",
 Filter 249                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-92
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-92
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-92
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-92
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-92
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-92
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-92
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-92
   inet/filter/address-92     -s 10.0.0.1 -d 172.16.0.0/16 -j ACCEPT
   inet/filter/address-92     -s 10.0.0.1 -d 172.16.2.0/16 -j ACCEPT
@@ -1894,10 +1894,10 @@ Filter 249                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["
 Filter 250                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-93
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-93
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-93
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-93
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-93
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-93
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-93
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-93
   inet/filter/address-93     -s 10.0.0.1 -d 172.16.0.0/16 
   inet/filter/address-93     -s 10.0.0.1 -d 172.16.2.0/16 
@@ -1907,10 +1907,10 @@ Filter 250                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 251                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-94
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-94
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-94
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-94
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-94
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-94
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-94
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-94
   inet/filter/address-94     -s 10.0.0.1 -d 172.16.0.0/16 -j logaccept-53
   inet/filter/address-94     -s 10.0.0.1 -d 172.16.2.0/16 -j logaccept-53
@@ -1922,10 +1922,10 @@ Filter 251                   {"dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["
 Filter 252                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2.0\/16"],"in":["B","C"],"log":true,"src":["10.0.0.1","10.0.0.2"]}
 (address)                    
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -j address-95
-  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-95
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -j address-95
-  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-95
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -j address-95
+  inet/filter/INPUT          -i eth1 -s 10.0.0.0/12 -j address-95
+  inet/filter/INPUT          -i eth2 -s 10.1.0.0/12 -j address-95
   inet/filter/INPUT          -i eth3 -s 10.1.0.0/12 -j address-95
   inet/filter/address-95     -s 10.0.0.1 -d 172.16.0.0/16 -j logpass-43
   inet/filter/address-95     -s 10.0.0.1 -d 172.16.2.0/16 -j logpass-43
@@ -2200,133 +2200,133 @@ Filter 288                   {"action":"pass","dest":["172.16.0.0\/16","172.16.2
 Filter 289                   {}
 (log)                        
   inet/filter/FORWARD        -j ACCEPT
-  inet6/filter/FORWARD       -j ACCEPT
   inet/filter/INPUT          -j ACCEPT
-  inet6/filter/INPUT         -j ACCEPT
   inet/filter/OUTPUT         -j ACCEPT
+  inet6/filter/FORWARD       -j ACCEPT
+  inet6/filter/INPUT         -j ACCEPT
   inet6/filter/OUTPUT        -j ACCEPT
 
 Filter 290                   {"action":"drop"}
 (log)                        
   inet/filter/FORWARD        -j logdrop-0
-  inet6/filter/FORWARD       -j logdrop-0
   inet/filter/INPUT          -j logdrop-0
-  inet6/filter/INPUT         -j logdrop-0
   inet/filter/OUTPUT         -j logdrop-0
-  inet6/filter/OUTPUT        -j logdrop-0
   inet/filter/logdrop-0      -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-0     -m limit --limit 1/second -j LOG
   inet/filter/logdrop-0      -j DROP
+  inet6/filter/FORWARD       -j logdrop-0
+  inet6/filter/INPUT         -j logdrop-0
+  inet6/filter/OUTPUT        -j logdrop-0
+  inet6/filter/logdrop-0     -m limit --limit 1/second -j LOG
   inet6/filter/logdrop-0     -j DROP
 
 Filter 291                   {"action":"pass"}
 (log)                        
   inet/filter/FORWARD        
-  inet6/filter/FORWARD       
   inet/filter/INPUT          
-  inet6/filter/INPUT         
   inet/filter/OUTPUT         
+  inet6/filter/FORWARD       
+  inet6/filter/INPUT         
   inet6/filter/OUTPUT        
 
 Filter 292                   {"log":false}
 (log)                        
   inet/filter/FORWARD        -j ACCEPT
-  inet6/filter/FORWARD       -j ACCEPT
   inet/filter/INPUT          -j ACCEPT
-  inet6/filter/INPUT         -j ACCEPT
   inet/filter/OUTPUT         -j ACCEPT
+  inet6/filter/FORWARD       -j ACCEPT
+  inet6/filter/INPUT         -j ACCEPT
   inet6/filter/OUTPUT        -j ACCEPT
 
 Filter 293                   {"action":"drop","log":false}
 (log)                        
   inet/filter/FORWARD        -j DROP
-  inet6/filter/FORWARD       -j DROP
   inet/filter/INPUT          -j DROP
-  inet6/filter/INPUT         -j DROP
   inet/filter/OUTPUT         -j DROP
+  inet6/filter/FORWARD       -j DROP
+  inet6/filter/INPUT         -j DROP
   inet6/filter/OUTPUT        -j DROP
 
 Filter 294                   {"action":"pass","log":false}
 (log)                        
   inet/filter/FORWARD        
-  inet6/filter/FORWARD       
   inet/filter/INPUT          
-  inet6/filter/INPUT         
   inet/filter/OUTPUT         
+  inet6/filter/FORWARD       
+  inet6/filter/INPUT         
   inet6/filter/OUTPUT        
 
 Filter 295                   {"log":true}
 (log)                        
   inet/filter/FORWARD        -j logaccept-63
-  inet6/filter/FORWARD       -j logaccept-63
   inet/filter/INPUT          -j logaccept-63
-  inet6/filter/INPUT         -j logaccept-63
   inet/filter/OUTPUT         -j logaccept-63
-  inet6/filter/OUTPUT        -j logaccept-63
   inet/filter/logaccept-63   -m limit --limit 1/second -j LOG
-  inet6/filter/logaccept-63  -m limit --limit 1/second -j LOG
   inet/filter/logaccept-63   -j ACCEPT
+  inet6/filter/FORWARD       -j logaccept-63
+  inet6/filter/INPUT         -j logaccept-63
+  inet6/filter/OUTPUT        -j logaccept-63
+  inet6/filter/logaccept-63  -m limit --limit 1/second -j LOG
   inet6/filter/logaccept-63  -j ACCEPT
 
 Filter 296                   {"action":"drop","log":true}
 (log)                        
   inet/filter/FORWARD        -j logdrop-1
-  inet6/filter/FORWARD       -j logdrop-1
   inet/filter/INPUT          -j logdrop-1
-  inet6/filter/INPUT         -j logdrop-1
   inet/filter/OUTPUT         -j logdrop-1
-  inet6/filter/OUTPUT        -j logdrop-1
   inet/filter/logdrop-1      -m limit --limit 1/second -j LOG
-  inet6/filter/logdrop-1     -m limit --limit 1/second -j LOG
   inet/filter/logdrop-1      -j DROP
+  inet6/filter/FORWARD       -j logdrop-1
+  inet6/filter/INPUT         -j logdrop-1
+  inet6/filter/OUTPUT        -j logdrop-1
+  inet6/filter/logdrop-1     -m limit --limit 1/second -j LOG
   inet6/filter/logdrop-1     -j DROP
 
 Filter 297                   {"action":"pass","log":true}
 (log)                        
   inet/filter/FORWARD        -j logpass-50
-  inet6/filter/FORWARD       -j logpass-50
   inet/filter/INPUT          -j logpass-50
-  inet6/filter/INPUT         -j logpass-50
   inet/filter/OUTPUT         -j logpass-50
-  inet6/filter/OUTPUT        -j logpass-50
   inet/filter/logpass-50     -m limit --limit 1/second -j LOG
+  inet6/filter/FORWARD       -j logpass-50
+  inet6/filter/INPUT         -j logpass-50
+  inet6/filter/OUTPUT        -j logpass-50
   inet6/filter/logpass-50    -m limit --limit 1/second -j LOG
 
 Filter 298                   {"log":"none"}
 (log)                        
   inet/filter/FORWARD        -j ACCEPT
-  inet6/filter/FORWARD       -j ACCEPT
   inet/filter/INPUT          -j ACCEPT
-  inet6/filter/INPUT         -j ACCEPT
   inet/filter/OUTPUT         -j ACCEPT
+  inet6/filter/FORWARD       -j ACCEPT
+  inet6/filter/INPUT         -j ACCEPT
   inet6/filter/OUTPUT        -j ACCEPT
 
 Filter 299                   {"action":"drop","log":"none"}
 (log)                        
   inet/filter/FORWARD        -j DROP
-  inet6/filter/FORWARD       -j DROP
   inet/filter/INPUT          -j DROP
-  inet6/filter/INPUT         -j DROP
   inet/filter/OUTPUT         -j DROP
+  inet6/filter/FORWARD       -j DROP
+  inet6/filter/INPUT         -j DROP
   inet6/filter/OUTPUT        -j DROP
 
 Filter 300                   {"action":"pass","log":"none"}
 (log)                        
   inet/filter/FORWARD        
-  inet6/filter/FORWARD       
   inet/filter/INPUT          
-  inet6/filter/INPUT         
   inet/filter/OUTPUT         
+  inet6/filter/FORWARD       
+  inet6/filter/INPUT         
   inet6/filter/OUTPUT        
 
 Filter 301                   {"in":["_fw","A"]}
 (zone)                       
-  inet/filter/OUTPUT         -j ACCEPT
-  inet6/filter/OUTPUT        -j ACCEPT
   inet/filter/FORWARD        -i eth0 -j ACCEPT
-  inet6/filter/FORWARD       -i eth0 -j ACCEPT
   inet/filter/INPUT          -i eth0 -j ACCEPT
+  inet/filter/OUTPUT         -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -j ACCEPT
   inet6/filter/INPUT         -i eth0 -j ACCEPT
+  inet6/filter/OUTPUT        -j ACCEPT
 
 Filter 302                   {"in":"B","out":"C"}
 (zone)                       
@@ -2335,35 +2335,27 @@ Filter 302                   {"in":"B","out":"C"}
 
 Filter 303                   {"out":["_fw","B"]}
 (zone)                       
-  inet/filter/INPUT          -j ACCEPT
-  inet6/filter/INPUT         -j ACCEPT
   inet/filter/FORWARD        -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/INPUT          -j ACCEPT
   inet/filter/OUTPUT         -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet6/filter/FORWARD       -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/INPUT         -j ACCEPT
   inet6/filter/OUTPUT        -o eth1 -d fc00::/7 -j ACCEPT
 
 Filter 304                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                       
   inet/filter/FORWARD        -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD       -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD       -i eth0 -o eth4 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD       -i eth0 -o eth5 -j ACCEPT
   inet/filter/FORWARD        -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD       -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
   inet/filter/FORWARD        -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
@@ -2377,40 +2369,48 @@ Filter 304                   {"in":["A","B","C","D","E"],"out":["A","B","C","D",
   inet/filter/FORWARD        -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD        -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD        -i eth4 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD       -i eth4 -o eth0 -j ACCEPT
   inet/filter/FORWARD        -i eth5 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD       -i eth5 -o eth0 -j ACCEPT
   inet/filter/FORWARD        -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD       -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD        -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD       -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD        -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -i eth4 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD       -i eth4 -o eth4 -j ACCEPT
   inet/filter/FORWARD        -i eth4 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD       -i eth4 -o eth5 -j ACCEPT
   inet/filter/FORWARD        -i eth5 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD       -i eth5 -o eth4 -j ACCEPT
   inet/filter/FORWARD        -i eth5 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD       -i eth5 -o eth5 -j ACCEPT
   inet/filter/FORWARD        -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD       -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD        -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD       -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
   inet/filter/FORWARD        -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
-  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
   inet/filter/FORWARD        -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
   inet/filter/FORWARD        -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD        -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
-  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
   inet/filter/FORWARD        -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
-  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
   inet/filter/FORWARD        -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD       -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD       -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD       -i eth4 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD       -i eth5 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD       -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD       -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD       -i eth4 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD       -i eth4 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD       -i eth5 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD       -i eth5 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD       -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD       -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet6/filter/FORWARD       -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
   inet6/filter/FORWARD       -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 
 
@@ -2438,8 +2438,8 @@ Log none      {"mode":"none"}
 Mark 1                      {"in":["_fw","A"],"mark":0}
 (zone)                      
   inet/mangle/OUTPUT        -j MARK --set-mark 0
-  inet6/mangle/OUTPUT       -j MARK --set-mark 0
   inet/mangle/PREROUTING    -i eth0 -j MARK --set-mark 0
+  inet6/mangle/OUTPUT       -j MARK --set-mark 0
   inet6/mangle/PREROUTING   -i eth0 -j MARK --set-mark 0
 
 Mark 2                      {"in":"B","mark":1,"out":"C"}
@@ -2450,16 +2450,16 @@ Mark 2                      {"in":"B","mark":1,"out":"C"}
 Mark 3                      {"mark":2,"out":["_fw","B"]}
 (zone)                      
   inet/mangle/INPUT         -j MARK --set-mark 2
-  inet6/mangle/INPUT        -j MARK --set-mark 2
   inet/mangle/POSTROUTING   -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
+  inet6/mangle/INPUT        -j MARK --set-mark 2
   inet6/mangle/POSTROUTING  -o eth1 -d fc00::/7 -j MARK --set-mark 2
 
 
 No-track 1              {"in":["_fw","A"]}
 (zone)                  
   inet/raw/OUTPUT       -j CT --notrack
-  inet6/raw/OUTPUT      -j CT --notrack
   inet/raw/PREROUTING   -i eth0 -j CT --notrack
+  inet6/raw/OUTPUT      -j CT --notrack
   inet6/raw/PREROUTING  -i eth0 -j CT --notrack
 
 No-track 2              {"in":"B"}
