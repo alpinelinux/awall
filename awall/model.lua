@@ -16,6 +16,7 @@ local builtin = require('awall.iptables').builtin
 local optfrag = require('awall.optfrag')
 local FAMILIES = optfrag.FAMILIES
 local combinations = optfrag.combinations
+local prune = optfrag.prune
 
 local raise = require('awall.uerror').raise
 
@@ -462,6 +463,8 @@ function M.Rule:combine(ofs1, ofs2, key, unique)
       return extend(map(ofs1, setvar('target')), map(ofs2, setvar('chain')))
    end
 
+   ofs1, ofs2 = prune(ofs1, ofs2)
+
    local chainless = filter(ofs2, function(of) return not of.chain end)
    local created
    local res = {}
@@ -508,31 +511,6 @@ function M.Rule:trules()
 	 assert(not ofrag[tag])
 	 ofrag[tag] = value
       end
-   end
-
-   local families
-
-   local function setfamilies(ofrags)
-      if ofrags then
-	 families = {}
-	 for i, ofrag in ipairs(ofrags) do
-	    if not ofrag.family then
-	       families = nil
-	       return
-	    end
-	    table.insert(families, ofrag.family)
-	 end
-      else families = nil end
-   end
-
-   local function ffilter(ofrags)
-      if not ofrags or not ofrags[1] or not families then return ofrags end
-      return filter(
-	 ofrags,
-	 function(of)
-	    return not of.family or contains(families, of.family)
-	 end
-      )
    end
 
    local ofrags = self:zoneoptfrags()
@@ -587,26 +565,20 @@ function M.Rule:trules()
 
    tag(ofrags, 'position', self:position())
 
-   setfamilies(ofrags)
-
    local addrofrags = combinations(
       self:create(M.Zone, {addr=self.src}):optfrags(self:direction('in')),
       self:destoptfrags()
    )
-   if addrofrags then
-      addrofrags = ffilter(addrofrags)
-      setfamilies(addrofrags)
-      ofrags = self:combine(ffilter(ofrags), addrofrags, 'address')
-   end
+   if addrofrags then ofrags = self:combine(ofrags, addrofrags, 'address') end
 
-   ofrags = self:mangleoptfrags(ofrags)
+   ofrags = prune(self:mangleoptfrags(ofrags), ofrags)
 
    local custom = self:customtarget()
    for _, ofrag in ipairs(ofrags) do
       setdefault(ofrag, 'target', custom or self:target())
    end
 
-   ofrags = self:convertchains(ffilter(ofrags))
+   ofrags = self:convertchains(ofrags)
    tag(ofrags, 'table', self:table(), false)
 
    local function checkzof(ofrag, dir, chains)
@@ -621,7 +593,7 @@ function M.Rule:trules()
    end
    
    ofrags = filter(
-      combinations(ofrags, ffilter(optfrag.FAMILYFRAGS)),
+      combinations(ofrags, optfrag.FAMILYFRAGS),
       function(r) return self:trulefilter(r) end
    )
 

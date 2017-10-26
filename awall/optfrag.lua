@@ -7,10 +7,15 @@ See LICENSE file for license details
 
 local M = {}
 
+local util = require('awall.util')
+local map = util.map
+
+local function ffrags(families)
+   return map(families, function(f) return {family=f} end)
+end
+
 M.FAMILIES = {'inet', 'inet6'}
-M.FAMILYFRAGS = require('awall.util').map(
-   M.FAMILIES, function(f) return {family=f} end
-)
+M.FAMILYFRAGS = ffrags(M.FAMILIES)
 
 function M.combinations(of1, ...)
    local arg = {...}
@@ -54,6 +59,30 @@ function M.combinations(of1, ...)
    end
 
    return M.combinations(res, table.unpack(arg))
+end
+
+function M.prune(...)
+   local arg = {...}
+   local families = {}
+
+   for i, ofrags in ipairs(arg) do
+      families[i] = {}
+      for _, ofrag in ipairs(ofrags) do
+	 if not ofrag.family then
+	    families[i] = false
+	    break
+	 end
+	 families[i][ofrag.family] = true
+      end
+   end
+
+   local ff
+   for _, f in ipairs(families) do
+      ff = M.combinations(ff, f and ffrags(util.keys(f)) or nil)
+   end
+   return table.unpack(
+      map(arg, function(ofs) return M.combinations(ofs, ff) end)
+   )
 end
 
 function M.location(of) return of.family..'/'..of.table..'/'..of.chain end
