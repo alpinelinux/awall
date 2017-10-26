@@ -14,6 +14,7 @@ local resolve = require('awall.host')
 local builtin = require('awall.iptables').builtin
 
 local optfrag = require('awall.optfrag')
+local FAMILIES = optfrag.FAMILIES
 local combinations = optfrag.combinations
 
 local raise = require('awall.uerror').raise
@@ -313,8 +314,10 @@ function M.Rule:servoptfrags()
 
    if not self.service then return end
 
-   local fports = {inet={}, inet6={}}
    local res = {}
+
+   local fports = {}
+   map(FAMILIES, function(f) fports[f] = {} end)
 
    for i, serv in ipairs(self.service) do
       for i, sdef in listpairs(serv) do
@@ -618,7 +621,7 @@ function M.Rule:trules()
    end
    
    ofrags = filter(
-      combinations(ofrags, ffilter({{family='inet'}, {family='inet6'}})),
+      combinations(ofrags, ffilter(optfrag.FAMILYFRAGS)),
       function(r) return self:trulefilter(r) end
    )
 
@@ -709,7 +712,7 @@ function M.Maskable:init(...)
       self['src-mask'] = {}
       self['dest-mask'] = {}
       if type(self.mask) == 'number' then self.mask = {src=self.mask} end
-      for _, family in ipairs{'inet', 'inet6'} do
+      for _, family in ipairs(FAMILIES) do
 	 setdefault(self.mask, family, copy(self.mask))
 	 for _, attr in ipairs{'src', 'dest'} do
 	    self[attr..'-mask'][family] = self.mask[family][attr] or
@@ -728,9 +731,11 @@ function M.Maskable:initmask()
    for _, addr in ipairs{'src', 'dest'} do
       local mask = addr..'-mask'
       if type(self[mask]) ~= 'table' then
-	 self[mask] = {inet=self[mask], inet6=self[mask]}
+	 local m = self[mask]
+	 self[mask] = {}
+	 map(FAMILIES, function(f) self[mask][f] = m end)
       end
-      for _, family in ipairs{'inet', 'inet6'} do
+      for _, family in ipairs(FAMILIES) do
 	 local value = self[mask][family]
 	 if not value then self[mask][family] = 0
 	 elseif value == true then self[mask][family] = ADDRLEN[family] end
@@ -741,7 +746,7 @@ end
 function M.Maskable:recentmask(name)
    local res = {}
 
-   for _, family in ipairs{'inet', 'inet6'} do
+   for _, family in ipairs(FAMILIES) do
       local addr, len
       for _, a in ipairs{'src', 'dest'} do
 	 local mask = self[a..'-mask'][family]
@@ -772,7 +777,8 @@ function M.Maskable:recentmask(name)
 	 end
 	 while #mask % 5 < 4 do mask = mask..'0' end
 	 if #mask < 39 then mask = mask..'::' end
-      end
+
+      else assert(false) end
 
       table.insert(
 	 res,
@@ -816,7 +822,7 @@ function M.Limit:limitofrags(name)
 
    local ofrags = {}
 
-   for _, family in ipairs{'inet', 'inet6'} do
+   for _, family in ipairs(FAMILIES) do
       local keys = {}
       local maskopts = ''
       for _, addr in ipairs{'src', 'dest'} do

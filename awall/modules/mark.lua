@@ -8,7 +8,9 @@ See LICENSE file for license details
 local model = require('awall.model')
 local class = model.class
 
-local combinations = require('awall.optfrag').combinations
+local optfrag = require('awall.optfrag')
+local combinations = optfrag.combinations
+
 local list = require('awall.util').list
 
 
@@ -38,7 +40,7 @@ end
 local function restoremark(config)
    if list(config['route-track'])[1] then
       return combinations(
-	 {{family='inet'}, {family='inet6'}},
+	 optfrag.FAMILYFRAGS,
 	 {{chain='OUTPUT'}, {chain='PREROUTING'}},
 	 {
 	    {

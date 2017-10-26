@@ -1,12 +1,14 @@
 --[[
 Transparent proxy module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local model = require('awall.model')
-local combinations = require('awall.optfrag').combinations
+
+local optfrag = require('awall.optfrag')
+local combinations = optfrag.combinations
 
 local util = require('awall.util')
 local contains = util.contains
@@ -57,11 +59,7 @@ local function divert(config)
 	 ofrags,
 	 {chain='PREROUTING', match='-m socket', target='divert'}
       )
-      return combinations(
-	 {{family='inet'}, {family='inet6'}},
-	 {{table='mangle'}},
-	 ofrags
-      )
+      return combinations(optfrag.FAMILYFRAGS, {{table='mangle'}}, ofrags)
    end
 end
 

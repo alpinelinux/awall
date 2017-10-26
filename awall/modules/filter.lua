@@ -12,7 +12,8 @@ local model = require('awall.model')
 local class = model.class
 local Rule = model.Rule
 
-local combinations = require('awall.optfrag').combinations
+local optfrag = require('awall.optfrag')
+local combinations = optfrag.combinations
 
 local util = require('awall.util')
 local contains = util.contains
@@ -442,7 +443,7 @@ local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
 local function stateful(config)
    local res = {}
 
-   for i, family in ipairs{'inet', 'inet6'} do
+   for _, family in ipairs(optfrag.FAMILIES) do
 
       local er = combinations(
 	 fchains,
