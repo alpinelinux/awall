@@ -3801,8 +3801,8 @@
 :logdrop-999 - [0:0]
 :logpass-0 - [0:0]
 :logpass-1 - [0:0]
--A FORWARD -m recent --name user:A --rdest --mask 255.255.255.255 --set 
--A FORWARD -m recent --name user:A --rsource --mask 255.255.255.255 --set 
+-A FORWARD -m recent --name user:B --rdest --mask 255.255.255.255 --set 
+-A FORWARD -m recent --name user:B --rsource --mask 255.255.255.255 --set 
 -A FORWARD -j limit-1886
 -A FORWARD -j limit-1885
 -A FORWARD -j limit-1884
@@ -5461,8 +5461,8 @@
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
--A INPUT -m recent --name user:A --rdest --mask 255.255.255.255 --set 
--A INPUT -m recent --name user:A --rsource --mask 255.255.255.255 --set 
+-A INPUT -m recent --name user:B --rdest --mask 255.255.255.255 --set 
+-A INPUT -m recent --name user:B --rsource --mask 255.255.255.255 --set 
 -A INPUT -j limit-1886
 -A INPUT -j limit-1885
 -A INPUT -j limit-1884
@@ -7075,8 +7075,8 @@
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
--A OUTPUT -m recent --name user:A --rdest --mask 255.255.255.255 --set 
--A OUTPUT -m recent --name user:A --rsource --mask 255.255.255.255 --set 
+-A OUTPUT -m recent --name user:B --rdest --mask 255.255.255.255 --set 
+-A OUTPUT -m recent --name user:B --rsource --mask 255.255.255.255 --set 
 -A OUTPUT -j limit-1886
 -A OUTPUT -j limit-1885
 -A OUTPUT -j limit-1884

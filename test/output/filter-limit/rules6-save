@@ -3800,8 +3800,8 @@
 :logdrop-998 - [0:0]
 :logdrop-999 - [0:0]
 :logpass-0 - [0:0]
--A FORWARD -m recent --name user:A --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A FORWARD -m recent --name user:A --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A FORWARD -m recent --name user:B --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A FORWARD -m recent --name user:B --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A FORWARD -j limit-1886
 -A FORWARD -j limit-1885
 -A FORWARD -j limit-1884
@@ -5435,8 +5435,8 @@
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
--A INPUT -m recent --name user:A --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A INPUT -m recent --name user:A --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A INPUT -m recent --name user:B --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A INPUT -m recent --name user:B --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A INPUT -j limit-1886
 -A INPUT -j limit-1885
 -A INPUT -j limit-1884
@@ -7048,8 +7048,8 @@
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
--A OUTPUT -m recent --name user:A --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
--A OUTPUT -m recent --name user:A --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A OUTPUT -m recent --name user:B --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
+-A OUTPUT -m recent --name user:B --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 
 -A OUTPUT -j limit-1886
 -A OUTPUT -j limit-1885
 -A OUTPUT -j limit-1884

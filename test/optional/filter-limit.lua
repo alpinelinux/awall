@@ -75,12 +75,15 @@ for _, name in ipairs{'A', 'B', 'C', 'D'} do
    table.insert(res, {['update-limit']=name})
 end
 
-for _, measure in ipairs{'conn', 'flow'} do
+function add_update_limit(name, measure)
    for _, addr in ipairs{'src', 'dest'} do
       table.insert(
-         res, {['update-limit']={name='A', measure=measure, addr=addr}}
+         res, {['update-limit']={name=name, measure=measure, addr=addr}}
       )
    end
 end
+
+add_update_limit('A', 'conn')
+add_update_limit('B', 'flow')
 
 print(json.encode{filter=res})
