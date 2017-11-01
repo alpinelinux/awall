@@ -1,5 +1,8 @@
 {
-    "log": { "none": { "mode": "none" } },
+    "log": {
+	"none": { "mode": "none" },
+	"ulog": { "mode": "ulog", "limit": { "interval": 5 } }
+    },
     "filter": [
 	{},
 	{ "action": "drop" },
@@ -12,6 +15,11 @@
 	{ "log": true, "action": "pass" },
 	{ "log": "none" },
 	{ "log": "none", "action": "drop" },
-	{ "log": "none", "action": "pass" }
+	{ "log": "none", "action": "pass" },
+
+	{ "log": "ulog" },
+	{ "log": "ulog", "action": "drop" },
+	{ "log": "ulog", "action": "pass" },
+	{ "in": "_fw", "log": "ulog", "action": "pass" }
     ]
 }

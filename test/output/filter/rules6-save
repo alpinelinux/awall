@@ -5,9 +5,11 @@
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
 :logaccept-0 - [0:0]
+:logaccept-1 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
 :logpass-0 - [0:0]
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
@@ -31,6 +33,8 @@
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -j logaccept-1
+-A FORWARD -j logdrop-3
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -77,6 +81,8 @@
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -j logaccept-1
+-A INPUT -j logdrop-3
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -100,6 +106,8 @@
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -j logaccept-1
+-A OUTPUT -j logdrop-3
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -109,12 +117,14 @@
 -A icmp-routing -p icmpv6 --icmpv6-type 4 -j ACCEPT
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
+-A logaccept-1 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
+-A logdrop-3 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
 -A logreject-0 -m limit --limit 1/second -j LOG
 -A logreject-0 -j REJECT

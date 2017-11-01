@@ -200,7 +200,42 @@ Filter 18                   {"action":"pass","log":"none"}
   inet6/filter/INPUT        
   inet6/filter/OUTPUT       
 
-Filter 19                   {"in":["_fw","A"]}
+Filter 19                   {"log":"ulog"}
+(log)                       
+  inet/filter/FORWARD       -j logaccept-1
+  inet/filter/INPUT         -j logaccept-1
+  inet/filter/OUTPUT        -j logaccept-1
+  inet/filter/logaccept-1   -m limit --limit 12/minute -j ULOG
+  inet/filter/logaccept-1   -j ACCEPT
+  inet6/filter/FORWARD      -j logaccept-1
+  inet6/filter/INPUT        -j logaccept-1
+  inet6/filter/OUTPUT       -j logaccept-1
+  inet6/filter/logaccept-1  -j ACCEPT
+
+Filter 20                   {"action":"drop","log":"ulog"}
+(log)                       
+  inet/filter/FORWARD       -j logdrop-3
+  inet/filter/INPUT         -j logdrop-3
+  inet/filter/OUTPUT        -j logdrop-3
+  inet/filter/logdrop-3     -m limit --limit 12/minute -j ULOG
+  inet/filter/logdrop-3     -j DROP
+  inet6/filter/FORWARD      -j logdrop-3
+  inet6/filter/INPUT        -j logdrop-3
+  inet6/filter/OUTPUT       -j logdrop-3
+  inet6/filter/logdrop-3    -j DROP
+
+Filter 21                   {"action":"pass","log":"ulog"}
+(log)                       
+  inet/filter/FORWARD       -j logpass-1
+  inet/filter/INPUT         -j logpass-1
+  inet/filter/OUTPUT        -j logpass-1
+  inet/filter/logpass-1     -m limit --limit 12/minute -j ULOG
+
+Filter 22                   {"action":"pass","in":"_fw","log":"ulog"}
+(log)                       
+  inet/filter/OUTPUT        -m limit --limit 12/minute -j ULOG
+
+Filter 23                   {"in":["_fw","A"]}
 (zone)                      
   inet/filter/FORWARD       -i eth0 -j ACCEPT
   inet/filter/INPUT         -i eth0 -j ACCEPT
@@ -209,12 +244,12 @@ Filter 19                   {"in":["_fw","A"]}
   inet6/filter/INPUT        -i eth0 -j ACCEPT
   inet6/filter/OUTPUT       -j ACCEPT
 
-Filter 20                   {"in":"B","out":"C"}
+Filter 24                   {"in":"B","out":"C"}
 (zone)                      
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 21                   {"out":["_fw","B"]}
+Filter 25                   {"out":["_fw","B"]}
 (zone)                      
   inet/filter/FORWARD       -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/INPUT         -j ACCEPT
@@ -223,7 +258,7 @@ Filter 21                   {"out":["_fw","B"]}
   inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 22                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 26                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                      
   inet/filter/FORWARD       -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
@@ -313,6 +348,9 @@ Log _default  {"limit":1}
 (defaults)    
 
 Log none      {"mode":"none"}
+(log)         
+
+Log ulog      {"limit":{"interval":5},"mode":"ulog"}
 (log)         
 
 
@@ -569,10 +607,13 @@ hash:net family inet
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
 :logaccept-0 - [0:0]
+:logaccept-1 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
 :logpass-0 - [0:0]
+:logpass-1 - [0:0]
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
@@ -595,6 +636,9 @@ hash:net family inet
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -j logaccept-1
+-A FORWARD -j logdrop-3
+-A FORWARD -j logpass-1
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -665,6 +709,9 @@ hash:net family inet
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -j logaccept-1
+-A INPUT -j logdrop-3
+-A INPUT -j logpass-1
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -688,6 +735,10 @@ hash:net family inet
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -j logaccept-1
+-A OUTPUT -j logdrop-3
+-A OUTPUT -j logpass-1
+-A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing
@@ -696,13 +747,18 @@ hash:net family inet
 -A icmp-routing -p icmp --icmp-type 12 -j ACCEPT
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
+-A logaccept-1 -m limit --limit 12/minute -j ULOG
+-A logaccept-1 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
+-A logdrop-3 -m limit --limit 12/minute -j ULOG
+-A logdrop-3 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
+-A logpass-1 -m limit --limit 12/minute -j ULOG
 -A logreject-0 -m limit --limit 1/second -j LOG
 -A logreject-0 -j REJECT
 -A logtarpit-0 -m limit --limit 1/second -j LOG
@@ -755,9 +811,11 @@ COMMIT
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
 :logaccept-0 - [0:0]
+:logaccept-1 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
 :logpass-0 - [0:0]
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
@@ -781,6 +839,8 @@ COMMIT
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -j logaccept-1
+-A FORWARD -j logdrop-3
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -827,6 +887,8 @@ COMMIT
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -j logaccept-1
+-A INPUT -j logdrop-3
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -850,6 +912,8 @@ COMMIT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -j logaccept-1
+-A OUTPUT -j logdrop-3
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -859,12 +923,14 @@ COMMIT
 -A icmp-routing -p icmpv6 --icmpv6-type 4 -j ACCEPT
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
+-A logaccept-1 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
+-A logdrop-3 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
 -A logreject-0 -m limit --limit 1/second -j LOG
 -A logreject-0 -j REJECT

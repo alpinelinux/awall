@@ -3,190 +3,250 @@
 :FORWARD DROP [0:0]
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
-:address-10 - [0:0]
-:address-11 - [0:0]
-:address-128 - [0:0]
-:address-129 - [0:0]
-:address-130 - [0:0]
-:address-131 - [0:0]
+:address-12 - [0:0]
+:address-13 - [0:0]
+:address-138 - [0:0]
+:address-139 - [0:0]
+:address-14 - [0:0]
 :address-140 - [0:0]
 :address-141 - [0:0]
 :address-142 - [0:0]
-:address-143 - [0:0]
-:address-176 - [0:0]
-:address-177 - [0:0]
-:address-178 - [0:0]
-:address-179 - [0:0]
-:address-188 - [0:0]
-:address-189 - [0:0]
-:address-190 - [0:0]
-:address-191 - [0:0]
-:address-44 - [0:0]
-:address-45 - [0:0]
-:address-46 - [0:0]
-:address-47 - [0:0]
-:address-56 - [0:0]
-:address-57 - [0:0]
-:address-58 - [0:0]
-:address-59 - [0:0]
-:address-8 - [0:0]
-:address-9 - [0:0]
-:address-92 - [0:0]
-:address-93 - [0:0]
-:address-94 - [0:0]
-:address-95 - [0:0]
+:address-15 - [0:0]
+:address-16 - [0:0]
+:address-192 - [0:0]
+:address-193 - [0:0]
+:address-194 - [0:0]
+:address-195 - [0:0]
+:address-196 - [0:0]
+:address-210 - [0:0]
+:address-211 - [0:0]
+:address-212 - [0:0]
+:address-213 - [0:0]
+:address-214 - [0:0]
+:address-264 - [0:0]
+:address-265 - [0:0]
+:address-266 - [0:0]
+:address-267 - [0:0]
+:address-268 - [0:0]
+:address-282 - [0:0]
+:address-283 - [0:0]
+:address-284 - [0:0]
+:address-285 - [0:0]
+:address-286 - [0:0]
+:address-66 - [0:0]
+:address-67 - [0:0]
+:address-68 - [0:0]
+:address-69 - [0:0]
+:address-70 - [0:0]
+:address-84 - [0:0]
+:address-85 - [0:0]
+:address-86 - [0:0]
+:address-87 - [0:0]
+:address-88 - [0:0]
 :icmp-routing - [0:0]
 :logaccept-0 - [0:0]
-:logaccept-112 - [0:0]
-:logaccept-12 - [0:0]
-:logaccept-15 - [0:0]
-:logaccept-16 - [0:0]
-:logaccept-19 - [0:0]
-:logaccept-28 - [0:0]
-:logaccept-3 - [0:0]
+:logaccept-1 - [0:0]
+:logaccept-102 - [0:0]
+:logaccept-103 - [0:0]
+:logaccept-120 - [0:0]
+:logaccept-121 - [0:0]
+:logaccept-126 - [0:0]
+:logaccept-127 - [0:0]
+:logaccept-128 - [0:0]
+:logaccept-129 - [0:0]
+:logaccept-134 - [0:0]
+:logaccept-135 - [0:0]
+:logaccept-152 - [0:0]
+:logaccept-153 - [0:0]
+:logaccept-158 - [0:0]
+:logaccept-159 - [0:0]
+:logaccept-160 - [0:0]
+:logaccept-161 - [0:0]
+:logaccept-166 - [0:0]
+:logaccept-167 - [0:0]
+:logaccept-184 - [0:0]
+:logaccept-185 - [0:0]
+:logaccept-190 - [0:0]
+:logaccept-191 - [0:0]
+:logaccept-224 - [0:0]
+:logaccept-225 - [0:0]
+:logaccept-24 - [0:0]
+:logaccept-25 - [0:0]
+:logaccept-30 - [0:0]
 :logaccept-31 - [0:0]
 :logaccept-32 - [0:0]
-:logaccept-35 - [0:0]
-:logaccept-44 - [0:0]
-:logaccept-47 - [0:0]
-:logaccept-48 - [0:0]
-:logaccept-51 - [0:0]
-:logaccept-60 - [0:0]
+:logaccept-33 - [0:0]
+:logaccept-38 - [0:0]
+:logaccept-39 - [0:0]
+:logaccept-56 - [0:0]
+:logaccept-57 - [0:0]
+:logaccept-6 - [0:0]
+:logaccept-62 - [0:0]
 :logaccept-63 - [0:0]
 :logaccept-64 - [0:0]
-:logaccept-67 - [0:0]
-:logaccept-76 - [0:0]
-:logaccept-79 - [0:0]
-:logaccept-80 - [0:0]
-:logaccept-83 - [0:0]
-:logaccept-92 - [0:0]
+:logaccept-65 - [0:0]
+:logaccept-7 - [0:0]
+:logaccept-70 - [0:0]
+:logaccept-71 - [0:0]
+:logaccept-88 - [0:0]
+:logaccept-89 - [0:0]
+:logaccept-94 - [0:0]
 :logaccept-95 - [0:0]
+:logaccept-96 - [0:0]
+:logaccept-97 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
+:logdrop-2 - [0:0]
 :logpass-0 - [0:0]
-:logpass-12 - [0:0]
-:logpass-15 - [0:0]
-:logpass-16 - [0:0]
+:logpass-104 - [0:0]
+:logpass-118 - [0:0]
+:logpass-124 - [0:0]
+:logpass-154 - [0:0]
 :logpass-24 - [0:0]
-:logpass-26 - [0:0]
-:logpass-29 - [0:0]
-:logpass-3 - [0:0]
-:logpass-38 - [0:0]
-:logpass-41 - [0:0]
-:logpass-49 - [0:0]
+:logpass-30 - [0:0]
+:logpass-32 - [0:0]
+:logpass-48 - [0:0]
 :logpass-52 - [0:0]
-:logpass-59 - [0:0]
-:logpass-62 - [0:0]
-:logpass-77 - [0:0]
+:logpass-58 - [0:0]
+:logpass-6 - [0:0]
+:logpass-76 - [0:0]
+:logpass-82 - [0:0]
+:logpass-98 - [0:0]
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD 
 -A FORWARD -j logaccept-0
 -A FORWARD -j logpass-0
+-A FORWARD -j logaccept-1
 -A FORWARD -d fc00::2 -j ACCEPT
 -A FORWARD -d fc00::2 
--A FORWARD -d fc00::2 -j logaccept-3
--A FORWARD -d fc00::2 -j logpass-3
+-A FORWARD -d fc00::2 -j logaccept-6
+-A FORWARD -d fc00::2 -j logpass-6
+-A FORWARD -d fc00::2 -j logaccept-7
 -A FORWARD -s fc00::1 -j ACCEPT
 -A FORWARD -s fc00::1 
--A FORWARD -s fc00::1 -j logaccept-12
--A FORWARD -s fc00::1 -j logpass-12
+-A FORWARD -s fc00::1 -j logaccept-24
+-A FORWARD -s fc00::1 -j logpass-24
+-A FORWARD -s fc00::1 -j logaccept-25
 -A FORWARD -s fc00::1 -d fc00::2 -j ACCEPT
 -A FORWARD -s fc00::1 -d fc00::2 
--A FORWARD -s fc00::1 -d fc00::2 -j logaccept-15
--A FORWARD -s fc00::1 -d fc00::2 -j logpass-15
+-A FORWARD -s fc00::1 -d fc00::2 -j logaccept-30
+-A FORWARD -s fc00::1 -d fc00::2 -j logpass-30
+-A FORWARD -s fc00::1 -d fc00::2 -j logaccept-31
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 
--A FORWARD -o eth1 -d fc00::/7 -j logaccept-16
--A FORWARD -o eth1 -d fc00::/7 -j logpass-16
--A FORWARD -o eth1 -d fc00::/7 -j address-8
--A FORWARD -o eth1 -d fc00::/7 -j address-9
--A FORWARD -o eth1 -d fc00::/7 -j address-10
--A FORWARD -o eth1 -d fc00::/7 -j address-11
+-A FORWARD -o eth1 -d fc00::/7 -j logaccept-32
+-A FORWARD -o eth1 -d fc00::/7 -j logpass-32
+-A FORWARD -o eth1 -d fc00::/7 -j logaccept-33
+-A FORWARD -o eth1 -d fc00::/7 -j address-12
+-A FORWARD -o eth1 -d fc00::/7 -j address-13
+-A FORWARD -o eth1 -d fc00::/7 -j address-14
+-A FORWARD -o eth1 -d fc00::/7 -j address-15
+-A FORWARD -o eth1 -d fc00::/7 -j address-16
 -A FORWARD -o eth1 -d fc00::/7 -s fc00::1 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -s fc00::1 
--A FORWARD -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-28
--A FORWARD -o eth1 -d fc00::/7 -s fc00::1 -j logpass-24
--A FORWARD -o eth1 -d fc00::/7 -j address-44
--A FORWARD -o eth1 -d fc00::/7 -j address-45
--A FORWARD -o eth1 -d fc00::/7 -j address-46
--A FORWARD -o eth1 -d fc00::/7 -j address-47
+-A FORWARD -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-56
+-A FORWARD -o eth1 -d fc00::/7 -s fc00::1 -j logpass-48
+-A FORWARD -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-57
+-A FORWARD -o eth1 -d fc00::/7 -j address-66
+-A FORWARD -o eth1 -d fc00::/7 -j address-67
+-A FORWARD -o eth1 -d fc00::/7 -j address-68
+-A FORWARD -o eth1 -d fc00::/7 -j address-69
+-A FORWARD -o eth1 -d fc00::/7 -j address-70
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth0 
--A FORWARD -i eth0 -j logaccept-32
--A FORWARD -i eth0 -j logpass-26
+-A FORWARD -i eth0 -j logaccept-64
+-A FORWARD -i eth0 -j logpass-52
+-A FORWARD -i eth0 -j logaccept-65
 -A FORWARD -i eth0 -d fc00::2 -j ACCEPT
 -A FORWARD -i eth0 -d fc00::2 
--A FORWARD -i eth0 -d fc00::2 -j logaccept-35
--A FORWARD -i eth0 -d fc00::2 -j logpass-29
+-A FORWARD -i eth0 -d fc00::2 -j logaccept-70
+-A FORWARD -i eth0 -d fc00::2 -j logpass-58
+-A FORWARD -i eth0 -d fc00::2 -j logaccept-71
 -A FORWARD -i eth0 -s fc00::1 -j ACCEPT
 -A FORWARD -i eth0 -s fc00::1 
--A FORWARD -i eth0 -s fc00::1 -j logaccept-44
--A FORWARD -i eth0 -s fc00::1 -j logpass-38
+-A FORWARD -i eth0 -s fc00::1 -j logaccept-88
+-A FORWARD -i eth0 -s fc00::1 -j logpass-76
+-A FORWARD -i eth0 -s fc00::1 -j logaccept-89
 -A FORWARD -i eth0 -s fc00::1 -d fc00::2 -j ACCEPT
 -A FORWARD -i eth0 -s fc00::1 -d fc00::2 
--A FORWARD -i eth0 -s fc00::1 -d fc00::2 -j logaccept-47
--A FORWARD -i eth0 -s fc00::1 -d fc00::2 -j logpass-41
+-A FORWARD -i eth0 -s fc00::1 -d fc00::2 -j logaccept-94
+-A FORWARD -i eth0 -s fc00::1 -d fc00::2 -j logpass-82
+-A FORWARD -i eth0 -s fc00::1 -d fc00::2 -j logaccept-95
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j logaccept-48
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j logaccept-96
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -m limit --limit 1/second -j LOG
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-56
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-57
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-58
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-59
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j logaccept-97
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-84
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-85
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-86
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-87
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-88
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -s fc00::1 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -s fc00::1 
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-60
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-120
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -s fc00::1 -m limit --limit 1/second -j LOG
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-92
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-93
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-94
--A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-95
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-121
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-138
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-139
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-140
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-141
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j address-142
 -A FORWARD -i eth1 -s fc00::/7 -j ACCEPT
 -A FORWARD -i eth1 -s fc00::/7 
--A FORWARD -i eth1 -s fc00::/7 -j logaccept-64
--A FORWARD -i eth1 -s fc00::/7 -j logpass-49
+-A FORWARD -i eth1 -s fc00::/7 -j logaccept-128
+-A FORWARD -i eth1 -s fc00::/7 -j logpass-98
+-A FORWARD -i eth1 -s fc00::/7 -j logaccept-129
 -A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j ACCEPT
 -A FORWARD -i eth1 -s fc00::/7 -d fc00::2 
--A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-67
--A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logpass-52
--A FORWARD -i eth1 -s fc00::/7 -j address-128
--A FORWARD -i eth1 -s fc00::/7 -j address-129
--A FORWARD -i eth1 -s fc00::/7 -j address-130
--A FORWARD -i eth1 -s fc00::/7 -j address-131
--A FORWARD -i eth1 -s fc00::/7 -j address-140
--A FORWARD -i eth1 -s fc00::/7 -j address-141
--A FORWARD -i eth1 -s fc00::/7 -j address-142
--A FORWARD -i eth1 -s fc00::/7 -j address-143
+-A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-134
+-A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logpass-104
+-A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-135
+-A FORWARD -i eth1 -s fc00::/7 -j address-192
+-A FORWARD -i eth1 -s fc00::/7 -j address-193
+-A FORWARD -i eth1 -s fc00::/7 -j address-194
+-A FORWARD -i eth1 -s fc00::/7 -j address-195
+-A FORWARD -i eth1 -s fc00::/7 -j address-196
+-A FORWARD -i eth1 -s fc00::/7 -j address-210
+-A FORWARD -i eth1 -s fc00::/7 -j address-211
+-A FORWARD -i eth1 -s fc00::/7 -j address-212
+-A FORWARD -i eth1 -s fc00::/7 -j address-213
+-A FORWARD -i eth1 -s fc00::/7 -j address-214
 -A FORWARD -i eth1 -s fc00::/7 -j ACCEPT
 -A FORWARD -i eth1 -s fc00::/7 
--A FORWARD -i eth1 -s fc00::/7 -j logaccept-80
--A FORWARD -i eth1 -s fc00::/7 -j logpass-59
+-A FORWARD -i eth1 -s fc00::/7 -j logaccept-160
+-A FORWARD -i eth1 -s fc00::/7 -j logpass-118
+-A FORWARD -i eth1 -s fc00::/7 -j logaccept-161
 -A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j ACCEPT
 -A FORWARD -i eth1 -s fc00::/7 -d fc00::2 
--A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-83
--A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logpass-62
--A FORWARD -i eth1 -s fc00::/7 -j address-176
--A FORWARD -i eth1 -s fc00::/7 -j address-177
--A FORWARD -i eth1 -s fc00::/7 -j address-178
--A FORWARD -i eth1 -s fc00::/7 -j address-179
--A FORWARD -i eth1 -s fc00::/7 -j address-188
--A FORWARD -i eth1 -s fc00::/7 -j address-189
--A FORWARD -i eth1 -s fc00::/7 -j address-190
--A FORWARD -i eth1 -s fc00::/7 -j address-191
+-A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-166
+-A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logpass-124
+-A FORWARD -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-167
+-A FORWARD -i eth1 -s fc00::/7 -j address-264
+-A FORWARD -i eth1 -s fc00::/7 -j address-265
+-A FORWARD -i eth1 -s fc00::/7 -j address-266
+-A FORWARD -i eth1 -s fc00::/7 -j address-267
+-A FORWARD -i eth1 -s fc00::/7 -j address-268
+-A FORWARD -i eth1 -s fc00::/7 -j address-282
+-A FORWARD -i eth1 -s fc00::/7 -j address-283
+-A FORWARD -i eth1 -s fc00::/7 -j address-284
+-A FORWARD -i eth1 -s fc00::/7 -j address-285
+-A FORWARD -i eth1 -s fc00::/7 -j address-286
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-0
 -A FORWARD 
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-112
+-A FORWARD -j logaccept-224
 -A FORWARD -j logdrop-1
--A FORWARD -j logpass-77
+-A FORWARD -j logpass-154
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
+-A FORWARD -j logaccept-225
+-A FORWARD -j logdrop-2
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -219,78 +279,96 @@
 -A INPUT 
 -A INPUT -j logaccept-0
 -A INPUT -j logpass-0
+-A INPUT -j logaccept-1
 -A INPUT -d fc00::2 -j ACCEPT
 -A INPUT -d fc00::2 
--A INPUT -d fc00::2 -j logaccept-3
--A INPUT -d fc00::2 -j logpass-3
+-A INPUT -d fc00::2 -j logaccept-6
+-A INPUT -d fc00::2 -j logpass-6
+-A INPUT -d fc00::2 -j logaccept-7
 -A INPUT -s fc00::1 -j ACCEPT
 -A INPUT -s fc00::1 
--A INPUT -s fc00::1 -j logaccept-12
--A INPUT -s fc00::1 -j logpass-12
+-A INPUT -s fc00::1 -j logaccept-24
+-A INPUT -s fc00::1 -j logpass-24
+-A INPUT -s fc00::1 -j logaccept-25
 -A INPUT -s fc00::1 -d fc00::2 -j ACCEPT
 -A INPUT -s fc00::1 -d fc00::2 
--A INPUT -s fc00::1 -d fc00::2 -j logaccept-15
--A INPUT -s fc00::1 -d fc00::2 -j logpass-15
+-A INPUT -s fc00::1 -d fc00::2 -j logaccept-30
+-A INPUT -s fc00::1 -d fc00::2 -j logpass-30
+-A INPUT -s fc00::1 -d fc00::2 -j logaccept-31
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -i eth0 
--A INPUT -i eth0 -j logaccept-32
--A INPUT -i eth0 -j logpass-26
+-A INPUT -i eth0 -j logaccept-64
+-A INPUT -i eth0 -j logpass-52
+-A INPUT -i eth0 -j logaccept-65
 -A INPUT -i eth0 -d fc00::2 -j ACCEPT
 -A INPUT -i eth0 -d fc00::2 
--A INPUT -i eth0 -d fc00::2 -j logaccept-35
--A INPUT -i eth0 -d fc00::2 -j logpass-29
+-A INPUT -i eth0 -d fc00::2 -j logaccept-70
+-A INPUT -i eth0 -d fc00::2 -j logpass-58
+-A INPUT -i eth0 -d fc00::2 -j logaccept-71
 -A INPUT -i eth0 -s fc00::1 -j ACCEPT
 -A INPUT -i eth0 -s fc00::1 
--A INPUT -i eth0 -s fc00::1 -j logaccept-44
--A INPUT -i eth0 -s fc00::1 -j logpass-38
+-A INPUT -i eth0 -s fc00::1 -j logaccept-88
+-A INPUT -i eth0 -s fc00::1 -j logpass-76
+-A INPUT -i eth0 -s fc00::1 -j logaccept-89
 -A INPUT -i eth0 -s fc00::1 -d fc00::2 -j ACCEPT
 -A INPUT -i eth0 -s fc00::1 -d fc00::2 
--A INPUT -i eth0 -s fc00::1 -d fc00::2 -j logaccept-47
--A INPUT -i eth0 -s fc00::1 -d fc00::2 -j logpass-41
+-A INPUT -i eth0 -s fc00::1 -d fc00::2 -j logaccept-94
+-A INPUT -i eth0 -s fc00::1 -d fc00::2 -j logpass-82
+-A INPUT -i eth0 -s fc00::1 -d fc00::2 -j logaccept-95
 -A INPUT -i eth1 -s fc00::/7 -j ACCEPT
 -A INPUT -i eth1 -s fc00::/7 
--A INPUT -i eth1 -s fc00::/7 -j logaccept-64
--A INPUT -i eth1 -s fc00::/7 -j logpass-49
+-A INPUT -i eth1 -s fc00::/7 -j logaccept-128
+-A INPUT -i eth1 -s fc00::/7 -j logpass-98
+-A INPUT -i eth1 -s fc00::/7 -j logaccept-129
 -A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j ACCEPT
 -A INPUT -i eth1 -s fc00::/7 -d fc00::2 
--A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-67
--A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logpass-52
--A INPUT -i eth1 -s fc00::/7 -j address-128
--A INPUT -i eth1 -s fc00::/7 -j address-129
--A INPUT -i eth1 -s fc00::/7 -j address-130
--A INPUT -i eth1 -s fc00::/7 -j address-131
--A INPUT -i eth1 -s fc00::/7 -j address-140
--A INPUT -i eth1 -s fc00::/7 -j address-141
--A INPUT -i eth1 -s fc00::/7 -j address-142
--A INPUT -i eth1 -s fc00::/7 -j address-143
+-A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-134
+-A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logpass-104
+-A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-135
+-A INPUT -i eth1 -s fc00::/7 -j address-192
+-A INPUT -i eth1 -s fc00::/7 -j address-193
+-A INPUT -i eth1 -s fc00::/7 -j address-194
+-A INPUT -i eth1 -s fc00::/7 -j address-195
+-A INPUT -i eth1 -s fc00::/7 -j address-196
+-A INPUT -i eth1 -s fc00::/7 -j address-210
+-A INPUT -i eth1 -s fc00::/7 -j address-211
+-A INPUT -i eth1 -s fc00::/7 -j address-212
+-A INPUT -i eth1 -s fc00::/7 -j address-213
+-A INPUT -i eth1 -s fc00::/7 -j address-214
 -A INPUT -i eth1 -s fc00::/7 -j ACCEPT
 -A INPUT -i eth1 -s fc00::/7 
--A INPUT -i eth1 -s fc00::/7 -j logaccept-80
--A INPUT -i eth1 -s fc00::/7 -j logpass-59
+-A INPUT -i eth1 -s fc00::/7 -j logaccept-160
+-A INPUT -i eth1 -s fc00::/7 -j logpass-118
+-A INPUT -i eth1 -s fc00::/7 -j logaccept-161
 -A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j ACCEPT
 -A INPUT -i eth1 -s fc00::/7 -d fc00::2 
--A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-83
--A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logpass-62
--A INPUT -i eth1 -s fc00::/7 -j address-176
--A INPUT -i eth1 -s fc00::/7 -j address-177
--A INPUT -i eth1 -s fc00::/7 -j address-178
--A INPUT -i eth1 -s fc00::/7 -j address-179
--A INPUT -i eth1 -s fc00::/7 -j address-188
--A INPUT -i eth1 -s fc00::/7 -j address-189
--A INPUT -i eth1 -s fc00::/7 -j address-190
--A INPUT -i eth1 -s fc00::/7 -j address-191
+-A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-166
+-A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logpass-124
+-A INPUT -i eth1 -s fc00::/7 -d fc00::2 -j logaccept-167
+-A INPUT -i eth1 -s fc00::/7 -j address-264
+-A INPUT -i eth1 -s fc00::/7 -j address-265
+-A INPUT -i eth1 -s fc00::/7 -j address-266
+-A INPUT -i eth1 -s fc00::/7 -j address-267
+-A INPUT -i eth1 -s fc00::/7 -j address-268
+-A INPUT -i eth1 -s fc00::/7 -j address-282
+-A INPUT -i eth1 -s fc00::/7 -j address-283
+-A INPUT -i eth1 -s fc00::/7 -j address-284
+-A INPUT -i eth1 -s fc00::/7 -j address-285
+-A INPUT -i eth1 -s fc00::/7 -j address-286
 -A INPUT -j ACCEPT
 -A INPUT -j logdrop-0
 -A INPUT 
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-112
+-A INPUT -j logaccept-224
 -A INPUT -j logdrop-1
--A INPUT -j logpass-77
+-A INPUT -j logpass-154
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
+-A INPUT -j logaccept-225
+-A INPUT -j logdrop-2
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -300,154 +378,198 @@
 -A OUTPUT 
 -A OUTPUT -j logaccept-0
 -A OUTPUT -j logpass-0
+-A OUTPUT -j logaccept-1
 -A OUTPUT -d fc00::2 -j ACCEPT
 -A OUTPUT -d fc00::2 
--A OUTPUT -d fc00::2 -j logaccept-3
--A OUTPUT -d fc00::2 -j logpass-3
+-A OUTPUT -d fc00::2 -j logaccept-6
+-A OUTPUT -d fc00::2 -j logpass-6
+-A OUTPUT -d fc00::2 -j logaccept-7
 -A OUTPUT -s fc00::1 -j ACCEPT
 -A OUTPUT -s fc00::1 
--A OUTPUT -s fc00::1 -j logaccept-12
--A OUTPUT -s fc00::1 -j logpass-12
+-A OUTPUT -s fc00::1 -j logaccept-24
+-A OUTPUT -s fc00::1 -j logpass-24
+-A OUTPUT -s fc00::1 -j logaccept-25
 -A OUTPUT -s fc00::1 -d fc00::2 -j ACCEPT
 -A OUTPUT -s fc00::1 -d fc00::2 
--A OUTPUT -s fc00::1 -d fc00::2 -j logaccept-15
--A OUTPUT -s fc00::1 -d fc00::2 -j logpass-15
+-A OUTPUT -s fc00::1 -d fc00::2 -j logaccept-30
+-A OUTPUT -s fc00::1 -d fc00::2 -j logpass-30
+-A OUTPUT -s fc00::1 -d fc00::2 -j logaccept-31
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 
--A OUTPUT -o eth1 -d fc00::/7 -j logaccept-16
--A OUTPUT -o eth1 -d fc00::/7 -j logpass-16
--A OUTPUT -o eth1 -d fc00::/7 -j address-8
--A OUTPUT -o eth1 -d fc00::/7 -j address-9
--A OUTPUT -o eth1 -d fc00::/7 -j address-10
--A OUTPUT -o eth1 -d fc00::/7 -j address-11
+-A OUTPUT -o eth1 -d fc00::/7 -j logaccept-32
+-A OUTPUT -o eth1 -d fc00::/7 -j logpass-32
+-A OUTPUT -o eth1 -d fc00::/7 -j logaccept-33
+-A OUTPUT -o eth1 -d fc00::/7 -j address-12
+-A OUTPUT -o eth1 -d fc00::/7 -j address-13
+-A OUTPUT -o eth1 -d fc00::/7 -j address-14
+-A OUTPUT -o eth1 -d fc00::/7 -j address-15
+-A OUTPUT -o eth1 -d fc00::/7 -j address-16
 -A OUTPUT -o eth1 -d fc00::/7 -s fc00::1 -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -s fc00::1 
--A OUTPUT -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-28
--A OUTPUT -o eth1 -d fc00::/7 -s fc00::1 -j logpass-24
--A OUTPUT -o eth1 -d fc00::/7 -j address-44
--A OUTPUT -o eth1 -d fc00::/7 -j address-45
--A OUTPUT -o eth1 -d fc00::/7 -j address-46
--A OUTPUT -o eth1 -d fc00::/7 -j address-47
+-A OUTPUT -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-56
+-A OUTPUT -o eth1 -d fc00::/7 -s fc00::1 -j logpass-48
+-A OUTPUT -o eth1 -d fc00::/7 -s fc00::1 -j logaccept-57
+-A OUTPUT -o eth1 -d fc00::/7 -j address-66
+-A OUTPUT -o eth1 -d fc00::/7 -j address-67
+-A OUTPUT -o eth1 -d fc00::/7 -j address-68
+-A OUTPUT -o eth1 -d fc00::/7 -j address-69
+-A OUTPUT -o eth1 -d fc00::/7 -j address-70
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j logdrop-0
 -A OUTPUT 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-112
+-A OUTPUT -j logaccept-224
 -A OUTPUT -j logdrop-1
--A OUTPUT -j logpass-77
+-A OUTPUT -j logpass-154
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
+-A OUTPUT -j logaccept-225
+-A OUTPUT -j logdrop-2
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
--A address-10 -d fc00::2 -j logaccept-19
--A address-11 -d fc00::2 -m limit --limit 1/second -j LOG
--A address-128 -s fc00::1 -j ACCEPT
--A address-129 -s fc00::1 
--A address-130 -s fc00::1 -j logaccept-76
--A address-131 -s fc00::1 -m limit --limit 1/second -j LOG
--A address-140 -s fc00::1 -d fc00::2 -j ACCEPT
--A address-141 -s fc00::1 -d fc00::2 
--A address-142 -s fc00::1 -d fc00::2 -j logaccept-79
--A address-143 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
--A address-176 -s fc00::1 -j ACCEPT
--A address-177 -s fc00::1 
--A address-178 -s fc00::1 -j logaccept-92
--A address-179 -s fc00::1 -m limit --limit 1/second -j LOG
--A address-188 -s fc00::1 -d fc00::2 -j ACCEPT
--A address-189 -s fc00::1 -d fc00::2 
--A address-190 -s fc00::1 -d fc00::2 -j logaccept-95
--A address-191 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
--A address-44 -s fc00::1 -d fc00::2 -j ACCEPT
--A address-45 -s fc00::1 -d fc00::2 
--A address-46 -s fc00::1 -d fc00::2 -j logaccept-31
--A address-47 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
--A address-56 -d fc00::2 -j ACCEPT
--A address-57 -d fc00::2 
--A address-58 -d fc00::2 -j logaccept-51
--A address-59 -d fc00::2 -m limit --limit 1/second -j LOG
--A address-8 -d fc00::2 -j ACCEPT
--A address-9 -d fc00::2 
--A address-92 -s fc00::1 -d fc00::2 -j ACCEPT
--A address-93 -s fc00::1 -d fc00::2 
--A address-94 -s fc00::1 -d fc00::2 -j logaccept-63
--A address-95 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
+-A address-12 -d fc00::2 -j ACCEPT
+-A address-13 -d fc00::2 
+-A address-138 -s fc00::1 -d fc00::2 -j ACCEPT
+-A address-139 -s fc00::1 -d fc00::2 
+-A address-14 -d fc00::2 -j logaccept-38
+-A address-140 -s fc00::1 -d fc00::2 -j logaccept-126
+-A address-141 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
+-A address-142 -s fc00::1 -d fc00::2 -j logaccept-127
+-A address-15 -d fc00::2 -m limit --limit 1/second -j LOG
+-A address-16 -d fc00::2 -j logaccept-39
+-A address-192 -s fc00::1 -j ACCEPT
+-A address-193 -s fc00::1 
+-A address-194 -s fc00::1 -j logaccept-152
+-A address-195 -s fc00::1 -m limit --limit 1/second -j LOG
+-A address-196 -s fc00::1 -j logaccept-153
+-A address-210 -s fc00::1 -d fc00::2 -j ACCEPT
+-A address-211 -s fc00::1 -d fc00::2 
+-A address-212 -s fc00::1 -d fc00::2 -j logaccept-158
+-A address-213 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
+-A address-214 -s fc00::1 -d fc00::2 -j logaccept-159
+-A address-264 -s fc00::1 -j ACCEPT
+-A address-265 -s fc00::1 
+-A address-266 -s fc00::1 -j logaccept-184
+-A address-267 -s fc00::1 -m limit --limit 1/second -j LOG
+-A address-268 -s fc00::1 -j logaccept-185
+-A address-282 -s fc00::1 -d fc00::2 -j ACCEPT
+-A address-283 -s fc00::1 -d fc00::2 
+-A address-284 -s fc00::1 -d fc00::2 -j logaccept-190
+-A address-285 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
+-A address-286 -s fc00::1 -d fc00::2 -j logaccept-191
+-A address-66 -s fc00::1 -d fc00::2 -j ACCEPT
+-A address-67 -s fc00::1 -d fc00::2 
+-A address-68 -s fc00::1 -d fc00::2 -j logaccept-62
+-A address-69 -s fc00::1 -d fc00::2 -m limit --limit 1/second -j LOG
+-A address-70 -s fc00::1 -d fc00::2 -j logaccept-63
+-A address-84 -d fc00::2 -j ACCEPT
+-A address-85 -d fc00::2 
+-A address-86 -d fc00::2 -j logaccept-102
+-A address-87 -d fc00::2 -m limit --limit 1/second -j LOG
+-A address-88 -d fc00::2 -j logaccept-103
 -A icmp-routing -p icmpv6 --icmpv6-type 1 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 2 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 3 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 4 -j ACCEPT
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
--A logaccept-112 -m limit --limit 1/second -j LOG
--A logaccept-112 -j ACCEPT
--A logaccept-12 -m limit --limit 1/second -j LOG
--A logaccept-12 -j ACCEPT
--A logaccept-15 -m limit --limit 1/second -j LOG
--A logaccept-15 -j ACCEPT
--A logaccept-16 -m limit --limit 1/second -j LOG
--A logaccept-16 -j ACCEPT
--A logaccept-19 -m limit --limit 1/second -j LOG
--A logaccept-19 -j ACCEPT
--A logaccept-28 -m limit --limit 1/second -j LOG
--A logaccept-28 -j ACCEPT
--A logaccept-3 -m limit --limit 1/second -j LOG
--A logaccept-3 -j ACCEPT
--A logaccept-31 -m limit --limit 1/second -j LOG
+-A logaccept-1 -j ACCEPT
+-A logaccept-102 -m limit --limit 1/second -j LOG
+-A logaccept-102 -j ACCEPT
+-A logaccept-103 -j ACCEPT
+-A logaccept-120 -m limit --limit 1/second -j LOG
+-A logaccept-120 -j ACCEPT
+-A logaccept-121 -j ACCEPT
+-A logaccept-126 -m limit --limit 1/second -j LOG
+-A logaccept-126 -j ACCEPT
+-A logaccept-127 -j ACCEPT
+-A logaccept-128 -m limit --limit 1/second -j LOG
+-A logaccept-128 -j ACCEPT
+-A logaccept-129 -j ACCEPT
+-A logaccept-134 -m limit --limit 1/second -j LOG
+-A logaccept-134 -j ACCEPT
+-A logaccept-135 -j ACCEPT
+-A logaccept-152 -m limit --limit 1/second -j LOG
+-A logaccept-152 -j ACCEPT
+-A logaccept-153 -j ACCEPT
+-A logaccept-158 -m limit --limit 1/second -j LOG
+-A logaccept-158 -j ACCEPT
+-A logaccept-159 -j ACCEPT
+-A logaccept-160 -m limit --limit 1/second -j LOG
+-A logaccept-160 -j ACCEPT
+-A logaccept-161 -j ACCEPT
+-A logaccept-166 -m limit --limit 1/second -j LOG
+-A logaccept-166 -j ACCEPT
+-A logaccept-167 -j ACCEPT
+-A logaccept-184 -m limit --limit 1/second -j LOG
+-A logaccept-184 -j ACCEPT
+-A logaccept-185 -j ACCEPT
+-A logaccept-190 -m limit --limit 1/second -j LOG
+-A logaccept-190 -j ACCEPT
+-A logaccept-191 -j ACCEPT
+-A logaccept-224 -m limit --limit 1/second -j LOG
+-A logaccept-224 -j ACCEPT
+-A logaccept-225 -j ACCEPT
+-A logaccept-24 -m limit --limit 1/second -j LOG
+-A logaccept-24 -j ACCEPT
+-A logaccept-25 -j ACCEPT
+-A logaccept-30 -m limit --limit 1/second -j LOG
+-A logaccept-30 -j ACCEPT
 -A logaccept-31 -j ACCEPT
 -A logaccept-32 -m limit --limit 1/second -j LOG
 -A logaccept-32 -j ACCEPT
--A logaccept-35 -m limit --limit 1/second -j LOG
--A logaccept-35 -j ACCEPT
--A logaccept-44 -m limit --limit 1/second -j LOG
--A logaccept-44 -j ACCEPT
--A logaccept-47 -m limit --limit 1/second -j LOG
--A logaccept-47 -j ACCEPT
--A logaccept-48 -m limit --limit 1/second -j LOG
--A logaccept-48 -j ACCEPT
--A logaccept-51 -m limit --limit 1/second -j LOG
--A logaccept-51 -j ACCEPT
--A logaccept-60 -m limit --limit 1/second -j LOG
--A logaccept-60 -j ACCEPT
--A logaccept-63 -m limit --limit 1/second -j LOG
+-A logaccept-33 -j ACCEPT
+-A logaccept-38 -m limit --limit 1/second -j LOG
+-A logaccept-38 -j ACCEPT
+-A logaccept-39 -j ACCEPT
+-A logaccept-56 -m limit --limit 1/second -j LOG
+-A logaccept-56 -j ACCEPT
+-A logaccept-57 -j ACCEPT
+-A logaccept-6 -m limit --limit 1/second -j LOG
+-A logaccept-6 -j ACCEPT
+-A logaccept-62 -m limit --limit 1/second -j LOG
+-A logaccept-62 -j ACCEPT
 -A logaccept-63 -j ACCEPT
 -A logaccept-64 -m limit --limit 1/second -j LOG
 -A logaccept-64 -j ACCEPT
--A logaccept-67 -m limit --limit 1/second -j LOG
--A logaccept-67 -j ACCEPT
--A logaccept-76 -m limit --limit 1/second -j LOG
--A logaccept-76 -j ACCEPT
--A logaccept-79 -m limit --limit 1/second -j LOG
--A logaccept-79 -j ACCEPT
--A logaccept-80 -m limit --limit 1/second -j LOG
--A logaccept-80 -j ACCEPT
--A logaccept-83 -m limit --limit 1/second -j LOG
--A logaccept-83 -j ACCEPT
--A logaccept-92 -m limit --limit 1/second -j LOG
--A logaccept-92 -j ACCEPT
--A logaccept-95 -m limit --limit 1/second -j LOG
+-A logaccept-65 -j ACCEPT
+-A logaccept-7 -j ACCEPT
+-A logaccept-70 -m limit --limit 1/second -j LOG
+-A logaccept-70 -j ACCEPT
+-A logaccept-71 -j ACCEPT
+-A logaccept-88 -m limit --limit 1/second -j LOG
+-A logaccept-88 -j ACCEPT
+-A logaccept-89 -j ACCEPT
+-A logaccept-94 -m limit --limit 1/second -j LOG
+-A logaccept-94 -j ACCEPT
 -A logaccept-95 -j ACCEPT
+-A logaccept-96 -m limit --limit 1/second -j LOG
+-A logaccept-96 -j ACCEPT
+-A logaccept-97 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
+-A logdrop-2 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
--A logpass-12 -m limit --limit 1/second -j LOG
--A logpass-15 -m limit --limit 1/second -j LOG
--A logpass-16 -m limit --limit 1/second -j LOG
+-A logpass-104 -m limit --limit 1/second -j LOG
+-A logpass-118 -m limit --limit 1/second -j LOG
+-A logpass-124 -m limit --limit 1/second -j LOG
+-A logpass-154 -m limit --limit 1/second -j LOG
 -A logpass-24 -m limit --limit 1/second -j LOG
--A logpass-26 -m limit --limit 1/second -j LOG
--A logpass-29 -m limit --limit 1/second -j LOG
--A logpass-3 -m limit --limit 1/second -j LOG
--A logpass-38 -m limit --limit 1/second -j LOG
--A logpass-41 -m limit --limit 1/second -j LOG
--A logpass-49 -m limit --limit 1/second -j LOG
+-A logpass-30 -m limit --limit 1/second -j LOG
+-A logpass-32 -m limit --limit 1/second -j LOG
+-A logpass-48 -m limit --limit 1/second -j LOG
 -A logpass-52 -m limit --limit 1/second -j LOG
--A logpass-59 -m limit --limit 1/second -j LOG
--A logpass-62 -m limit --limit 1/second -j LOG
--A logpass-77 -m limit --limit 1/second -j LOG
+-A logpass-58 -m limit --limit 1/second -j LOG
+-A logpass-6 -m limit --limit 1/second -j LOG
+-A logpass-76 -m limit --limit 1/second -j LOG
+-A logpass-82 -m limit --limit 1/second -j LOG
+-A logpass-98 -m limit --limit 1/second -j LOG
 COMMIT
 *mangle
 :INPUT ACCEPT [0:0]
