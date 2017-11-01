@@ -13,13 +13,16 @@ res = {}
 saddr = '10.0.0.1'
 daddr = '172.16.0.0/16'
 
+saddr6 = 'fc00::1'
+daddr6 = 'fc00::2'
+
 for _, izone in ipairs{false, 'A', 'B', {'B', 'C'}} do
    for _, ozone in ipairs{false, 'B'} do
       for _, src in ipairs{
-	 false, saddr, {saddr, '10.0.0.2'}, {saddr, 'fc00::1'}
+	 false, saddr, {saddr, '10.0.0.2'}, saddr6, {saddr, saddr6}
       } do
 	 for _, dest in ipairs{
-	    false, daddr, {daddr, '172.16.2.0/16'}, {daddr, 'fc00::2'}
+	    false, daddr, {daddr, '172.16.2.0/16'}, daddr6, {daddr, daddr6}
 	 } do
 	    for _, log in ipairs{false, true, 'ulog'} do
 	       for _, action in ipairs{false, 'pass'} do
