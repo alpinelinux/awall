@@ -15,8 +15,12 @@ daddr = '172.16.0.0/16'
 
 for _, izone in ipairs{false, 'A', 'B', {'B', 'C'}} do
    for _, ozone in ipairs{false, 'B'} do
-      for _, src in ipairs{false, saddr, {saddr, '10.0.0.2'}} do
-	 for _, dest in ipairs{false, daddr, {daddr, '172.16.2.0/16'}} do
+      for _, src in ipairs{
+	 false, saddr, {saddr, '10.0.0.2'}, {saddr, 'fc00::1'}
+      } do
+	 for _, dest in ipairs{
+	    false, daddr, {daddr, '172.16.2.0/16'}, {daddr, 'fc00::2'}
+	 } do
 	    for _, log in ipairs{false, true} do
 	       for _, action in ipairs{false, 'pass'} do
 		  table.insert(
