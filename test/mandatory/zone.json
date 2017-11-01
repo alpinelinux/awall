@@ -21,9 +21,9 @@
 	}
     ],
     "mark": [
-	{ "in": [ "_fw", "A" ], "mark": 0 },
-	{ "in": "B", "out": "C", "mark": 1 },
-	{ "out": [ "_fw", "B" ], "mark": 2 }
+	{ "in": [ "_fw", "A" ], "mark": 1 },
+	{ "in": "B", "out": "C", "mark": 2 },
+	{ "out": [ "_fw", "B" ], "mark": 3 }
     ],
     "no-track": [
 	{ "in": [ "_fw", "A" ] },

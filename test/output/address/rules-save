@@ -1623,12 +1623,12 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
--A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 1
--A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 1
--A INPUT -j MARK --set-mark 2
--A OUTPUT -j MARK --set-mark 0
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
--A PREROUTING -i eth0 -j MARK --set-mark 0
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 2
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 2
+-A INPUT -j MARK --set-mark 3
+-A OUTPUT -j MARK --set-mark 1
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 3
+-A PREROUTING -i eth0 -j MARK --set-mark 1
 COMMIT
 *nat
 :INPUT ACCEPT [0:0]

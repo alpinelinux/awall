@@ -174,10 +174,10 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
--A INPUT -j MARK --set-mark 2
--A OUTPUT -j MARK --set-mark 0
--A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 2
--A PREROUTING -i eth0 -j MARK --set-mark 0
+-A INPUT -j MARK --set-mark 3
+-A OUTPUT -j MARK --set-mark 1
+-A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 3
+-A PREROUTING -i eth0 -j MARK --set-mark 1
 COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]

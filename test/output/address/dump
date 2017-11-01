@@ -2435,24 +2435,24 @@ Log none      {"mode":"none"}
 (log)         
 
 
-Mark 1                      {"in":["_fw","A"],"mark":0}
+Mark 1                      {"in":["_fw","A"],"mark":1}
 (zone)                      
-  inet/mangle/OUTPUT        -j MARK --set-mark 0
-  inet/mangle/PREROUTING    -i eth0 -j MARK --set-mark 0
-  inet6/mangle/OUTPUT       -j MARK --set-mark 0
-  inet6/mangle/PREROUTING   -i eth0 -j MARK --set-mark 0
+  inet/mangle/OUTPUT        -j MARK --set-mark 1
+  inet/mangle/PREROUTING    -i eth0 -j MARK --set-mark 1
+  inet6/mangle/OUTPUT       -j MARK --set-mark 1
+  inet6/mangle/PREROUTING   -i eth0 -j MARK --set-mark 1
 
-Mark 2                      {"in":"B","mark":1,"out":"C"}
+Mark 2                      {"in":"B","mark":2,"out":"C"}
 (zone)                      
-  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 1
-  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 1
+  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 2
+  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 2
 
-Mark 3                      {"mark":2,"out":["_fw","B"]}
+Mark 3                      {"mark":3,"out":["_fw","B"]}
 (zone)                      
-  inet/mangle/INPUT         -j MARK --set-mark 2
-  inet/mangle/POSTROUTING   -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
-  inet6/mangle/INPUT        -j MARK --set-mark 2
-  inet6/mangle/POSTROUTING  -o eth1 -d fc00::/7 -j MARK --set-mark 2
+  inet/mangle/INPUT         -j MARK --set-mark 3
+  inet/mangle/POSTROUTING   -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 3
+  inet6/mangle/INPUT        -j MARK --set-mark 3
+  inet6/mangle/POSTROUTING  -o eth1 -d fc00::/7 -j MARK --set-mark 3
 
 
 No-track 1              {"in":["_fw","A"]}
@@ -4306,12 +4306,12 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
--A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 1
--A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 1
--A INPUT -j MARK --set-mark 2
--A OUTPUT -j MARK --set-mark 0
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 2
--A PREROUTING -i eth0 -j MARK --set-mark 0
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 2
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 2
+-A INPUT -j MARK --set-mark 3
+-A OUTPUT -j MARK --set-mark 1
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 3
+-A PREROUTING -i eth0 -j MARK --set-mark 1
 COMMIT
 *nat
 :INPUT ACCEPT [0:0]
@@ -4512,10 +4512,10 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
--A INPUT -j MARK --set-mark 2
--A OUTPUT -j MARK --set-mark 0
--A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 2
--A PREROUTING -i eth0 -j MARK --set-mark 0
+-A INPUT -j MARK --set-mark 3
+-A OUTPUT -j MARK --set-mark 1
+-A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 3
+-A PREROUTING -i eth0 -j MARK --set-mark 1
 COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]
