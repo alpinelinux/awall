@@ -106,10 +106,8 @@ end
 
 function LogRule:position() return 'prepend' end
 
-function LogRule:servoptfrags()
-   return combinations(
-      LogRule.super(self):servoptfrags(), self.log:matchofrags()
-   )
+function LogRule:mangleoptfrags(ofrags)
+   return combinations(ofrags, self.log:matchofrags())
 end
 
 function LogRule:target() return self.log:target() end
