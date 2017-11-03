@@ -8044,6 +8044,16 @@ No-track 3              {"out":"_fw"}
   inet6/raw/PREROUTING  -m addrtype --dst-type LOCAL -j CT --notrack
 
 
+Packet-log 1          {"out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -m limit --limit 1/second -j LOG
+  inet6/filter/INPUT  -m limit --limit 1/second -j LOG
+
+Packet-log 2          {"log":"ulog","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
+
+
 Service babel         {"port":6697,"proto":"tcp"}
 (services)            
 
@@ -10191,6 +10201,8 @@ hash:net family inet
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
+-A INPUT -m limit --limit 12/minute -j ULOG
+-A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -j ACCEPT
@@ -13031,6 +13043,7 @@ COMMIT
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -j ACCEPT

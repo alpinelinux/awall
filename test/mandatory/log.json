@@ -3,6 +3,10 @@
 	"none": { "mode": "none" },
 	"ulog": { "mode": "ulog", "limit": { "interval": 5 } }
     },
+    "packet-log": [
+	{ "out": "_fw" },
+	{ "out": "_fw", "log": "ulog" }
+    ],
     "filter": [
 	{},
 	{ "action": "drop" },
