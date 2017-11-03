@@ -7825,7 +7825,87 @@ Filter 1209                   {"action":"pass","log":true}
   inet6/filter/OUTPUT         -j logpass-167
   inet6/filter/logpass-167    -m limit --limit 1/second -j LOG
 
-Filter 1210                   {"log":"none"}
+Filter 1210                   {"log":"dual"}
+(log)                         
+  inet/filter/FORWARD         -j logaccept-268
+  inet/filter/INPUT           -j logaccept-268
+  inet/filter/OUTPUT          -j logaccept-268
+  inet/filter/logaccept-268   -j LOG
+  inet/filter/logaccept-268   -j ACCEPT
+  inet6/filter/FORWARD        -j logaccept-268
+  inet6/filter/INPUT          -j logaccept-268
+  inet6/filter/OUTPUT         -j logaccept-268
+  inet6/filter/logaccept-268  -j LOG
+  inet6/filter/logaccept-268  -j TEE --gateway fc00::1
+  inet6/filter/logaccept-268  -j ACCEPT
+
+Filter 1211                   {"action":"drop","log":"dual"}
+(log)                         
+  inet/filter/FORWARD         -j logdrop-2
+  inet/filter/INPUT           -j logdrop-2
+  inet/filter/OUTPUT          -j logdrop-2
+  inet/filter/logdrop-2       -j LOG
+  inet/filter/logdrop-2       -j DROP
+  inet6/filter/FORWARD        -j logdrop-2
+  inet6/filter/INPUT          -j logdrop-2
+  inet6/filter/OUTPUT         -j logdrop-2
+  inet6/filter/logdrop-2      -j LOG
+  inet6/filter/logdrop-2      -j TEE --gateway fc00::1
+  inet6/filter/logdrop-2      -j DROP
+
+Filter 1212                   {"action":"pass","log":"dual"}
+(log)                         
+  inet/filter/FORWARD         -j logpass-168
+  inet/filter/INPUT           -j logpass-168
+  inet/filter/OUTPUT          -j logpass-168
+  inet/filter/logpass-168     -j LOG
+  inet6/filter/FORWARD        -j logpass-168
+  inet6/filter/INPUT          -j logpass-168
+  inet6/filter/OUTPUT         -j logpass-168
+  inet6/filter/logpass-168    -j LOG
+  inet6/filter/logpass-168    -j TEE --gateway fc00::1
+
+Filter 1213                   {"log":"mirror"}
+(log)                         
+  inet/filter/FORWARD         -j logaccept-269
+  inet/filter/INPUT           -j logaccept-269
+  inet/filter/OUTPUT          -j logaccept-269
+  inet/filter/logaccept-269   -j TEE --gateway 10.0.0.1
+  inet/filter/logaccept-269   -j TEE --gateway 10.0.0.2
+  inet/filter/logaccept-269   -j ACCEPT
+  inet6/filter/FORWARD        -j logaccept-269
+  inet6/filter/INPUT          -j logaccept-269
+  inet6/filter/OUTPUT         -j logaccept-269
+  inet6/filter/logaccept-269  -j TEE --gateway fc00::2
+  inet6/filter/logaccept-269  -j ACCEPT
+
+Filter 1214                   {"action":"drop","log":"mirror"}
+(log)                         
+  inet/filter/FORWARD         -j logdrop-3
+  inet/filter/INPUT           -j logdrop-3
+  inet/filter/OUTPUT          -j logdrop-3
+  inet/filter/logdrop-3       -j TEE --gateway 10.0.0.1
+  inet/filter/logdrop-3       -j TEE --gateway 10.0.0.2
+  inet/filter/logdrop-3       -j DROP
+  inet6/filter/FORWARD        -j logdrop-3
+  inet6/filter/INPUT          -j logdrop-3
+  inet6/filter/OUTPUT         -j logdrop-3
+  inet6/filter/logdrop-3      -j TEE --gateway fc00::2
+  inet6/filter/logdrop-3      -j DROP
+
+Filter 1215                   {"action":"pass","log":"mirror"}
+(log)                         
+  inet/filter/FORWARD         -j logpass-169
+  inet/filter/INPUT           -j logpass-169
+  inet/filter/OUTPUT          -j logpass-169
+  inet/filter/logpass-169     -j TEE --gateway 10.0.0.1
+  inet/filter/logpass-169     -j TEE --gateway 10.0.0.2
+  inet6/filter/FORWARD        -j logpass-169
+  inet6/filter/INPUT          -j logpass-169
+  inet6/filter/OUTPUT         -j logpass-169
+  inet6/filter/logpass-169    -j TEE --gateway fc00::2
+
+Filter 1216                   {"log":"none"}
 (log)                         
   inet/filter/FORWARD         -j ACCEPT
   inet/filter/INPUT           -j ACCEPT
@@ -7834,7 +7914,7 @@ Filter 1210                   {"log":"none"}
   inet6/filter/INPUT          -j ACCEPT
   inet6/filter/OUTPUT         -j ACCEPT
 
-Filter 1211                   {"action":"drop","log":"none"}
+Filter 1217                   {"action":"drop","log":"none"}
 (log)                         
   inet/filter/FORWARD         -j DROP
   inet/filter/INPUT           -j DROP
@@ -7843,7 +7923,7 @@ Filter 1211                   {"action":"drop","log":"none"}
   inet6/filter/INPUT          -j DROP
   inet6/filter/OUTPUT         -j DROP
 
-Filter 1212                   {"action":"pass","log":"none"}
+Filter 1218                   {"action":"pass","log":"none"}
 (log)                         
   inet/filter/FORWARD         
   inet/filter/INPUT           
@@ -7852,42 +7932,42 @@ Filter 1212                   {"action":"pass","log":"none"}
   inet6/filter/INPUT          
   inet6/filter/OUTPUT         
 
-Filter 1213                   {"log":"ulog"}
+Filter 1219                   {"log":"ulog"}
 (log)                         
-  inet/filter/FORWARD         -j logaccept-268
-  inet/filter/INPUT           -j logaccept-268
-  inet/filter/OUTPUT          -j logaccept-268
-  inet/filter/logaccept-268   -m limit --limit 12/minute -j ULOG
-  inet/filter/logaccept-268   -j ACCEPT
-  inet6/filter/FORWARD        -j logaccept-268
-  inet6/filter/INPUT          -j logaccept-268
-  inet6/filter/OUTPUT         -j logaccept-268
-  inet6/filter/logaccept-268  -j ACCEPT
+  inet/filter/FORWARD         -j logaccept-270
+  inet/filter/INPUT           -j logaccept-270
+  inet/filter/OUTPUT          -j logaccept-270
+  inet/filter/logaccept-270   -m limit --limit 12/minute -j ULOG
+  inet/filter/logaccept-270   -j ACCEPT
+  inet6/filter/FORWARD        -j logaccept-270
+  inet6/filter/INPUT          -j logaccept-270
+  inet6/filter/OUTPUT         -j logaccept-270
+  inet6/filter/logaccept-270  -j ACCEPT
 
-Filter 1214                   {"action":"drop","log":"ulog"}
+Filter 1220                   {"action":"drop","log":"ulog"}
 (log)                         
-  inet/filter/FORWARD         -j logdrop-2
-  inet/filter/INPUT           -j logdrop-2
-  inet/filter/OUTPUT          -j logdrop-2
-  inet/filter/logdrop-2       -m limit --limit 12/minute -j ULOG
-  inet/filter/logdrop-2       -j DROP
-  inet6/filter/FORWARD        -j logdrop-2
-  inet6/filter/INPUT          -j logdrop-2
-  inet6/filter/OUTPUT         -j logdrop-2
-  inet6/filter/logdrop-2      -j DROP
+  inet/filter/FORWARD         -j logdrop-4
+  inet/filter/INPUT           -j logdrop-4
+  inet/filter/OUTPUT          -j logdrop-4
+  inet/filter/logdrop-4       -m limit --limit 12/minute -j ULOG
+  inet/filter/logdrop-4       -j DROP
+  inet6/filter/FORWARD        -j logdrop-4
+  inet6/filter/INPUT          -j logdrop-4
+  inet6/filter/OUTPUT         -j logdrop-4
+  inet6/filter/logdrop-4      -j DROP
 
-Filter 1215                   {"action":"pass","log":"ulog"}
+Filter 1221                   {"action":"pass","log":"ulog"}
 (log)                         
-  inet/filter/FORWARD         -j logpass-168
-  inet/filter/INPUT           -j logpass-168
-  inet/filter/OUTPUT          -j logpass-168
-  inet/filter/logpass-168     -m limit --limit 12/minute -j ULOG
+  inet/filter/FORWARD         -j logpass-170
+  inet/filter/INPUT           -j logpass-170
+  inet/filter/OUTPUT          -j logpass-170
+  inet/filter/logpass-170     -m limit --limit 12/minute -j ULOG
 
-Filter 1216                   {"action":"pass","in":"_fw","log":"ulog"}
+Filter 1222                   {"action":"pass","in":"_fw","log":"ulog"}
 (log)                         
   inet/filter/OUTPUT          -m limit --limit 12/minute -j ULOG
 
-Filter 1217                   {"in":["_fw","A"]}
+Filter 1223                   {"in":["_fw","A"]}
 (zone)                        
   inet/filter/FORWARD         -i eth0 -j ACCEPT
   inet/filter/INPUT           -i eth0 -j ACCEPT
@@ -7896,12 +7976,12 @@ Filter 1217                   {"in":["_fw","A"]}
   inet6/filter/INPUT          -i eth0 -j ACCEPT
   inet6/filter/OUTPUT         -j ACCEPT
 
-Filter 1218                   {"in":"B","out":"C"}
+Filter 1224                   {"in":"B","out":"C"}
 (zone)                        
   inet/filter/FORWARD         -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD         -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 1219                   {"out":["_fw","B"]}
+Filter 1225                   {"out":["_fw","B"]}
 (zone)                        
   inet/filter/FORWARD         -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/INPUT           -j ACCEPT
@@ -7910,7 +7990,7 @@ Filter 1219                   {"out":["_fw","B"]}
   inet6/filter/INPUT          -j ACCEPT
   inet6/filter/OUTPUT         -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 1220                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 1226                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                        
   inet/filter/FORWARD         -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/FORWARD         -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
@@ -7999,6 +8079,12 @@ Limit D  {"inet":22,"inet6":58}
 Log _default  {"limit":1}
 (defaults)    
 
+Log dual      {"mirror":"fc00::1","mode":"log"}
+(log)         
+
+Log mirror    {"mirror":["10.0.0.1","10.0.0.2","fc00::2"]}
+(log)         
+
 Log none      {"mode":"none"}
 (log)         
 
@@ -8049,7 +8135,13 @@ Packet-log 1          {"out":"_fw"}
   inet/filter/INPUT   -m limit --limit 1/second -j LOG
   inet6/filter/INPUT  -m limit --limit 1/second -j LOG
 
-Packet-log 2          {"log":"ulog","out":"_fw"}
+Packet-log 2          {"log":"mirror","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -j TEE --gateway 10.0.0.1
+  inet/filter/INPUT   -j TEE --gateway 10.0.0.2
+  inet6/filter/INPUT  -j TEE --gateway fc00::2
+
+Packet-log 3          {"log":"ulog","out":"_fw"}
 (log)                 
   inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
 
@@ -8809,6 +8901,8 @@ hash:net family inet
 :logaccept-266 - [0:0]
 :logaccept-267 - [0:0]
 :logaccept-268 - [0:0]
+:logaccept-269 - [0:0]
+:logaccept-270 - [0:0]
 :logaccept-3 - [0:0]
 :logaccept-32 - [0:0]
 :logaccept-33 - [0:0]
@@ -8875,6 +8969,8 @@ hash:net family inet
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
+:logdrop-4 - [0:0]
 :logpass-0 - [0:0]
 :logpass-1 - [0:0]
 :logpass-10 - [0:0]
@@ -8951,7 +9047,9 @@ hash:net family inet
 :logpass-166 - [0:0]
 :logpass-167 - [0:0]
 :logpass-168 - [0:0]
+:logpass-169 - [0:0]
 :logpass-17 - [0:0]
+:logpass-170 - [0:0]
 :logpass-18 - [0:0]
 :logpass-19 - [0:0]
 :logpass-2 - [0:0]
@@ -10145,12 +10243,18 @@ hash:net family inet
 -A FORWARD -j logaccept-267
 -A FORWARD -j logdrop-1
 -A FORWARD -j logpass-167
--A FORWARD -j ACCEPT
--A FORWARD -j DROP
--A FORWARD 
 -A FORWARD -j logaccept-268
 -A FORWARD -j logdrop-2
 -A FORWARD -j logpass-168
+-A FORWARD -j logaccept-269
+-A FORWARD -j logdrop-3
+-A FORWARD -j logpass-169
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
+-A FORWARD -j logaccept-270
+-A FORWARD -j logdrop-4
+-A FORWARD -j logpass-170
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -10202,6 +10306,8 @@ hash:net family inet
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
 -A INPUT -m limit --limit 12/minute -j ULOG
+-A INPUT -j TEE --gateway 10.0.0.2
+-A INPUT -j TEE --gateway 10.0.0.1
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
@@ -10922,12 +11028,18 @@ hash:net family inet
 -A INPUT -j logaccept-267
 -A INPUT -j logdrop-1
 -A INPUT -j logpass-167
--A INPUT -j ACCEPT
--A INPUT -j DROP
--A INPUT 
 -A INPUT -j logaccept-268
 -A INPUT -j logdrop-2
 -A INPUT -j logpass-168
+-A INPUT -j logaccept-269
+-A INPUT -j logdrop-3
+-A INPUT -j logpass-169
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
+-A INPUT -j logaccept-270
+-A INPUT -j logdrop-4
+-A INPUT -j logpass-170
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -11194,12 +11306,18 @@ hash:net family inet
 -A OUTPUT -j logaccept-267
 -A OUTPUT -j logdrop-1
 -A OUTPUT -j logpass-167
--A OUTPUT -j ACCEPT
--A OUTPUT -j DROP
--A OUTPUT 
 -A OUTPUT -j logaccept-268
 -A OUTPUT -j logdrop-2
 -A OUTPUT -j logpass-168
+-A OUTPUT -j logaccept-269
+-A OUTPUT -j logdrop-3
+-A OUTPUT -j logpass-169
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
+-A OUTPUT -j logaccept-270
+-A OUTPUT -j logdrop-4
+-A OUTPUT -j logpass-170
 -A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
@@ -12155,8 +12273,13 @@ hash:net family inet
 -A logaccept-266 -j ACCEPT
 -A logaccept-267 -m limit --limit 1/second -j LOG
 -A logaccept-267 -j ACCEPT
--A logaccept-268 -m limit --limit 12/minute -j ULOG
+-A logaccept-268 -j LOG
 -A logaccept-268 -j ACCEPT
+-A logaccept-269 -j TEE --gateway 10.0.0.1
+-A logaccept-269 -j TEE --gateway 10.0.0.2
+-A logaccept-269 -j ACCEPT
+-A logaccept-270 -m limit --limit 12/minute -j ULOG
+-A logaccept-270 -j ACCEPT
 -A logaccept-3 -m limit --limit 12/minute -j ULOG
 -A logaccept-3 -j ACCEPT
 -A logaccept-32 -m limit --limit 1/second -j LOG
@@ -12287,8 +12410,13 @@ hash:net family inet
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
--A logdrop-2 -m limit --limit 12/minute -j ULOG
+-A logdrop-2 -j LOG
 -A logdrop-2 -j DROP
+-A logdrop-3 -j TEE --gateway 10.0.0.1
+-A logdrop-3 -j TEE --gateway 10.0.0.2
+-A logdrop-3 -j DROP
+-A logdrop-4 -m limit --limit 12/minute -j ULOG
+-A logdrop-4 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
 -A logpass-1 -m limit --limit 12/minute -j ULOG
 -A logpass-10 -m limit --limit 12/minute -j ULOG
@@ -12364,8 +12492,11 @@ hash:net family inet
 -A logpass-165 -m limit --limit 1/second -j LOG
 -A logpass-166 -m limit --limit 12/minute -j ULOG
 -A logpass-167 -m limit --limit 1/second -j LOG
--A logpass-168 -m limit --limit 12/minute -j ULOG
+-A logpass-168 -j LOG
+-A logpass-169 -j TEE --gateway 10.0.0.1
+-A logpass-169 -j TEE --gateway 10.0.0.2
 -A logpass-17 -m limit --limit 1/second -j LOG
+-A logpass-170 -m limit --limit 12/minute -j ULOG
 -A logpass-18 -m limit --limit 12/minute -j ULOG
 -A logpass-19 -m limit --limit 1/second -j LOG
 -A logpass-2 -m limit --limit 1/second -j LOG
@@ -12666,7 +12797,9 @@ COMMIT
 :logaccept-26 - [0:0]
 :logaccept-267 - [0:0]
 :logaccept-268 - [0:0]
+:logaccept-269 - [0:0]
 :logaccept-27 - [0:0]
+:logaccept-270 - [0:0]
 :logaccept-28 - [0:0]
 :logaccept-29 - [0:0]
 :logaccept-30 - [0:0]
@@ -12704,6 +12837,8 @@ COMMIT
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
+:logdrop-4 - [0:0]
 :logpass-0 - [0:0]
 :logpass-109 - [0:0]
 :logpass-115 - [0:0]
@@ -12712,6 +12847,8 @@ COMMIT
 :logpass-136 - [0:0]
 :logpass-137 - [0:0]
 :logpass-167 - [0:0]
+:logpass-168 - [0:0]
+:logpass-169 - [0:0]
 :logpass-25 - [0:0]
 :logpass-26 - [0:0]
 :logpass-27 - [0:0]
@@ -13012,11 +13149,17 @@ COMMIT
 -A FORWARD -j logaccept-267
 -A FORWARD -j logdrop-1
 -A FORWARD -j logpass-167
+-A FORWARD -j logaccept-268
+-A FORWARD -j logdrop-2
+-A FORWARD -j logpass-168
+-A FORWARD -j logaccept-269
+-A FORWARD -j logdrop-3
+-A FORWARD -j logpass-169
 -A FORWARD -j ACCEPT
 -A FORWARD -j DROP
 -A FORWARD 
--A FORWARD -j logaccept-268
--A FORWARD -j logdrop-2
+-A FORWARD -j logaccept-270
+-A FORWARD -j logdrop-4
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -13043,6 +13186,7 @@ COMMIT
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -j TEE --gateway fc00::2
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
@@ -13235,11 +13379,17 @@ COMMIT
 -A INPUT -j logaccept-267
 -A INPUT -j logdrop-1
 -A INPUT -j logpass-167
+-A INPUT -j logaccept-268
+-A INPUT -j logdrop-2
+-A INPUT -j logpass-168
+-A INPUT -j logaccept-269
+-A INPUT -j logdrop-3
+-A INPUT -j logpass-169
 -A INPUT -j ACCEPT
 -A INPUT -j DROP
 -A INPUT 
--A INPUT -j logaccept-268
--A INPUT -j logdrop-2
+-A INPUT -j logaccept-270
+-A INPUT -j logdrop-4
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -13344,11 +13494,17 @@ COMMIT
 -A OUTPUT -j logaccept-267
 -A OUTPUT -j logdrop-1
 -A OUTPUT -j logpass-167
+-A OUTPUT -j logaccept-268
+-A OUTPUT -j logdrop-2
+-A OUTPUT -j logpass-168
+-A OUTPUT -j logaccept-269
+-A OUTPUT -j logdrop-3
+-A OUTPUT -j logpass-169
 -A OUTPUT -j ACCEPT
 -A OUTPUT -j DROP
 -A OUTPUT 
--A OUTPUT -j logaccept-268
--A OUTPUT -j logdrop-2
+-A OUTPUT -j logaccept-270
+-A OUTPUT -j logdrop-4
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -13569,8 +13725,13 @@ COMMIT
 -A logaccept-26 -j ACCEPT
 -A logaccept-267 -m limit --limit 1/second -j LOG
 -A logaccept-267 -j ACCEPT
+-A logaccept-268 -j LOG
+-A logaccept-268 -j TEE --gateway fc00::1
 -A logaccept-268 -j ACCEPT
+-A logaccept-269 -j TEE --gateway fc00::2
+-A logaccept-269 -j ACCEPT
 -A logaccept-27 -j ACCEPT
+-A logaccept-270 -j ACCEPT
 -A logaccept-28 -m limit --limit 1/second -j LOG
 -A logaccept-28 -j ACCEPT
 -A logaccept-29 -j ACCEPT
@@ -13628,7 +13789,12 @@ COMMIT
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
+-A logdrop-2 -j LOG
+-A logdrop-2 -j TEE --gateway fc00::1
 -A logdrop-2 -j DROP
+-A logdrop-3 -j TEE --gateway fc00::2
+-A logdrop-3 -j DROP
+-A logdrop-4 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
 -A logpass-109 -m limit --limit 1/second -j LOG
 -A logpass-115 -m limit --limit 1/second -j LOG
@@ -13637,6 +13803,9 @@ COMMIT
 -A logpass-136 -m limit --limit 1/second -j LOG
 -A logpass-137 -m limit --limit 1/second -j LOG
 -A logpass-167 -m limit --limit 1/second -j LOG
+-A logpass-168 -j LOG
+-A logpass-168 -j TEE --gateway fc00::1
+-A logpass-169 -j TEE --gateway fc00::2
 -A logpass-25 -m limit --limit 1/second -j LOG
 -A logpass-26 -m limit --limit 1/second -j LOG
 -A logpass-27 -m limit --limit 1/second -j LOG

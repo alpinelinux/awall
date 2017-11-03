@@ -8,16 +8,16 @@ See LICENSE file for license details
 util = require('awall.util')
 json = require('cjson')
 
-LOGOPTIONS = {false, true, 'none', 'ulog'}
-
 res = {}
 
 function add(limit_type, filter)
 
+   local logopts = {false, true, 'mirror', 'none', 'ulog'}
+
    for _, high_rate in ipairs{false, true} do
 
       local function add_limit(limit)
-         for _, log in ipairs(LOGOPTIONS) do
+         for _, log in ipairs(logopts) do
             for _, action in ipairs{false, 'pass'} do
                if not (high_rate and log and action) then
 	          table.insert(
@@ -40,7 +40,7 @@ function add(limit_type, filter)
       add_limit(count or 1)
 
       for _, interval in ipairs{false, 5} do
-         for _, log in ipairs(LOGOPTIONS) do
+         for _, log in ipairs(logopts) do
 	    local limit = {count=count, interval=interval or nil}
 	    if log ~= true then limit.log = log end
 

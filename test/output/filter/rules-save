@@ -6,12 +6,18 @@
 :icmp-routing - [0:0]
 :logaccept-0 - [0:0]
 :logaccept-1 - [0:0]
+:logaccept-2 - [0:0]
+:logaccept-3 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
 :logdrop-3 - [0:0]
+:logdrop-4 - [0:0]
+:logdrop-5 - [0:0]
 :logpass-0 - [0:0]
 :logpass-1 - [0:0]
+:logpass-2 - [0:0]
+:logpass-3 - [0:0]
 :logreject-0 - [0:0]
 :logtarpit-0 - [0:0]
 :tarpit - [0:0]
@@ -31,12 +37,18 @@
 -A FORWARD -j logaccept-0
 -A FORWARD -j logdrop-2
 -A FORWARD -j logpass-0
--A FORWARD -j ACCEPT
--A FORWARD -j DROP
--A FORWARD 
 -A FORWARD -j logaccept-1
 -A FORWARD -j logdrop-3
 -A FORWARD -j logpass-1
+-A FORWARD -j logaccept-2
+-A FORWARD -j logdrop-4
+-A FORWARD -j logpass-2
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
+-A FORWARD -j logaccept-3
+-A FORWARD -j logdrop-5
+-A FORWARD -j logpass-3
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -88,6 +100,8 @@
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
 -A INPUT -m limit --limit 12/minute -j ULOG
+-A INPUT -j TEE --gateway 10.0.0.2
+-A INPUT -j TEE --gateway 10.0.0.1
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
@@ -106,12 +120,18 @@
 -A INPUT -j logaccept-0
 -A INPUT -j logdrop-2
 -A INPUT -j logpass-0
--A INPUT -j ACCEPT
--A INPUT -j DROP
--A INPUT 
 -A INPUT -j logaccept-1
 -A INPUT -j logdrop-3
 -A INPUT -j logpass-1
+-A INPUT -j logaccept-2
+-A INPUT -j logdrop-4
+-A INPUT -j logpass-2
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
+-A INPUT -j logaccept-3
+-A INPUT -j logdrop-5
+-A INPUT -j logpass-3
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -132,12 +152,18 @@
 -A OUTPUT -j logaccept-0
 -A OUTPUT -j logdrop-2
 -A OUTPUT -j logpass-0
--A OUTPUT -j ACCEPT
--A OUTPUT -j DROP
--A OUTPUT 
 -A OUTPUT -j logaccept-1
 -A OUTPUT -j logdrop-3
 -A OUTPUT -j logpass-1
+-A OUTPUT -j logaccept-2
+-A OUTPUT -j logdrop-4
+-A OUTPUT -j logpass-2
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
+-A OUTPUT -j logaccept-3
+-A OUTPUT -j logdrop-5
+-A OUTPUT -j logpass-3
 -A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
@@ -147,18 +173,31 @@
 -A icmp-routing -p icmp --icmp-type 12 -j ACCEPT
 -A logaccept-0 -m limit --limit 1/second -j LOG
 -A logaccept-0 -j ACCEPT
--A logaccept-1 -m limit --limit 12/minute -j ULOG
+-A logaccept-1 -j LOG
 -A logaccept-1 -j ACCEPT
+-A logaccept-2 -j TEE --gateway 10.0.0.1
+-A logaccept-2 -j TEE --gateway 10.0.0.2
+-A logaccept-2 -j ACCEPT
+-A logaccept-3 -m limit --limit 12/minute -j ULOG
+-A logaccept-3 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
 -A logdrop-1 -j DROP
 -A logdrop-2 -m limit --limit 1/second -j LOG
 -A logdrop-2 -j DROP
--A logdrop-3 -m limit --limit 12/minute -j ULOG
+-A logdrop-3 -j LOG
 -A logdrop-3 -j DROP
+-A logdrop-4 -j TEE --gateway 10.0.0.1
+-A logdrop-4 -j TEE --gateway 10.0.0.2
+-A logdrop-4 -j DROP
+-A logdrop-5 -m limit --limit 12/minute -j ULOG
+-A logdrop-5 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
--A logpass-1 -m limit --limit 12/minute -j ULOG
+-A logpass-1 -j LOG
+-A logpass-2 -j TEE --gateway 10.0.0.1
+-A logpass-2 -j TEE --gateway 10.0.0.2
+-A logpass-3 -m limit --limit 12/minute -j ULOG
 -A logreject-0 -m limit --limit 1/second -j LOG
 -A logreject-0 -j REJECT
 -A logtarpit-0 -m limit --limit 1/second -j LOG

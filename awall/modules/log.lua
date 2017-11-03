@@ -5,6 +5,8 @@ See LICENSE file for license details
 ]]--
 
 
+local resolve = require('awall.host')
+
 local model = require('awall.model')
 local class = model.class
 
@@ -23,8 +25,9 @@ end
 local Log = class(model.ConfigObject)
 
 function Log:optfrags()
-   local mode = self.mode or 'log'
+   local mode = self.mode
    if mode == 'none' then return {} end
+   if not (mode or self.mirror) then mode = 'log' end
 
    local selector, ofrags
 
@@ -48,35 +51,49 @@ function Log:optfrags()
       end
    end
 
-   local optmap = {
-      log={level='level', prefix='prefix'},
-      nflog={
-	 group='group',
-	 prefix='prefix',
-	 range='range',
-	 threshold='threshold'
-      },
-      ulog={
-	 group='nlgroup',
-	 prefix='prefix',
-	 range='cprange',
-	 threshold='qthreshold'
-      }
-   }
-   if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
+   local targets = {}
 
-   local target = mode:upper()
-   for s, t in pairs(optmap[mode]) do
-      local value = self[s]
-      if value then
-	 if s == 'prefix' then value = util.quote(value) end
-	 target = target..' --'..mode..'-'..t..' '..value
+   if mode then
+      local optmap = {
+	 log={level='level', prefix='prefix'},
+	 nflog={
+	    group='group',
+	    prefix='prefix',
+	    range='range',
+	    threshold='threshold'
+	 },
+	 ulog={
+	    group='nlgroup',
+	    prefix='prefix',
+	    range='cprange',
+	    threshold='qthreshold'
+	 }
+      }
+      if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
+
+      local target = mode:upper()
+      for s, t in pairs(optmap[mode]) do
+	 local value = self[s]
+	 if value then
+	    if s == 'prefix' then value = util.quote(value) end
+	    target = target..' --'..mode..'-'..t..' '..value
+	 end
+      end
+
+      table.insert(
+	 targets, {family=mode == 'ulog' and 'inet' or nil, target=target}
+      )
+   end
+
+   for _, hostdef in util.listpairs(self.mirror) do
+      for _, addr in ipairs(resolve(hostdef, self)) do
+	 table.insert(
+	    targets, {family=addr[1], target='TEE --gateway '..addr[2]}
+	 )
       end
    end
 
-   return combinations(
-      ofrags, {{family=mode == 'ulog' and 'inet' or nil, target=target}}
-   )
+   return combinations(ofrags, targets)
 end
 
 function Log.get(rule, spec, default)

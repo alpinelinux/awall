@@ -1,10 +1,13 @@
 {
     "log": {
+	"dual": { "mode": "log", "mirror": "fc00::1" },
+	"mirror": { "mirror": [ "10.0.0.1", "10.0.0.2", "fc00::2" ] },
 	"none": { "mode": "none" },
 	"ulog": { "mode": "ulog", "limit": { "interval": 5 } }
     },
     "packet-log": [
 	{ "out": "_fw" },
+	{ "out": "_fw", "log": "mirror" },
 	{ "out": "_fw", "log": "ulog" }
     ],
     "filter": [
@@ -17,6 +20,12 @@
 	{ "log": true },
 	{ "log": true, "action": "drop" },
 	{ "log": true, "action": "pass" },
+	{ "log": "dual" },
+	{ "log": "dual", "action": "drop" },
+	{ "log": "dual", "action": "pass" },
+	{ "log": "mirror" },
+	{ "log": "mirror", "action": "drop" },
+	{ "log": "mirror", "action": "pass" },
 	{ "log": "none" },
 	{ "log": "none", "action": "drop" },
 	{ "log": "none", "action": "pass" },

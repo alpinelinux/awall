@@ -299,6 +299,11 @@ with these modes:
   </tbody>
 </table>
 
+Copies of the eligible packets are sent to all hosts defined with the
+**mirror** attribute of the logging class. The hosts may be defined
+using IP addresses or DNS names. If this attribute is defined,
+**mode** defaults to **none**.
+
 [Filter](#filter) and [policy](#policy) rules can have an attribute
 named **log**. If it is a string, it is interpreted as a reference to
 a logging class, and logging is performed according to the
