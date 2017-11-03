@@ -1,13 +1,18 @@
 --[[
 Host address resolver for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2017 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
-local familypatterns = {inet='%d[%.%d/]+',
-			inet6='[:%x/]+',
-			domain='[%a-][%.%w-]*'}
+local M = {}
+
+local util = require('awall.util')
+
+
+local familypatterns = {
+   inet='%d[%.%d/]+', inet6='[:%x/]+', domain='[%a-][%.%w-]*'
+}
 
 local function getfamily(addr, context)
    for k, v in pairs(familypatterns) do
@@ -18,7 +23,7 @@ end
 
 local dnscache = {}
 
-return function(host, context)
+function M.resolve(host, context)
    local family = getfamily(host, context)
    if family == 'domain' then
 
@@ -52,3 +57,14 @@ return function(host, context)
 
    return {{family, host}}
 end
+
+function M.resolvelist(list, context)
+   local res = {}
+   for _, host in util.listpairs(list) do
+      util.extend(res, M.resolve(host, context))
+   end
+   return ipairs(res)
+end
+
+
+return M

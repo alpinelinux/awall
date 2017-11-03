@@ -5,7 +5,7 @@ See LICENSE file for license details
 ]]--
 
 
-local resolve = require('awall.host')
+local resolvelist = require('awall.host').resolvelist
 
 local model = require('awall.model')
 local class = model.class
@@ -85,12 +85,8 @@ function Log:optfrags()
       )
    end
 
-   for _, hostdef in util.listpairs(self.mirror) do
-      for _, addr in ipairs(resolve(hostdef, self)) do
-	 table.insert(
-	    targets, {family=addr[1], target='TEE --gateway '..addr[2]}
-	 )
-      end
+   for _, addr in resolvelist(self.mirror) do
+      table.insert(targets, {family=addr[1], target='TEE --gateway '..addr[2]})
    end
 
    return combinations(ofrags, targets)

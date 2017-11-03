@@ -6,7 +6,7 @@ See LICENSE file for license details
 
 
 local loadclass = require('awall').loadclass
-local resolve = require('awall.host')
+local resolve = require('awall.host').resolve
 
 local model = require('awall.model')
 local class = model.class
