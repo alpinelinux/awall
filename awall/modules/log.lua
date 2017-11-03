@@ -22,7 +22,10 @@ end
 
 local Log = class(model.ConfigObject)
 
-function Log:matchofrags()
+function Log:optfrags()
+   local mode = self.mode or 'log'
+   if mode == 'none' then return {} end
+
    local selector, ofrags
 
    for i, sel in ipairs{'every', 'limit', 'probability'} do
@@ -45,14 +48,6 @@ function Log:matchofrags()
       end
    end
 
-   if self.mode == 'ulog' then
-      ofrags = combinations({{family='inet'}}, ofrags)
-   end
-
-   return ofrags
-end
-
-function Log:target()
    local optmap = {
       log={level='level', prefix='prefix'},
       nflog={
@@ -68,25 +63,20 @@ function Log:target()
 	 threshold='qthreshold'
       }
    }
-
-   local mode = self.mode or 'log'
-   if mode == 'none' then return end
    if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
 
-   local res = mode:upper()
+   local target = mode:upper()
    for s, t in pairs(optmap[mode]) do
       local value = self[s]
       if value then
 	 if s == 'prefix' then value = util.quote(value) end
-	 res = res..' --'..mode..'-'..t..' '..value
+	 target = target..' --'..mode..'-'..t..' '..value
       end
    end
-   return res
-end
 
-function Log:optfrags()
-   local target = self:target()
-   return combinations(self:matchofrags(), {target and {target=target}})
+   return combinations(
+      ofrags, {{family=mode == 'ulog' and 'inet' or nil, target=target}}
+   )
 end
 
 function Log.get(rule, spec, default)
@@ -107,10 +97,8 @@ end
 function LogRule:position() return 'prepend' end
 
 function LogRule:mangleoptfrags(ofrags)
-   return combinations(ofrags, self.log:matchofrags())
+   return combinations(ofrags, self.log:optfrags())
 end
-
-function LogRule:target() return self.log:target() end
 
 
 return {

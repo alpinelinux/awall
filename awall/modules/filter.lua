@@ -179,8 +179,9 @@ end
 function LoggingRule:combinelog(ofrags, log, action, target)
    local actions = self:actofrags(log, target)
    return actions[1] and
-      self:combine(ofrags, actions, 'log'..action, log and log:target()) or
-      ofrags
+      self:combine(
+	 ofrags, actions, 'log'..action, log and #log:optfrags() > 0
+      ) or ofrags
 end
 
 function LoggingRule:mangleoptfrags(ofrags)
@@ -416,7 +417,7 @@ function Filter:mangleoptfrags(ofrags)
       if ft then
 	 extend(ofs, self:actofrags(self.log))
 	 nxt = target
-      elseif sofs and not (pl and pl:target()) then nxt = false end
+      elseif sofs and not (pl and #pl:optfrags() > 0) then nxt = false end
       extend(ofs, combinations(sofs, self:actofrags(pl, nxt)))
 
    else
