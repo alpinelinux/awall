@@ -69,7 +69,7 @@ end
 add('conn', {out='B'})
 add('conn', {['in']='_fw', out='B'})
 add('flow')
-add('flow', {['in']='A', out='_fw', ['no-track']=true})
+add('flow', {['in']='A', out='_fw', service='ntp', ['no-track']=true})
 
 for _, name in ipairs{'A', 'B', 'C', 'D'} do
    table.insert(res, {['update-limit']=name})
