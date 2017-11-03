@@ -11,11 +11,16 @@ export LUA_PATH="./?.lua;;"
 LUA=lua${LUA_VERSION}
 AWALL="$LUA ./awall-cli"
 
+GEN_POLICIES=
+
 for cls in mandatory optional private; do
     eval "export AWALL_PATH_$(echo $cls | tr a-z A-Z)=test/$cls"
     mkdir -p test/$cls
     for script in test/$cls/*.lua; do
-        [ -f $script ] && $LUA $script > ${script%.lua}.json
+	[ -f $script ] || continue
+	policy=${script%.lua}.json
+	GEN_POLICIES="$GEN_POLICIES $policy"
+	$LUA $script > $policy
     done
 done
 
@@ -34,4 +39,7 @@ for pol in $POLICIES; do
     $AWALL ${1:-diff} -o $dir || RC=1
     $AWALL disable $pol
 done
+
+rm $GEN_POLICIES
+
 exit $RC
