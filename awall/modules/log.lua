@@ -1,6 +1,6 @@
 --[[
 Packet logging module for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2018 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -59,7 +59,7 @@ function Log:optfrags()
 	 nflog={
 	    group='group',
 	    prefix='prefix',
-	    range='range',
+	    range='size',
 	    threshold='threshold'
 	 },
 	 ulog={
