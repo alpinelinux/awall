@@ -1,0 +1,12 @@
+{
+	"description": "SSH server",
+	"filter": [
+		{
+			"in": "wan",
+			"out": "_fw",
+			"service": "ssh",
+			"conn-limit": { "count": 1, "interval": 10 }
+		},
+		{ "out": "_fw", "service": "ssh" }
+	]
+}

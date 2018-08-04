@@ -1,0 +1,4 @@
+{
+	"description": "DNS client",
+	"filter": [ { "in": "_fw", "out": "wan", "service": "dns" } ]
+}
