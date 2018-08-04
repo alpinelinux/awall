@@ -1,5 +1,5 @@
 # Installer Makefile for Alpine Wall
-# Copyright (C) 2012-2017 Kaarle Ritvanen
+# Copyright (C) 2012-2018 Kaarle Ritvanen
 # See LICENSE file for license details
 
 ROOT_DIR := /
@@ -34,7 +34,7 @@ files += $(2)
 endef
 
 $(eval $(call copy,awall,usr/share/lua/$(LUA_VERSION)/awall,lua))
-$(eval $(call copy,json,$(resdir)/mandatory,json))
+$(eval $(call copy,mandatory,$(resdir)/mandatory,json))
 
 $(eval $(call rename,awall-cli,usr/sbin/awall,755))
 $(eval $(call rename,sample-policy.json,$(resdir)/sample/sample-policy.json,644))

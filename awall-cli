@@ -147,7 +147,7 @@ end
 
 if dev_mode then
    util.setdefault(pol_paths, 'mandatory', {'/etc/awall'})
-   table.insert(pol_paths.mandatory, basedir..'/json')
+   table.insert(pol_paths.mandatory, basedir..'/mandatory')
 end
 
 uerror = require('awall.uerror')
