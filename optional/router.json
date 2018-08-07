@@ -5,5 +5,5 @@
 		{ "in": "wan", "dest": "$LAN_PRIVATE_ADDRS", "action": "drop" }
 	],
 	"policy": [ { "in": "lan", "out": "wan" } ],
-	"nat": [ { "out": "wan", "src": "$LAN_PRIVATE_ADDRS" } ]
+	"snat": [ { "out": "wan", "src": "$LAN_PRIVATE_ADDRS" } ]
 }
