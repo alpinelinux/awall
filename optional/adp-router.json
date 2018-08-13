@@ -1,5 +1,7 @@
 {
 	"description": "Router",
+	"before": "adp-config",
+	"variable": { "adp_router_policy": "accept" },
 	"zone": {
 		"adp-lan": {
 			"iface": "$adp_lan_ifaces", "addr": "$adp_lan_addrs"
@@ -12,6 +14,12 @@
 			"action": "drop"
 		}
 	],
-	"policy": [ { "in": "adp-lan", "out": "adp-wan" } ],
+	"policy": [
+		{
+			"in": "adp-lan",
+			"out": "adp-wan",
+			"action": "$adp_router_policy"
+		}
+	],
 	"snat": [ { "out": "adp-wan", "src": "$adp_lan_private_addrs" } ]
 }
