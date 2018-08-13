@@ -1,11 +1,12 @@
 --[[
 Dependency order resolver for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2018 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 local util = require('awall.util')
 local contains = util.contains
+local sortedkeys = util.sortedkeys
 
 return function(items)
    local visited = {}
@@ -17,8 +18,8 @@ return function(items)
       visited[key] = true
 
       local after = util.list(items[key].after)
-      for k, v in pairs(items) do
-	 if contains(v.before, key) then table.insert(after, k) end
+      for _, k in sortedkeys(items) do
+	 if contains(items[k].before, key) then table.insert(after, k) end
       end
       for i, k in ipairs(after) do
 	 if items[k] then
@@ -30,7 +31,7 @@ return function(items)
       table.insert(res, key)
    end
 
-   for i, k in util.sortedkeys(items) do
+   for _, k in sortedkeys(items) do
       local ek = visit(k)
       if ek ~= nil then return ek end
    end
