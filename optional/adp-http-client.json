@@ -1,4 +1,4 @@
 {
 	"description": "HTTP client",
-	"filter": [ { "in": "_fw", "out": "wan", "service": "http" } ]
+	"filter": [ { "in": "_fw", "out": "adp-wan", "service": "http" } ]
 }

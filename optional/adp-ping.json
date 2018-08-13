@@ -2,7 +2,7 @@
 	"description": "Allow ICMP echo request",
 	"after": "adp-router",
 	"filter": [
-		{ "in": "wan", "service": "ping", "flow-limit": 3 },
+		{ "in": "adp-wan", "service": "ping", "flow-limit": 3 },
 		{ "service": "ping" }
 	]
 }

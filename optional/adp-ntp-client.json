@@ -1,4 +1,4 @@
 {
 	"description": "NTP client",
-	"filter": [ { "in": "_fw", "out": "wan", "service": "ntp" } ]
+	"filter": [ { "in": "_fw", "out": "adp-wan", "service": "ntp" } ]
 }

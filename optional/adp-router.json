@@ -1,15 +1,17 @@
 {
 	"description": "Router",
 	"zone": {
-		"lan": { "iface": "$adp_lan_ifaces", "addr": "$adp_lan_addrs" }
+		"adp-lan": {
+			"iface": "$adp_lan_ifaces", "addr": "$adp_lan_addrs"
+		}
 	},
 	"filter": [
 		{
-			"in": "wan",
+			"in": "adp-wan",
 			"dest": "$adp_lan_private_addrs",
 			"action": "drop"
 		}
 	],
-	"policy": [ { "in": "lan", "out": "wan" } ],
-	"snat": [ { "out": "wan", "src": "$adp_lan_private_addrs" } ]
+	"policy": [ { "in": "adp-lan", "out": "adp-wan" } ],
+	"snat": [ { "out": "adp-wan", "src": "$adp_lan_private_addrs" } ]
 }

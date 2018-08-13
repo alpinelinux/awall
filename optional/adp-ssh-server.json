@@ -2,7 +2,7 @@
 	"description": "SSH server",
 	"filter": [
 		{
-			"in": "wan",
+			"in": "adp-wan",
 			"out": "_fw",
 			"service": "ssh",
 			"conn-limit": { "count": 1, "interval": 10 }
