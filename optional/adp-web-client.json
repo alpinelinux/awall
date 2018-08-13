@@ -1,0 +1,12 @@
+{
+	"description": "Web client",
+	"before": "adp-config",
+	"variable": { "adp_web_client_zones": "_fw" },
+	"filter": [
+		{
+			"in": "$adp_web_client_zones",
+			"out": "adp-wan",
+			"service": [ "dns", "http", "https" ]
+		}
+	]
+}

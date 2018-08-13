@@ -1,4 +1,0 @@
-{
-	"description": "DNS client",
-	"filter": [ { "in": "_fw", "out": "adp-wan", "service": "dns" } ]
-}
