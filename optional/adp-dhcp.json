@@ -1,7 +1,7 @@
 {
 	"description": "Allow DHCP",
 	"filter": [
-		{ "in": "$DHCP_ZONES", "out": "_fw", "service": "dhcp" },
-		{ "in": "_fw", "out": "$DHCP_ZONES", "service": "dhcp" }
+		{ "in": "$adp_dhcp_zones", "out": "_fw", "service": "dhcp" },
+		{ "in": "_fw", "out": "$adp_dhcp_zones", "service": "dhcp" }
 	]
 }
