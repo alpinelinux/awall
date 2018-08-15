@@ -1,0 +1,4 @@
+{
+	"description": "HTTP server",
+	"filter": [ { "out": "_fw", "service": "http" } ]
+}
