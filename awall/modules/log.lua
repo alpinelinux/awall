@@ -54,29 +54,31 @@ function Log:optfrags()
    local targets = {}
 
    if mode then
-      local optmap = {
-	 log={level='level', prefix='prefix'},
-	 nflog={
-	    group='group',
-	    prefix='prefix',
-	    range='size',
-	    threshold='threshold'
-	 },
-	 ulog={
-	    group='nlgroup',
-	    prefix='prefix',
-	    range='cprange',
-	    threshold='qthreshold'
+      local optmap = (
+	 {
+	    log={level='level', prefix='prefix'},
+	    nflog={
+	       group='group',
+	       prefix='prefix',
+	       range='size',
+	       threshold='threshold'
+	    },
+	    ulog={
+	       group='nlgroup',
+	       prefix='prefix',
+	       range='cprange',
+	       threshold='qthreshold'
+	    }
 	 }
-      }
-      if not optmap[mode] then self:error('Invalid logging mode: '..mode) end
+      )[mode]
+      if not optmap then self:error('Invalid logging mode: '..mode) end
 
       local target = mode:upper()
-      for s, t in pairs(optmap[mode]) do
+      for _, s in util.sortedkeys(optmap) do
 	 local value = self[s]
 	 if value then
 	    if s == 'prefix' then value = util.quote(value) end
-	    target = target..' --'..mode..'-'..t..' '..value
+	    target = target..' --'..mode..'-'..optmap[s]..' '..value
 	 end
       end
 
