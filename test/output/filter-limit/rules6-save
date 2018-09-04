@@ -8882,6 +8882,7 @@
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway fc00::2
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m recent --name user:B --rdest --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set 

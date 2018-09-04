@@ -363,6 +363,9 @@ Log dual      {"mirror":"fc00::1","mode":"log"}
 Log mirror    {"mirror":["10.0.0.1","10.0.0.2","fc00::2"]}
 (log)         
 
+Log nflog     {"group":1,"mode":"nflog","range":128}
+(log)         
+
 Log none      {"mode":"none"}
 (log)         
 
@@ -419,7 +422,12 @@ Packet-log 2          {"log":"mirror","out":"_fw"}
   inet/filter/INPUT   -j TEE --gateway 10.0.0.2
   inet6/filter/INPUT  -j TEE --gateway fc00::2
 
-Packet-log 3          {"log":"ulog","out":"_fw"}
+Packet-log 3          {"log":"nflog","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -j NFLOG --nflog-group 1 --nflog-size 128
+  inet6/filter/INPUT  -j NFLOG --nflog-group 1 --nflog-size 128
+
+Packet-log 4          {"log":"ulog","out":"_fw"}
 (log)                 
   inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
 
@@ -730,6 +738,7 @@ hash:net family inet
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
 -A INPUT -m limit --limit 12/minute -j ULOG
+-A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway 10.0.0.2
 -A INPUT -j TEE --gateway 10.0.0.1
 -A INPUT -m limit --limit 1/second -j LOG
@@ -921,6 +930,7 @@ COMMIT
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway fc00::2
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
