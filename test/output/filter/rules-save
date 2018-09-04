@@ -100,6 +100,7 @@
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
 -A INPUT -m limit --limit 12/minute -j ULOG
+-A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway 10.0.0.2
 -A INPUT -j TEE --gateway 10.0.0.1
 -A INPUT -m limit --limit 1/second -j LOG

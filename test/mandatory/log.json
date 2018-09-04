@@ -2,12 +2,14 @@
     "log": {
 	"dual": { "mode": "log", "mirror": "fc00::1" },
 	"mirror": { "mirror": [ "10.0.0.1", "10.0.0.2", "fc00::2" ] },
+	"nflog": { "mode": "nflog", "group": 1, "range": 128 },
 	"none": { "mode": "none" },
 	"ulog": { "mode": "ulog", "limit": { "interval": 5 } }
     },
     "packet-log": [
 	{ "out": "_fw" },
 	{ "out": "_fw", "log": "mirror" },
+	{ "out": "_fw", "log": "nflog" },
 	{ "out": "_fw", "log": "ulog" }
     ],
     "filter": [
