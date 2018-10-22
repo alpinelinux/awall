@@ -386,7 +386,7 @@ if not call(
 
       elseif mode == 'fallback' then
    
-	 for i, sig in ipairs({'HUP', 'PIPE'}) do
+	 for _, sig in ipairs{'HUP', 'INT', 'PIPE'} do
 	    signal(posix['SIG'..sig], 'SIG_IGN')
 	 end
 
