@@ -1,6 +1,6 @@
 --[[
 Ipset file dumper for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -20,10 +20,11 @@ end
 
 function IPSet:create()
    for name, ipset in pairs(self.config) do
-      local pid = lpc.run(
-	 'ipset', '-!', 'create', name, table.unpack(ipset.options)
-      )
-      if lpc.wait(pid) ~= 0 then
+      if not lpc.wait(
+	 util.run(
+	    'ipset', '-!', 'create', name, table.unpack(ipset.options)
+	 )
+      ) ~= 0 then
 	 util.printmsg('ipset creation failed: '..name)
       end
    end

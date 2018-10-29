@@ -340,11 +340,7 @@ if not call(
 		  end
 	       )
 	    end
-
-	    local stdio, stdout
-	    pid, stdio, stdout = lpc.run(arg[0], 'fallback')
-	    stdio:close()
-	    stdout:close()
+	    pid = util.run(arg[0], 'fallback')
 	 end
 
 	 local function kill()

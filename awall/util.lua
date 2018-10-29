@@ -1,11 +1,14 @@
 --[[
 Utility module for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local M = {}
+
+local lpc = require('lpc')
+
 
 function M.split(s, sep)
    if s == '' then return {} end
@@ -149,5 +152,13 @@ function M.printtabular(tbl) M.printtabulars({tbl}) end
 
 
 function M.printmsg(msg) io.stderr:write(msg..'\n') end
+
+
+function M.run(...)
+   local pid, stdin, stdout = lpc.run(...)
+   stdin:close()
+   stdout:close()
+   return pid
+end
 
 return M
