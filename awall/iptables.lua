@@ -154,16 +154,13 @@ function M.revert() Backup():activate() end
 
 function M.flush()
    local empty = M.IPTables()
-   for family, params in pairs(families) do
-      local success, lines = pcall(io.lines, params.procfile)
-      if success then
-	 for tbl in lines do
-	    if M.builtin[tbl] then
-	       for i, chain in ipairs(M.builtin[tbl]) do
-		  empty.config[family][tbl][chain] = {}
-	       end
-	    else printmsg('Warning: not flushing unknown table: '..tbl) end
-	 end
+   for _, family in pairs(actfamilies()) do
+      for tbl in io.lines(families[family].procfile) do
+	 if M.builtin[tbl] then
+	    for _, chain in ipairs(M.builtin[tbl]) do
+	       empty.config[family][tbl][chain] = {}
+	    end
+	 else printmsg('Warning: not flushing unknown table: '..tbl) end
       end
    end
    empty:restore(false)
