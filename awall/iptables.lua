@@ -1,11 +1,12 @@
 --[[
 Iptables file dumper for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local class = require('awall.class')
+local ACTIVE = require('awall.family').ACTIVE
 local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
@@ -13,8 +14,8 @@ local printmsg = util.printmsg
 local sortedkeys = util.sortedkeys
 
 
-local mkdir = require('posix').mkdir
 local lpc = require('lpc')
+local posix = require('posix')
 
 
 local M = {}
@@ -37,6 +38,21 @@ M.builtin = {
 local backupdir = '/var/run/awall'
 
 
+local _actfamilies
+local function actfamilies()
+   if _actfamilies then return _actfamilies end
+   _actfamilies = {}
+   for _, family in ipairs(ACTIVE) do
+      if posix.stat(families[family].procfile) then
+	 table.insert(_actfamilies, family)
+      else printmsg('Warning: firewall not enabled for '..family) end
+   end
+   return _actfamilies
+end
+
+function M.isenabled() return #actfamilies() > 0 end
+
+
 local BaseIPTables = class()
 
 function BaseIPTables:print()
@@ -55,27 +71,15 @@ function BaseIPTables:dump(dir)
 end
 
 function BaseIPTables:restore(test)
-   local disabled = true
-
-   for family, params in pairs(families) do
-      local file = io.open(params.procfile)
-      if file then
-	 io.close(file)
-
-	 local pid, stdin, stdout = lpc.run(
-	    params.cmd..'-restore', table.unpack{test and '-t' or nil}
-	 )
-	 stdout:close()
-	 self:dumpfile(family, stdin)
-	 stdin:close()
-	 assert(lpc.wait(pid) == 0)
-
-	 disabled = false
-
-      elseif test then printmsg('Warning: '..family..' rules not tested') end
+   for _, family in ipairs(actfamilies()) do
+      local pid, stdin, stdout = lpc.run(
+	 families[family].cmd..'-restore', table.unpack{test and '-t' or nil}
+      )
+      stdout:close()
+      self:dumpfile(family, stdin)
+      stdin:close()
+      assert(lpc.wait(pid) == 0)
    end
-
-   if disabled then raise('Firewall not enabled in kernel') end
 end
 
 function BaseIPTables:activate()
@@ -142,7 +146,7 @@ end
 
 
 function M.backup()
-   mkdir(backupdir)
+   posix.mkdir(backupdir)
    Current():dump(backupdir)
 end
 

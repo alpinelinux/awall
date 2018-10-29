@@ -152,6 +152,7 @@ end
 
 uerror = require('awall.uerror')
 call = uerror.call
+raise = uerror.raise
 
 if not call(
    function()
@@ -194,7 +195,7 @@ if not call(
 	 repeat
 	    local name = arg[opind]
 	    local policy = policyset.policies[name]
-	    if not policy then uerror.raise('No such policy: '..name) end
+	    if not policy then raise('No such policy: '..name) end
 	    policy[mode](policy)
 	    opind = opind + 1
 	 until opind > #arg
@@ -319,6 +320,10 @@ if not call(
 	 filedump(dumpfile)
 
       elseif mode == 'activate' then
+
+	 if not iptables.isenabled() then
+	    raise('Firewall not enabled in kernel')
+	 end
 
 	 iptables.backup()
 
