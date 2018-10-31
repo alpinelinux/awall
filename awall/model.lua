@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2018 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -125,7 +125,7 @@ function M.Zone:optfrags(dir)
    local aopts = nil
    if self.addr then
       aopts = {}
-      for _, addr in resolvelist(self.addr) do
+      for _, addr in resolvelist(self.addr, self) do
 	 table.insert(
 	    aopts,
 	    {family=addr[1], [aprop]=addr[2], match='-'..aopt..' '..addr[2]}
