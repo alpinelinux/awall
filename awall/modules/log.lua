@@ -87,7 +87,7 @@ function Log:optfrags()
       )
    end
 
-   for _, addr in resolvelist(self.mirror) do
+   for _, addr in resolvelist(self.mirror, self) do
       table.insert(targets, {family=addr[1], target='TEE --gateway '..addr[2]})
    end
 
