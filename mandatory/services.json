@@ -8,6 +8,7 @@
     "bacula-sd": { "proto": "tcp", "port": 9103 }, 
     "bgp": { "proto": "tcp", "port": 179 },
     "dhcp": { "family": "inet", "proto": "udp", "port": [ 67, 68 ] },
+    "dhcpv6": { "family": "inet6", "proto": "udp", "port": [ 546, 547 ] },
     "discard": [
       { "proto": "udp", "port": 9 },
       { "proto": "tcp", "port": 9 }
