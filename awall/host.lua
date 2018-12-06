@@ -1,6 +1,6 @@
 --[[
 Host address resolver for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2018 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -29,7 +29,7 @@ function M.resolve(host, context)
 
       if not dnscache[host] then
 	 dnscache[host] = {}
-	 for rec in io.popen('dig -t ANY '..host):lines() do
+	 for rec in io.popen('dig '..host..' A '..host..' AAAA'):lines() do
 	    local name, rtype, addr =
 	       rec:match(
 		  '^('..familypatterns.domain..')%s+%d+%s+IN%s+(A+)%s+(.+)'
