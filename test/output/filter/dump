@@ -607,6 +607,9 @@ Service netbios-ssn   [{"port":139,"proto":"tcp"},{"port":139,"proto":"udp"}]
 Service ntp           {"port":123,"proto":"udp"}
 (services)            
 
+Service openvpn       {"port":1194,"proto":"udp"}
+(services)            
+
 Service ospf          {"proto":"ospf"}
 (services)            
 

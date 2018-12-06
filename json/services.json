@@ -84,6 +84,7 @@
       { "proto": "udp", "port": 139 }
     ],
     "ntp": { "proto": "udp", "port": 123 },
+    "openvpn": { "proto": "udp", "port": 1194 },
     "ospf": { "proto": "ospf" },
     "pgsql": { "proto": "tcp", "port": 5432 },
     "ping": [
