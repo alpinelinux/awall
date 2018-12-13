@@ -29,18 +29,14 @@ function M.resolve(host, context)
 
       if not dnscache[host] then
 	 dnscache[host] = {}
-	 for rec in io.popen('dig '..host..' A '..host..' AAAA'):lines() do
-	    local name, rtype, addr =
-	       rec:match(
-		  '^('..familypatterns.domain..')%s+%d+%s+IN%s+(A+)%s+(.+)'
+	 for family, rtype in pairs{inet='A', inet6='AAAA'} do
+	    for rec in io.popen('drill '..host..' '..rtype):lines() do
+	       local name, addr = rec:match(
+		  '^('..familypatterns.domain..')%s+%d+%s+IN%s+'..rtype..
+		     '%s+(.+)'
 	       )
 
-	    if name and name:sub(1, host:len() + 1) == host..'.' then
-	       if rtype == 'A' then family = 'inet'
-	       elseif rtype == 'AAAA' then family = 'inet6'
-	       else family = nil end
-
-	       if family then
+	       if name and name:sub(1, host:len() + 1) == host..'.' then
 		  assert(getfamily(addr, context) == family)
 		  table.insert(dnscache[host], {family, addr})
 	       end
