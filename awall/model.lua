@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2018 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -10,11 +10,11 @@ local M = {}
 
 local loadclass = require('awall').loadclass
 M.class = require('awall.class')
+local FAMILIES = require('awall.family').ALL
 local resolvelist = require('awall.host').resolvelist
 local builtin = require('awall.iptables').builtin
 
 local optfrag = require('awall.optfrag')
-local FAMILIES = optfrag.FAMILIES
 local combinations = optfrag.combinations
 local prune = optfrag.prune
 

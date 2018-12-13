@@ -1,19 +1,19 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local loadclass = require('awall').loadclass
+local FAMILIES = require('awall.family').ALL
 local resolve = require('awall.host').resolve
 
 local model = require('awall.model')
 local class = model.class
 local Rule = model.Rule
 
-local optfrag = require('awall.optfrag')
-local combinations = optfrag.combinations
+local combinations = require('awall.optfrag').combinations
 
 local util = require('awall.util')
 local contains = util.contains
@@ -444,7 +444,7 @@ local fchains = {{chain='FORWARD'}, {chain='INPUT'}, {chain='OUTPUT'}}
 local function stateful(config)
    local res = {}
 
-   for _, family in ipairs(optfrag.FAMILIES) do
+   for _, family in ipairs(FAMILIES) do
 
       local er = combinations(
 	 fchains,

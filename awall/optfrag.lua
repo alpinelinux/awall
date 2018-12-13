@@ -1,11 +1,13 @@
 --[[
 Option fragment module for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local M = {}
+
+local FAMILIES = require('awall.family').ALL
 
 local util = require('awall.util')
 local map = util.map
@@ -14,8 +16,7 @@ local function ffrags(families)
    return map(families, function(f) return {family=f} end)
 end
 
-M.FAMILIES = {'inet', 'inet6'}
-M.FAMILYFRAGS = ffrags(M.FAMILIES)
+M.FAMILYFRAGS = ffrags(FAMILIES)
 
 function M.combinations(of1, ...)
    local arg = {...}
