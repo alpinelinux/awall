@@ -1,6 +1,6 @@
 --[[
 Transparent proxy module for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -59,7 +59,7 @@ local function divert(config)
 	 ofrags,
 	 {chain='PREROUTING', match='-m socket', target='divert'}
       )
-      return combinations(optfrag.FAMILYFRAGS, {{table='mangle'}}, ofrags)
+      return combinations(optfrag.FAMILIES, {{table='mangle'}}, ofrags)
    end
 end
 

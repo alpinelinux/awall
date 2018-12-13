@@ -16,7 +16,7 @@ local function ffrags(families)
    return map(families, function(f) return {family=f} end)
 end
 
-M.FAMILYFRAGS = ffrags(FAMILIES)
+M.FAMILIES = ffrags(FAMILIES)
 
 function M.combinations(of1, ...)
    local arg = {...}

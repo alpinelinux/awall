@@ -1,6 +1,6 @@
 --[[
 Packet marking module for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -40,7 +40,7 @@ end
 local function restoremark(config)
    if list(config['route-track'])[1] then
       return combinations(
-	 optfrag.FAMILYFRAGS,
+	 optfrag.FAMILIES,
 	 {{chain='OUTPUT'}, {chain='PREROUTING'}},
 	 {
 	    {
