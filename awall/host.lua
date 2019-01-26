@@ -1,6 +1,6 @@
 --[[
 Host address resolver for Alpine Wall
-Copyright (C) 2012-2018 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -30,16 +30,19 @@ function M.resolve(host, context)
       if not dnscache[host] then
 	 dnscache[host] = {}
 	 for family, rtype in pairs{inet='A', inet6='AAAA'} do
+	    local answer
 	    for rec in io.popen('drill '..host..' '..rtype):lines() do
-	       local name, addr = rec:match(
-		  '^('..familypatterns.domain..')%s+%d+%s+IN%s+'..rtype..
-		     '%s+(.+)'
-	       )
-
-	       if name and name:sub(1, host:len() + 1) == host..'.' then
-		  assert(getfamily(addr, context) == family)
-		  table.insert(dnscache[host], {family, addr})
-	       end
+	       if answer then
+		  if rec == '' then break end
+		  local addr = rec:match(
+		     '^'..familypatterns.domain..'%s+%d+%s+IN%s+'..rtype..
+			'%s+(.+)'
+		  )
+		  if addr then
+		     assert(getfamily(addr, context) == family)
+		     table.insert(dnscache[host], {family, addr})
+		  end
+	       elseif rec == ';; ANSWER SECTION:' then answer = true end
 	    end
 	 end
 	 if not dnscache[host][1] then
