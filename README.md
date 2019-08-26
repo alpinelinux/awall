@@ -455,13 +455,14 @@ whether to consider the source (**src**, default) or destination
 defaults to **pass** and cannot be set to any other value.
 
 Filter objects may have an attribute named **dnat**, the value of
-which is an IPv4 address. If defined, this enables destination NAT for
-all IPv4 packets matching the rule, such that the specified address
-replaces the original destination address. If also port translation is
-desired, the attribute may be defined as an object consisting of
-attributes **addr** and **port**. The format of the **port** attribute
-is similar to that of the **to-port** attribute of [NAT
-rules](#nat). This option has no effect on IPv6 packets.
+which is an IPv4 address or a DNS name resolving to a single IPv4
+address. If defined, this enables destination NAT for all IPv4 packets
+matching the rule, such that the specified address replaces the
+original destination address. If also port translation is desired, the
+attribute may be defined as an object consisting of attributes
+**addr** and **port**. The format of the **port** attribute is similar
+to that of the **to-port** attribute of [NAT rules](#nat). This option
+has no effect on IPv6 packets.
 
 Filter objects may have a boolean attribute named **no-track**. If set
 to **true**, connection tracking is bypassed for the matching

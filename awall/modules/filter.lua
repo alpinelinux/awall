@@ -100,7 +100,34 @@ local TranslatingRule = class(Rule)
 
 function TranslatingRule:init(...)
    TranslatingRule.super(self):init(...)
-   if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
+
+   if self.dnat then
+      if self.ipset then
+	 self:error('dnat and ipset options cannot be used simultaneously')
+      end
+
+      if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
+
+      if self.dnat.addr:find('/') then
+	 self:error('DNAT target cannot be a network address')
+      end
+
+      local dnataddr
+      for _, addr in ipairs(resolve(self.dnat.addr, self)) do
+	 if addr[1] == 'inet' then
+	    if dnataddr then
+	       self:error(
+		  self.dnat.addr..' resolves to multiple IPv4 addresses'
+	       )
+	    end
+	    dnataddr = addr[2]
+	 end
+      end
+      if not dnataddr then
+	 self:error(self.dnat.addr..' does not resolve to any IPv4 address')
+      end
+      self.dnat.addr = dnataddr
+   end
 end
 
 function TranslatingRule:destoptfrags()
@@ -274,34 +301,12 @@ function Filter:extratrules()
       if self['no-track'] then
 	 self:error('dnat option not allowed with no-track')
       end
-      if self.ipset then
-	 self:error('dnat and ipset options cannot be used simultaneously')
-      end
-
-      if self.dnat.addr:find('/') then
-	 self:error('DNAT target cannot be a network address')
-      end
-
-      local dnataddr
-      for i, addr in ipairs(resolve(self.dnat.addr, self)) do
-	 if addr[1] == 'inet' then
-	    if dnataddr then
-	       self:error(
-		  self.dnat.addr..' resolves to multiple IPv4 addresses'
-	       )
-	    end
-	    dnataddr = addr[2]
-	 end
-      end
-      if not dnataddr then
-	 self:error(self.dnat.addr..' does not resolve to any IPv4 address')
-      end
 
       extrarules(
 	 'dnat',
 	 'dnat',
 	 {
-	    update={['to-addr']=dnataddr, ['to-port']=self.dnat.port},
+	    update={['to-addr']=self.dnat.addr, ['to-port']=self.dnat.port},
 	    discard='out'
 	 }
       )
