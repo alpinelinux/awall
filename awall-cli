@@ -202,6 +202,22 @@ if not call(
       end
 
 
+      local iptables = require('awall.iptables')
+
+      if mode == 'fallback' then
+
+	 for _, sig in ipairs{'HUP', 'INT', 'PIPE'} do
+	    signal(posix['SIG'..sig], 'SIG_IGN')
+	 end
+
+	 posix.sleep(10)
+
+	 printmsg('\nTimeout, reverting to the old configuration')
+	 iptables.revert()
+	 os.exit()
+      end
+
+
       local input = policyset:load()
 
       if mode == 'dump' then level = 0 + (arg[opind] or 0) end
@@ -282,9 +298,6 @@ if not call(
 
       local sysdumpfile = '/etc/iptables/awall-save'
       local dumpfile = outputdir and outputdir..'/dump' or sysdumpfile
-
-
-      local iptables = require('awall.iptables')
 
 
       if mode == 'dump' then dump(level)
@@ -383,17 +396,6 @@ if not call(
 	    revert()
 	 end
 
-
-      elseif mode == 'fallback' then
-   
-	 for _, sig in ipairs{'HUP', 'INT', 'PIPE'} do
-	    signal(posix['SIG'..sig], 'SIG_IGN')
-	 end
-
-	 posix.sleep(10)
-
-	 printmsg('\nTimeout, reverting to the old configuration')
-	 iptables.revert()
 
       elseif mode == 'flush' then iptables.flush()
 
