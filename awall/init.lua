@@ -10,7 +10,7 @@ local M = {}
 local class = require('awall.class')
 local resolve = require('awall.dependency')
 local IPSet = require('awall.ipset')
-local IPTables = require('awall.iptables').IPTables
+local iptables = require('awall.iptables')
 local combinations = require('awall.optfrag').combinations
 M.PolicySet = require('awall.policy')
 
@@ -78,13 +78,19 @@ M.Config = class()
 function M.Config:init(policyconfig)
 
    self.objects = policyconfig:expand()
-   self.iptables = IPTables()
+
+   local dedicated = self.objects.variable.awall_dedicated_chains
+   self.iptables = dedicated and iptables.PartialIPTables() or
+      iptables.IPTables()
+   self.prefix = dedicated and 'awall-' or ''
 
    local actions = {}
 
    local function insertrules(trules, obj)
       for _, trule in ipairs(trules) do
-	 local t = self.iptables.config[trule.family][trule.table][trule.chain]
+	 local t = self.iptables.config[trule.family][trule.table][
+	    self.prefix..trule.chain
+	 ]
 	 local opts = self:ofragcmd(trule)
 
 	 if trule.target then
@@ -150,11 +156,17 @@ function M.Config:init(policyconfig)
    self.ipset = IPSet(self.objects.ipset)
 end
 
-function M.Config:ofragloc(of) return of.family..'/'..of.table..'/'..of.chain end
+function M.Config:ofragloc(of)
+   return of.family..'/'..of.table..'/'..self.prefix..of.chain
+end
 
 function M.Config:ofragcmd(of)
-   return (of.match and of.match..' ' or '')..
-      (of.target and '-j '..of.target or '')
+   local target = ''
+   if of.target then
+      target = '-j '..(util.startswithupper(of.target) and '' or self.prefix)..
+	 of.target
+   end
+   return (of.match and of.match..' ' or '')..target
 end
 
 function M.Config:print()
@@ -177,6 +189,8 @@ function M.Config:activate()
    self:test()
    self.iptables:activate()
 end
+
+function M.Config:flush() self.iptables:flush() end
 
 
 return M

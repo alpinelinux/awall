@@ -631,6 +631,17 @@ customized chain, using the **custom:** prefix. It is also possible to
 constrain each rule to IPv4 or IPv6 only by defining the **family**
 attribute as **inet** or **inet6**, respectively.
 
+## <a name="dedicated">Co-Existence with Other Firewall Management Tools
+
+If awall is used on a host running other software that manipulates
+iptables rules, it is recommended to set the
+**awall_dedicated_chains** variable to **true**, which will have the
+following effects:
+
+* Awall installs its own rules to dedicated chains prefixed with
+  **awall-**.
+* Activation of awall rules leaves any unrelated rule intact.
+
 ## Command Line Syntax
 
 ### Translating Policy Files to Firewall Configuration Files
@@ -656,9 +667,15 @@ the Return key within 10 seconds or the `--force` option is used, the
 configuration is saved to the files. Otherwise, the old configuration
 is restored.
 
- **awall flush**
+ **awall flush** \[**-a** | **--all**\]
 
-This command configures the firewall to drop all packets.
+Normally, this command deletes all firewall rules and configures it to
+drop all packets.
+
+If awall is configured to [co-exist with other firewall management
+tools](#dedicated), this command flushes only the rules installed by
+awall. Specifying `--all` overrides this behavior and causes all rules
+to be flushed.
 
 ### Optional Policies
 

@@ -635,8 +635,11 @@ Snat 1                  {"out":["_fw","B"]}
   inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -j MASQUERADE
 
 
-Variable awall_tproxy_mark  1
-(defaults)                  
+Variable awall_dedicated_chains  false
+(defaults)                       
+
+Variable awall_tproxy_mark       1
+(defaults)                       
 
 
 Zone A  {"iface":"eth0"}

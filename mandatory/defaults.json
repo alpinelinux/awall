@@ -1,5 +1,5 @@
 {
   "before": "%defaults",
-  "variable": { "awall_tproxy_mark": 1 },
+  "variable": { "awall_dedicated_chains": false, "awall_tproxy_mark": 1 },
   "log": { "_default": { "limit": 1 } }
 }

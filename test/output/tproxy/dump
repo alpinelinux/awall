@@ -629,8 +629,11 @@ Tproxy 1                   {"in":"B","service":"http"}
   inet6/mangle/PREROUTING  -i eth1 -s fc00::/7 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 0
 
 
-Variable awall_tproxy_mark  1
-(defaults)                  
+Variable awall_dedicated_chains  false
+(defaults)                       
+
+Variable awall_tproxy_mark       1
+(defaults)                       
 
 
 Zone A  {"iface":"eth0"}

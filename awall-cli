@@ -49,10 +49,15 @@ Run-time activation of new firewall configuration:
     configuration is restored.
 
 Flush firewall configuration:
-    awall flush
+    awall flush [-a|--all]
 
-    This command deletes all firewall rules and configures it to drop
-    all packets.
+    Normally, this command deletes all firewall rules and configures
+    it to drop all packets.
+
+    If awall is configured to co-exist with other firewall management
+    tools, this command flushes only the rules installed by awall.
+    Specifying --all overrides this behavior and causes all rules to
+    be flushed.
 
 Enable/disable optional policies:
     awall {enable|disable} <policy>...
@@ -428,7 +433,9 @@ if not call(
 	 end
 
 
-      elseif mode == 'flush' then iptables.flush()
+      elseif mode == 'flush' then
+	 if all then iptables.flush()
+	 else config:flush() end
 
       else assert(false) end
 

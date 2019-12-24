@@ -16,6 +16,7 @@ local sortedkeys = util.sortedkeys
 
 local lpc = require('lpc')
 local posix = require('posix')
+local stringy = require('stringy')
 
 
 local M = {}
@@ -137,6 +138,62 @@ function M.IPTables:dumpfile(family, iptfile)
 	 end
       end
       iptfile:write('COMMIT\n')
+   end
+end
+
+
+M.PartialIPTables = class(M.IPTables)
+
+function M.PartialIPTables:restorecmd(family, test)
+   local cmd = {M.PartialIPTables.super(self):restorecmd(family, test)}
+   table.insert(cmd, '-n')
+   return table.unpack(cmd)
+end
+
+function M.PartialIPTables:dumpfile(family, iptfile)
+   local tables = self.config[family]
+   for tbl, chains in pairs(tables) do
+      local builtins = {}
+      for chain, _ in pairs(chains) do
+	 if stringy.startswith(chain, 'awall-') then
+	    local base = chain:sub(7, -1)
+	    if M.isbuiltin(tbl, base) then table.insert(builtins, base) end
+	 end
+      end
+      for _, chain in ipairs(builtins) do
+	 chains[chain] = {'-j awall-'..chain}
+      end
+   end
+   M.PartialIPTables.super(self):dumpfile(family, iptfile)
+end
+
+function M.PartialIPTables:flush()
+   for _, family in ipairs(actfamilies()) do
+      local cmd = families[family].cmd
+      for tbl, _ in pairs(builtin) do
+	 local pid, stdin, stdout = lpc.run(cmd, '-t', tbl, '-S')
+	 stdin:close()
+	 local chains = {}
+	 local rules = {}
+	 for line in stdout:lines() do
+	    if stringy.startswith(line, '-N awall-') then
+	       table.insert(chains, line:sub(4, -1))
+	    else
+	       local chain, target = line:match('^%-A (%u+) %-j (awall%-%u+)$')
+	       if chain then table.insert(rules, {chain, '-j', target}) end
+	    end
+	 end
+	 stdout:close()
+	 assert(lpc.wait(pid) == 0)
+
+	 local function exec(...)
+	    assert(util.execute(cmd, '-t', tbl, table.unpack{...}) == 0)
+	 end
+	 for _, rule in ipairs(rules) do exec('-D', table.unpack(rule)) end
+	 for _, opt in ipairs{'-F', '-X'} do
+	    for _, chain in ipairs(chains) do exec(opt, chain) end
+	 end
+      end
    end
 end
 
