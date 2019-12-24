@@ -11,10 +11,7 @@ local class = require('awall.class')
 local resolve = require('awall.dependency')
 local IPSet = require('awall.ipset')
 local IPTables = require('awall.iptables').IPTables
-
-local optfrag = require('awall.optfrag')
-local combinations = optfrag.combinations
-
+local combinations = require('awall.optfrag').combinations
 M.PolicySet = require('awall.policy')
 
 local util = require('awall.util')
@@ -88,7 +85,7 @@ function M.Config:init(policyconfig)
    local function insertrules(trules, obj)
       for _, trule in ipairs(trules) do
 	 local t = self.iptables.config[trule.family][trule.table][trule.chain]
-	 local opts = optfrag.command(trule)
+	 local opts = self:ofragcmd(trule)
 
 	 if trule.target then
 	    local acfrag = {
@@ -96,7 +93,7 @@ function M.Config:init(policyconfig)
 	       table=trule.table,
 	       chain=trule.target
 	    }
-	    local key = optfrag.location(acfrag)
+	    local key = self:ofragloc(acfrag)
 	    if not actions[key] then
 	       actions[key] = true
 	       if stringy.startswith(trule.target, 'custom:') then
@@ -151,6 +148,13 @@ function M.Config:init(policyconfig)
    end
 
    self.ipset = IPSet(self.objects.ipset)
+end
+
+function M.Config:ofragloc(of) return of.family..'/'..of.table..'/'..of.chain end
+
+function M.Config:ofragcmd(of)
+   return (of.match and of.match..' ' or '')..
+      (of.target and '-j '..of.target or '')
 end
 
 function M.Config:print()

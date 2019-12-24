@@ -1,6 +1,6 @@
 --[[
 Option fragment module for Alpine Wall
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -84,13 +84,6 @@ function M.prune(...)
    return table.unpack(
       map(arg, function(ofs) return M.combinations(ofs, ff) end)
    )
-end
-
-function M.location(of) return of.family..'/'..of.table..'/'..of.chain end
-
-function M.command(of)
-   return (of.match and of.match..' ' or '')..
-      (of.target and '-j '..of.target or '')
 end
 
 return M

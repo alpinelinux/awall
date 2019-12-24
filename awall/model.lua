@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -100,9 +100,9 @@ function M.ConfigObject:trules() return {} end
 function M.ConfigObject:info()
    local rules = {}
    for _, trule in ipairs(self:trules()) do
-      local loc = optfrag.location(trule)
+      local loc = self.context:ofragloc(trule)
       table.insert(
-	 setdefault(rules, loc, {}), {'  '..loc, optfrag.command(trule)}
+	 setdefault(rules, loc, {}), {'  '..loc, self.context:ofragcmd(trule)}
       )
    end
 
