@@ -6,6 +6,7 @@ See LICENSE file for license details
 
 
 local util = require('awall.util')
+local lpc = require('lpc')
 
 
 local IPSet = require('awall.class')()
@@ -20,7 +21,7 @@ end
 
 function IPSet:create()
    for name, ipset in pairs(self.config) do
-      if not lpc.wait(
+      if lpc.wait(
 	 util.run(
 	    'ipset', '-!', 'create', name, table.unpack(ipset.options)
 	 )
