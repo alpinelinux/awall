@@ -91,11 +91,13 @@ function BaseIPTables:restore(test)
 end
 
 function BaseIPTables:activate()
-   M.flush()
+   self:flush()
    self:restore(false)
 end
 
 function BaseIPTables:test() self:restore(true) end
+
+function BaseIPTables:flush() M.flush() end
 
 
 M.IPTables = class(BaseIPTables)
