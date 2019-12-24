@@ -1,6 +1,6 @@
 --[[
 Alpine Wall main module
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2019 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -105,12 +105,7 @@ function M.Config:init(policyconfig)
 		  if not rules then
 		     obj:error('Invalid custom chain: '..name)
 		  end
-		  insertrules(
-		     combinations(
-			{{chain=trule.target}}, util.list(rules), {acfrag}
-		     ),
-		     rules
-		  )
+		  insertrules(combinations(util.list(rules), {acfrag}), rules)
 	       else insertrules(combinations(achains, {acfrag})) end
 	    end
 	 end
