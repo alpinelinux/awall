@@ -31,7 +31,7 @@ local families = {
    }
 }
 
-M.builtin = {
+local builtin = {
    filter={'FORWARD', 'INPUT', 'OUTPUT'},
    mangle={'FORWARD', 'INPUT', 'OUTPUT', 'POSTROUTING', 'PREROUTING'},
    nat={'INPUT', 'OUTPUT', 'POSTROUTING', 'PREROUTING'},
@@ -55,6 +55,8 @@ local function actfamilies()
 end
 
 function M.isenabled() return #actfamilies() > 0 end
+
+function M.isbuiltin(tbl, chain) return util.contains(builtin[tbl], chain) end
 
 
 local BaseIPTables = class()
@@ -124,7 +126,7 @@ function M.IPTables:dumpfile(family, iptfile)
       local chains = tables[tbl]
       for _, chain in sortedkeys(chains) do
 	 local policy = '-'
-	 if util.contains(M.builtin[tbl], chain) then
+	 if M.isbuiltin(tbl, chain) then
 	    policy = tbl == 'filter' and 'DROP' or 'ACCEPT'
 	 end
 	 iptfile:write(':'..chain..' '..policy..' [0:0]\n')
@@ -170,8 +172,8 @@ function M.flush()
    local empty = M.IPTables()
    for _, family in pairs(actfamilies()) do
       for tbl in io.lines(families[family].procfile) do
-	 if M.builtin[tbl] then
-	    for _, chain in ipairs(M.builtin[tbl]) do
+	 if builtin[tbl] then
+	    for _, chain in ipairs(builtin[tbl]) do
 	       empty.config[family][tbl][chain] = {}
 	    end
 	 else printmsg('Warning: not flushing unknown table: '..tbl) end

@@ -12,7 +12,7 @@ local loadclass = require('awall').loadclass
 M.class = require('awall.class')
 local FAMILIES = require('awall.family').ALL
 local resolvelist = require('awall.host').resolvelist
-local builtin = require('awall.iptables').builtin
+local isbuiltin = require('awall.iptables').isbuiltin
 
 local optfrag = require('awall.optfrag')
 local combinations = optfrag.combinations
@@ -619,10 +619,7 @@ function M.Rule:convertchains(ofrags)
    local res = {}
 
    for _, ofrag in ipairs(ofrags) do
-
-      if contains(builtin[self:table()], ofrag.chain) then
-	 table.insert(res, ofrag)
-
+      if isbuiltin(self:table(), ofrag.chain) then table.insert(res, ofrag)
       else
 	 local ofs, recursive
 	 if ofrag.chain == 'PREROUTING' then
