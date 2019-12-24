@@ -1,6 +1,6 @@
 --[[
 Alpine Wall main module
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -60,7 +60,7 @@ function M.loadmodules(path)
    table.sort(modules)
 
    local imported = {}
-   for i, name in ipairs(modules) do
+   for _, name in ipairs(modules) do
       extend(imported, readmetadata(require(name)))
    end
 
@@ -86,7 +86,7 @@ function M.Config:init(policyconfig)
    local actions = {}
 
    local function insertrules(trules, obj)
-      for i, trule in ipairs(trules) do
+      for _, trule in ipairs(trules) do
 	 local t = self.iptables.config[trule.family][trule.table][trule.chain]
 	 local opts = optfrag.command(trule)
 
@@ -118,7 +118,7 @@ function M.Config:init(policyconfig)
       end
    end
 
-   for i, path in ipairs(procorder) do
+   for _, path in ipairs(procorder) do
       if path:sub(1, 1) ~= '%' then
 	 local objs = self.objects[path]
 	 if objs then
@@ -133,7 +133,7 @@ function M.Config:init(policyconfig)
       end
    end
 
-   for i, event in ipairs(procorder) do
+   for _, event in ipairs(procorder) do
       if event:sub(1, 1) == '%' then
 	 local r = events[event].rules
 	 if r then
@@ -144,7 +144,7 @@ function M.Config:init(policyconfig)
 	    end
 	 end
       elseif self.objects[event] then
-	 for i, rule in ipairs(self.objects[event]) do
+	 for _, rule in ipairs(self.objects[event]) do
 	    insertrules(rule:trules(), rule)
 	 end
       end
