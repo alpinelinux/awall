@@ -1,6 +1,6 @@
 --[[
 Utility module for Alpine Wall
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -120,6 +120,12 @@ function M.join(a, sep, b)
    if comps[1] then return table.concat(comps, sep) end
 end
 
+
+function M.startswithupper(s)
+   if s == '' then return false end
+   local c = s:sub(1, 1)
+   return c == c:upper()
+end
 
 function M.quote(s) return '"'..s:gsub('(["\\])', '\\%1')..'"' end
 

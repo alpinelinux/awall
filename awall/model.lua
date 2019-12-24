@@ -602,8 +602,9 @@ end
 
 function M.Rule:customtarget()
    if self.action then
-      local as = self.action:sub(1, 1)
-      if as == as:upper() or startswith(self.action, 'custom:') then
+      if util.startswithupper(self.action) or startswith(
+	 self.action, 'custom:'
+      ) then
 	 return self.action
       end
    end
