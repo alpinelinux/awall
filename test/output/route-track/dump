@@ -1,3 +1,7 @@
+Custom foo      [{"family":"inet6","match":"-m hl --hl-lt 7","target":"REJECT --reject-with icmpv6-no-route"},{"target":"LED --led-trigger-id foo"}]
+(custom-chain)  
+
+
 Dnat 1                 {"in":["_fw","A"]}
 (zone)                 
   inet/nat/OUTPUT      -j REDIRECT

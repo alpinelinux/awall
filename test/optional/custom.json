@@ -1,0 +1,7 @@
+{
+    "filter": [
+	{ "out": "A", "match": "-m owner --uid-owner 0" },
+	{ "in": "B", "action": "custom:foo" }
+    ],
+    "dnat": [ { "in": "D", "action": "NETMAP --to 10.1.0.0/12" } ]
+}
