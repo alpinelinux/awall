@@ -167,4 +167,6 @@ function M.run(...)
    return pid
 end
 
+function M.execute(...) return lpc.wait(M.run(...)) end
+
 return M

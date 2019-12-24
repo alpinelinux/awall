@@ -1,12 +1,11 @@
 --[[
 Ipset file dumper for Alpine Wall
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local util = require('awall.util')
-local lpc = require('lpc')
 
 
 local IPSet = require('awall.class')()
@@ -21,10 +20,8 @@ end
 
 function IPSet:create()
    for name, ipset in pairs(self.config) do
-      if lpc.wait(
-	 util.run(
-	    'ipset', '-!', 'create', name, table.unpack(ipset.options)
-	 )
+      if util.execute(
+	 'ipset', '-!', 'create', name, table.unpack(ipset.options)
       ) ~= 0 then
 	 util.printmsg('ipset creation failed: '..name)
       end
