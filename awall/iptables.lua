@@ -74,11 +74,15 @@ function BaseIPTables:dump(dir)
    end
 end
 
+function BaseIPTables:restorecmd(family, test)
+   local cmd = {families[family].cmd..'-restore'}
+   if test then table.insert(cmd, '-t') end
+   return table.unpack(cmd)
+end
+
 function BaseIPTables:restore(test)
    for _, family in ipairs(actfamilies()) do
-      local pid, stdin, stdout = lpc.run(
-	 families[family].cmd..'-restore', table.unpack{test and '-t' or nil}
-      )
+      local pid, stdin, stdout = lpc.run(self:restorecmd(family, test))
       stdout:close()
       self:dumpfile(family, stdin)
       stdin:close()
