@@ -857,14 +857,14 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
-:awall-masquerade - [0:0]
+:masquerade - [0:0]
 -A INPUT -j MASQUERADE
 -A OUTPUT -j REDIRECT
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MASQUERADE
--A POSTROUTING -m set --match-set awall-masquerade src -j awall-masquerade
+-A POSTROUTING -m set --match-set awall-masquerade src -j masquerade
 -A PREROUTING -i eth0 -j REDIRECT
 -A PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT
--A awall-masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
+-A masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
 COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]
