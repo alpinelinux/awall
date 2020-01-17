@@ -668,13 +668,16 @@ Optional policies can be enabled or disabled using this command:
 
 Optional policies can be listed using this command:
 
- **awall list**
+ **awall list** \[**-a** | **--all**\]
 
 The **enabled** status means that the policy has been enabled by the
 user. The **disabled** status means that the policy is not in use. The
 **required** status means that the policy has not been enabled by the
 user but is in use because it is required by another policy which is
 in use.
+
+Normally, the command lists only optional policies. Specifying `--all`
+makes it list all policies and more information about them.
 
 ### Debugging Policies
 
@@ -691,6 +694,6 @@ information is displayed on higher levels.
 Displays the difference in the input policy files and generated output
 files since the last **translate** or **activate** command.
 
-When the **--output** option is used, the updated configuration is
+When the `--output` option is used, the updated configuration is
 compared to the generated files in the specified directory (generated
 by the equivalent **translate** command).
