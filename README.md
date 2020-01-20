@@ -631,7 +631,7 @@ customized chain, using the **custom:** prefix. It is also possible to
 constrain each rule to IPv4 or IPv6 only by defining the **family**
 attribute as **inet** or **inet6**, respectively.
 
-## <a name="dedicated">Co-Existence with Other Firewall Management Tools
+## <a name="dedicated"></a>Co-Existence with Other Firewall Management Tools
 
 If awall is used on a host running other software that manipulates
 iptables rules, it is recommended to set the
