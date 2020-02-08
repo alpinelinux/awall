@@ -114,6 +114,7 @@ function PolicySet:init(dirs)
    local decoder = {
       json = { mod="cjson", func="decode" },
       yaml = { mod="lyaml", func="load" },
+      yml = { mod="lyaml", func="load" },
       toml = { mod="toml", func="parse" },
    }
    self.policies = {}
@@ -121,7 +122,7 @@ function PolicySet:init(dirs)
    for i, cls in ipairs{'private', 'optional', 'mandatory'} do
       for i, dir in ipairs(dirs[cls] or defdirs[cls]) do
 	 for _, fname in ipairs(posix.dir(dir)) do
-	    local si, ei, name, suff = fname:find('^([%w-]+)%.([jyt][sao][om][nl])$') -- json|yaml|toml
+	    local si, ei, name, suff = fname:find('^([%w-]+)%.([jyt][sao][om][nl])$|(yml)$') -- json|yaml|toml|yml
 
 	    if name and suff and decoder[suff] then
 	       local pol = self.policies[name]
