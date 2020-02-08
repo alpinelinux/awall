@@ -170,28 +170,30 @@ end
 function M.PartialIPTables:flush()
    for _, family in ipairs(actfamilies()) do
       local cmd = families[family].cmd
-      for tbl, _ in pairs(builtin) do
-	 local pid, stdin, stdout = lpc.run(cmd, '-t', tbl, '-S')
-	 stdin:close()
-	 local chains = {}
-	 local rules = {}
-	 for line in stdout:lines() do
-	    if stringy.startswith(line, '-N awall-') then
-	       table.insert(chains, line:sub(4, -1))
-	    else
-	       local chain, target = line:match('^%-A (%u+) %-j (awall%-%u+)$')
-	       if chain then table.insert(rules, {chain, '-j', target}) end
+      for tbl in io.lines(families[family].procfile) do
+	 if builtin[tbl] then
+	    local pid, stdin, stdout = lpc.run(cmd, '-t', tbl, '-S')
+	    stdin:close()
+	    local chains = {}
+	    local rules = {}
+	    for line in stdout:lines() do
+	       if stringy.startswith(line, '-N awall-') then
+		  table.insert(chains, line:sub(4, -1))
+	       else
+		  local chain, target = line:match('^%-A (%u+) %-j (awall%-%u+)$')
+		  if chain then table.insert(rules, {chain, '-j', target}) end
+	       end
 	    end
-	 end
-	 stdout:close()
-	 assert(lpc.wait(pid) == 0)
+	    stdout:close()
+	    assert(lpc.wait(pid) == 0)
 
-	 local function exec(...)
-	    assert(util.execute(cmd, '-t', tbl, table.unpack{...}) == 0)
-	 end
-	 for _, rule in ipairs(rules) do exec('-D', table.unpack(rule)) end
-	 for _, opt in ipairs{'-F', '-X'} do
-	    for _, chain in ipairs(chains) do exec(opt, chain) end
+	    local function exec(...)
+	       assert(util.execute(cmd, '-t', tbl, table.unpack{...}) == 0)
+	    end
+	    for _, rule in ipairs(rules) do exec('-D', table.unpack(rule)) end
+	    for _, opt in ipairs{'-F', '-X'} do
+	       for _, chain in ipairs(chains) do exec(opt, chain) end
+	    end
 	 end
       end
    end
