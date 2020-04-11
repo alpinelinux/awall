@@ -1,0 +1,6 @@
+{
+	"description": "Local outbound traffic",
+	"before": "adp-config",
+	"variable": { "adp_local_policy": "reject" },
+	"policy": [ { "in": "_fw", "action": "$adp_local_policy" } ]
+}
