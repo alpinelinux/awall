@@ -1,0 +1,4 @@
+{
+	"description": "SSH client",
+	"filter": [ { "in": "_fw", "service": "ssh" } ]
+}
