@@ -714,3 +714,142 @@ files since the last **translate** or **activate** command.
 When the `--output` option is used, the updated configuration is
 compared to the generated files in the specified directory (generated
 by the equivalent **translate** command).
+
+## Default Policies
+
+Awall ships with a set of optional policies, which can be used as the
+basis for firewall configuration:
+
+<table>
+  <thead><tr><th>Name</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>adp-dhcp</strong></td>
+      <td>Allow DHCP on specified zones</td>
+    </tr>
+    <tr>
+      <td><strong>adp-http-server</strong></td>
+      <td>Allow HTTP server on the firewall host</td>
+    </tr>
+    <tr>
+      <td><strong>adp-local-outbound</strong></td>
+      <td>Policy for local outbound traffic</td>
+    </tr>
+    <tr>
+      <td><strong>adp-ntp-client</strong></td>
+      <td>Allow DNS and NTP clients on the firewall host</td>
+    </tr>
+    <tr>
+      <td><strong>adp-ping</td></strong>
+      <td>
+        Allow ICMP echo request. On WAN, rate is limited to 3 packets
+        per second.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>adp-router</strong></td>
+      <td>
+        Routing policy from LAN to WAN, possibly with NAT. Prevent LAN
+        address spoofing from WAN.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>adp-ssh-client</strong></td>
+      <td>Allow SSH clients on the firewall host</td>
+    </tr>
+    <tr>
+      <td><strong>adp-ssh-server</strong></td>
+      <td>
+        Allow SSH server on the firewall host. On WAN, rate is limited
+        to 1 connection per 10 seconds.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>adp-web-client</strong></td>
+      <td>Allow DNS, HTTP, and HTTPS from specified zones to WAN</td>
+    </tr>
+  </tbody>
+</table>
+
+The behavior of these policies can be tuned by defining variables and
+zones in a policy named **adp-config** or another policy imported by
+this policy. On Alpine Linux, the **setup-firewall** utility
+automatically enables some of the policies and generates an initial
+**adp-config** policy by making an educated guess.
+
+### Zones
+
+<table>
+  <thead><tr><th>Name</th><th>Used by</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>adp-lan</strong></td>
+      <td><strong>adp-router</strong></td>
+      <td>
+        Local Area Network (LAN), defined by variables prefixed with
+        <strong>adp_lan_</strong>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>adp-wan</strong></td>
+      <td>
+        <strong>adp-ping</strong><br>
+        <strong>adp-router</strong><br>
+        <strong>adp-ssh-server</strong><br>
+        <strong>adp-web-client</strong>
+      </td>
+      <td>
+        Wide Area Network (WAN), to be defined in <strong>adp-config</strong>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### Variables
+
+<table>
+  <thead><tr><th>Name</th><th>Used by</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>adp_dhcp_zones</strong></td>
+      <td><strong>adp-dhcp</strong></td>
+      <td>Zones on which DHCP is allowed</td>
+    </tr>
+    <tr>
+      <td><strong>adp_lan_addrs</strong></td>
+      <td><strong>adp-router</strong></td>
+      <td>LAN addresses</td>
+    </tr>
+    <tr>
+      <td><strong>adp_lan_ifaces</strong></td>
+      <td><strong>adp-router</strong></td>
+      <td>LAN interfaces</td>
+    </tr>
+      <td><strong>adp_lan_private_addrs</strong></td>
+      <td><strong>adp-router</strong></td>
+      <td>
+        Private LAN addresses for which NAT must be applied when routing to WAN
+      </td>
+    </tr>
+    <tr>
+      <td><strong>adp_local_policy</strong></td>
+      <td><strong>adp-local-outbound</strong></td>
+      <td>
+        Policy for local outbound traffic, defaults to <strong>reject</strong>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>adp_router_policy</strong></td>
+      <td><strong>adp-router</strong></td>
+      <td>Routing policy from LAN to WAN</td>
+    </tr>
+    <tr>
+      <td><strong>adp_web_client_zones</strong></td>
+      <td><strong>adp-web-client</strong></th>
+      <td>
+        Zones on which web clients are allowed, defaults to the
+        firewall host only
+      </td>
+    </tr>
+  </tbody>
+</table>
