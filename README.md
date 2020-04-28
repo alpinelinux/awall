@@ -724,6 +724,10 @@ basis for firewall configuration:
   <thead><tr><th>Name</th><th>Description</th></tr></thead>
   <tbody>
     <tr>
+      <td><strong>adp-clamp-mss</strong></td>
+      <td>Clamp MSS on WAN</td>
+    </tr>
+    <tr>
       <td><strong>adp-dhcp</strong></td>
       <td>Allow DHCP on specified zones</td>
     </tr>
@@ -793,6 +797,7 @@ automatically enables some of the policies and generates an initial
     <tr>
       <td><strong>adp-wan</strong></td>
       <td>
+        <strong>adp-clamp-mss</strong><br>
         <strong>adp-ping</strong><br>
         <strong>adp-router</strong><br>
         <strong>adp-ssh-server</strong><br>
