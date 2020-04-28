@@ -524,10 +524,10 @@ Service bgp           {"port":179,"proto":"tcp"}
 Service dhcp          {"family":"inet","port":[67,68],"proto":"udp"}
 (services)            
 
-Service discard       [{"port":9,"proto":"udp"},{"port":9,"proto":"tcp"}]
+Service discard       [{"port":9,"proto":"tcp"},{"port":9,"proto":"udp"}]
 (services)            
 
-Service dns           [{"port":53,"proto":"udp"},{"port":53,"proto":"tcp"}]
+Service dns           [{"port":53,"proto":"tcp"},{"port":53,"proto":"udp"}]
 (services)            
 
 Service epmap         [{"port":135,"proto":"tcp"},{"port":135,"proto":"udp"}]
@@ -629,10 +629,10 @@ Service pop3          {"port":110,"proto":"tcp"}
 Service pop3s         {"port":995,"proto":"tcp"}
 (services)            
 
-Service radius        [{"port":1812,"proto":"udp"},{"port":1812,"proto":"tcp"}]
+Service radius        [{"port":1812,"proto":"tcp"},{"port":1812,"proto":"udp"}]
 (services)            
 
-Service radius-acct   [{"port":1813,"proto":"udp"},{"port":1813,"proto":"tcp"}]
+Service radius-acct   [{"port":1813,"proto":"tcp"},{"port":1813,"proto":"udp"}]
 (services)            
 
 Service rdp           {"port":3389,"proto":"tcp"}
@@ -650,10 +650,10 @@ Service rtsp          {"port":554,"proto":"tcp"}
 Service sieve         {"port":4190,"proto":"tcp"}
 (services)            
 
-Service sip           [{"ct-helper":"sip","port":5060,"proto":"udp"},{"ct-helper":"sip","port":5060,"proto":"tcp"}]
+Service sip           [{"ct-helper":"sip","port":5060,"proto":"tcp"},{"ct-helper":"sip","port":5060,"proto":"udp"}]
 (services)            
 
-Service sip-tls       [{"port":5061,"proto":"udp"},{"port":5061,"proto":"tcp"}]
+Service sip-tls       [{"port":5061,"proto":"tcp"},{"port":5061,"proto":"udp"}]
 (services)            
 
 Service smtp          {"port":25,"proto":"tcp"}

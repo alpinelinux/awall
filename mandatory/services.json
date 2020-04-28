@@ -9,12 +9,12 @@
     "bgp": { "proto": "tcp", "port": 179 },
     "dhcp": { "family": "inet", "proto": "udp", "port": [ 67, 68 ] },
     "discard": [
-      { "proto": "udp", "port": 9 },
-      { "proto": "tcp", "port": 9 }
+      { "proto": "tcp", "port": 9 },
+      { "proto": "udp", "port": 9 }
     ],
     "dns": [
-      { "proto": "udp", "port": 53 },
-      { "proto": "tcp", "port": 53 }
+      { "proto": "tcp", "port": 53 },
+      { "proto": "udp", "port": 53 }
     ],
     "epmap": [
       { "proto": "tcp", "port": 135 },
@@ -94,12 +94,12 @@
     "pop3": { "proto": "tcp", "port": 110 },
     "pop3s": { "proto": "tcp", "port": 995 },
     "radius": [
-      { "proto": "udp", "port": 1812 },
-      { "proto": "tcp", "port": 1812 }
+      { "proto": "tcp", "port": 1812 },
+      { "proto": "udp", "port": 1812 }
     ],
     "radius-acct": [
-      { "proto": "udp", "port": 1813 },
-      { "proto": "tcp", "port": 1813 }
+      { "proto": "tcp", "port": 1813 },
+      { "proto": "udp", "port": 1813 }
     ],
     "rdp": { "proto": "tcp", "port": 3389 },
     "rsync": { "proto": "tcp", "port": 873 },
@@ -107,12 +107,12 @@
     "rtsp": { "proto": "tcp", "port": 554 },
     "sieve": { "proto": "tcp", "port": 4190 },
     "sip": [
-    	{ "proto": "udp", "port": 5060, "ct-helper": "sip" },
-    	{ "proto": "tcp", "port": 5060, "ct-helper": "sip" }
+      { "proto": "tcp", "port": 5060, "ct-helper": "sip" },
+      { "proto": "udp", "port": 5060, "ct-helper": "sip" }
     ],
     "sip-tls": [
-      { "proto": "udp", "port": 5061 },
-      { "proto": "tcp", "port": 5061 }
+      { "proto": "tcp", "port": 5061 },
+      { "proto": "udp", "port": 5061 }
     ],
     "smtp": { "proto": "tcp", "port": 25 },
     "snmp": { "proto": "udp", "port": 161 },
