@@ -455,185 +455,206 @@ Packet-log 4          {"log":"ulog","out":"_fw"}
   inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
 
 
-Service babel         {"port":6697,"proto":"tcp"}
-(services)            
+Service babel           {"port":6697,"proto":"tcp"}
+(services)              
 
-Service bacula-dir    {"port":9101,"proto":"tcp"}
-(services)            
+Service bacula-dir      {"port":9101,"proto":"tcp"}
+(services)              
 
-Service bacula-fd     {"port":9102,"proto":"tcp"}
-(services)            
+Service bacula-fd       {"port":9102,"proto":"tcp"}
+(services)              
 
-Service bacula-sd     {"port":9103,"proto":"tcp"}
-(services)            
+Service bacula-sd       {"port":9103,"proto":"tcp"}
+(services)              
 
-Service bgp           {"port":179,"proto":"tcp"}
-(services)            
+Service bgp             {"port":179,"proto":"tcp"}
+(services)              
 
-Service dhcp          {"family":"inet","port":[67,68],"proto":"udp"}
-(services)            
+Service dhcp            {"family":"inet","port":[67,68],"proto":"udp"}
+(services)              
 
-Service discard       [{"port":9,"proto":"tcp"},{"port":9,"proto":"udp"}]
-(services)            
+Service discard         [{"port":9,"proto":"tcp"},{"port":9,"proto":"udp"}]
+(services)              
 
-Service dns           [{"port":53,"proto":"tcp"},{"port":53,"proto":"udp"}]
-(services)            
+Service dns             [{"port":53,"proto":"tcp"},{"port":53,"proto":"udp"}]
+(services)              
 
-Service epmap         [{"port":135,"proto":"tcp"},{"port":135,"proto":"udp"}]
-(services)            
+Service epmap           [{"port":135,"proto":"tcp"},{"port":135,"proto":"udp"}]
+(services)              
 
-Service ftp           {"ct-helper":"ftp","port":21,"proto":"tcp"}
-(services)            
+Service ftp             {"ct-helper":"ftp","port":21,"proto":"tcp"}
+(services)              
 
-Service gre           {"proto":"gre"}
-(services)            
+Service gre             {"proto":"gre"}
+(services)              
 
-Service hp-pdl        {"port":9100,"proto":"tcp"}
-(services)            
+Service hp-pdl          {"port":9100,"proto":"tcp"}
+(services)              
 
-Service http          {"port":80,"proto":"tcp"}
-(services)            
+Service http            {"port":80,"proto":"tcp"}
+(services)              
 
-Service http-alt      {"port":8080,"proto":"tcp"}
-(services)            
+Service http-alt        {"port":8080,"proto":"tcp"}
+(services)              
 
-Service https         {"port":443,"proto":"tcp"}
-(services)            
+Service https           {"port":443,"proto":"tcp"}
+(services)              
 
-Service icmp          {"proto":"icmp"}
-(services)            
+Service icmp            {"proto":"icmp"}
+(services)              
 
-Service igmp          {"proto":"igmp"}
-(services)            
+Service igmp            {"proto":"igmp"}
+(services)              
 
-Service imap          {"port":143,"proto":"tcp"}
-(services)            
+Service imap            {"port":143,"proto":"tcp"}
+(services)              
 
-Service imaps         {"port":993,"proto":"tcp"}
-(services)            
+Service imaps           {"port":993,"proto":"tcp"}
+(services)              
 
-Service ipsec         [{"proto":"esp"},{"port":[500,4500],"proto":"udp"}]
-(services)            
+Service ipsec           [{"proto":"esp"},{"port":[500,4500],"proto":"udp"}]
+(services)              
 
-Service irc           {"ct-helper":"irc","port":6667,"proto":"tcp"}
-(services)            
+Service irc             {"ct-helper":"irc","port":6667,"proto":"tcp"}
+(services)              
 
-Service kerberos      [{"port":88,"proto":"tcp"},{"port":88,"proto":"udp"}]
-(services)            
+Service kerberos        [{"port":88,"proto":"tcp"},{"port":88,"proto":"udp"}]
+(services)              
 
-Service kpasswd       [{"port":464,"proto":"tcp"},{"port":464,"proto":"udp"}]
-(services)            
+Service kpasswd         [{"port":464,"proto":"tcp"},{"port":464,"proto":"udp"}]
+(services)              
 
-Service l2tp          {"port":1701,"proto":"udp"}
-(services)            
+Service l2tp            {"port":1701,"proto":"udp"}
+(services)              
 
-Service ldap          [{"port":389,"proto":"tcp"},{"port":389,"proto":"udp"}]
-(services)            
+Service ldap            [{"port":389,"proto":"tcp"},{"port":389,"proto":"udp"}]
+(services)              
 
-Service ldaps         [{"port":636,"proto":"tcp"},{"port":636,"proto":"udp"}]
-(services)            
+Service ldaps           [{"port":636,"proto":"tcp"},{"port":636,"proto":"udp"}]
+(services)              
 
-Service microsoft-ds  [{"port":445,"proto":"tcp"},{"port":445,"proto":"udp"}]
-(services)            
+Service microsoft-ds    [{"port":445,"proto":"tcp"},{"port":445,"proto":"udp"}]
+(services)              
 
-Service ms-sql-m      {"port":1434,"proto":"tcp"}
-(services)            
+Service mqtt            {"port":1883,"proto":"tcp"}
+(services)              
 
-Service ms-sql-s      {"port":1433,"proto":"tcp"}
-(services)            
+Service mqtt-sn         {"port":1883,"proto":"udp"}
+(services)              
 
-Service msft-gc       [{"port":3268,"proto":"tcp"},{"port":3268,"proto":"udp"}]
-(services)            
+Service mqtt-ws         {"port":8083,"proto":"tcp"}
+(services)              
 
-Service msft-gc-ssl   [{"port":3269,"proto":"tcp"},{"port":3269,"proto":"udp"}]
-(services)            
+Service ms-sql-m        {"port":1434,"proto":"tcp"}
+(services)              
 
-Service netbios-ds    [{"port":138,"proto":"tcp"},{"port":138,"proto":"udp"}]
-(services)            
+Service ms-sql-s        {"port":1433,"proto":"tcp"}
+(services)              
 
-Service netbios-ns    [{"family":"inet","port":137,"proto":"tcp"},{"ct-helper":"netbios-ns","family":"inet","port":137,"proto":"udp"}]
-(services)            
+Service msft-gc         [{"port":3268,"proto":"tcp"},{"port":3268,"proto":"udp"}]
+(services)              
 
-Service netbios-ssn   [{"port":139,"proto":"tcp"},{"port":139,"proto":"udp"}]
-(services)            
+Service msft-gc-ssl     [{"port":3269,"proto":"tcp"},{"port":3269,"proto":"udp"}]
+(services)              
 
-Service ntp           {"port":123,"proto":"udp"}
-(services)            
+Service netbios-ds      [{"port":138,"proto":"tcp"},{"port":138,"proto":"udp"}]
+(services)              
 
-Service openvpn       {"port":1194,"proto":"udp"}
-(services)            
+Service netbios-ns      [{"family":"inet","port":137,"proto":"tcp"},{"ct-helper":"netbios-ns","family":"inet","port":137,"proto":"udp"}]
+(services)              
 
-Service ospf          {"proto":"ospf"}
-(services)            
+Service netbios-ssn     [{"port":139,"proto":"tcp"},{"port":139,"proto":"udp"}]
+(services)              
 
-Service pgsql         {"port":5432,"proto":"tcp"}
-(services)            
+Service ntp             {"port":123,"proto":"udp"}
+(services)              
 
-Service ping          [{"proto":"icmp","reply-type":0,"type":8},{"proto":"icmpv6","reply-type":129,"type":128}]
-(services)            
+Service openvpn         {"port":1194,"proto":"udp"}
+(services)              
 
-Service pop3          {"port":110,"proto":"tcp"}
-(services)            
+Service ospf            {"proto":"ospf"}
+(services)              
 
-Service pop3s         {"port":995,"proto":"tcp"}
-(services)            
+Service pgsql           {"port":5432,"proto":"tcp"}
+(services)              
 
-Service radius        [{"port":1812,"proto":"tcp"},{"port":1812,"proto":"udp"}]
-(services)            
+Service ping            [{"proto":"icmp","reply-type":0,"type":8},{"proto":"icmpv6","reply-type":129,"type":128}]
+(services)              
 
-Service radius-acct   [{"port":1813,"proto":"tcp"},{"port":1813,"proto":"udp"}]
-(services)            
+Service pop3            {"port":110,"proto":"tcp"}
+(services)              
 
-Service rdp           {"port":3389,"proto":"tcp"}
-(services)            
+Service pop3s           {"port":995,"proto":"tcp"}
+(services)              
 
-Service rsync         {"port":873,"proto":"tcp"}
-(services)            
+Service radius          [{"port":1812,"proto":"tcp"},{"port":1812,"proto":"udp"}]
+(services)              
 
-Service rtmp          {"port":1935,"proto":"tcp"}
-(services)            
+Service radius-acct     [{"port":1813,"proto":"tcp"},{"port":1813,"proto":"udp"}]
+(services)              
 
-Service rtsp          {"port":554,"proto":"tcp"}
-(services)            
+Service rdp             {"port":3389,"proto":"tcp"}
+(services)              
 
-Service sieve         {"port":4190,"proto":"tcp"}
-(services)            
+Service rsync           {"port":873,"proto":"tcp"}
+(services)              
 
-Service sip           [{"ct-helper":"sip","port":5060,"proto":"tcp"},{"ct-helper":"sip","port":5060,"proto":"udp"}]
-(services)            
+Service rtmp            {"port":1935,"proto":"tcp"}
+(services)              
 
-Service sip-tls       [{"port":5061,"proto":"tcp"},{"port":5061,"proto":"udp"}]
-(services)            
+Service rtsp            {"port":554,"proto":"tcp"}
+(services)              
 
-Service smtp          {"port":25,"proto":"tcp"}
-(services)            
+Service secure-mqtt     {"port":8883,"proto":"tcp"}
+(services)              
 
-Service snmp          {"port":161,"proto":"udp"}
-(services)            
+Service sieve           {"port":4190,"proto":"tcp"}
+(services)              
 
-Service snmp-trap     {"port":162,"proto":"udp"}
-(services)            
+Service sip             [{"ct-helper":"sip","port":5060,"proto":"tcp"},{"ct-helper":"sip","port":5060,"proto":"udp"}]
+(services)              
 
-Service ssh           {"port":22,"proto":"tcp"}
-(services)            
+Service sip-tls         [{"port":5061,"proto":"tcp"},{"port":5061,"proto":"udp"}]
+(services)              
 
-Service submission    {"port":587,"proto":"tcp"}
-(services)            
+Service smtp            {"port":25,"proto":"tcp"}
+(services)              
 
-Service syslog        {"port":514,"proto":"udp"}
-(services)            
+Service snmp            {"port":161,"proto":"udp"}
+(services)              
 
-Service telnet        {"port":23,"proto":"tcp"}
-(services)            
+Service snmp-trap       {"port":162,"proto":"udp"}
+(services)              
 
-Service teredo        {"port":3544,"proto":"udp"}
-(services)            
+Service ssh             {"port":22,"proto":"tcp"}
+(services)              
 
-Service tftp          {"port":69,"proto":"udp"}
-(services)            
+Service submission      {"port":587,"proto":"tcp"}
+(services)              
 
-Service vnc           {"port":5900,"proto":"tcp"}
-(services)            
+Service syslog          {"port":514,"proto":"udp"}
+(services)              
+
+Service telnet          {"port":23,"proto":"tcp"}
+(services)              
+
+Service teredo          {"port":3544,"proto":"udp"}
+(services)              
+
+Service tftp            {"port":69,"proto":"udp"}
+(services)              
+
+Service tinc            [{"port":655,"proto":"tcp"},{"port":655,"proto":"udp"}]
+(services)              
+
+Service vnc             {"port":5900,"proto":"tcp"}
+(services)              
+
+Service zabbix-agent    {"port":10050,"proto":"tcp"}
+(services)              
+
+Service zabbix-trapper  {"port":10051,"proto":"tcp"}
+(services)              
 
 
 Snat 1                  {"out":["_fw","B"]}
