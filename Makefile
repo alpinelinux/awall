@@ -1,9 +1,9 @@
 # Installer Makefile for Alpine Wall
-# Copyright (C) 2012-2018 Kaarle Ritvanen
+# Copyright (C) 2012-2020 Kaarle Ritvanen
 # See LICENSE file for license details
 
 ROOT_DIR := /
-LUA_VERSION := 5.2
+LUA_VERSION := 5.3
 
 resdir := usr/share/awall
 confdir := etc/awall

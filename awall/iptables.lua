@@ -106,17 +106,19 @@ function BaseIPTables:flush() M.flush() end
 M.IPTables = class(BaseIPTables)
 
 function M.IPTables:init()
-   self.config = {}
-   setmetatable(
-      self.config,
-      {
-	 __index=function(t, k)
-	    t[k] = {}
-	    setmetatable(t[k], getmetatable(t))
-	    return t[k]
-	 end
-      }
-   )
+   local function nestedtable(levels)
+      return levels > 0 and setmetatable(
+	 {},
+	 {
+	    __index=function(t, k)
+	       t[k] = nestedtable(getmetatable(t).levels - 1)
+	       return t[k]
+	    end,
+	    levels=levels
+	 }
+      ) or {}
+   end
+   self.config = nestedtable(3)
 end
 
 function M.IPTables:dumpfile(family, iptfile)
