@@ -108,10 +108,6 @@ function TranslatingRule:init(...)
 
       if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
 
-      if self.dnat.addr:find('/') then
-	 self:error('DNAT target cannot be a network address')
-      end
-
       local dnataddr
       for _, addr in ipairs(resolve(self.dnat.addr, self)) do
 	 if addr[1] == 'inet' then

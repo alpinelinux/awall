@@ -1,6 +1,6 @@
 --[[
 Host address resolver for Alpine Wall
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -23,7 +23,7 @@ end
 
 local dnscache = {}
 
-function M.resolve(host, context)
+function M.resolve(host, context, network)
    local family = getfamily(host, context)
    if family == 'domain' then
 
@@ -54,13 +54,17 @@ function M.resolve(host, context)
       return dnscache[host]
    end
 
+   if not network and host:find('/') then
+      context:error('Network address not allowed: '..host)
+   end
+
    return {{family, host}}
 end
 
-function M.resolvelist(list, context)
+function M.resolvelist(list, context, network)
    local res = {}
    for _, host in util.listpairs(list) do
-      util.extend(res, M.resolve(host, context))
+      util.extend(res, M.resolve(host, context, network))
    end
    return ipairs(res)
 end
