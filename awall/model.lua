@@ -733,14 +733,16 @@ function M.Maskable:recentmask(name)
 	 for i = 0, 3 do
 	    if len <= i * 8 then octet = 0
 	    elseif len > i * 8 + 7 then octet = 255
-	    else octet = 256 - math.floor(2^(8 - len % 8)) end
+	    else octet = 256 - math.tointeger(2^(8 - len % 8)) end
 	    mask = util.join(mask, '.', octet)
 	 end
 
       elseif family == 'inet6' then
 	 while len > 0 do
 	    if #mask % 5 == 4 then mask = mask..':' end
-	    mask = mask..('%x'):format(16 - math.floor(2^math.max(0, 4 - len)))
+	    mask = mask..('%x'):format(
+	       16 - math.tointeger(2^math.max(0, 4 - len))
+	    )
 	    len = len - 4
 	 end
 	 while #mask % 5 < 4 do mask = mask..'0' end
