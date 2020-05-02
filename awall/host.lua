@@ -12,7 +12,7 @@ local listpairs = util.listpairs
 
 
 local familypatterns = {
-   inet='%d[%.%d/]+', inet6='[:%x/]+', domain='[%a-][%.%w-]*'
+   inet='%d[%.%d/-]+', inet6='[:%x/-]+', domain='[%a-][%.%w-]*'
 }
 
 local function getfamily(addr, context)
@@ -24,7 +24,7 @@ end
 
 local dnscache = {}
 
-function M.resolve(list, context, network)
+function M.resolve(list, context, allow)
    local res = {}
 
    for _, host in listpairs(list) do
@@ -59,10 +59,17 @@ function M.resolve(list, context, network)
 
 	 entry = dnscache[host]
 
-      elseif not network and host:find('/') then
-	 context:error('Network address not allowed: '..host)
-
-      else entry = {{family, host}} end
+      else
+	 if not allow then allow = {} end
+	 for k, v in pairs{
+	    network={'/', 'Network address'}, range={'-', 'Address range'}
+	 } do
+	    if not allow[k] and host:find(v[1]) then
+	       context:error(v[2]..' not allowed: '..host)
+	    end
+	 end
+	 entry = {{family, host}}
+      end
 
       util.extend(res, entry)
    end
@@ -72,7 +79,7 @@ end
 
 function M.resolveunique(list, families, context)
    local res = {}
-   for _, addr in M.resolve(list, self) do
+   for _, addr in M.resolve(list, self, {range=true}) do
       local family = addr[1]
       if util.contains(families, family) then
 	 if res[family] then context:error('Address must be unique') end

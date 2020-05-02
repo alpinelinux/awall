@@ -125,7 +125,7 @@ function M.Zone:optfrags(dir)
    local aopts = nil
    if self.addr then
       aopts = {}
-      for _, addr in resolve(self.addr, self, true) do
+      for _, addr in resolve(self.addr, self, {network=true}) do
 	 table.insert(
 	    aopts,
 	    {family=addr[1], [aprop]=addr[2], match='-'..aopt..' '..addr[2]}
