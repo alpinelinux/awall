@@ -7,20 +7,12 @@ See LICENSE file for license details
 
 local M = {}
 
+local family = require('awall.family')
+local identify = family.identify
+
 local util = require('awall.util')
 local listpairs = util.listpairs
 
-
-local familypatterns = {
-   inet='%d[%.%d/-]+', inet6='[:%x/-]+', domain='[%a-][%.%w-]*'
-}
-
-local function getfamily(addr, context)
-   for k, v in pairs(familypatterns) do
-      if addr:match('^'..v..'$') then return k end
-   end
-   context:error('Malformed host specification: '..addr)
-end
 
 local dnscache = {}
 
@@ -28,7 +20,7 @@ function M.resolve(list, context, allow)
    local res = {}
 
    for _, host in listpairs(list) do
-      local family = getfamily(host, context)
+      local family = identify(host, context)
       local entry
 
       if family == 'domain' then
@@ -41,11 +33,11 @@ function M.resolve(list, context, allow)
 		  if answer then
 		     if rec == '' then break end
 		     local addr = rec:match(
-			'^'..familypatterns.domain..'%s+%d+%s+IN%s+'..rtype..
+			'^'..family.PATTERNS.domain..'%s+%d+%s+IN%s+'..rtype..
 			   '%s+(.+)'
 		     )
 		     if addr then
-			assert(getfamily(addr, context) == family)
+			assert(identify(addr, context) == family)
 			table.insert(dnscache[host], {family, addr})
 		     end
 		  elseif rec == ';; ANSWER SECTION:' then answer = true end
