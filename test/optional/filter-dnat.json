@@ -11,6 +11,11 @@
 	    "dest": "192.168.0.2",
 	    "service": "http",
 	    "dnat": { "addr": "10.0.0.2", "port": 8080 }
+	},
+	{
+	    "in": "A",
+	    "service": "ssh",
+	    "dnat": { "addr": "10.0.0.3", "port": "8022-8033" }
 	}
     ]
 }
