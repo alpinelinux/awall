@@ -357,16 +357,17 @@ attributes:
     <tr>
       <td><strong>ipset</strong></td>
       <td>
-        Object containing two attributes: <strong>name</strong>
-        referring to an <a href="#ipset">IP set</a> and
-        <strong>args</strong>, which is a list of strings
+        List of objects containing two attributes:
+        <strong>name</strong> referring to an <a href="#ipset">IP
+        set</a> and <strong>args</strong>, which is a list of strings
         <strong>in</strong> and <strong>out</strong>
       </td>
       <td>
-        Packet matches the IP set referred here when the match
+        Packet matches any of the IP sets referred here when the match
         arguments are taken from the source (<strong>in</strong>) and
-        destination (<strong>out</strong>) address or port in the
-        order specified by <strong>args</strong>
+        destination (<strong>out</strong>) address, port, or interface
+        in the order specified by <strong>args</strong> for the
+        respective set
       </td>
     </tr>
     <tr>
