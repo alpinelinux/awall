@@ -1,0 +1,2 @@
+# ipset foo
+hash:net,iface family inet

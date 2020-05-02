@@ -1,0 +1,17 @@
+{
+    "ipset": {
+	"foo": { "type": "hash:net,iface", "family": "inet" },
+	"bar": { "type": "hash:net", "family": "inet6" }
+    },
+    "filter": [
+	{
+	    "in": "A",
+	    "ipset": [
+		{ "name": "foo", "args": [ "in", "out" ] },
+		{ "name": "bar", "args": "in" }
+	    ],
+	    "service": "ssh",
+	    "action": "drop"
+	}
+    ]
+}
