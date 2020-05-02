@@ -505,12 +505,25 @@ rules*. These are contained in two top-level lists named **snat** and
 **dnat**, respectively.
 
 Each NAT rule may have an attribute named **to-addr** that specifies
-the IPv4 address range to which the original source or destination
-address is mapped. The value can be a single IPv4 address or a range
-specified by two addresses, separated with the **-** character. If not
-defined, it defaults to the primary address of the ingress interface
-in case of destination NAT, or that of the egress interface in case of
-source NAT.
+the IP address ranges to which the original source or destination
+address is mapped. It is a list that can contain
+
+* an IPv4 address or range
+* an IPv6 address or range
+* DNS name which resolves to an IPv4 and/or IPv6 address
+
+Only one address or range per protocol version may be defined. Ranges
+are specified by two addresses, separated with the **-** character. If
+not defined, **to-addr** defaults to the primary address of the
+ingress interface in case of destination NAT, or that of the egress
+interface in case of source NAT.
+
+When **to-addr** is defined, the NAT rule applies to those protocol
+versions for which an address is given. The protocol version scope can
+be explicitly defined using the **family** attribute. It is a list
+where the allowed values are **inet** and **inet6**, corresponding to
+IPv4 and IPv6. When both **to-addr** and **family** are undefined, the
+rule applies to IPv4 packets only.
 
 Optionally, a NAT rule can specify the TCP and UDP port range to which
 the original source or destination port is mapped. The attribute is

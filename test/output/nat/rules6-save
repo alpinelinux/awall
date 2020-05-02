@@ -153,6 +153,50 @@ COMMIT
 -A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 3
 -A PREROUTING -i eth0 -j MARK --set-mark 1
 COMMIT
+*nat
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:600d::cafe
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:600d::cafe
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:dead::beef-fc00:dead::ca1f
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:dead::beef-fc00:dead::ca1f
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:600d::cafe
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:600d::cafe
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:dead::beef-fc00:dead::ca1f
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:dead::beef-fc00:dead::ca1f
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]

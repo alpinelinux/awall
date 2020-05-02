@@ -201,12 +201,26 @@ COMMIT
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:7890
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
 -A POSTROUTING -o eth0 -j MASQUERADE
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
 -A POSTROUTING -m set --match-set awall-masquerade src -j masquerade
@@ -214,12 +228,26 @@ COMMIT
 -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
 -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
 -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
--A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
--A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
--A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
 -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200
 -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:7890
 -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
 -A PREROUTING -i eth0 -j REDIRECT
 -A PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT
 -A masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE

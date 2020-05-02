@@ -2,54 +2,160 @@ Custom foo      [{"family":"inet6","match":"-m hl --hl-lt 7","target":"REJECT --
 (custom-chain)  
 
 
-Dnat 1                 {"action":"exclude","in":"A","service":"ssh"}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 22 -j ACCEPT
+Dnat 1                  {"action":"exclude","in":"A","service":"ssh"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 22 -j ACCEPT
 
-Dnat 2                 {"in":"A","service":"http"}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT
+Dnat 2                  {"in":"A","service":"http"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT
 
-Dnat 3                 {"in":"A","service":"http","to-port":7890}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+Dnat 3                  {"in":"A","service":"http","to-port":7890}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
 
-Dnat 4                 {"in":"A","service":"http","to-port":"1234-5678"}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+Dnat 4                  {"in":"A","service":"http","to-port":"1234-5678"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
 
-Dnat 5                 {"in":"A","service":"http","to-addr":"10.1.2.3"}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
+Dnat 5                  {"action":"exclude","family":"inet","in":"A","service":"ssh"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 22 -j ACCEPT
 
-Dnat 6                 {"in":"A","service":"http","to-addr":"10.1.2.3","to-port":7890}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
+Dnat 6                  {"family":"inet","in":"A","service":"http"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT
 
-Dnat 7                 {"in":"A","service":"http","to-addr":"10.1.2.3","to-port":"1234-5678"}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
+Dnat 7                  {"family":"inet","in":"A","service":"http","to-port":7890}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
 
-Dnat 8                 {"in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200"}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200
+Dnat 8                  {"family":"inet","in":"A","service":"http","to-port":"1234-5678"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
 
-Dnat 9                 {"in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":7890}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:7890
+Dnat 9                  {"in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200
 
-Dnat 10                {"in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":"1234-5678"}
-(nat)                  
-  inet/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:1234-5678
+Dnat 10                 {"in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":7890}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:7890
 
-Dnat 11                {"in":["_fw","A"]}
-(zone)                 
-  inet/nat/OUTPUT      -j REDIRECT
-  inet/nat/PREROUTING  -i eth0 -j REDIRECT
+Dnat 11                 {"in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":"1234-5678"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:1234-5678
 
-Dnat 12                {"in":"B"}
-(zone)                 
-  inet/nat/PREROUTING  -i eth1 -s 10.0.0.0/12 -j REDIRECT
+Dnat 12                 {"family":"inet","in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200
+
+Dnat 13                 {"family":"inet","in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":7890}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:7890
+
+Dnat 14                 {"family":"inet","in":"A","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":"1234-5678"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:1234-5678
+
+Dnat 15                 {"action":"exclude","family":"inet6","in":"A","service":"ssh"}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 22 -j ACCEPT
+
+Dnat 16                 {"family":"inet6","in":"A","service":"http"}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT
+
+Dnat 17                 {"family":"inet6","in":"A","service":"http","to-port":7890}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+
+Dnat 18                 {"family":"inet6","in":"A","service":"http","to-port":"1234-5678"}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+
+Dnat 19                 {"in":"A","service":"http","to-addr":"fc00:600d::cafe"}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:600d::cafe
+
+Dnat 20                 {"in":"A","service":"http","to-addr":"fc00:600d::cafe","to-port":7890}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:7890
+
+Dnat 21                 {"in":"A","service":"http","to-addr":"fc00:600d::cafe","to-port":"1234-5678"}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:1234-5678
+
+Dnat 22                 {"family":"inet6","in":"A","service":"http","to-addr":"fc00:600d::cafe"}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:600d::cafe
+
+Dnat 23                 {"family":"inet6","in":"A","service":"http","to-addr":"fc00:600d::cafe","to-port":7890}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:7890
+
+Dnat 24                 {"family":"inet6","in":"A","service":"http","to-addr":"fc00:600d::cafe","to-port":"1234-5678"}
+(nat)                   
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:1234-5678
+
+Dnat 25                 {"action":"exclude","family":["inet","inet6"],"in":"A","service":"ssh"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 22 -j ACCEPT
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 22 -j ACCEPT
+
+Dnat 26                 {"family":["inet","inet6"],"in":"A","service":"http"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT
+
+Dnat 27                 {"family":["inet","inet6"],"in":"A","service":"http","to-port":7890}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+
+Dnat 28                 {"family":["inet","inet6"],"in":"A","service":"http","to-port":"1234-5678"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+
+Dnat 29                 {"in":"A","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"]}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:dead::beef-fc00:dead::ca1f
+
+Dnat 30                 {"in":"A","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":7890}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:7890
+
+Dnat 31                 {"in":"A","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":"1234-5678"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+
+Dnat 32                 {"family":["inet","inet6"],"in":"A","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"]}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:dead::beef-fc00:dead::ca1f
+
+Dnat 33                 {"family":["inet","inet6"],"in":"A","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":7890}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:7890
+
+Dnat 34                 {"family":["inet","inet6"],"in":"A","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":"1234-5678"}
+(nat)                   
+  inet/nat/PREROUTING   -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
+  inet6/nat/PREROUTING  -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+
+Dnat 35                 {"in":["_fw","A"]}
+(zone)                  
+  inet/nat/OUTPUT       -j REDIRECT
+  inet/nat/PREROUTING   -i eth0 -j REDIRECT
+
+Dnat 36                 {"in":"B"}
+(zone)                  
+  inet/nat/PREROUTING   -i eth1 -s 10.0.0.0/12 -j REDIRECT
 
 
 Filter 1                    {}
@@ -678,54 +784,160 @@ Service zabbix-trapper  {"port":10051,"proto":"tcp"}
 (services)              
 
 
-Snat 1                  {"action":"exclude","out":"B","service":"ssh"}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
+Snat 1                   {"action":"exclude","out":"B","service":"ssh"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
 
-Snat 2                  {"out":"B","service":"http"}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
+Snat 2                   {"out":"B","service":"http"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
 
-Snat 3                  {"out":"B","service":"http","to-port":7890}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+Snat 3                   {"out":"B","service":"http","to-port":7890}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
 
-Snat 4                  {"out":"B","service":"http","to-port":"1234-5678"}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+Snat 4                   {"out":"B","service":"http","to-port":"1234-5678"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
 
-Snat 5                  {"out":"B","service":"http","to-addr":"10.1.2.3"}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
+Snat 5                   {"action":"exclude","family":"inet","out":"B","service":"ssh"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
 
-Snat 6                  {"out":"B","service":"http","to-addr":"10.1.2.3","to-port":7890}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
+Snat 6                   {"family":"inet","out":"B","service":"http"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
 
-Snat 7                  {"out":"B","service":"http","to-addr":"10.1.2.3","to-port":"1234-5678"}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
+Snat 7                   {"family":"inet","out":"B","service":"http","to-port":7890}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
 
-Snat 8                  {"out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200"}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200
+Snat 8                   {"family":"inet","out":"B","service":"http","to-port":"1234-5678"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
 
-Snat 9                  {"out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":7890}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:7890
+Snat 9                   {"out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200
 
-Snat 10                 {"out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":"1234-5678"}
-(nat)                   
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:1234-5678
+Snat 10                  {"out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":7890}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:7890
 
-Snat 11                 {"out":"A"}
-(zone)                  
-  inet/nat/POSTROUTING  -o eth0 -j MASQUERADE
+Snat 11                  {"out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":"1234-5678"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:1234-5678
 
-Snat 12                 {"out":["_fw","B"],"to-addr":"10.1.2.3"}
-(zone)                  
-  inet/nat/INPUT        -j SNAT --to-source 10.1.2.3
-  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
+Snat 12                  {"family":"inet","out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200
+
+Snat 13                  {"family":"inet","out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":7890}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:7890
+
+Snat 14                  {"family":"inet","out":"B","service":"http","to-addr":"10.2.3.100-10.2.3.200","to-port":"1234-5678"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:1234-5678
+
+Snat 15                  {"action":"exclude","family":"inet6","out":"B","service":"ssh"}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 22 -j ACCEPT
+
+Snat 16                  {"family":"inet6","out":"B","service":"http"}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE
+
+Snat 17                  {"family":"inet6","out":"B","service":"http","to-port":7890}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+
+Snat 18                  {"family":"inet6","out":"B","service":"http","to-port":"1234-5678"}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+
+Snat 19                  {"out":"B","service":"http","to-addr":"fc00:600d::cafe"}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:600d::cafe
+
+Snat 20                  {"out":"B","service":"http","to-addr":"fc00:600d::cafe","to-port":7890}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:7890
+
+Snat 21                  {"out":"B","service":"http","to-addr":"fc00:600d::cafe","to-port":"1234-5678"}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:1234-5678
+
+Snat 22                  {"family":"inet6","out":"B","service":"http","to-addr":"fc00:600d::cafe"}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:600d::cafe
+
+Snat 23                  {"family":"inet6","out":"B","service":"http","to-addr":"fc00:600d::cafe","to-port":7890}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:7890
+
+Snat 24                  {"family":"inet6","out":"B","service":"http","to-addr":"fc00:600d::cafe","to-port":"1234-5678"}
+(nat)                    
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:1234-5678
+
+Snat 25                  {"action":"exclude","family":["inet","inet6"],"out":"B","service":"ssh"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 22 -j ACCEPT
+
+Snat 26                  {"family":["inet","inet6"],"out":"B","service":"http"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE
+
+Snat 27                  {"family":["inet","inet6"],"out":"B","service":"http","to-port":7890}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+
+Snat 28                  {"family":["inet","inet6"],"out":"B","service":"http","to-port":"1234-5678"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+
+Snat 29                  {"out":"B","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"]}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:dead::beef-fc00:dead::ca1f
+
+Snat 30                  {"out":"B","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":7890}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:7890
+
+Snat 31                  {"out":"B","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":"1234-5678"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+
+Snat 32                  {"family":["inet","inet6"],"out":"B","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"]}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:dead::beef-fc00:dead::ca1f
+
+Snat 33                  {"family":["inet","inet6"],"out":"B","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":7890}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:7890
+
+Snat 34                  {"family":["inet","inet6"],"out":"B","service":"http","to-addr":["10.1.2.3","fc00:dead::beef-fc00:dead::ca1f"],"to-port":"1234-5678"}
+(nat)                    
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
+  inet6/nat/POSTROUTING  -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+
+Snat 35                  {"out":"A"}
+(zone)                   
+  inet/nat/POSTROUTING   -o eth0 -j MASQUERADE
+
+Snat 36                  {"out":["_fw","B"],"to-addr":"10.1.2.3"}
+(zone)                   
+  inet/nat/INPUT         -j SNAT --to-source 10.1.2.3
+  inet/nat/POSTROUTING   -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
 
 
 Variable awall_dedicated_chains  false
@@ -958,12 +1170,26 @@ COMMIT
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:7890
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.2.3.100-10.2.3.200:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:7890
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -p tcp --dport 80 -j SNAT --to-source 10.1.2.3:1234-5678
 -A POSTROUTING -o eth0 -j MASQUERADE
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
 -A POSTROUTING -m set --match-set awall-masquerade src -j masquerade
@@ -971,12 +1197,26 @@ COMMIT
 -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
 -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
 -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
--A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
--A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
--A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
 -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200
 -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:7890
 -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.2.3.100-10.2.3.200:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.1.2.3:1234-5678
 -A PREROUTING -i eth0 -j REDIRECT
 -A PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT
 -A masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
@@ -1144,6 +1384,50 @@ COMMIT
 -A OUTPUT -j MARK --set-mark 1
 -A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 3
 -A PREROUTING -i eth0 -j MARK --set-mark 1
+COMMIT
+*nat
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:600d::cafe
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:600d::cafe
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:600d::cafe]:1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 22 -j ACCEPT
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j MASQUERADE --to-ports 1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:dead::beef-fc00:dead::ca1f
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source fc00:dead::beef-fc00:dead::ca1f
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A POSTROUTING -o eth1 -d fc00::/7 -p tcp --dport 80 -j SNAT --to-source [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:600d::cafe
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:600d::cafe
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:600d::cafe]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 22 -j ACCEPT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:dead::beef-fc00:dead::ca1f
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination fc00:dead::beef-fc00:dead::ca1f
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:7890
+-A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination [fc00:dead::beef-fc00:dead::ca1f]:1234-5678
 COMMIT
 *raw
 :OUTPUT ACCEPT [0:0]
