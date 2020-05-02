@@ -1,11 +1,11 @@
 --[[
 Packet logging module for Alpine Wall
-Copyright (C) 2012-2018 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
-local resolvelist = require('awall.host').resolvelist
+local resolve = require('awall.host').resolve
 
 local model = require('awall.model')
 local class = model.class
@@ -87,7 +87,7 @@ function Log:optfrags()
       )
    end
 
-   for _, addr in resolvelist(self.mirror, self) do
+   for _, addr in resolve(self.mirror, self) do
       table.insert(targets, {family=addr[1], target='TEE --gateway '..addr[2]})
    end
 

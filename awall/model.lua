@@ -11,7 +11,7 @@ local M = {}
 local loadclass = require('awall').loadclass
 M.class = require('awall.class')
 local FAMILIES = require('awall.family').ALL
-local resolvelist = require('awall.host').resolvelist
+local resolve = require('awall.host').resolve
 local isbuiltin = require('awall.iptables').isbuiltin
 
 local optfrag = require('awall.optfrag')
@@ -125,7 +125,7 @@ function M.Zone:optfrags(dir)
    local aopts = nil
    if self.addr then
       aopts = {}
-      for _, addr in resolvelist(self.addr, self, true) do
+      for _, addr in resolve(self.addr, self, true) do
 	 table.insert(
 	    aopts,
 	    {family=addr[1], [aprop]=addr[2], match='-'..aopt..' '..addr[2]}

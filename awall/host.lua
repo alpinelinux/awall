@@ -24,55 +24,55 @@ end
 
 local dnscache = {}
 
-local function resolve(host, context, network)
-   local family = getfamily(host, context)
-   if family == 'domain' then
-
-      if not dnscache[host] then
-	 dnscache[host] = {}
-	 for family, rtype in pairs{inet='A', inet6='AAAA'} do
-	    local answer
-	    for rec in io.popen('drill '..host..' '..rtype):lines() do
-	       if answer then
-		  if rec == '' then break end
-		  local addr = rec:match(
-		     '^'..familypatterns.domain..'%s+%d+%s+IN%s+'..rtype..
-			'%s+(.+)'
-		  )
-		  if addr then
-		     assert(getfamily(addr, context) == family)
-		     table.insert(dnscache[host], {family, addr})
-		  end
-	       elseif rec == ';; ANSWER SECTION:' then answer = true end
-	    end
-	 end
-	 if not dnscache[host][1] then
-	    context:error('Invalid host name: '..host)
-	 end
-	 table.sort(dnscache[host], function(a, b) return a[2] < b[2] end)
-      end
-
-      return dnscache[host]
-   end
-
-   if not network and host:find('/') then
-      context:error('Network address not allowed: '..host)
-   end
-
-   return {{family, host}}
-end
-
-function M.resolvelist(list, context, network)
+function M.resolve(list, context, network)
    local res = {}
+
    for _, host in listpairs(list) do
-      util.extend(res, resolve(host, context, network))
+      local family = getfamily(host, context)
+      local entry
+
+      if family == 'domain' then
+
+	 if not dnscache[host] then
+	    dnscache[host] = {}
+	    for family, rtype in pairs{inet='A', inet6='AAAA'} do
+	       local answer
+	       for rec in io.popen('drill '..host..' '..rtype):lines() do
+		  if answer then
+		     if rec == '' then break end
+		     local addr = rec:match(
+			'^'..familypatterns.domain..'%s+%d+%s+IN%s+'..rtype..
+			   '%s+(.+)'
+		     )
+		     if addr then
+			assert(getfamily(addr, context) == family)
+			table.insert(dnscache[host], {family, addr})
+		     end
+		  elseif rec == ';; ANSWER SECTION:' then answer = true end
+	       end
+	    end
+	    if not dnscache[host][1] then
+	       context:error('Invalid host name: '..host)
+	    end
+	    table.sort(dnscache[host], function(a, b) return a[2] < b[2] end)
+	 end
+
+	 entry = dnscache[host]
+
+      elseif not network and host:find('/') then
+	 context:error('Network address not allowed: '..host)
+
+      else entry = {{family, host}} end
+
+      util.extend(res, entry)
    end
+
    return ipairs(res)
 end
 
 function M.resolveunique(list, families, context)
    local res = {}
-   for _, addr in M.resolvelist(list, self) do
+   for _, addr in M.resolve(list, self) do
       local family = addr[1]
       if util.contains(families, family) then
 	 if res[family] then context:error('Address must be unique') end
