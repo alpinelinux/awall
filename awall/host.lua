@@ -8,6 +8,7 @@ See LICENSE file for license details
 local M = {}
 
 local util = require('awall.util')
+local listpairs = util.listpairs
 
 
 local familypatterns = {
@@ -23,7 +24,7 @@ end
 
 local dnscache = {}
 
-function M.resolve(host, context, network)
+local function resolve(host, context, network)
    local family = getfamily(host, context)
    if family == 'domain' then
 
@@ -63,11 +64,27 @@ end
 
 function M.resolvelist(list, context, network)
    local res = {}
-   for _, host in util.listpairs(list) do
-      util.extend(res, M.resolve(host, context, network))
+   for _, host in listpairs(list) do
+      util.extend(res, resolve(host, context, network))
    end
    return ipairs(res)
 end
 
+function M.resolveunique(list, families, context)
+   local res = {}
+   for _, addr in M.resolvelist(list, self) do
+      local family = addr[1]
+      if util.contains(families, family) then
+	 if res[family] then context:error('Address must be unique') end
+	 res[family] = addr[2]
+      end
+   end
+   for _, family in listpairs(families) do
+      if not res[family] then
+	 context:error('No address provided for family '..family)
+      end
+   end
+   return res
+end
 
 return M

@@ -7,7 +7,7 @@ See LICENSE file for license details
 
 local loadclass = require('awall').loadclass
 local FAMILIES = require('awall.family').ALL
-local resolve = require('awall.host').resolve
+local resolveunique = require('awall.host').resolveunique
 
 local model = require('awall.model')
 local class = model.class
@@ -107,22 +107,7 @@ function TranslatingRule:init(...)
       end
 
       if type(self.dnat) == 'string' then self.dnat = {addr=self.dnat} end
-
-      local dnataddr
-      for _, addr in ipairs(resolve(self.dnat.addr, self)) do
-	 if addr[1] == 'inet' then
-	    if dnataddr then
-	       self:error(
-		  self.dnat.addr..' resolves to multiple IPv4 addresses'
-	       )
-	    end
-	    dnataddr = addr[2]
-	 end
-      end
-      if not dnataddr then
-	 self:error(self.dnat.addr..' does not resolve to any IPv4 address')
-      end
-      self.dnat.addr = dnataddr
+      self.dnat.addr = resolveunique(self.dnat.addr, 'inet', self).inet
    end
 end
 
