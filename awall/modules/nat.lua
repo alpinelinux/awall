@@ -79,5 +79,12 @@ function SNATRule:init(...)
    }
 end
 
+function SNATRule:trulefilter(rule)
+   if rule.chain == 'INPUT' and rule.target == 'MASQUERADE' then
+      self:error('Must specify translation address for inbound traffic')
+   end
+   return SNATRule.super(self):trulefilter(rule)
+end
+
 
 return {export={dnat={class=DNATRule}, snat={class=SNATRule}}}

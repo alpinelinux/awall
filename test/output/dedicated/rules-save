@@ -219,9 +219,10 @@ COMMIT
 -A OUTPUT -j awall-OUTPUT
 -A POSTROUTING -j awall-POSTROUTING
 -A PREROUTING -j awall-PREROUTING
--A awall-INPUT -j MASQUERADE
+-A awall-INPUT -j SNAT --to-source 10.1.2.3
 -A awall-OUTPUT -j REDIRECT
--A awall-POSTROUTING -o eth1 -d 10.0.0.0/12 -j MASQUERADE
+-A awall-POSTROUTING -o eth0 -j MASQUERADE
+-A awall-POSTROUTING -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
 -A awall-POSTROUTING -m set --match-set awall-masquerade src -j awall-masquerade
 -A awall-PREROUTING -i eth0 -j REDIRECT
 -A awall-PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT

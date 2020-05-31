@@ -199,9 +199,10 @@ COMMIT
 :POSTROUTING ACCEPT [0:0]
 :PREROUTING ACCEPT [0:0]
 :masquerade - [0:0]
--A INPUT -j MASQUERADE
+-A INPUT -j SNAT --to-source 10.1.2.3
 -A OUTPUT -j REDIRECT
--A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MASQUERADE
+-A POSTROUTING -o eth0 -j MASQUERADE
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
 -A POSTROUTING -m set --match-set awall-masquerade src -j masquerade
 -A PREROUTING -i eth0 -p tcp --dport 25 -d 192.168.0.1 -j DNAT --to-destination 10.0.0.1
 -A PREROUTING -i eth0 -p tcp --dport 80 -d 192.168.0.2 -j DNAT --to-destination 10.0.0.2:8080
