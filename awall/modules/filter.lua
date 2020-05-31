@@ -13,7 +13,9 @@ local model = require('awall.model')
 local class = model.class
 local Rule = model.Rule
 
-local combinations = require('awall.optfrag').combinations
+local optfrag = require('awall.optfrag')
+local combinations = optfrag.combinations
+local expandfamilies = optfrag.expandfamilies
 
 local util = require('awall.util')
 local contains = util.contains
@@ -115,7 +117,7 @@ function TranslatingRule:destoptfrags()
    local ofrags = TranslatingRule.super(self):destoptfrags()
    if not self.dnat then return ofrags end
 
-   ofrags = combinations(ofrags, {{family='inet6'}})
+   ofrags = expandfamilies(ofrags, 'inet6')
    local natof = self:create(
       model.Zone, {addr=self.dnat.addr}
    ):optfrags(self:direction('out'))
@@ -128,7 +130,7 @@ function TranslatingRule:servoptfrags()
    local ofrags = TranslatingRule.super(self):servoptfrags()
    if not (self.dnat and self.dnat.port) then return ofrags end
 
-   ofrags = combinations(ofrags, {{family='inet6'}})
+   ofrags = expandfamilies(ofrags, 'inet6')
 
    local protos = {}
    for _, serv in ipairs(self.service) do
@@ -139,11 +141,11 @@ function TranslatingRule:servoptfrags()
    for proto, _ in pairs(protos) do
       extend(
 	 ofrags,
-	 combinations(
+	 expandfamilies(
 	    self:create(
 	       model.Rule, {service={proto=proto, port=self.dnat.port}}
 	    ):servoptfrags(),
-	    {{family='inet'}}
+	    'inet'
 	 )
       )
    end

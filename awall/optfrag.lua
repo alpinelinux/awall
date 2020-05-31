@@ -60,8 +60,10 @@ function M.combinations(of1, ...)
    return M.combinations(res, table.unpack(arg))
 end
 
-function M.expandfamilies(ofrags)
-   return M.combinations(ffrags(FAMILIES), ofrags)
+function M.expandfamilies(ofrags, families)
+   return M.combinations(
+      ffrags(families and util.list(families) or FAMILIES), ofrags
+   )
 end
 
 function M.prune(...)
