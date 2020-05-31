@@ -1,6 +1,6 @@
 --[[
 NAT module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -59,7 +59,6 @@ local DNATRule = class(NATRule)
 function DNATRule:init(...)
    DNATRule.super(self):init(...)
    self.params = {
-      forbidif='out',
       subject='destination',
       chains={'OUTPUT', 'PREROUTING'},
       target='DNAT',
@@ -73,7 +72,6 @@ local SNATRule = class(NATRule)
 function SNATRule:init(...)
    SNATRule.super(self):init(...)
    self.params = {
-      forbidif='in',
       subject='source',
       chains={'INPUT', 'POSTROUTING'},
       target='SNAT',
