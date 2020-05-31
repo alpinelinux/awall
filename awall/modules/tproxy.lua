@@ -50,7 +50,7 @@ local function divert(config)
 	 ofrags,
 	 {chain='PREROUTING', match='-m socket', target='divert'}
       )
-      return combinations(optfrag.FAMILIES, {{table='mangle'}}, ofrags)
+      return optfrag.expandfamilies(combinations({{table='mangle'}}, ofrags))
    end
 end
 

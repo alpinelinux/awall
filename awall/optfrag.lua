@@ -16,8 +16,6 @@ local function ffrags(families)
    return map(families, function(f) return {family=f} end)
 end
 
-M.FAMILIES = ffrags(FAMILIES)
-
 function M.combinations(of1, ...)
    local arg = {...}
 
@@ -60,6 +58,10 @@ function M.combinations(of1, ...)
    end
 
    return M.combinations(res, table.unpack(arg))
+end
+
+function M.expandfamilies(ofrags)
+   return M.combinations(ffrags(FAMILIES), ofrags)
 end
 
 function M.prune(...)

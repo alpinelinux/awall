@@ -598,7 +598,7 @@ function M.Rule:trules()
    end
    
    ofrags = filter(
-      combinations(ofrags, optfrag.FAMILIES),
+      optfrag.expandfamilies(ofrags),
       function(r) return self:trulefilter(r) end
    )
 
