@@ -25,6 +25,8 @@ function NATRule:init(...)
    end
 end
 
+function NATRule:porttrans() return self['to-port'] end
+
 function NATRule:trulefilter(rule)
    if not contains(self.params.chains, rule.chain) then
       self:error(

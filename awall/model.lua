@@ -217,6 +217,7 @@ function M.Rule:init(...)
       self.ipsec = nil
    end
 
+   local ptrans = self:porttrans()
    if self.service then
       if not self.label and type(self.service) == 'string' then
 	 self.label = self.service
@@ -234,10 +235,16 @@ function M.Rule:init(...)
 	    sdef.proto = (
 	       {[1]='icmp', [6]='tcp', [17]='udp', [58]='ipv6-icmp'}
             )[sdef.proto] or sdef.proto
+	    if ptrans and not contains({'tcp', 'udp'}, sdef.proto) then
+	       self:error('Invalid protocol for port translation: '..sdef.proto)
+	    end
 	 end
       end
-   end
+   elseif ptrans then self:error('Service not defined') end
 end
+
+
+function M.Rule:porttrans() return false end
 
 
 function M.Rule:direction(dir)

@@ -1,6 +1,6 @@
 --[[
 Transparent proxy module for Alpine Wall
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -11,9 +11,7 @@ local optfrag = require('awall.optfrag')
 local combinations = optfrag.combinations
 
 local util = require('awall.util')
-local contains = util.contains
 local list = util.list
-local listpairs = util.listpairs
 
 
 local TProxyRule = model.class(model.Rule)
@@ -22,20 +20,13 @@ function TProxyRule:init(...)
    TProxyRule.super(self):init(...)
 
    if not self['in'] then self:error('Ingress zone must be specified') end
-   if contains(list(self['in']), model.fwzone) then
+   if util.contains(list(self['in']), model.fwzone) then
       self:error('Transparent proxy cannot be used for firewall zone')
    end
    if self.out then self:error('Egress zone cannot be specified') end
-
-   if not self.service then self:error('Service must be defined') end
-   for i, serv in listpairs(self.service) do
-      for i, sdef in listpairs(serv) do
-	 if not contains({6, 'tcp', 17, 'udp'}, sdef.proto) then
-	    self:error('Transparent proxy not available for protocol '..sdef.proto)
-	 end
-      end
-   end
 end
+
+function TProxyRule:porttrans() return true end
 
 function TProxyRule:table() return 'mangle' end
 

@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2019 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -150,14 +150,9 @@ function TranslatingRule:servoptfrags()
    ofrags = combinations(ofrags, {{family='inet6'}})
 
    local protos = {}
-   for _, serv in listpairs(self.service) do
+   for _, serv in ipairs(self.service) do
       for _, sdef in listpairs(serv) do
-	 if sdef.family ~= 'inet6' then
-	    if not contains({'tcp', 'udp'}, sdef.proto) then
-	       self:error('Cannot do port translation for '..sdef.proto)
-	    end
-	    protos[sdef.proto] = true
-	 end
+	 if sdef.family ~= 'inet6' then protos[sdef.proto] = true end
       end
    end
    for proto, _ in pairs(protos) do
