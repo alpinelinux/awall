@@ -13,5 +13,5 @@
 	{ "out": "_fw", "log": "nflog" },
 	{ "out": "_fw", "log": "ulog" }
     ],
-    "filter": [ { "in": "_fw", "log": "ulog", "action": "pass" } ]
+    "filter": { "in": "_fw", "log": "ulog", "action": "pass" }
 }

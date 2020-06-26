@@ -7,14 +7,14 @@ See LICENSE file for license details
 
 local resolve = require('awall.dependency')
 local class = require('awall.class')
+local loader = require('awall.loader')
 local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
 local contains = util.contains
-local keys = util.keys
 local listpairs = util.listpairs
-local map = util.map
 local printmsg = util.printmsg
+local setdefault = util.setdefault
 
 
 local posix = require('posix')
@@ -22,12 +22,13 @@ local posix = require('posix')
 
 local PolicyConfig = class()
 
-function PolicyConfig:init(policies)
+function PolicyConfig:init(policies, modpath)
    local order = resolve(policies)
    if type(order) ~= 'table' then
       raise('Circular ordering directives: '..order)
    end
 
+   self.model = loader(modpath)
    self.data = {}
    self.source = {}
 
@@ -36,40 +37,31 @@ function PolicyConfig:init(policies)
 	 if not contains(
 	    {'description', 'import', 'after', 'before'}, attr
 	 ) then
+
 	    if type(objs) ~= 'table' then
-	       raise('Invalid top-level attribute: '..attr..' ('..name..')')
+	       raise(
+		  'Top-level attribute '..attr..' must be a table ('..name..')'
+	       )
 	    end
 
-	    util.setdefault(self.source, attr, {})
+	    setdefault(self.data, attr, {})
+	    setdefault(self.source, attr, {})
 
-	    if not self.data[attr] then
-	       self.data[attr] = objs
-	       for k, v in pairs(objs) do self.source[attr][k] = name end
+	    local cls = self.model:loadclass(attr)
+
+	    if cls and cls.append then
+	       local list = util.list(objs)
+	       local last = #self.data[attr]
+	       util.extend(self.data[attr], list)
+	       for i = 1,#list do self.source[attr][last + i] = name end
 
 	    else
-	       local fk = next(self.data[attr])
-	       map(
-		  keys(objs),
-		  function(k)
-		     if type(k) ~= type(fk) then
-			raise(
-			   'Type mismatch in '..attr..' definitions ('..
-			      name..', '..self.source[attr][fk]..')'
-			)
-		     end
+	       for k, v in pairs(objs) do
+	          if type(k) ~= 'string' then
+		     _raise(name, 'Name required for '..attr..' definitions')
 		  end
-	       )
-
-	       if objs[1] then
-		  local last = #self.data[attr]
-		  util.extend(self.data[attr], objs)
-		  for i = 1,#objs do self.source[attr][last + i] = name end
-
-	       else
-		  for k, v in pairs(objs) do
-		     self.data[attr][k] = v
-		     self.source[attr][k] = name
-		  end
+		  self.data[attr][k] = v
+		  self.source[attr][k] = name
 	       end
 	    end
 	 end
@@ -80,7 +72,7 @@ end
 function PolicyConfig:expand()
 
    local function expand(value)
-      if type(value) == 'table' then return map(value, expand) end
+      if type(value) == 'table' then return util.map(value, expand) end
 
       local visited = {}
       local pattern = '%$(%a[%w_]*)'
@@ -251,9 +243,9 @@ function PolicySet:_load()
    return res
 end
 
-function PolicySet:active() return keys(self:_load()) end
+function PolicySet:active() return util.keys(self:_load()) end
 
-function PolicySet:load() return PolicyConfig(self:_load()) end
+function PolicySet:load(modpath) return PolicyConfig(self:_load(), modpath) end
 
 
 return PolicySet

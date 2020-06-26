@@ -225,14 +225,10 @@ if not call(
       end
 
 
-      local input = policyset:load()
-
       if mode == 'dump' then level = 0 + (arg[opind] or 0) end
 
-      local config
-      if mode ~= 'dump' or level > 3 then
-	 config = awall.Config(input, basedir)
-      end
+      local input = policyset:load(basedir)
+      local config = (mode ~= 'dump' or level > 3) and awall.Config(input)
 
 
       local function dump(level)

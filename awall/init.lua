@@ -10,7 +10,6 @@ local M = {}
 local class = require('awall.class')
 local IPSet = require('awall.ipset')
 local iptables = require('awall.iptables')
-local loader = require('awall.loader')
 local combinations = require('awall.optfrag').combinations
 M.PolicySet = require('awall.policy')
 local util = require('awall.util')
@@ -20,10 +19,10 @@ local startswith = require('stringy').startswith
 
 M.Config = class()
 
-function M.Config:init(policyconfig, modpath)
+function M.Config:init(policyconfig)
 
    self.objects = policyconfig:expand()
-   self.model = loader(modpath)
+   self.model = policyconfig.model
 
    local dedicated = self.objects.variable.awall_dedicated_chains
    self.iptables = dedicated and iptables.PartialIPTables() or

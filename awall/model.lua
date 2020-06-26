@@ -180,6 +180,7 @@ end
 
 M.Rule = M.class(M.ConfigObject)
 
+M.Rule.append = true
 
 function M.Rule:init(...)
    M.Rule.super(self):init(...)
@@ -242,16 +243,13 @@ function M.Rule:init(...)
    elseif ptrans then self:error('Service not defined') end
 end
 
-
 function M.Rule:porttrans() return false end
-
 
 function M.Rule:direction(dir)
    if dir == 'in' then return self.reverse and 'out' or 'in' end
    if dir == 'out' then return self.reverse and 'in' or 'out' end
    self:error('Invalid direction: '..dir)
 end
-
 
 function M.Rule:zoneoptfrags()
 
@@ -313,7 +311,6 @@ function M.Rule:zoneoptfrags()
 
    return res
 end
-
 
 function M.Rule:servoptfrags()
 
@@ -451,7 +448,6 @@ function M.Rule:target()
    end
 end
 
-
 function M.Rule:combine(ofs1, ofs2, key, unique)
 
    local function connect()
@@ -506,7 +502,6 @@ function M.Rule:combine(ofs1, ofs2, key, unique)
 
    return extend(res, filter(ofs2, function(of) return of.chain end))
 end
-
 
 function M.Rule:trules()
 
