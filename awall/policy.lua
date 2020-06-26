@@ -1,6 +1,6 @@
 --[[
 Policy file handling for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -22,10 +22,9 @@ local posix = require('posix')
 
 local PolicyConfig = class()
 
-function PolicyConfig:init(data, source, policies)
+function PolicyConfig:init(data, source)
    self.data = data
    self.source = source
-   self.policies = policies
 end
 
 function PolicyConfig:expand()
@@ -161,15 +160,15 @@ function PolicySet:init(dirs)
 end
 
 
-function PolicySet:load()
+function PolicySet:_load()
 
-   local imported = {['%defaults']={}}
+   local res = {['%defaults']={}}
    
    local function require(policy)
-      if imported[policy.name] then return end
+      if res[policy.name] then return end
 
       local data = policy:load()
-      imported[policy.name] = data
+      res[policy.name] = data
 
       if not data.after then
 	 data.after = {}
@@ -185,7 +184,7 @@ function PolicySet:load()
 	 table.insert(data.after, '%defaults')
       end
 
-      for i, name in listpairs(data.import) do
+      for _, name in listpairs(data.import) do
 	 if name:sub(1, 1) ~= '%' then
 	    local pol = self.policies[name]
 	    if not pol then
@@ -200,18 +199,26 @@ function PolicySet:load()
       if policy.enabled then require(policy) end
    end
 
+   return res
+end
 
-   local order = resolve(imported)
+
+function PolicySet:active() return keys(self:_load()) end
+
+
+function PolicySet:load()
+   local policies = self:_load()
+
+   local order = resolve(policies)
    if type(order) ~= 'table' then
       raise('Circular ordering directives: '..order)
    end
-
 
    local input = {}
    local source = {}
 
    for i, name in ipairs(order) do
-      for cls, objs in pairs(imported[name]) do
+      for cls, objs in pairs(policies[name]) do
 	 if not contains(
 	    {'description', 'import', 'after', 'before'},
 	    cls
@@ -256,7 +263,7 @@ function PolicySet:load()
       end
    end
 
-   return PolicyConfig(input, source, keys(imported))
+   return PolicyConfig(input, source)
 end
 
 return PolicySet
