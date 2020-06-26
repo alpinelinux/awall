@@ -32,44 +32,43 @@ function PolicyConfig:init(policies)
    self.source = {}
 
    for _, name in ipairs(order) do
-      for cls, objs in pairs(policies[name]) do
+      for attr, objs in pairs(policies[name]) do
 	 if not contains(
-	    {'description', 'import', 'after', 'before'},
-	    cls
+	    {'description', 'import', 'after', 'before'}, attr
 	 ) then
 	    if type(objs) ~= 'table' then
-	       raise('Invalid top-level attribute: '..cls..' ('..name..')')
+	       raise('Invalid top-level attribute: '..attr..' ('..name..')')
 	    end
 
-	    util.setdefault(self.source, cls, {})
+	    util.setdefault(self.source, attr, {})
 
-	    if not self.data[cls] then
-	       self.data[cls] = objs
-	       for k, v in pairs(objs) do self.source[cls][k] = name end
+	    if not self.data[attr] then
+	       self.data[attr] = objs
+	       for k, v in pairs(objs) do self.source[attr][k] = name end
 
 	    else
-	       local fk = next(self.data[cls])
+	       local fk = next(self.data[attr])
 	       map(
 		  keys(objs),
 		  function(k)
 		     if type(k) ~= type(fk) then
 			raise(
-			   'Type mismatch in '..cls..' definitions ('..
-			      name..', '..self.source[cls][fk]..')'
+			   'Type mismatch in '..attr..' definitions ('..
+			      name..', '..self.source[attr][fk]..')'
 			)
 		     end
 		  end
 	       )
 
 	       if objs[1] then
-		  local last = #self.data[cls]
-		  util.extend(self.data[cls], objs)
-		  for i = 1,#objs do self.source[cls][last + i] = name end
+		  local last = #self.data[attr]
+		  util.extend(self.data[attr], objs)
+		  for i = 1,#objs do self.source[attr][last + i] = name end
 
 	       else
 		  for k, v in pairs(objs) do
-		     self.data[cls][k] = v
-		     self.source[cls][k] = name
+		     self.data[attr][k] = v
+		     self.source[attr][k] = name
 		  end
 	       end
 	    end
