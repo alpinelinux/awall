@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -8,7 +8,6 @@ See LICENSE file for license details
 local M = {}
 
 
-local loadclass = require('awall').loadclass
 M.class = require('awall.class')
 local FAMILIES = require('awall.family').ALL
 local resolve = require('awall.host').resolve
@@ -62,7 +61,7 @@ function M.ConfigObject:create(cls, params, label, index)
 
    if type(cls) == 'string' then
       local name = cls
-      cls = loadclass(cls)
+      cls = self.context:loadclass(cls)
       if not cls then
 	 self:error('Support for '..name..' objects not installed')
       end

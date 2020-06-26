@@ -5,7 +5,6 @@ See LICENSE file for license details
 ]]--
 
 
-local loadclass = require('awall').loadclass
 local FAMILIES = require('awall.family').ALL
 local resolveunique = require('awall.host').resolveunique
 
@@ -162,7 +161,7 @@ function LoggingRule:init(...)
 
    local custom = self:customtarget()
    if type(self.log) ~= 'table' then
-      self.log = loadclass('log').get(
+      self.log = self.context:loadclass('log').get(
 	 self, self.log, not custom and self:logdefault()
       )
    end
@@ -239,7 +238,9 @@ function Filter:init(...)
       if type(self[limit]) ~= 'table' then
 	 self[limit] = {count=self[limit]}
       end
-      self[limit].log = loadclass('log').get(self, self[limit].log, true)
+      self[limit].log = self.context:loadclass('log').get(
+	 self, self[limit].log, true
+      )
    end
 
    if ul and self.action ~= 'pass' then

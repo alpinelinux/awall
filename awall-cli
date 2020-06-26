@@ -231,8 +231,7 @@ if not call(
 
       local config
       if mode ~= 'dump' or level > 3 then
-	 awall.loadmodules(basedir)
-	 config = awall.Config(input)
+	 config = awall.Config(input, basedir)
       end
 
 
