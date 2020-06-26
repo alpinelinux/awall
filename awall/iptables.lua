@@ -16,7 +16,7 @@ local sortedkeys = util.sortedkeys
 
 local lpc = require('lpc')
 local posix = require('posix')
-local stringy = require('stringy')
+local startswith = require('stringy').startswith
 
 
 local M = {}
@@ -157,7 +157,7 @@ function M.PartialIPTables:dumpfile(family, iptfile)
    for tbl, chains in pairs(tables) do
       local builtins = {}
       for chain, _ in pairs(chains) do
-	 if stringy.startswith(chain, 'awall-') then
+	 if startswith(chain, 'awall-') then
 	    local base = chain:sub(7, -1)
 	    if M.isbuiltin(tbl, base) then table.insert(builtins, base) end
 	 end
@@ -179,7 +179,7 @@ function M.PartialIPTables:flush()
 	    local chains = {}
 	    local rules = {}
 	    for line in stdout:lines() do
-	       if stringy.startswith(line, '-N awall-') then
+	       if startswith(line, '-N awall-') then
 		  table.insert(chains, line:sub(4, -1))
 	       else
 		  local chain, target = line:match('^%-A (%u+) %-j (awall%-%u+)$')
