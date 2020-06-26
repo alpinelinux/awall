@@ -22,9 +22,60 @@ local posix = require('posix')
 
 local PolicyConfig = class()
 
-function PolicyConfig:init(data, source)
-   self.data = data
-   self.source = source
+function PolicyConfig:init(policies)
+   local order = resolve(policies)
+   if type(order) ~= 'table' then
+      raise('Circular ordering directives: '..order)
+   end
+
+   self.data = {}
+   self.source = {}
+
+   for _, name in ipairs(order) do
+      for cls, objs in pairs(policies[name]) do
+	 if not contains(
+	    {'description', 'import', 'after', 'before'},
+	    cls
+	 ) then
+	    if type(objs) ~= 'table' then
+	       raise('Invalid top-level attribute: '..cls..' ('..name..')')
+	    end
+
+	    util.setdefault(self.source, cls, {})
+
+	    if not self.data[cls] then
+	       self.data[cls] = objs
+	       for k, v in pairs(objs) do self.source[cls][k] = name end
+
+	    else
+	       local fk = next(self.data[cls])
+	       map(
+		  keys(objs),
+		  function(k)
+		     if type(k) ~= type(fk) then
+			raise(
+			   'Type mismatch in '..cls..' definitions ('..
+			      name..', '..self.source[cls][fk]..')'
+			)
+		     end
+		  end
+	       )
+
+	       if objs[1] then
+		  local last = #self.data[cls]
+		  util.extend(self.data[cls], objs)
+		  for i = 1,#objs do self.source[cls][last + i] = name end
+
+	       else
+		  for k, v in pairs(objs) do
+		     self.data[cls][k] = v
+		     self.source[cls][k] = name
+		  end
+	       end
+	    end
+	 end
+      end
+   end
 end
 
 function PolicyConfig:expand()
@@ -159,7 +210,6 @@ function PolicySet:init(dirs)
    end
 end
 
-
 function PolicySet:_load()
 
    local res = {['%defaults']={}}
@@ -202,68 +252,9 @@ function PolicySet:_load()
    return res
 end
 
-
 function PolicySet:active() return keys(self:_load()) end
 
+function PolicySet:load() return PolicyConfig(self:_load()) end
 
-function PolicySet:load()
-   local policies = self:_load()
-
-   local order = resolve(policies)
-   if type(order) ~= 'table' then
-      raise('Circular ordering directives: '..order)
-   end
-
-   local input = {}
-   local source = {}
-
-   for i, name in ipairs(order) do
-      for cls, objs in pairs(policies[name]) do
-	 if not contains(
-	    {'description', 'import', 'after', 'before'},
-	    cls
-	 ) then
-	    if type(objs) ~= 'table' then
-	       raise('Invalid top-level attribute: '..cls..' ('..name..')')
-	    end
-
-	    util.setdefault(source, cls, {})
-
-	    if not input[cls] then
-	       input[cls] = objs
-	       for k, v in pairs(objs) do source[cls][k] = name end
-
-	    else
-	       local fk = next(input[cls])
-	       map(
-		  keys(objs),
-		  function(k)
-		     if type(k) ~= type(fk) then
-			raise(
-			   'Type mismatch in '..cls..' definitions ('..
-			      name..', '..source[cls][fk]..')'
-			)
-		     end
-		  end
-	       )
-
-	       if objs[1] then
-		  local last = #input[cls]
-		  util.extend(input[cls], objs)
-		  for i = 1,#objs do source[cls][last + i] = name end
-
-	       else
-		  for k, v in pairs(objs) do
-		     input[cls][k] = v
-		     source[cls][k] = name
-		  end
-	       end
-	    end
-	 end
-      end
-   end
-
-   return PolicyConfig(input, source)
-end
 
 return PolicySet
