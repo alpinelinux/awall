@@ -786,6 +786,8 @@ function M.Limit:rate() return self.count / self.interval end
 function M.Limit:intrate() return math.ceil(self:rate()) end
 
 function M.Limit:limitofrags(name)
+   if self.count == 0 then return {} end
+
    local rate = self:rate()
    local unit
    for _, quantum in ipairs{

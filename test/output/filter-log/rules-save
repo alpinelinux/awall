@@ -8,18 +8,15 @@
 :logaccept-1 - [0:0]
 :logaccept-2 - [0:0]
 :logaccept-3 - [0:0]
-:logaccept-4 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
 :logdrop-3 - [0:0]
 :logdrop-4 - [0:0]
-:logdrop-5 - [0:0]
 :logpass-0 - [0:0]
 :logpass-1 - [0:0]
 :logpass-2 - [0:0]
 :logpass-3 - [0:0]
-:logpass-4 - [0:0]
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-0
@@ -42,9 +39,9 @@
 -A FORWARD -j logaccept-3
 -A FORWARD -j logdrop-4
 -A FORWARD -j logpass-3
--A FORWARD -j logaccept-4
--A FORWARD -j logdrop-5
--A FORWARD -j logpass-4
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -123,9 +120,9 @@
 -A INPUT -j logaccept-3
 -A INPUT -j logdrop-4
 -A INPUT -j logpass-3
--A INPUT -j logaccept-4
--A INPUT -j logdrop-5
--A INPUT -j logpass-4
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -152,9 +149,9 @@
 -A OUTPUT -j logaccept-3
 -A OUTPUT -j logdrop-4
 -A OUTPUT -j logpass-3
--A OUTPUT -j logaccept-4
--A OUTPUT -j logdrop-5
--A OUTPUT -j logpass-4
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
 -A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
@@ -171,8 +168,6 @@
 -A logaccept-2 -j ACCEPT
 -A logaccept-3 -m limit --limit 12/minute -j ULOG
 -A logaccept-3 -j ACCEPT
--A logaccept-4 -m limit --limit 0/day -j LOG
--A logaccept-4 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
@@ -184,14 +179,11 @@
 -A logdrop-3 -j DROP
 -A logdrop-4 -m limit --limit 12/minute -j ULOG
 -A logdrop-4 -j DROP
--A logdrop-5 -m limit --limit 0/day -j LOG
--A logdrop-5 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
 -A logpass-1 -j LOG
 -A logpass-2 -j TEE --gateway 10.0.0.1
 -A logpass-2 -j TEE --gateway 10.0.0.2
 -A logpass-3 -m limit --limit 12/minute -j ULOG
--A logpass-4 -m limit --limit 0/day -j LOG
 COMMIT
 *mangle
 :FORWARD ACCEPT [0:0]

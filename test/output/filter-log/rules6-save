@@ -8,17 +8,14 @@
 :logaccept-1 - [0:0]
 :logaccept-2 - [0:0]
 :logaccept-3 - [0:0]
-:logaccept-4 - [0:0]
 :logdrop-0 - [0:0]
 :logdrop-1 - [0:0]
 :logdrop-2 - [0:0]
 :logdrop-3 - [0:0]
 :logdrop-4 - [0:0]
-:logdrop-5 - [0:0]
 :logpass-0 - [0:0]
 :logpass-1 - [0:0]
 :logpass-2 - [0:0]
-:logpass-4 - [0:0]
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -j ACCEPT
 -A FORWARD -j logdrop-0
@@ -40,9 +37,9 @@
 -A FORWARD 
 -A FORWARD -j logaccept-3
 -A FORWARD -j logdrop-4
--A FORWARD -j logaccept-4
--A FORWARD -j logdrop-5
--A FORWARD -j logpass-4
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -94,9 +91,9 @@
 -A INPUT 
 -A INPUT -j logaccept-3
 -A INPUT -j logdrop-4
--A INPUT -j logaccept-4
--A INPUT -j logdrop-5
--A INPUT -j logpass-4
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -122,9 +119,9 @@
 -A OUTPUT 
 -A OUTPUT -j logaccept-3
 -A OUTPUT -j logdrop-4
--A OUTPUT -j logaccept-4
--A OUTPUT -j logdrop-5
--A OUTPUT -j logpass-4
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -140,8 +137,6 @@
 -A logaccept-2 -j TEE --gateway fc00::2
 -A logaccept-2 -j ACCEPT
 -A logaccept-3 -j ACCEPT
--A logaccept-4 -m limit --limit 0/day -j LOG
--A logaccept-4 -j ACCEPT
 -A logdrop-0 -m limit --limit 1/second -j LOG
 -A logdrop-0 -j DROP
 -A logdrop-1 -m limit --limit 1/second -j LOG
@@ -152,13 +147,10 @@
 -A logdrop-3 -j TEE --gateway fc00::2
 -A logdrop-3 -j DROP
 -A logdrop-4 -j DROP
--A logdrop-5 -m limit --limit 0/day -j LOG
--A logdrop-5 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
 -A logpass-1 -j LOG
 -A logpass-1 -j TEE --gateway fc00::1
 -A logpass-2 -j TEE --gateway fc00::2
--A logpass-4 -m limit --limit 0/day -j LOG
 COMMIT
 *mangle
 :INPUT ACCEPT [0:0]
