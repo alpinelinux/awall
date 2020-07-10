@@ -1,6 +1,6 @@
 --[[
 Filter limit test cases for Alpine Wall
-Copyright (C) 2012-2017 Kaarle Ritvanen
+Copyright (C) 2012-2020 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -14,7 +14,9 @@ function add(limit_type, filter)
 
    local logopts = {false, true, 'mirror', 'none', 'ulog'}
 
-   for _, high_rate in ipairs{false, true} do
+   for _, count in ipairs{0, false, 150} do
+
+      local high_rate = count == 150
 
       local function add_limit(limit)
          for _, log in ipairs(logopts) do
@@ -36,12 +38,11 @@ function add(limit_type, filter)
          end
       end
 
-      local count = high_rate and 150 or nil
       add_limit(count or 1)
 
       for _, interval in ipairs{false, 5} do
          for _, log in ipairs(logopts) do
-	    local limit = {count=count, interval=interval or nil}
+	    local limit = {count=count or nil, interval=interval or nil}
 	    if log ~= true then limit.log = log end
 
             add_limit(limit)

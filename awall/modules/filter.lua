@@ -295,7 +295,7 @@ function Filter:extratrules()
    end
 
    if self.action == 'accept' then
-      if self:position() == 'prepend' then
+      if self:position() == 'prepend' and self['flow-limit'].count > 0 then
 	 extrarules('final', LoggingRule, {update={log=self.log}})
       end
 
@@ -381,9 +381,14 @@ function Filter:mangleoptfrags(ofrags)
       incompatible('action: '..self.action)
    end
 
-   local limitchain = self:uniqueid('limit')
    local limitlog = self[limit].log
+
+   local function drop(ofs)
+      return self:combinelog(ofs, limitlog, 'drop', 'DROP')
+   end
+
    local limitobj = self:create(FilterLimit, self[limit], 'limit')
+   if limitobj.count == 0 then return drop(ofrags) end
 
    local ofs
    local final = self:position() == 'append'
@@ -391,10 +396,11 @@ function Filter:mangleoptfrags(ofrags)
    local ft = final and target
    local pl = not target and self.log
 
+   local limitchain = self:uniqueid('limit')
    local cofs, sofs = limitobj:recentofrags(limitchain)
 
    if cofs then
-      ofs = self:combinelog(cofs, limitlog, 'drop', 'DROP')
+      ofs = drop(cofs)
 
       local nxt
       if ft then
