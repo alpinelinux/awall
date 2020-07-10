@@ -9,7 +9,9 @@ json = require('cjson')
 
 res = {}
 
-for _, log in ipairs{'', false, true, 'dual', 'mirror', 'none', 'ulog'} do
+for _, log in ipairs{
+   '', false, true, 'dual', 'mirror', 'none', 'ulog', 'zero'
+} do
    for _, action in ipairs{false, 'drop', 'pass'} do
       if log == '' then log = nil end
       table.insert(res, {log=log, action=action or nil})

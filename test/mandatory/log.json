@@ -4,7 +4,8 @@
 	"mirror": { "mirror": [ "10.0.0.1", "10.0.0.2", "fc00::2" ] },
 	"nflog": { "mode": "nflog", "group": 1, "range": 128 },
 	"none": { "mode": "none" },
-	"ulog": { "mode": "ulog", "limit": { "interval": 5 } }
+	"ulog": { "mode": "ulog", "limit": { "interval": 5 } },
+	"zero": { "mode": "log", "limit": 0 }
     },
     "packet-log": [
 	{ "out": "_fw" },

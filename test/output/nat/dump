@@ -289,6 +289,9 @@ Log none      {"mode":"none"}
 Log ulog      {"limit":{"interval":5},"mode":"ulog"}
 (log)         
 
+Log zero      {"limit":0,"mode":"log"}
+(log)         
+
 
 Mark 1                      {"in":["_fw","A"],"mark":1}
 (zone)                      
