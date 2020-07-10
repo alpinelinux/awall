@@ -3811,10 +3811,6 @@
 :logaccept-63 - [0:0]
 :logaccept-64 - [0:0]
 :logaccept-65 - [0:0]
-:logaccept-66 - [0:0]
-:logaccept-67 - [0:0]
-:logaccept-68 - [0:0]
-:logaccept-69 - [0:0]
 :logaccept-7 - [0:0]
 :logaccept-8 - [0:0]
 :logaccept-9 - [0:0]
@@ -4882,11 +4878,6 @@
 :logdrop-1648 - [0:0]
 :logdrop-1649 - [0:0]
 :logdrop-165 - [0:0]
-:logdrop-1650 - [0:0]
-:logdrop-1651 - [0:0]
-:logdrop-1652 - [0:0]
-:logdrop-1653 - [0:0]
-:logdrop-1654 - [0:0]
 :logdrop-166 - [0:0]
 :logdrop-167 - [0:0]
 :logdrop-168 - [0:0]
@@ -6362,10 +6353,6 @@
 :logdrop-ntp-97 - [0:0]
 :logdrop-ntp-98 - [0:0]
 :logdrop-ntp-99 - [0:0]
-:logpass-0 - [0:0]
-:logpass-1 - [0:0]
-:logpass-2 - [0:0]
-:logpass-3 - [0:0]
 -A FORWARD -m recent --name user:B --rdest --mask 255.255.255.255 --set 
 -A FORWARD -m recent --name user:B --rsource --mask 255.255.255.255 --set 
 -A FORWARD -j limit-2927
@@ -8837,27 +8824,6 @@
 -A FORWARD -m recent --name user:D --rsource --mask 255.255.252.0 --set 
 -A FORWARD -m recent --name user:A --rsource --mask 255.255.255.255 --set 
 -A FORWARD -m recent --name user:A --rdest --mask 255.255.255.255 --set 
--A FORWARD -j ACCEPT
--A FORWARD -j logdrop-1650
--A FORWARD 
--A FORWARD -j ACCEPT
--A FORWARD -j DROP
--A FORWARD 
--A FORWARD -j logaccept-66
--A FORWARD -j logdrop-1651
--A FORWARD -j logpass-0
--A FORWARD -j logaccept-67
--A FORWARD -j logdrop-1652
--A FORWARD -j logpass-1
--A FORWARD -j logaccept-68
--A FORWARD -j logdrop-1653
--A FORWARD -j logpass-2
--A FORWARD -j ACCEPT
--A FORWARD -j DROP
--A FORWARD 
--A FORWARD -j logaccept-69
--A FORWARD -j logdrop-1654
--A FORWARD -j logpass-3
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -11385,27 +11351,6 @@
 -A INPUT -m recent --name user:D --rsource --mask 255.255.252.0 --set 
 -A INPUT -m recent --name user:A --rsource --mask 255.255.255.255 --set 
 -A INPUT -m recent --name user:A --rdest --mask 255.255.255.255 --set 
--A INPUT -j ACCEPT
--A INPUT -j logdrop-1650
--A INPUT 
--A INPUT -j ACCEPT
--A INPUT -j DROP
--A INPUT 
--A INPUT -j logaccept-66
--A INPUT -j logdrop-1651
--A INPUT -j logpass-0
--A INPUT -j logaccept-67
--A INPUT -j logdrop-1652
--A INPUT -j logpass-1
--A INPUT -j logaccept-68
--A INPUT -j logdrop-1653
--A INPUT -j logpass-2
--A INPUT -j ACCEPT
--A INPUT -j DROP
--A INPUT 
--A INPUT -j logaccept-69
--A INPUT -j logdrop-1654
--A INPUT -j logpass-3
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -15367,27 +15312,6 @@
 -A OUTPUT -m recent --name user:D --rsource --mask 255.255.252.0 --set 
 -A OUTPUT -m recent --name user:A --rsource --mask 255.255.255.255 --set 
 -A OUTPUT -m recent --name user:A --rdest --mask 255.255.255.255 --set 
--A OUTPUT -j ACCEPT
--A OUTPUT -j logdrop-1650
--A OUTPUT 
--A OUTPUT -j ACCEPT
--A OUTPUT -j DROP
--A OUTPUT 
--A OUTPUT -j logaccept-66
--A OUTPUT -j logdrop-1651
--A OUTPUT -j logpass-0
--A OUTPUT -j logaccept-67
--A OUTPUT -j logdrop-1652
--A OUTPUT -j logpass-1
--A OUTPUT -j logaccept-68
--A OUTPUT -j logdrop-1653
--A OUTPUT -j logpass-2
--A OUTPUT -j ACCEPT
--A OUTPUT -j DROP
--A OUTPUT 
--A OUTPUT -j logaccept-69
--A OUTPUT -j logdrop-1654
--A OUTPUT -j logpass-3
 -A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
@@ -24342,15 +24266,6 @@
 -A logaccept-64 -j ACCEPT
 -A logaccept-65 -m limit --limit 12/minute -j ULOG
 -A logaccept-65 -j ACCEPT
--A logaccept-66 -m limit --limit 1/second -j LOG
--A logaccept-66 -j ACCEPT
--A logaccept-67 -j LOG
--A logaccept-67 -j ACCEPT
--A logaccept-68 -j TEE --gateway 10.0.0.1
--A logaccept-68 -j TEE --gateway 10.0.0.2
--A logaccept-68 -j ACCEPT
--A logaccept-69 -m limit --limit 12/minute -j ULOG
--A logaccept-69 -j ACCEPT
 -A logaccept-7 -j TEE --gateway 10.0.0.1
 -A logaccept-7 -j TEE --gateway 10.0.0.2
 -A logaccept-7 -j ACCEPT
@@ -26855,17 +26770,6 @@
 -A logdrop-165 -j TEE --gateway 10.0.0.1
 -A logdrop-165 -j TEE --gateway 10.0.0.2
 -A logdrop-165 -j DROP
--A logdrop-1650 -m limit --limit 1/second -j LOG
--A logdrop-1650 -j DROP
--A logdrop-1651 -m limit --limit 1/second -j LOG
--A logdrop-1651 -j DROP
--A logdrop-1652 -j LOG
--A logdrop-1652 -j DROP
--A logdrop-1653 -j TEE --gateway 10.0.0.1
--A logdrop-1653 -j TEE --gateway 10.0.0.2
--A logdrop-1653 -j DROP
--A logdrop-1654 -m limit --limit 12/minute -j ULOG
--A logdrop-1654 -j DROP
 -A logdrop-166 -j TEE --gateway 10.0.0.1
 -A logdrop-166 -j TEE --gateway 10.0.0.2
 -A logdrop-166 -j DROP
@@ -30280,11 +30184,6 @@
 -A logdrop-ntp-98 -j DROP
 -A logdrop-ntp-99 -m limit --limit 1/second -j LOG
 -A logdrop-ntp-99 -j DROP
--A logpass-0 -m limit --limit 1/second -j LOG
--A logpass-1 -j LOG
--A logpass-2 -j TEE --gateway 10.0.0.1
--A logpass-2 -j TEE --gateway 10.0.0.2
--A logpass-3 -m limit --limit 12/minute -j ULOG
 COMMIT
 *mangle
 :FORWARD ACCEPT [0:0]

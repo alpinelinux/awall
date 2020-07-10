@@ -543,10 +543,6 @@
 :logaccept-264 - [0:0]
 :logaccept-265 - [0:0]
 :logaccept-266 - [0:0]
-:logaccept-267 - [0:0]
-:logaccept-268 - [0:0]
-:logaccept-269 - [0:0]
-:logaccept-270 - [0:0]
 :logaccept-3 - [0:0]
 :logaccept-32 - [0:0]
 :logaccept-33 - [0:0]
@@ -610,11 +606,6 @@
 :logaccept-97 - [0:0]
 :logaccept-98 - [0:0]
 :logaccept-99 - [0:0]
-:logdrop-0 - [0:0]
-:logdrop-1 - [0:0]
-:logdrop-2 - [0:0]
-:logdrop-3 - [0:0]
-:logdrop-4 - [0:0]
 :logpass-0 - [0:0]
 :logpass-1 - [0:0]
 :logpass-10 - [0:0]
@@ -689,11 +680,7 @@
 :logpass-164 - [0:0]
 :logpass-165 - [0:0]
 :logpass-166 - [0:0]
-:logpass-167 - [0:0]
-:logpass-168 - [0:0]
-:logpass-169 - [0:0]
 :logpass-17 - [0:0]
-:logpass-170 - [0:0]
 :logpass-18 - [0:0]
 :logpass-19 - [0:0]
 :logpass-2 - [0:0]
@@ -1878,27 +1865,6 @@
 -A FORWARD -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j address-472
 -A FORWARD -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j address-473
 -A FORWARD -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j address-473
--A FORWARD -j ACCEPT
--A FORWARD -j logdrop-0
--A FORWARD 
--A FORWARD -j ACCEPT
--A FORWARD -j DROP
--A FORWARD 
--A FORWARD -j logaccept-267
--A FORWARD -j logdrop-1
--A FORWARD -j logpass-167
--A FORWARD -j logaccept-268
--A FORWARD -j logdrop-2
--A FORWARD -j logpass-168
--A FORWARD -j logaccept-269
--A FORWARD -j logdrop-3
--A FORWARD -j logpass-169
--A FORWARD -j ACCEPT
--A FORWARD -j DROP
--A FORWARD 
--A FORWARD -j logaccept-270
--A FORWARD -j logdrop-4
--A FORWARD -j logpass-170
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -2664,27 +2630,6 @@
 -A INPUT -i eth1 -s 10.0.0.0/12 -j address-383
 -A INPUT -i eth2 -s 10.1.0.0/12 -j address-383
 -A INPUT -i eth3 -s 10.1.0.0/12 -j address-383
--A INPUT -j ACCEPT
--A INPUT -j logdrop-0
--A INPUT 
--A INPUT -j ACCEPT
--A INPUT -j DROP
--A INPUT 
--A INPUT -j logaccept-267
--A INPUT -j logdrop-1
--A INPUT -j logpass-167
--A INPUT -j logaccept-268
--A INPUT -j logdrop-2
--A INPUT -j logpass-168
--A INPUT -j logaccept-269
--A INPUT -j logdrop-3
--A INPUT -j logpass-169
--A INPUT -j ACCEPT
--A INPUT -j DROP
--A INPUT 
--A INPUT -j logaccept-270
--A INPUT -j logdrop-4
--A INPUT -j logpass-170
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -2942,27 +2887,6 @@
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j address-93
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j address-94
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j address-95
--A OUTPUT -j ACCEPT
--A OUTPUT -j logdrop-0
--A OUTPUT 
--A OUTPUT -j ACCEPT
--A OUTPUT -j DROP
--A OUTPUT 
--A OUTPUT -j logaccept-267
--A OUTPUT -j logdrop-1
--A OUTPUT -j logpass-167
--A OUTPUT -j logaccept-268
--A OUTPUT -j logdrop-2
--A OUTPUT -j logpass-168
--A OUTPUT -j logaccept-269
--A OUTPUT -j logdrop-3
--A OUTPUT -j logpass-169
--A OUTPUT -j ACCEPT
--A OUTPUT -j DROP
--A OUTPUT 
--A OUTPUT -j logaccept-270
--A OUTPUT -j logdrop-4
--A OUTPUT -j logpass-170
 -A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
@@ -3916,15 +3840,6 @@
 -A logaccept-265 -j ACCEPT
 -A logaccept-266 -m limit --limit 12/minute -j ULOG
 -A logaccept-266 -j ACCEPT
--A logaccept-267 -m limit --limit 1/second -j LOG
--A logaccept-267 -j ACCEPT
--A logaccept-268 -j LOG
--A logaccept-268 -j ACCEPT
--A logaccept-269 -j TEE --gateway 10.0.0.1
--A logaccept-269 -j TEE --gateway 10.0.0.2
--A logaccept-269 -j ACCEPT
--A logaccept-270 -m limit --limit 12/minute -j ULOG
--A logaccept-270 -j ACCEPT
 -A logaccept-3 -m limit --limit 12/minute -j ULOG
 -A logaccept-3 -j ACCEPT
 -A logaccept-32 -m limit --limit 1/second -j LOG
@@ -4051,17 +3966,6 @@
 -A logaccept-98 -j ACCEPT
 -A logaccept-99 -m limit --limit 12/minute -j ULOG
 -A logaccept-99 -j ACCEPT
--A logdrop-0 -m limit --limit 1/second -j LOG
--A logdrop-0 -j DROP
--A logdrop-1 -m limit --limit 1/second -j LOG
--A logdrop-1 -j DROP
--A logdrop-2 -j LOG
--A logdrop-2 -j DROP
--A logdrop-3 -j TEE --gateway 10.0.0.1
--A logdrop-3 -j TEE --gateway 10.0.0.2
--A logdrop-3 -j DROP
--A logdrop-4 -m limit --limit 12/minute -j ULOG
--A logdrop-4 -j DROP
 -A logpass-0 -m limit --limit 1/second -j LOG
 -A logpass-1 -m limit --limit 12/minute -j ULOG
 -A logpass-10 -m limit --limit 12/minute -j ULOG
@@ -4136,12 +4040,7 @@
 -A logpass-164 -m limit --limit 12/minute -j ULOG
 -A logpass-165 -m limit --limit 1/second -j LOG
 -A logpass-166 -m limit --limit 12/minute -j ULOG
--A logpass-167 -m limit --limit 1/second -j LOG
--A logpass-168 -j LOG
--A logpass-169 -j TEE --gateway 10.0.0.1
--A logpass-169 -j TEE --gateway 10.0.0.2
 -A logpass-17 -m limit --limit 1/second -j LOG
--A logpass-170 -m limit --limit 12/minute -j ULOG
 -A logpass-18 -m limit --limit 12/minute -j ULOG
 -A logpass-19 -m limit --limit 1/second -j LOG
 -A logpass-2 -m limit --limit 1/second -j LOG

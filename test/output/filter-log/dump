@@ -1,0 +1,1056 @@
+Custom foo      [{"family":"inet6","match":"-m hl --hl-lt 7","target":"REJECT --reject-with icmpv6-no-route"},{"target":"LED --led-trigger-id foo"}]
+(custom-chain)  
+
+
+Dnat 1                 {"in":["_fw","A"]}
+(zone)                 
+  inet/nat/OUTPUT      -j REDIRECT
+  inet/nat/PREROUTING  -i eth0 -j REDIRECT
+
+Dnat 2                 {"in":"B"}
+(zone)                 
+  inet/nat/PREROUTING  -i eth1 -s 10.0.0.0/12 -j REDIRECT
+
+
+Filter 1                    {}
+(filter-log)                
+  inet/filter/FORWARD       -j ACCEPT
+  inet/filter/INPUT         -j ACCEPT
+  inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
+  inet6/filter/OUTPUT       -j ACCEPT
+
+Filter 2                    {"action":"drop"}
+(filter-log)                
+  inet/filter/FORWARD       -j logdrop-0
+  inet/filter/INPUT         -j logdrop-0
+  inet/filter/OUTPUT        -j logdrop-0
+  inet/filter/logdrop-0     -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-0     -j DROP
+  inet6/filter/FORWARD      -j logdrop-0
+  inet6/filter/INPUT        -j logdrop-0
+  inet6/filter/OUTPUT       -j logdrop-0
+  inet6/filter/logdrop-0    -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-0    -j DROP
+
+Filter 3                    {"action":"pass"}
+(filter-log)                
+  inet/filter/FORWARD       
+  inet/filter/INPUT         
+  inet/filter/OUTPUT        
+  inet6/filter/FORWARD      
+  inet6/filter/INPUT        
+  inet6/filter/OUTPUT       
+
+Filter 4                    {"log":false}
+(filter-log)                
+  inet/filter/FORWARD       -j ACCEPT
+  inet/filter/INPUT         -j ACCEPT
+  inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
+  inet6/filter/OUTPUT       -j ACCEPT
+
+Filter 5                    {"action":"drop","log":false}
+(filter-log)                
+  inet/filter/FORWARD       -j DROP
+  inet/filter/INPUT         -j DROP
+  inet/filter/OUTPUT        -j DROP
+  inet6/filter/FORWARD      -j DROP
+  inet6/filter/INPUT        -j DROP
+  inet6/filter/OUTPUT       -j DROP
+
+Filter 6                    {"action":"pass","log":false}
+(filter-log)                
+  inet/filter/FORWARD       
+  inet/filter/INPUT         
+  inet/filter/OUTPUT        
+  inet6/filter/FORWARD      
+  inet6/filter/INPUT        
+  inet6/filter/OUTPUT       
+
+Filter 7                    {"log":true}
+(filter-log)                
+  inet/filter/FORWARD       -j logaccept-0
+  inet/filter/INPUT         -j logaccept-0
+  inet/filter/OUTPUT        -j logaccept-0
+  inet/filter/logaccept-0   -m limit --limit 1/second -j LOG
+  inet/filter/logaccept-0   -j ACCEPT
+  inet6/filter/FORWARD      -j logaccept-0
+  inet6/filter/INPUT        -j logaccept-0
+  inet6/filter/OUTPUT       -j logaccept-0
+  inet6/filter/logaccept-0  -m limit --limit 1/second -j LOG
+  inet6/filter/logaccept-0  -j ACCEPT
+
+Filter 8                    {"action":"drop","log":true}
+(filter-log)                
+  inet/filter/FORWARD       -j logdrop-1
+  inet/filter/INPUT         -j logdrop-1
+  inet/filter/OUTPUT        -j logdrop-1
+  inet/filter/logdrop-1     -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-1     -j DROP
+  inet6/filter/FORWARD      -j logdrop-1
+  inet6/filter/INPUT        -j logdrop-1
+  inet6/filter/OUTPUT       -j logdrop-1
+  inet6/filter/logdrop-1    -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-1    -j DROP
+
+Filter 9                    {"action":"pass","log":true}
+(filter-log)                
+  inet/filter/FORWARD       -j logpass-0
+  inet/filter/INPUT         -j logpass-0
+  inet/filter/OUTPUT        -j logpass-0
+  inet/filter/logpass-0     -m limit --limit 1/second -j LOG
+  inet6/filter/FORWARD      -j logpass-0
+  inet6/filter/INPUT        -j logpass-0
+  inet6/filter/OUTPUT       -j logpass-0
+  inet6/filter/logpass-0    -m limit --limit 1/second -j LOG
+
+Filter 10                   {"log":"dual"}
+(filter-log)                
+  inet/filter/FORWARD       -j logaccept-1
+  inet/filter/INPUT         -j logaccept-1
+  inet/filter/OUTPUT        -j logaccept-1
+  inet/filter/logaccept-1   -j LOG
+  inet/filter/logaccept-1   -j ACCEPT
+  inet6/filter/FORWARD      -j logaccept-1
+  inet6/filter/INPUT        -j logaccept-1
+  inet6/filter/OUTPUT       -j logaccept-1
+  inet6/filter/logaccept-1  -j LOG
+  inet6/filter/logaccept-1  -j TEE --gateway fc00::1
+  inet6/filter/logaccept-1  -j ACCEPT
+
+Filter 11                   {"action":"drop","log":"dual"}
+(filter-log)                
+  inet/filter/FORWARD       -j logdrop-2
+  inet/filter/INPUT         -j logdrop-2
+  inet/filter/OUTPUT        -j logdrop-2
+  inet/filter/logdrop-2     -j LOG
+  inet/filter/logdrop-2     -j DROP
+  inet6/filter/FORWARD      -j logdrop-2
+  inet6/filter/INPUT        -j logdrop-2
+  inet6/filter/OUTPUT       -j logdrop-2
+  inet6/filter/logdrop-2    -j LOG
+  inet6/filter/logdrop-2    -j TEE --gateway fc00::1
+  inet6/filter/logdrop-2    -j DROP
+
+Filter 12                   {"action":"pass","log":"dual"}
+(filter-log)                
+  inet/filter/FORWARD       -j logpass-1
+  inet/filter/INPUT         -j logpass-1
+  inet/filter/OUTPUT        -j logpass-1
+  inet/filter/logpass-1     -j LOG
+  inet6/filter/FORWARD      -j logpass-1
+  inet6/filter/INPUT        -j logpass-1
+  inet6/filter/OUTPUT       -j logpass-1
+  inet6/filter/logpass-1    -j LOG
+  inet6/filter/logpass-1    -j TEE --gateway fc00::1
+
+Filter 13                   {"log":"mirror"}
+(filter-log)                
+  inet/filter/FORWARD       -j logaccept-2
+  inet/filter/INPUT         -j logaccept-2
+  inet/filter/OUTPUT        -j logaccept-2
+  inet/filter/logaccept-2   -j TEE --gateway 10.0.0.1
+  inet/filter/logaccept-2   -j TEE --gateway 10.0.0.2
+  inet/filter/logaccept-2   -j ACCEPT
+  inet6/filter/FORWARD      -j logaccept-2
+  inet6/filter/INPUT        -j logaccept-2
+  inet6/filter/OUTPUT       -j logaccept-2
+  inet6/filter/logaccept-2  -j TEE --gateway fc00::2
+  inet6/filter/logaccept-2  -j ACCEPT
+
+Filter 14                   {"action":"drop","log":"mirror"}
+(filter-log)                
+  inet/filter/FORWARD       -j logdrop-3
+  inet/filter/INPUT         -j logdrop-3
+  inet/filter/OUTPUT        -j logdrop-3
+  inet/filter/logdrop-3     -j TEE --gateway 10.0.0.1
+  inet/filter/logdrop-3     -j TEE --gateway 10.0.0.2
+  inet/filter/logdrop-3     -j DROP
+  inet6/filter/FORWARD      -j logdrop-3
+  inet6/filter/INPUT        -j logdrop-3
+  inet6/filter/OUTPUT       -j logdrop-3
+  inet6/filter/logdrop-3    -j TEE --gateway fc00::2
+  inet6/filter/logdrop-3    -j DROP
+
+Filter 15                   {"action":"pass","log":"mirror"}
+(filter-log)                
+  inet/filter/FORWARD       -j logpass-2
+  inet/filter/INPUT         -j logpass-2
+  inet/filter/OUTPUT        -j logpass-2
+  inet/filter/logpass-2     -j TEE --gateway 10.0.0.1
+  inet/filter/logpass-2     -j TEE --gateway 10.0.0.2
+  inet6/filter/FORWARD      -j logpass-2
+  inet6/filter/INPUT        -j logpass-2
+  inet6/filter/OUTPUT       -j logpass-2
+  inet6/filter/logpass-2    -j TEE --gateway fc00::2
+
+Filter 16                   {"log":"none"}
+(filter-log)                
+  inet/filter/FORWARD       -j ACCEPT
+  inet/filter/INPUT         -j ACCEPT
+  inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
+  inet6/filter/OUTPUT       -j ACCEPT
+
+Filter 17                   {"action":"drop","log":"none"}
+(filter-log)                
+  inet/filter/FORWARD       -j DROP
+  inet/filter/INPUT         -j DROP
+  inet/filter/OUTPUT        -j DROP
+  inet6/filter/FORWARD      -j DROP
+  inet6/filter/INPUT        -j DROP
+  inet6/filter/OUTPUT       -j DROP
+
+Filter 18                   {"action":"pass","log":"none"}
+(filter-log)                
+  inet/filter/FORWARD       
+  inet/filter/INPUT         
+  inet/filter/OUTPUT        
+  inet6/filter/FORWARD      
+  inet6/filter/INPUT        
+  inet6/filter/OUTPUT       
+
+Filter 19                   {"log":"ulog"}
+(filter-log)                
+  inet/filter/FORWARD       -j logaccept-3
+  inet/filter/INPUT         -j logaccept-3
+  inet/filter/OUTPUT        -j logaccept-3
+  inet/filter/logaccept-3   -m limit --limit 12/minute -j ULOG
+  inet/filter/logaccept-3   -j ACCEPT
+  inet6/filter/FORWARD      -j logaccept-3
+  inet6/filter/INPUT        -j logaccept-3
+  inet6/filter/OUTPUT       -j logaccept-3
+  inet6/filter/logaccept-3  -j ACCEPT
+
+Filter 20                   {"action":"drop","log":"ulog"}
+(filter-log)                
+  inet/filter/FORWARD       -j logdrop-4
+  inet/filter/INPUT         -j logdrop-4
+  inet/filter/OUTPUT        -j logdrop-4
+  inet/filter/logdrop-4     -m limit --limit 12/minute -j ULOG
+  inet/filter/logdrop-4     -j DROP
+  inet6/filter/FORWARD      -j logdrop-4
+  inet6/filter/INPUT        -j logdrop-4
+  inet6/filter/OUTPUT       -j logdrop-4
+  inet6/filter/logdrop-4    -j DROP
+
+Filter 21                   {"action":"pass","log":"ulog"}
+(filter-log)                
+  inet/filter/FORWARD       -j logpass-3
+  inet/filter/INPUT         -j logpass-3
+  inet/filter/OUTPUT        -j logpass-3
+  inet/filter/logpass-3     -m limit --limit 12/minute -j ULOG
+
+Filter 22                   {"action":"pass","in":"_fw","log":"ulog"}
+(log)                       
+  inet/filter/OUTPUT        -m limit --limit 12/minute -j ULOG
+
+Filter 23                   {"in":["_fw","A"]}
+(zone)                      
+  inet/filter/FORWARD       -i eth0 -j ACCEPT
+  inet/filter/INPUT         -i eth0 -j ACCEPT
+  inet/filter/OUTPUT        -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -j ACCEPT
+  inet6/filter/INPUT        -i eth0 -j ACCEPT
+  inet6/filter/OUTPUT       -j ACCEPT
+
+Filter 24                   {"in":"B","out":"C"}
+(zone)                      
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+
+Filter 25                   {"out":["_fw","B"]}
+(zone)                      
+  inet/filter/FORWARD       -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/INPUT         -j ACCEPT
+  inet/filter/OUTPUT        -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet6/filter/FORWARD      -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/INPUT        -j ACCEPT
+  inet6/filter/OUTPUT       -o eth1 -d fc00::/7 -j ACCEPT
+
+Filter 26                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+(zone)                      
+  inet/filter/FORWARD       -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth0 -o eth4 -j ACCEPT
+  inet/filter/FORWARD       -i eth0 -o eth5 -j ACCEPT
+  inet/filter/FORWARD       -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD       -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD       -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD       -i eth4 -o eth0 -j ACCEPT
+  inet/filter/FORWARD       -i eth5 -o eth0 -j ACCEPT
+  inet/filter/FORWARD       -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -i eth4 -o eth4 -j ACCEPT
+  inet/filter/FORWARD       -i eth4 -o eth5 -j ACCEPT
+  inet/filter/FORWARD       -i eth5 -o eth4 -j ACCEPT
+  inet/filter/FORWARD       -i eth5 -o eth5 -j ACCEPT
+  inet/filter/FORWARD       -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD       -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet/filter/FORWARD       -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+  inet/filter/FORWARD       -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+  inet6/filter/FORWARD      -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+
+
+Ipset awall-masquerade  {"family":"inet","type":"hash:net"}
+(masquerade)            
+
+
+Limit B  true
+(limit)  
+
+Limit C  7
+(limit)  
+
+Limit D  {"inet":22,"inet6":58}
+(limit)  
+
+
+Log _default  {"limit":1}
+(defaults)    
+
+Log dual      {"mirror":"fc00::1","mode":"log"}
+(log)         
+
+Log mirror    {"mirror":["10.0.0.1","10.0.0.2","fc00::2"]}
+(log)         
+
+Log nflog     {"group":1,"mode":"nflog","range":128}
+(log)         
+
+Log none      {"mode":"none"}
+(log)         
+
+Log ulog      {"limit":{"interval":5},"mode":"ulog"}
+(log)         
+
+
+Mark 1                      {"in":["_fw","A"],"mark":1}
+(zone)                      
+  inet/mangle/OUTPUT        -j MARK --set-mark 1
+  inet/mangle/PREROUTING    -i eth0 -j MARK --set-mark 1
+  inet6/mangle/OUTPUT       -j MARK --set-mark 1
+  inet6/mangle/PREROUTING   -i eth0 -j MARK --set-mark 1
+
+Mark 2                      {"in":"B","mark":2,"out":"C"}
+(zone)                      
+  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 2
+  inet/mangle/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 2
+
+Mark 3                      {"mark":3,"out":["_fw","B"]}
+(zone)                      
+  inet/mangle/INPUT         -j MARK --set-mark 3
+  inet/mangle/POSTROUTING   -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 3
+  inet6/mangle/INPUT        -j MARK --set-mark 3
+  inet6/mangle/POSTROUTING  -o eth1 -d fc00::/7 -j MARK --set-mark 3
+
+
+No-track 1              {"in":["_fw","A"]}
+(zone)                  
+  inet/raw/OUTPUT       -j CT --notrack
+  inet/raw/PREROUTING   -i eth0 -j CT --notrack
+  inet6/raw/OUTPUT      -j CT --notrack
+  inet6/raw/PREROUTING  -i eth0 -j CT --notrack
+
+No-track 2              {"in":"B"}
+(zone)                  
+  inet/raw/PREROUTING   -i eth1 -s 10.0.0.0/12 -j CT --notrack
+  inet6/raw/PREROUTING  -i eth1 -s fc00::/7 -j CT --notrack
+
+No-track 3              {"out":"_fw"}
+(zone)                  
+  inet/raw/PREROUTING   -m addrtype --dst-type LOCAL -j CT --notrack
+  inet6/raw/PREROUTING  -m addrtype --dst-type LOCAL -j CT --notrack
+
+
+Packet-log 1          {"out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -m limit --limit 1/second -j LOG
+  inet6/filter/INPUT  -m limit --limit 1/second -j LOG
+
+Packet-log 2          {"log":"mirror","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -j TEE --gateway 10.0.0.1
+  inet/filter/INPUT   -j TEE --gateway 10.0.0.2
+  inet6/filter/INPUT  -j TEE --gateway fc00::2
+
+Packet-log 3          {"log":"nflog","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -j NFLOG --nflog-group 1 --nflog-size 128
+  inet6/filter/INPUT  -j NFLOG --nflog-group 1 --nflog-size 128
+
+Packet-log 4          {"log":"ulog","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
+
+
+Service babel           {"port":6697,"proto":"tcp"}
+(services)              
+
+Service bacula-dir      {"port":9101,"proto":"tcp"}
+(services)              
+
+Service bacula-fd       {"port":9102,"proto":"tcp"}
+(services)              
+
+Service bacula-sd       {"port":9103,"proto":"tcp"}
+(services)              
+
+Service bgp             {"port":179,"proto":"tcp"}
+(services)              
+
+Service dhcp            {"family":"inet","port":[67,68],"proto":"udp"}
+(services)              
+
+Service discard         [{"port":9,"proto":"tcp"},{"port":9,"proto":"udp"}]
+(services)              
+
+Service dns             [{"port":53,"proto":"tcp"},{"port":53,"proto":"udp"}]
+(services)              
+
+Service epmap           [{"port":135,"proto":"tcp"},{"port":135,"proto":"udp"}]
+(services)              
+
+Service ftp             {"ct-helper":"ftp","port":21,"proto":"tcp"}
+(services)              
+
+Service gre             {"proto":"gre"}
+(services)              
+
+Service hp-pdl          {"port":9100,"proto":"tcp"}
+(services)              
+
+Service http            {"port":80,"proto":"tcp"}
+(services)              
+
+Service http-alt        {"port":8080,"proto":"tcp"}
+(services)              
+
+Service https           {"port":443,"proto":"tcp"}
+(services)              
+
+Service icmp            {"proto":"icmp"}
+(services)              
+
+Service igmp            {"proto":"igmp"}
+(services)              
+
+Service imap            {"port":143,"proto":"tcp"}
+(services)              
+
+Service imaps           {"port":993,"proto":"tcp"}
+(services)              
+
+Service ipsec           [{"proto":"esp"},{"port":[500,4500],"proto":"udp"}]
+(services)              
+
+Service irc             {"ct-helper":"irc","port":6667,"proto":"tcp"}
+(services)              
+
+Service kerberos        [{"port":88,"proto":"tcp"},{"port":88,"proto":"udp"}]
+(services)              
+
+Service kpasswd         [{"port":464,"proto":"tcp"},{"port":464,"proto":"udp"}]
+(services)              
+
+Service l2tp            {"port":1701,"proto":"udp"}
+(services)              
+
+Service ldap            [{"port":389,"proto":"tcp"},{"port":389,"proto":"udp"}]
+(services)              
+
+Service ldaps           [{"port":636,"proto":"tcp"},{"port":636,"proto":"udp"}]
+(services)              
+
+Service microsoft-ds    [{"port":445,"proto":"tcp"},{"port":445,"proto":"udp"}]
+(services)              
+
+Service mqtt            {"port":1883,"proto":"tcp"}
+(services)              
+
+Service mqtt-sn         {"port":1883,"proto":"udp"}
+(services)              
+
+Service mqtt-ws         {"port":8083,"proto":"tcp"}
+(services)              
+
+Service ms-sql-m        {"port":1434,"proto":"tcp"}
+(services)              
+
+Service ms-sql-s        {"port":1433,"proto":"tcp"}
+(services)              
+
+Service msft-gc         [{"port":3268,"proto":"tcp"},{"port":3268,"proto":"udp"}]
+(services)              
+
+Service msft-gc-ssl     [{"port":3269,"proto":"tcp"},{"port":3269,"proto":"udp"}]
+(services)              
+
+Service netbios-ds      [{"port":138,"proto":"tcp"},{"port":138,"proto":"udp"}]
+(services)              
+
+Service netbios-ns      [{"family":"inet","port":137,"proto":"tcp"},{"ct-helper":"netbios-ns","family":"inet","port":137,"proto":"udp"}]
+(services)              
+
+Service netbios-ssn     [{"port":139,"proto":"tcp"},{"port":139,"proto":"udp"}]
+(services)              
+
+Service ntp             {"port":123,"proto":"udp"}
+(services)              
+
+Service openvpn         {"port":1194,"proto":"udp"}
+(services)              
+
+Service ospf            {"proto":"ospf"}
+(services)              
+
+Service pgsql           {"port":5432,"proto":"tcp"}
+(services)              
+
+Service ping            [{"proto":"icmp","reply-type":0,"type":8},{"proto":"icmpv6","reply-type":129,"type":128}]
+(services)              
+
+Service pop3            {"port":110,"proto":"tcp"}
+(services)              
+
+Service pop3s           {"port":995,"proto":"tcp"}
+(services)              
+
+Service radius          [{"port":1812,"proto":"tcp"},{"port":1812,"proto":"udp"}]
+(services)              
+
+Service radius-acct     [{"port":1813,"proto":"tcp"},{"port":1813,"proto":"udp"}]
+(services)              
+
+Service rdp             {"port":3389,"proto":"tcp"}
+(services)              
+
+Service rsync           {"port":873,"proto":"tcp"}
+(services)              
+
+Service rtmp            {"port":1935,"proto":"tcp"}
+(services)              
+
+Service rtsp            {"port":554,"proto":"tcp"}
+(services)              
+
+Service secure-mqtt     {"port":8883,"proto":"tcp"}
+(services)              
+
+Service sieve           {"port":4190,"proto":"tcp"}
+(services)              
+
+Service sip             [{"ct-helper":"sip","port":5060,"proto":"tcp"},{"ct-helper":"sip","port":5060,"proto":"udp"}]
+(services)              
+
+Service sip-tls         [{"port":5061,"proto":"tcp"},{"port":5061,"proto":"udp"}]
+(services)              
+
+Service smtp            {"port":25,"proto":"tcp"}
+(services)              
+
+Service snmp            {"port":161,"proto":"udp"}
+(services)              
+
+Service snmp-trap       {"port":162,"proto":"udp"}
+(services)              
+
+Service ssh             {"port":22,"proto":"tcp"}
+(services)              
+
+Service submission      {"port":587,"proto":"tcp"}
+(services)              
+
+Service syslog          {"port":514,"proto":"udp"}
+(services)              
+
+Service telnet          {"port":23,"proto":"tcp"}
+(services)              
+
+Service teredo          {"port":3544,"proto":"udp"}
+(services)              
+
+Service tftp            {"port":69,"proto":"udp"}
+(services)              
+
+Service tinc            [{"port":655,"proto":"tcp"},{"port":655,"proto":"udp"}]
+(services)              
+
+Service vnc             {"port":5900,"proto":"tcp"}
+(services)              
+
+Service zabbix-agent    {"port":10050,"proto":"tcp"}
+(services)              
+
+Service zabbix-trapper  {"port":10051,"proto":"tcp"}
+(services)              
+
+
+Snat 1                  {"out":"A"}
+(zone)                  
+  inet/nat/POSTROUTING  -o eth0 -j MASQUERADE
+
+Snat 2                  {"out":["_fw","B"],"to-addr":"10.1.2.3"}
+(zone)                  
+  inet/nat/INPUT        -j SNAT --to-source 10.1.2.3
+  inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
+
+
+Variable awall_dedicated_chains  false
+(defaults)                       
+
+Variable awall_tproxy_mark       1
+(defaults)                       
+
+
+Zone A  {"iface":"eth0"}
+(zone)  
+
+Zone B  {"addr":["10.0.0.0\/12","fc00::\/7"],"iface":"eth1"}
+(zone)  
+
+Zone C  {"addr":"10.1.0.0\/12","iface":["eth2","eth3"]}
+(zone)  
+
+Zone D  {"iface":["eth4","eth5"],"route-back":true}
+(zone)  
+
+Zone E  {"ipsec":true}
+(zone)  
+
+
+# ipset awall-masquerade
+hash:net family inet
+
+
+# rules-save generated by awall
+*filter
+:FORWARD DROP [0:0]
+:INPUT DROP [0:0]
+:OUTPUT DROP [0:0]
+:icmp-routing - [0:0]
+:logaccept-0 - [0:0]
+:logaccept-1 - [0:0]
+:logaccept-2 - [0:0]
+:logaccept-3 - [0:0]
+:logdrop-0 - [0:0]
+:logdrop-1 - [0:0]
+:logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
+:logdrop-4 - [0:0]
+:logpass-0 - [0:0]
+:logpass-1 - [0:0]
+:logpass-2 - [0:0]
+:logpass-3 - [0:0]
+-A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logdrop-0
+-A FORWARD 
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
+-A FORWARD -j logaccept-0
+-A FORWARD -j logdrop-1
+-A FORWARD -j logpass-0
+-A FORWARD -j logaccept-1
+-A FORWARD -j logdrop-2
+-A FORWARD -j logpass-1
+-A FORWARD -j logaccept-2
+-A FORWARD -j logdrop-3
+-A FORWARD -j logpass-2
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
+-A FORWARD -j logaccept-3
+-A FORWARD -j logdrop-4
+-A FORWARD -j logpass-3
+-A FORWARD -i eth0 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth0 -o eth4 -j ACCEPT
+-A FORWARD -i eth0 -o eth5 -j ACCEPT
+-A FORWARD -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+-A FORWARD -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth4 -o eth0 -j ACCEPT
+-A FORWARD -i eth5 -o eth0 -j ACCEPT
+-A FORWARD -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -i eth4 -o eth4 -j ACCEPT
+-A FORWARD -i eth4 -o eth5 -j ACCEPT
+-A FORWARD -i eth5 -o eth4 -j ACCEPT
+-A FORWARD -i eth5 -o eth5 -j ACCEPT
+-A FORWARD -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -p icmp -j icmp-routing
+-A INPUT -m limit --limit 12/minute -j ULOG
+-A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
+-A INPUT -j TEE --gateway 10.0.0.2
+-A INPUT -j TEE --gateway 10.0.0.1
+-A INPUT -m limit --limit 1/second -j LOG
+-A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logdrop-0
+-A INPUT 
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
+-A INPUT -j logaccept-0
+-A INPUT -j logdrop-1
+-A INPUT -j logpass-0
+-A INPUT -j logaccept-1
+-A INPUT -j logdrop-2
+-A INPUT -j logpass-1
+-A INPUT -j logaccept-2
+-A INPUT -j logdrop-3
+-A INPUT -j logpass-2
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
+-A INPUT -j logaccept-3
+-A INPUT -j logdrop-4
+-A INPUT -j logpass-3
+-A INPUT -i eth0 -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -p icmp -j icmp-routing
+-A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logdrop-0
+-A OUTPUT 
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
+-A OUTPUT -j logaccept-0
+-A OUTPUT -j logdrop-1
+-A OUTPUT -j logpass-0
+-A OUTPUT -j logaccept-1
+-A OUTPUT -j logdrop-2
+-A OUTPUT -j logpass-1
+-A OUTPUT -j logaccept-2
+-A OUTPUT -j logdrop-3
+-A OUTPUT -j logpass-2
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
+-A OUTPUT -j logaccept-3
+-A OUTPUT -j logdrop-4
+-A OUTPUT -j logpass-3
+-A OUTPUT -m limit --limit 12/minute -j ULOG
+-A OUTPUT -j ACCEPT
+-A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
+-A OUTPUT -p icmp -j icmp-routing
+-A icmp-routing -p icmp --icmp-type 3 -j ACCEPT
+-A icmp-routing -p icmp --icmp-type 11 -j ACCEPT
+-A icmp-routing -p icmp --icmp-type 12 -j ACCEPT
+-A logaccept-0 -m limit --limit 1/second -j LOG
+-A logaccept-0 -j ACCEPT
+-A logaccept-1 -j LOG
+-A logaccept-1 -j ACCEPT
+-A logaccept-2 -j TEE --gateway 10.0.0.1
+-A logaccept-2 -j TEE --gateway 10.0.0.2
+-A logaccept-2 -j ACCEPT
+-A logaccept-3 -m limit --limit 12/minute -j ULOG
+-A logaccept-3 -j ACCEPT
+-A logdrop-0 -m limit --limit 1/second -j LOG
+-A logdrop-0 -j DROP
+-A logdrop-1 -m limit --limit 1/second -j LOG
+-A logdrop-1 -j DROP
+-A logdrop-2 -j LOG
+-A logdrop-2 -j DROP
+-A logdrop-3 -j TEE --gateway 10.0.0.1
+-A logdrop-3 -j TEE --gateway 10.0.0.2
+-A logdrop-3 -j DROP
+-A logdrop-4 -m limit --limit 12/minute -j ULOG
+-A logdrop-4 -j DROP
+-A logpass-0 -m limit --limit 1/second -j LOG
+-A logpass-1 -j LOG
+-A logpass-2 -j TEE --gateway 10.0.0.1
+-A logpass-2 -j TEE --gateway 10.0.0.2
+-A logpass-3 -m limit --limit 12/minute -j ULOG
+COMMIT
+*mangle
+:FORWARD ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j MARK --set-mark 2
+-A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j MARK --set-mark 2
+-A INPUT -j MARK --set-mark 3
+-A OUTPUT -j MARK --set-mark 1
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 3
+-A PREROUTING -i eth0 -j MARK --set-mark 1
+COMMIT
+*nat
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+:masquerade - [0:0]
+-A INPUT -j SNAT --to-source 10.1.2.3
+-A OUTPUT -j REDIRECT
+-A POSTROUTING -o eth0 -j MASQUERADE
+-A POSTROUTING -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
+-A POSTROUTING -m set --match-set awall-masquerade src -j masquerade
+-A PREROUTING -i eth0 -j REDIRECT
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT
+-A masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
+COMMIT
+*raw
+:OUTPUT ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A OUTPUT -j CT --notrack
+-A PREROUTING -i eth0 -j CT --notrack
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
+COMMIT
+
+# rules6-save generated by awall
+*filter
+:FORWARD DROP [0:0]
+:INPUT DROP [0:0]
+:OUTPUT DROP [0:0]
+:icmp-routing - [0:0]
+:logaccept-0 - [0:0]
+:logaccept-1 - [0:0]
+:logaccept-2 - [0:0]
+:logaccept-3 - [0:0]
+:logdrop-0 - [0:0]
+:logdrop-1 - [0:0]
+:logdrop-2 - [0:0]
+:logdrop-3 - [0:0]
+:logdrop-4 - [0:0]
+:logpass-0 - [0:0]
+:logpass-1 - [0:0]
+:logpass-2 - [0:0]
+-A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -j ACCEPT
+-A FORWARD -j logdrop-0
+-A FORWARD 
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
+-A FORWARD -j logaccept-0
+-A FORWARD -j logdrop-1
+-A FORWARD -j logpass-0
+-A FORWARD -j logaccept-1
+-A FORWARD -j logdrop-2
+-A FORWARD -j logpass-1
+-A FORWARD -j logaccept-2
+-A FORWARD -j logdrop-3
+-A FORWARD -j logpass-2
+-A FORWARD -j ACCEPT
+-A FORWARD -j DROP
+-A FORWARD 
+-A FORWARD -j logaccept-3
+-A FORWARD -j logdrop-4
+-A FORWARD -i eth0 -j ACCEPT
+-A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth0 -o eth4 -j ACCEPT
+-A FORWARD -i eth0 -o eth5 -j ACCEPT
+-A FORWARD -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
+-A FORWARD -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth4 -o eth0 -j ACCEPT
+-A FORWARD -i eth5 -o eth0 -j ACCEPT
+-A FORWARD -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -i eth4 -o eth4 -j ACCEPT
+-A FORWARD -i eth4 -o eth5 -j ACCEPT
+-A FORWARD -i eth5 -o eth4 -j ACCEPT
+-A FORWARD -i eth5 -o eth5 -j ACCEPT
+-A FORWARD -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+-A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+-A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
+-A INPUT -j TEE --gateway fc00::2
+-A INPUT -m limit --limit 1/second -j LOG
+-A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -j logdrop-0
+-A INPUT 
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
+-A INPUT -j logaccept-0
+-A INPUT -j logdrop-1
+-A INPUT -j logpass-0
+-A INPUT -j logaccept-1
+-A INPUT -j logdrop-2
+-A INPUT -j logpass-1
+-A INPUT -j logaccept-2
+-A INPUT -j logdrop-3
+-A INPUT -j logpass-2
+-A INPUT -j ACCEPT
+-A INPUT -j DROP
+-A INPUT 
+-A INPUT -j logaccept-3
+-A INPUT -j logdrop-4
+-A INPUT -i eth0 -j ACCEPT
+-A INPUT -j ACCEPT
+-A INPUT -p icmpv6 -j ACCEPT
+-A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j logdrop-0
+-A OUTPUT 
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
+-A OUTPUT -j logaccept-0
+-A OUTPUT -j logdrop-1
+-A OUTPUT -j logpass-0
+-A OUTPUT -j logaccept-1
+-A OUTPUT -j logdrop-2
+-A OUTPUT -j logpass-1
+-A OUTPUT -j logaccept-2
+-A OUTPUT -j logdrop-3
+-A OUTPUT -j logpass-2
+-A OUTPUT -j ACCEPT
+-A OUTPUT -j DROP
+-A OUTPUT 
+-A OUTPUT -j logaccept-3
+-A OUTPUT -j logdrop-4
+-A OUTPUT -j ACCEPT
+-A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
+-A OUTPUT -p icmpv6 -j ACCEPT
+-A icmp-routing -p icmpv6 --icmpv6-type 1 -j ACCEPT
+-A icmp-routing -p icmpv6 --icmpv6-type 2 -j ACCEPT
+-A icmp-routing -p icmpv6 --icmpv6-type 3 -j ACCEPT
+-A icmp-routing -p icmpv6 --icmpv6-type 4 -j ACCEPT
+-A logaccept-0 -m limit --limit 1/second -j LOG
+-A logaccept-0 -j ACCEPT
+-A logaccept-1 -j LOG
+-A logaccept-1 -j TEE --gateway fc00::1
+-A logaccept-1 -j ACCEPT
+-A logaccept-2 -j TEE --gateway fc00::2
+-A logaccept-2 -j ACCEPT
+-A logaccept-3 -j ACCEPT
+-A logdrop-0 -m limit --limit 1/second -j LOG
+-A logdrop-0 -j DROP
+-A logdrop-1 -m limit --limit 1/second -j LOG
+-A logdrop-1 -j DROP
+-A logdrop-2 -j LOG
+-A logdrop-2 -j TEE --gateway fc00::1
+-A logdrop-2 -j DROP
+-A logdrop-3 -j TEE --gateway fc00::2
+-A logdrop-3 -j DROP
+-A logdrop-4 -j DROP
+-A logpass-0 -m limit --limit 1/second -j LOG
+-A logpass-1 -j LOG
+-A logpass-1 -j TEE --gateway fc00::1
+-A logpass-2 -j TEE --gateway fc00::2
+COMMIT
+*mangle
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A INPUT -j MARK --set-mark 3
+-A OUTPUT -j MARK --set-mark 1
+-A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 3
+-A PREROUTING -i eth0 -j MARK --set-mark 1
+COMMIT
+*raw
+:OUTPUT ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+-A OUTPUT -j CT --notrack
+-A PREROUTING -i eth0 -j CT --notrack
+-A PREROUTING -i eth1 -s fc00::/7 -j CT --notrack
+-A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
+COMMIT
+
