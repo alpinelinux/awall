@@ -41,6 +41,9 @@ function PolicyConfig:init(policies, modpath)
 	    {'description', 'import', 'after', 'before'}, attr
 	 ) then
 
+	    if type(attr) ~= 'string' then
+	       _raise(name, 'Must be an object, not a list')
+	    end
 	    if type(objs) ~= 'table' then
 	       _raise(name, 'Top-level attribute '..attr..' must be a table')
 	    end
@@ -122,8 +125,9 @@ function Policy:load()
    file:close()
 
    local success, res = pcall(self.decode, data)
-   if success then return res end
-   raise(res..' while parsing '..self.path)
+   if not success then raise(res..' while parsing '..self.path) end
+   if type(res) == 'table' then return res end
+   self:error('Must be an object')
 end
 
 function Policy:checkoptional()
