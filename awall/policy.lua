@@ -20,6 +20,9 @@ local setdefault = util.setdefault
 local posix = require('posix')
 
 
+local function _raise(name, msg) raise(name..': '..msg) end
+
+
 local PolicyConfig = class()
 
 function PolicyConfig:init(policies, modpath)
@@ -39,9 +42,7 @@ function PolicyConfig:init(policies, modpath)
 	 ) then
 
 	    if type(objs) ~= 'table' then
-	       raise(
-		  'Top-level attribute '..attr..' must be a table ('..name..')'
-	       )
+	       _raise(name, 'Top-level attribute '..attr..' must be a table')
 	    end
 
 	    setdefault(self.data, attr, {})
@@ -109,6 +110,8 @@ local Policy = class()
 
 function Policy:init() self.enabled = self.type == 'mandatory' end
 
+function Policy:error(msg) _raise(self.name, msg) end
+
 function Policy:load()
    local file = io.open(self.path)
    if not file then raise('Unable to read policy file '..self.path) end
@@ -124,9 +127,7 @@ function Policy:load()
 end
 
 function Policy:checkoptional()
-   if self.type ~= 'optional' then
-      raise('Not an optional policy: '..self.name)
-   end
+   if self.type ~= 'optional' then self:error('Not an optional policy') end
 end
 
 function Policy:enable()
@@ -228,9 +229,7 @@ function PolicySet:_load()
       for _, name in listpairs(data.import) do
 	 if name:sub(1, 1) ~= '%' then
 	    local pol = self.policies[name]
-	    if not pol then
-	       raise('Invalid policy reference from '..policy.name..': '..name)
-	    end
+	    if not pol then policy:error('Cannot import policy '..name) end
 	    require(pol)
 	 end
       end
