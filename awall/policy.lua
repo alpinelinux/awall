@@ -8,6 +8,7 @@ See LICENSE file for license details
 local resolve = require('awall.dependency')
 local class = require('awall.class')
 local loader = require('awall.loader')
+local schema = require('awall.schema')
 local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
@@ -19,6 +20,14 @@ local setdefault = util.setdefault
 
 local posix = require('posix')
 
+
+local policyattrs = {
+   after=schema.List(schema.String),
+   before=schema.List(schema.String),
+   description=schema.Optional(schema.String),
+   import=schema.List(schema.String),
+   variable=schema.Map
+}
 
 local function _raise(name, msg) raise(name..': '..msg) end
 
@@ -37,13 +46,8 @@ function PolicyConfig:init(policies, modpath)
 
    for _, name in ipairs(order) do
       for attr, objs in pairs(policies[name]) do
-	 if not contains(
-	    {'description', 'import', 'after', 'before'}, attr
-	 ) then
+	 if attr == 'variable' or not policyattrs[attr] then
 
-	    if type(attr) ~= 'string' then
-	       _raise(name, 'Must be an object, not a list')
-	    end
 	    if type(objs) ~= 'table' then
 	       _raise(name, 'Top-level attribute '..attr..' must be a table')
 	    end
@@ -126,8 +130,10 @@ function Policy:load()
 
    local success, res = pcall(self.decode, data)
    if not success then raise(res..' while parsing '..self.path) end
-   if type(res) == 'table' then return res end
-   self:error('Must be an object')
+
+   local err = schema.check(res, schema.Record(policyattrs, true))
+   if err then self:error(err) end
+   return res
 end
 
 function Policy:checkoptional()
