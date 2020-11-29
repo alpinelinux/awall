@@ -20,14 +20,14 @@ function M.resolve(list, context, allow)
    local res = {}
 
    for _, host in listpairs(list) do
-      local family = identify(host, context)
+      local hfamily = identify(host, context)
       local entry
 
-      if family == 'domain' then
+      if hfamily == 'domain' then
 
 	 if not dnscache[host] then
 	    dnscache[host] = {}
-	    for family, rtype in pairs{inet='A', inet6='AAAA'} do
+	    for rfamily, rtype in pairs{inet='A', inet6='AAAA'} do
 	       local answer
 	       for rec in io.popen('drill '..host..' '..rtype):lines() do
 		  if answer then
@@ -37,8 +37,8 @@ function M.resolve(list, context, allow)
 			   '%s+(.+)'
 		     )
 		     if addr then
-			assert(identify(addr, context) == family)
-			table.insert(dnscache[host], {family, addr})
+			assert(identify(addr, context) == rfamily)
+			table.insert(dnscache[host], {rfamily, addr})
 		     end
 		  elseif rec == ';; ANSWER SECTION:' then answer = true end
 	       end
@@ -60,7 +60,7 @@ function M.resolve(list, context, allow)
 	       context:error(v[2]..' not allowed: '..host)
 	    end
 	 end
-	 entry = {{family, host}}
+	 entry = {{hfamily, host}}
       end
 
       util.extend(res, entry)
