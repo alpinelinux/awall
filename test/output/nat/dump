@@ -744,6 +744,7 @@ hash:net family inet
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -800,11 +801,13 @@ hash:net family inet
 -A INPUT -j TEE --gateway 10.0.0.1
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -j ACCEPT
@@ -906,6 +909,7 @@ COMMIT
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -936,11 +940,13 @@ COMMIT
 -A INPUT -j TEE --gateway fc00::2
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT

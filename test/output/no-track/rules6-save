@@ -5,6 +5,7 @@
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -35,6 +36,7 @@
 -A INPUT -j TEE --gateway fc00::2
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -p tcp --sport 80 -j ACCEPT
 -A INPUT -p esp -j ACCEPT
@@ -43,6 +45,7 @@
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -p tcp --dport 80 -j ACCEPT
 -A OUTPUT -p esp -j ACCEPT

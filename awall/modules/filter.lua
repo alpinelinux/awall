@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -437,17 +437,25 @@ local function stateful(config)
 
       local er = combinations(
 	 fchains,
-	 {{match='-m conntrack --ctstate ESTABLISHED'}}
+	 {
+	    {match='-m conntrack --ctstate ESTABLISHED', target='ACCEPT'},
+	    {
+	       match='-p icmp -m conntrack --ctstate RELATED',
+	       target='icmp-routing'
+	    }
+	 }
       )
-      for i, chain in ipairs({'INPUT', 'OUTPUT'}) do
+      for _, chain in ipairs{'INPUT', 'OUTPUT'} do
 	 table.insert(
-	    er, {chain=chain, match='-'..chain:sub(1, 1):lower()..' lo'}
+	    er,
+	    {
+	       chain=chain,
+	       match='-'..chain:sub(1, 1):lower()..' lo',
+	       target='ACCEPT'
+	    }
 	 )
       end
-      extend(
-	 res,
-	 combinations(er, {{family=family, table='filter', target='ACCEPT'}})
-      )
+      extend(res, combinations(er, {{family=family, table='filter'}}))
 
       -- TODO avoid creating unnecessary CT rules by inspecting the
       -- filter rules' target families and chains

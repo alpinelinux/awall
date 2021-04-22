@@ -243,6 +243,7 @@
 :logpass-92 - [0:0]
 :logpass-93 - [0:0]
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -j ACCEPT
 -A FORWARD 
 -A FORWARD -j logaccept-0
@@ -543,6 +544,7 @@
 -A INPUT -j TEE --gateway fc00::2
 -A INPUT -m limit --limit 1/second -j LOG
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT 
@@ -728,6 +730,7 @@
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT 
