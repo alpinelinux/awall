@@ -11,7 +11,7 @@
 -A INPUT -j awall-INPUT
 -A OUTPUT -j awall-OUTPUT
 -A awall-FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
--A awall-FORWARD -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
+-A awall-FORWARD -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-FORWARD -i eth0 -j ACCEPT
 -A awall-FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A awall-FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -42,13 +42,13 @@
 -A awall-INPUT -j TEE --gateway fc00::2
 -A awall-INPUT -m limit --limit 1/second -j LOG
 -A awall-INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
--A awall-INPUT -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
+-A awall-INPUT -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-INPUT -i lo -j ACCEPT
 -A awall-INPUT -i eth0 -j ACCEPT
 -A awall-INPUT -j ACCEPT
 -A awall-INPUT -p icmpv6 -j ACCEPT
 -A awall-OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
--A awall-OUTPUT -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
+-A awall-OUTPUT -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-OUTPUT -o lo -j ACCEPT
 -A awall-OUTPUT -j ACCEPT
 -A awall-OUTPUT -o eth1 -d fc00::/7 -j ACCEPT

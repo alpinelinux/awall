@@ -440,7 +440,9 @@ local function stateful(config)
 	 {
 	    {match='-m conntrack --ctstate ESTABLISHED', target='ACCEPT'},
 	    {
-	       match='-p icmp -m conntrack --ctstate RELATED',
+	       match='-p '..(
+	          {inet='icmp', inet6='icmpv6'}
+	       )[family]..' -m conntrack --ctstate RELATED',
 	       target='icmp-routing'
 	    }
 	 }

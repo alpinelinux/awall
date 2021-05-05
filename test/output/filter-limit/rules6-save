@@ -10442,7 +10442,7 @@
 -A FORWARD -j logdrop-2201
 -A FORWARD -j logdrop-2200
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
--A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
+-A FORWARD -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -o eth1 -d fc00::/7 -j logdrop-0
 -A FORWARD -o eth1 -d fc00::/7 -j logdrop-1
 -A FORWARD -o eth1 -d fc00::/7 -j logdrop-2
@@ -14763,7 +14763,7 @@
 -A INPUT -j logdrop-2201
 -A INPUT -j logdrop-2200
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
--A INPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
+-A INPUT -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -j logaccept-final-0
@@ -19059,7 +19059,7 @@
 -A OUTPUT -j logdrop-2201
 -A OUTPUT -j logdrop-2200
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
--A OUTPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
+-A OUTPUT -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j logdrop-0
 -A OUTPUT -o eth1 -d fc00::/7 -j logdrop-1
