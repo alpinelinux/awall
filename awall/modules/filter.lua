@@ -361,6 +361,16 @@ function Filter:target()
 end
 
 function Filter:mangleoptfrags(ofrags)
+   if self.dnat then
+      ofrags = combinations(
+         ofrags,
+	 {
+	    {family='inet', match='-m conntrack --ctstate DNAT'},
+	    {family='inet6'}
+	 }
+      )
+   end
+
    local limit = self:limit()
    local ul = self:updatelimit()
 
