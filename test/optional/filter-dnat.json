@@ -16,6 +16,12 @@
 	    "in": "A",
 	    "service": "ssh",
 	    "dnat": { "addr": "10.0.0.3", "port": "8022-8033" }
+	},
+	{
+	    "in": "A",
+	    "service": "https",
+	    "dnat": "10.0.0.4",
+	    "conn-limit": 2
 	}
     ]
 }
