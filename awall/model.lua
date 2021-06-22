@@ -40,12 +40,11 @@ local ADDRLEN = {inet=32, inet6=128}
 
 M.ConfigObject = M.class()
 
-function M.ConfigObject:init(context, location)
+function M.ConfigObject:init(context)
    if context then
       self.context = context
       self.root = context.objects
    end
-   self.location = location
 
    self.extraobjs = {}
    self.uniqueids = {}
@@ -69,8 +68,9 @@ function M.ConfigObject:create(cls, params, label, index)
 
    if type(params) ~= 'table' then params = {params} end
    params.label = join(self.label, '-', label)
+   params.location = self.location
 
-   local obj = cls.morph(params, self.context, self.location)
+   local obj = cls.morph(params, self.context)
    if key then self.extraobjs[key] = obj end
    return obj
 end
