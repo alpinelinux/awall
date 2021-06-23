@@ -6,24 +6,30 @@ See LICENSE file for license details
 
 
 local schema = require('schema')
-local Optional = schema.Optional
+local Map = schema.Map
 local String = schema.String
 
-local M = {
-   Map=Optional(schema.Map(String, schema.Any)),
-   Optional=Optional,
-   String=String,
-   Record=schema.Record
-}
+local M = {String=String, Record=schema.Record}
+
+function M.Optional(sch)
+   return function(data, path)
+      if data ~= nil then return sch(data, path) end
+   end
+end
+
+M.Map = M.Optional(Map(String, schema.Any))
 
 function M.List(elements)
-   return Optional(
-      schema.OneOf(
-	 elements,
-	 schema.Map(
-	    schema.AllOf(schema.PositiveNumber, schema.Integer), elements
-	 )
-      )
+   return M.Optional(
+      function(data, path)
+         local sch = elements
+	 if type(data) == 'table' and data[1] then
+	    sch = Map(
+	       schema.AllOf(schema.Integer, schema.PositiveNumber), elements
+	    )
+	 end
+	 return sch(data, path)
+      end
    )
 end
 
