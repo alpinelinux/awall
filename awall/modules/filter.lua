@@ -16,6 +16,8 @@ local optfrag = require('awall.optfrag')
 local combinations = optfrag.combinations
 local expandfamilies = optfrag.expandfamilies
 
+local schema = require('awall.schema')
+
 local util = require('awall.util')
 local contains = util.contains
 local extend = util.extend
@@ -530,10 +532,64 @@ end
 icmprules(icmp, 'icmp-type', {3, 11, 12})
 icmprules(icmp6, 'icmpv6-type', {1, 2, 3, 4})
 
+local LogSchema = schema.Optional(
+   schema.MultiType(
+      {boolean=schema.Boolean, string=schema.String},
+      'must be a boolean or logging class'
+   )
+)
+local LimitSchema = schema.Optional(
+   schema.Limit{
+      addr=schema.Optional(schema.OneOf('dest', 'src')),
+      log=LogSchema,
+      name=schema.Optional(schema.String),
+      update=schema.Optional(schema.Boolean)
+   }
+)
+local recordfields = {
+   ['conn-limit']=LimitSchema,
+   dnat=schema.Optional(
+      schema.MultiType(
+         {
+            string=schema.String,
+            table=schema.Record{
+                addr=schema.String,
+                port=schema.Optional(schema.PortRange)
+            }
+         },
+         'must be an IPv4 host or DNAT descriptor'
+      )
+   ),
+   ['flow-limit']=LimitSchema,
+   log=LogSchema,
+   ['no-track']=schema.Optional(schema.Boolean),
+   related=schema.List(schema.Rule()),
+   ['update-limit']=schema.Optional(
+      schema.MultiType(
+         {
+            string=schema.String,
+            table=schema.Record{
+               addr=schema.OneOf('dest', 'src'),
+               measure=schema.OneOf('conn', 'flow'),
+               name=schema.String
+            }
+         },
+         'must be a limit name or update descriptor'
+      )
+   )
+}
 return {
    export={
-      filter={class=Filter, before={'dnat', 'no-track'}},
-      policy={class=Policy, after='%filter-after'},
+      filter={
+         schema=schema.Rule(recordfields),
+         class=Filter,
+         before={'dnat', 'no-track'}
+      },
+      policy={
+         schema=schema.Rule(util.update({service=schema.Nil}, recordfields)),
+	 class=Policy,
+	 after='%filter-after'
+      },
       ['%filter-before']={rules=stateful, before='filter'},
       ['%filter-after']={rules=ir, after='filter'}
    },

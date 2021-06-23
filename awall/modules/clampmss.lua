@@ -1,11 +1,12 @@
 --[[
 TCP MSS clamping module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local model = require('awall.model')
+local schema = require('awall.schema')
 
 
 local ClampMSSRule = model.class(model.Rule)
@@ -21,4 +22,14 @@ function ClampMSSRule:target()
 end
 
 
-return {export={['clamp-mss']={class=ClampMSSRule, before='tproxy'}}}
+return {
+   export={
+      ['clamp-mss']={
+         schema=schema.Rule{
+            mss=schema.Optional(schema.NonNegativeInteger(2^32 - 61))
+         },
+         class=ClampMSSRule,
+         before='tproxy'
+      }
+   }
+}

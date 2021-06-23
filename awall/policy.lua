@@ -109,7 +109,26 @@ function PolicyConfig:expand()
       return value
    end
 
-   return expand(self.data)
+   local res = expand(self.data)
+   for attr, objs in pairs(res) do
+      if attr ~= 'variable' then
+         for k, v in pairs(objs) do
+	    local src = self.source[attr][k]
+	    local loc = attr..' '..k..' ('..src..')'
+
+	    local sch = self.model:schema(attr)
+	    if not sch then
+	       _raise(src, 'Unknown top-level attribute: '..attr)
+	    end
+
+	    local err = schema.check(v, sch)
+	    if err then _raise(loc, err) end
+
+	    if type(v) == 'table' then setmetatable(v, {location=loc}) end
+	 end
+      end
+   end
+   return res
 end
 
 

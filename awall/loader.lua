@@ -63,15 +63,16 @@ function Model:stages()
    return ipairs(self.procorder)
 end
 
-function Model:loadclass(name)
-   return name:sub(1, 1) ~= '%' and self._stages[name] and
-      self._stages[name].class
+function Model:property(key, prop)
+   local stage = key:sub(1, 1) ~= '%' and self._stages[key]
+   return stage and stage[prop]
 end
 
-function Model:rules(stage)
-   assert(stage:sub(1, 1) == '%')
-   return self._stages[stage].rules
-end
+function Model:schema(name) return self:property(name, 'schema') end
+
+function Model:loadclass(name) return self:property(name, 'class') end
+
+function Model:rules(stage) return self._stages[stage].rules end
 
 
 return Model

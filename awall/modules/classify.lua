@@ -1,11 +1,12 @@
 --[[
 Packet classification module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local model = require('awall.model')
+local schema = require('awall.schema')
 local extend = require('awall.util').extend
 
 
@@ -28,4 +29,10 @@ function ClassificationRule:extratrules(rules)
    )
 end
 
-return {export={classify={class=ClassificationRule}}}
+return {
+   export={
+      classify={
+         schema=schema.Rule{class=schema.UInt(6)}, class=ClassificationRule
+      }
+   }
+}

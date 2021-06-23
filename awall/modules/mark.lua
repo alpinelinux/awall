@@ -1,6 +1,6 @@
 --[[
 Packet marking module for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -11,6 +11,7 @@ local class = model.class
 local optfrag = require('awall.optfrag')
 local combinations = optfrag.combinations
 
+local schema = require('awall.schema')
 local list = require('awall.util').list
 
 
@@ -55,10 +56,12 @@ local function restoremark(config)
 end
 
 
+local MarkSchema = schema.Rule{mark=schema.UInt(32)}
+
 return {
    export={
-      mark={class=MarkRule},
-      ['route-track']={class=RouteTrackRule, before='mark'},
+      mark={schema=MarkSchema, class=MarkRule},
+      ['route-track']={schema=MarkSchema, class=RouteTrackRule, before='mark'},
       ['%mark-restore']={rules=restoremark, before='route-track'}
    }
 }

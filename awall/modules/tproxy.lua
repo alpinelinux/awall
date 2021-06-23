@@ -1,6 +1,6 @@
 --[[
 Transparent proxy module for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -9,6 +9,8 @@ local model = require('awall.model')
 
 local optfrag = require('awall.optfrag')
 local combinations = optfrag.combinations
+
+local schema = require('awall.schema')
 
 local util = require('awall.util')
 local list = util.list
@@ -57,7 +59,11 @@ end
 
 return {
    export={
-      tproxy={class=TProxyRule, before='%mark-restore'},
+      tproxy={
+         schema=schema.Rule{['to-port']=schema.Optional(schema.UInt(16))},
+         class=TProxyRule,
+         before='%mark-restore'
+      },
       ['%tproxy-divert']={rules=divert, before='tproxy'}
    }
 }

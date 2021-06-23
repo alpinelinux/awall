@@ -1,6 +1,6 @@
 --[[
 NAT module for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -12,6 +12,7 @@ local model = require('awall.model')
 local class = model.class
 
 local expandfamilies = require('awall.optfrag').expandfamilies
+local schema = require('awall.schema')
 
 local util = require('awall.util')
 local setdefault = util.setdefault
@@ -118,4 +119,15 @@ function SNATRule:trulefilter(rule)
 end
 
 
-return {export={dnat={class=DNATRule}, snat={class=SNATRule}}}
+local NATSchema = schema.Rule{
+   family=schema.List(schema.Family),
+   ['to-addr']=schema.List(schema.String),
+   ['to-port']=schema.Optional(schema.PortRange)
+}
+
+return {
+   export={
+      dnat={schema=NATSchema, class=DNATRule},
+      snat={schema=NATSchema, class=SNATRule}
+   }
+}

@@ -1,11 +1,12 @@
 --[[
 Connection tracking bypass module for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local model = require('awall.model')
+local schema = require('awall.schema')
 
 
 local NoTrackRule = model.class(model.Rule)
@@ -17,4 +18,4 @@ function NoTrackRule:target()
 end
 
 
-return {export={['no-track']={class=NoTrackRule}}}
+return {export={['no-track']={schema=schema.Rule(), class=NoTrackRule}}}

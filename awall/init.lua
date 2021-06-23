@@ -71,11 +71,7 @@ function M.Config:init(policyconfig)
       if cls then
 	 local objs = self.objects[stage]
 	 if objs then
-	    for k, v in pairs(objs) do
-	       v.location = stage..' '..k..' ('..policyconfig.source[stage][k]..
-	          ')'
-	       objs[k] = cls.morph(v, self)
-	    end
+	    for k, v in pairs(objs) do objs[k] = cls.morph(v, self) end
 	 end
       end
    end

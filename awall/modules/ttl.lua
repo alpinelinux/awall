@@ -1,11 +1,12 @@
 --[[
 TTL adjustment module for Alpine Wall
-Copyright (C) 2012-2016 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
 
 local model = require('awall.model')
+local schema = require('awall.schema')
 
 
 local TTLRule = model.class(model.Rule)
@@ -30,4 +31,20 @@ function TTLRule:target()
       math.abs(self.ttl)
 end
 
-return {export={ttl={class=TTLRule}}}
+return {
+   export={
+      ttl={
+         schema=schema.Rule{
+            ttl=function(data, path)
+               local num = tonumber(data)
+               if not num or math.floor(num) ~= num or math.abs(num) > 255 then
+                  return schema.Error(
+                     'Invalid absolute or relative TTL value at '..path, path
+                  )
+	       end
+            end
+         },
+	 class=TTLRule
+      }
+   }
+}

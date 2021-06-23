@@ -1,6 +1,6 @@
 --[[
 Packet logging module for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -9,6 +9,8 @@ local resolve = require('awall.host').resolve
 
 local model = require('awall.model')
 local class = model.class
+
+local schema = require('awall.schema')
 
 local combinations = require('awall.optfrag').combinations
 local util = require('awall.util')
@@ -118,6 +120,37 @@ end
 
 return {
    export={
-      log={class=Log}, ['packet-log']={class=LogRule, after='%filter-after'}
+      log={
+         schema=schema.Record{
+            every=schema.Optional(schema.PositiveInteger),
+            group=schema.Optional(schema.UInt(16)),
+            level=schema.Optional(
+               schema.OneOf(
+                  schema.NonNegativeInteger(7),
+		  'emerg',
+		  'alert',
+		  'crit',
+		  'error',
+		  'warning',
+		  'notice',
+		  'info',
+		  'debug'
+               )
+            ),
+            limit=schema.Optional(schema.Limit()),
+            mirror=schema.List(schema.String),
+            mode=schema.Optional(schema.OneOf('log', 'nflog', 'none', 'ulog')),
+            prefix=schema.Optional(schema.String),
+            probability=schema.Optional(schema.NumberFrom(0, 1)),
+            range=schema.Optional(schema.UInt(32)),
+            threshold=schema.Optional(schema.PositiveInteger)
+         },
+         class=Log
+      },
+      ['packet-log']={
+         schema=schema.Rule{log=schema.Optional(schema.String)},
+	 class=LogRule,
+	 after='%filter-after'
+      }
    }
 }

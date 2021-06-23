@@ -17,6 +17,7 @@ local optfrag = require('awall.optfrag')
 local combinations = optfrag.combinations
 local prune = optfrag.prune
 
+local schema = require('awall.schema')
 local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
@@ -826,9 +827,47 @@ end
 
 
 M.export = {
-   custom={class=M.ConfigObject},
-   ipset={class=IPSet, before='%modules'},
-   zone={class=M.Zone}
+   custom={
+      schema=schema.List(
+         schema.Record{
+            family=schema.Optional(schema.Family),
+            match=schema.Optional(schema.String),
+            target=schema.String
+         }
+      ),
+      class=M.ConfigObject
+   },
+   ipset={
+      schema=schema.Record{
+         family=schema.Optional(schema.Family),
+         range=schema.Optional(schema.String),
+         type=schema.String
+      },
+      class=IPSet,
+      before='%modules'
+   },
+   limit={schema=schema.MaskSpec},
+   service={
+      schema=schema.List(
+         schema.Record{
+	    ['ct-helper']=schema.Optional(schema.String),
+	    family=schema.Optional(schema.Family),
+	    port=schema.List(schema.PortRange),
+	    proto=schema.OneOf(schema.UInt(8), schema.String),
+	    ['reply-type']=schema.Optional(schema.UInt(8)),
+	    type=schema.Optional(schema.UInt(8))
+	 }
+      )
+   },
+   zone={
+      schema=schema.Record{
+         addr=schema.List(schema.String),
+	 iface=schema.List(schema.String),
+	 ipsec=schema.Optional(schema.Boolean),
+	 ['route-back']=schema.Optional(schema.Boolean)
+      },
+      class=M.Zone
+   }
 }
 
 return M
