@@ -43,6 +43,7 @@ function PolicyConfig:init(policies, modpath)
    self.model = loader(modpath)
    self.data = {}
    self.source = {}
+   self.index = {}
 
    for _, name in ipairs(order) do
       for attr, objs in pairs(policies[name]) do
@@ -54,6 +55,7 @@ function PolicyConfig:init(policies, modpath)
 
 	    setdefault(self.data, attr, {})
 	    setdefault(self.source, attr, {})
+	    setdefault(self.index, attr, {})
 
 	    local cls = self.model:loadclass(attr)
 
@@ -61,7 +63,11 @@ function PolicyConfig:init(policies, modpath)
 	       local list = util.list(objs)
 	       local last = #self.data[attr]
 	       util.extend(self.data[attr], list)
-	       for i = 1,#list do self.source[attr][last + i] = name end
+	       for i = 1,#list do
+	          local j = last + i
+	          self.source[attr][j] = name
+	          self.index[attr][j] = i
+	       end
 
 	    else
 	       for k, v in pairs(objs) do
@@ -70,6 +76,7 @@ function PolicyConfig:init(policies, modpath)
 		  end
 		  self.data[attr][k] = v
 		  self.source[attr][k] = name
+		  self.index[attr][k] = k
 	       end
 	    end
 	 end
@@ -114,17 +121,21 @@ function PolicyConfig:expand()
       if attr ~= 'variable' then
          for k, v in pairs(objs) do
 	    local src = self.source[attr][k]
-	    local loc = attr..' '..k..' ('..src..')'
+	    local index = self.index[attr][k]
 
 	    local sch = self.model:schema(attr)
 	    if not sch then
 	       _raise(src, 'Unknown top-level attribute: '..attr)
 	    end
 
-	    local err = schema.check(v, sch)
-	    if err then _raise(loc, err) end
+	    local err = schema.check(
+	       {[attr]={[index]=v}}, schema.Collection(schema.Collection(sch))
+	    )
+	    if err then _raise(src, err) end
 
-	    if type(v) == 'table' then setmetatable(v, {location=loc}) end
+	    if type(v) == 'table' then
+	       setmetatable(v, {location=src..': '..attr..'.'..index})
+	    end
 	 end
       end
    end

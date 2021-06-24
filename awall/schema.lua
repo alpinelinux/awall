@@ -21,6 +21,7 @@ local String = schema.String
 
 local M = {
    Boolean=Boolean,
+   Collection=schema.Collection,
    Error=Error,
    Family=OneOf(table.unpack(FAMILIES)),
    Nil=schema.Nil,
