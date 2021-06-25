@@ -1,6 +1,6 @@
 --[[
 Class model with inheritance and morphing support for Alpine Wall
-Copyright (C) 2012-2014 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -27,7 +27,12 @@ local function class(base)
    end
 
    function cls:morph(...)
-      setmetatable(self, {__index = cls})
+      local mt = getmetatable(self)
+      if not mt then
+         mt = {}
+         setmetatable(self, mt)
+      end
+      mt.__index = cls
       self:init(...)
       return self
    end

@@ -45,6 +45,7 @@ function M.ConfigObject:init(context)
       self.context = context
       self.root = context.objects
    end
+   if not self.location then self.location = getmetatable(self).location end
 
    self.extraobjs = {}
    self.uniqueids = {}
