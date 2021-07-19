@@ -94,6 +94,8 @@
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
+-A INPUT -m statistic --mode random --probability 0.2 -j ULOG --ulog-qthreshold 10
+-A INPUT -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
 -A INPUT -m limit --limit 12/minute -j ULOG
 -A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway 10.0.0.2

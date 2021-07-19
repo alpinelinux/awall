@@ -5,13 +5,17 @@
 	"nflog": { "mode": "nflog", "group": 1, "range": 128 },
 	"none": { "mode": "none" },
 	"ulog": { "mode": "ulog", "limit": { "interval": 5 } },
-	"zero": { "mode": "log", "limit": 0 }
+	"zero": { "mode": "log", "limit": 0 },
+	"A": { "mode": "nflog", "every": 5, "prefix": "FOO ", "threshold": 3 },
+	"B": { "mode": "ulog", "probability": 0.2, "threshold": 10 }
     },
     "packet-log": [
 	{ "out": "_fw" },
 	{ "out": "_fw", "log": "mirror" },
 	{ "out": "_fw", "log": "nflog" },
-	{ "out": "_fw", "log": "ulog" }
+	{ "out": "_fw", "log": "ulog" },
+	{ "out": "_fw", "log": "A" },
+	{ "out": "_fw", "log": "B" }
     ],
     "filter": { "in": "_fw", "log": "ulog", "action": "pass" }
 }

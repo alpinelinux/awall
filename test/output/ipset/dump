@@ -151,6 +151,12 @@ Limit D  {"inet":22,"inet6":58}
 (limit)  
 
 
+Log A         {"every":5,"mode":"nflog","prefix":"FOO ","threshold":3}
+(log)         
+
+Log B         {"mode":"ulog","probability":0.2,"threshold":10}
+(log)         
+
 Log _default  {"limit":1}
 (defaults)    
 
@@ -230,6 +236,15 @@ Packet-log 3          {"log":"nflog","out":"_fw"}
 Packet-log 4          {"log":"ulog","out":"_fw"}
 (log)                 
   inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
+
+Packet-log 5          {"log":"A","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
+  inet6/filter/INPUT  -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
+
+Packet-log 6          {"log":"B","out":"_fw"}
+(log)                 
+  inet/filter/INPUT   -m statistic --mode random --probability 0.2 -j ULOG --ulog-qthreshold 10
 
 
 Service A               {"proto":123}
@@ -541,6 +556,8 @@ hash:net,iface family inet
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
+-A INPUT -m statistic --mode random --probability 0.2 -j ULOG --ulog-qthreshold 10
+-A INPUT -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
 -A INPUT -m limit --limit 12/minute -j ULOG
 -A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway 10.0.0.2
@@ -642,6 +659,7 @@ COMMIT
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
 -A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway fc00::2
 -A INPUT -m limit --limit 1/second -j LOG
