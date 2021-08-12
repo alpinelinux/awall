@@ -1,0 +1,15 @@
+{
+    "filter": [
+        { "in": "C", "out": "B", "service": "netbios-ns" },
+        {
+            "in": "B",
+            "out": "A",
+            "src": "10.0.0.7",
+            "service": "sip",
+            "related": [
+                { "in": "B", "out": "A", "src": "10.0.0.8/29" },
+                { "in": "A", "out": "B", "dest": "10.0.0.8/29" }
+            ]
+        }
+    ]
+}
