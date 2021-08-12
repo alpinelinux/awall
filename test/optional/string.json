@@ -1,0 +1,11 @@
+{
+    "filter": [
+        { "string": "foo" },
+        { "string": { "match": "bar", "algo": "bm", "from": 100 } },
+        { "string": { "match": "baz", "from": 200, "to": 300 } },
+        {
+	    "service": "http",
+	    "string": { "match": "quux quuux", "algo": "kmp" }
+        }
+    ]
+}
