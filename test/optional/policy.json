@@ -1,0 +1,1 @@
+{ "policy": [ { "in": "A", "action": "drop" }, { "action": "reject" } ] }
