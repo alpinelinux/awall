@@ -1,0 +1,11 @@
+{
+    "classify": [
+        {
+	    "in": [ "A", "B" ],
+	    "out": [ "A", "B" ],
+	    "service": "sip",
+	    "class": 40
+	},
+	{ "in": "C", "src": "10.1.2.3", "service": "irc", "class": 8 }
+    ]
+}
