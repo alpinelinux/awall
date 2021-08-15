@@ -323,12 +323,14 @@ There are several types of rule objects:
 
 * Filter rules
 * Policy rules
-* Packet Logging rules
+* Packet logging rules
 * NAT rules
-* Packet Marking rules
-* Transparent Proxy rules
-* MSS Clamping rules
-* Connection Tracking Bypass rules
+* Packet marking rules
+* Packet classification rules
+* TTL adjustment rules
+* Transparent proxy rules
+* MSS clamping rules
+* Connection tracking bypass rules
 
 All rule objects can have the **in** and **out** attributes referring
 to [zones](#zone) as described in the previous section. In addition,
