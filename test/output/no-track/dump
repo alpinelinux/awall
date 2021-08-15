@@ -248,19 +248,38 @@ Mark 3                      {"mark":3,"out":["_fw","B"]}
   inet6/mangle/POSTROUTING  -o eth1 -d fc00::/7 -j MARK --set-mark 3
 
 
-No-track 1              {"in":["_fw","A"]}
+No-track 1              {"action":"exclude","in":"D","service":"http"}
+(no-track)              
+  inet/raw/PREROUTING   -i eth4 -p tcp --dport 80 -j ACCEPT
+  inet/raw/PREROUTING   -i eth5 -p tcp --dport 80 -j ACCEPT
+  inet6/raw/PREROUTING  -i eth4 -p tcp --dport 80 -j ACCEPT
+  inet6/raw/PREROUTING  -i eth5 -p tcp --dport 80 -j ACCEPT
+
+No-track 2              {"action":"include","in":"D"}
+(no-track)              
+  inet/raw/PREROUTING   -i eth4 -j CT --notrack
+  inet/raw/PREROUTING   -i eth5 -j CT --notrack
+  inet6/raw/PREROUTING  -i eth4 -j CT --notrack
+  inet6/raw/PREROUTING  -i eth5 -j CT --notrack
+
+No-track 3              {"in":"E","service":"ntp"}
+(no-track)              
+  inet/raw/PREROUTING   -m policy --dir in --pol ipsec -p udp --dport 123 -j CT --notrack
+  inet6/raw/PREROUTING  -m policy --dir in --pol ipsec -p udp --dport 123 -j CT --notrack
+
+No-track 4              {"in":["_fw","A"]}
 (zone)                  
   inet/raw/OUTPUT       -j CT --notrack
   inet/raw/PREROUTING   -i eth0 -j CT --notrack
   inet6/raw/OUTPUT      -j CT --notrack
   inet6/raw/PREROUTING  -i eth0 -j CT --notrack
 
-No-track 2              {"in":"B"}
+No-track 5              {"in":"B"}
 (zone)                  
   inet/raw/PREROUTING   -i eth1 -s 10.0.0.0/12 -j CT --notrack
   inet6/raw/PREROUTING  -i eth1 -s fc00::/7 -j CT --notrack
 
-No-track 3              {"out":"_fw"}
+No-track 6              {"out":"_fw"}
 (zone)                  
   inet/raw/PREROUTING   -m addrtype --dst-type LOCAL -j CT --notrack
   inet6/raw/PREROUTING  -m addrtype --dst-type LOCAL -j CT --notrack
@@ -697,6 +716,11 @@ COMMIT
 -A PREROUTING -p tcp --sport 22 -s 172.18.0.0/16 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p esp -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
+-A PREROUTING -i eth4 -p tcp --dport 80 -j ACCEPT
+-A PREROUTING -i eth5 -p tcp --dport 80 -j ACCEPT
+-A PREROUTING -i eth4 -j CT --notrack
+-A PREROUTING -i eth5 -j CT --notrack
+-A PREROUTING -m policy --dir in --pol ipsec -p udp --dport 123 -j CT --notrack
 -A PREROUTING -i eth0 -j CT --notrack
 -A PREROUTING -i eth1 -s 10.0.0.0/12 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
@@ -786,6 +810,11 @@ COMMIT
 -A PREROUTING -m addrtype --dst-type LOCAL -p tcp --sport 80 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p esp -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
+-A PREROUTING -i eth4 -p tcp --dport 80 -j ACCEPT
+-A PREROUTING -i eth5 -p tcp --dport 80 -j ACCEPT
+-A PREROUTING -i eth4 -j CT --notrack
+-A PREROUTING -i eth5 -j CT --notrack
+-A PREROUTING -m policy --dir in --pol ipsec -p udp --dport 123 -j CT --notrack
 -A PREROUTING -i eth0 -j CT --notrack
 -A PREROUTING -i eth1 -s fc00::/7 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack

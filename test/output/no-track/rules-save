@@ -157,6 +157,11 @@ COMMIT
 -A PREROUTING -p tcp --sport 22 -s 172.18.0.0/16 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p esp -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -p udp -m multiport --dports 500,4500 -j CT --notrack
+-A PREROUTING -i eth4 -p tcp --dport 80 -j ACCEPT
+-A PREROUTING -i eth5 -p tcp --dport 80 -j ACCEPT
+-A PREROUTING -i eth4 -j CT --notrack
+-A PREROUTING -i eth5 -j CT --notrack
+-A PREROUTING -m policy --dir in --pol ipsec -p udp --dport 123 -j CT --notrack
 -A PREROUTING -i eth0 -j CT --notrack
 -A PREROUTING -i eth1 -s 10.0.0.0/12 -j CT --notrack
 -A PREROUTING -m addrtype --dst-type LOCAL -j CT --notrack
