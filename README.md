@@ -137,10 +137,10 @@ aware of such additional connections. The **ct-helper** attribute is
 used to associate such a helper to a service definition when required
 by the service.
 
-All rule objects, except for policies, may have an attribute named
-**service**, constraining the rule's scope to specific services
-only. This attribute is a list of service names, referring to the keys
-of the top-level service dictionary.
+All rule objects, except for policy and MSS clamping rules, may have
+an attribute named **service**, constraining the rule's scope to
+specific services only. This attribute is a list of service names,
+referring to the keys of the top-level service dictionary.
 
 ### <a name="zone"></a>Zones
 
