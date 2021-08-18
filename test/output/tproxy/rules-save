@@ -100,7 +100,8 @@ COMMIT
 -A OUTPUT -j MARK --set-mark 1
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 3
 -A PREROUTING -m socket -j divert
--A PREROUTING -i eth1 -s 10.0.0.0/12 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 0
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 8080
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -p tcp --dport 443 -j TPROXY --tproxy-mark 1 --on-port 0
 -A PREROUTING -i eth0 -j MARK --set-mark 1
 -A divert -j MARK --set-mark 1
 -A divert -j ACCEPT

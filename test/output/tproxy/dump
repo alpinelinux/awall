@@ -465,10 +465,15 @@ Snat 2                  {"out":["_fw","B"],"to-addr":"10.1.2.3"}
   inet/nat/POSTROUTING  -o eth1 -d 10.0.0.0/12 -j SNAT --to-source 10.1.2.3
 
 
-Tproxy 1                   {"in":"B","service":"http"}
+Tproxy 1                   {"in":"B","service":"http","to-port":8080}
 (tproxy)                   
-  inet/mangle/PREROUTING   -i eth1 -s 10.0.0.0/12 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 0
-  inet6/mangle/PREROUTING  -i eth1 -s fc00::/7 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 0
+  inet/mangle/PREROUTING   -i eth1 -s 10.0.0.0/12 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 8080
+  inet6/mangle/PREROUTING  -i eth1 -s fc00::/7 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 8080
+
+Tproxy 2                   {"in":"B","service":"https"}
+(tproxy)                   
+  inet/mangle/PREROUTING   -i eth1 -s 10.0.0.0/12 -p tcp --dport 443 -j TPROXY --tproxy-mark 1 --on-port 0
+  inet6/mangle/PREROUTING  -i eth1 -s fc00::/7 -p tcp --dport 443 -j TPROXY --tproxy-mark 1 --on-port 0
 
 
 Variable awall_dedicated_chains  false
@@ -600,7 +605,8 @@ COMMIT
 -A OUTPUT -j MARK --set-mark 1
 -A POSTROUTING -o eth1 -d 10.0.0.0/12 -j MARK --set-mark 3
 -A PREROUTING -m socket -j divert
--A PREROUTING -i eth1 -s 10.0.0.0/12 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 0
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 8080
+-A PREROUTING -i eth1 -s 10.0.0.0/12 -p tcp --dport 443 -j TPROXY --tproxy-mark 1 --on-port 0
 -A PREROUTING -i eth0 -j MARK --set-mark 1
 -A divert -j MARK --set-mark 1
 -A divert -j ACCEPT
@@ -701,7 +707,8 @@ COMMIT
 -A OUTPUT -j MARK --set-mark 1
 -A POSTROUTING -o eth1 -d fc00::/7 -j MARK --set-mark 3
 -A PREROUTING -m socket -j divert
--A PREROUTING -i eth1 -s fc00::/7 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 0
+-A PREROUTING -i eth1 -s fc00::/7 -p tcp --dport 80 -j TPROXY --tproxy-mark 1 --on-port 8080
+-A PREROUTING -i eth1 -s fc00::/7 -p tcp --dport 443 -j TPROXY --tproxy-mark 1 --on-port 0
 -A PREROUTING -i eth0 -j MARK --set-mark 1
 -A divert -j MARK --set-mark 1
 -A divert -j ACCEPT
