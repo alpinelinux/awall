@@ -1,6 +1,8 @@
 {
     "log": {
 	"dual": { "mode": "log", "mirror": "fc00::1" },
+	"emerg": { "level": "emerg" },
+	"info": { "mode": "log", "level": 6 },
 	"mirror": { "mirror": [ "10.0.0.1", "10.0.0.2", "fc00::2" ] },
 	"nflog": { "mode": "nflog", "group": 1, "range": 128 },
 	"none": { "mode": "none" },
@@ -15,7 +17,9 @@
 	{ "out": "_fw", "log": "nflog" },
 	{ "out": "_fw", "log": "ulog" },
 	{ "out": "_fw", "log": "A" },
-	{ "out": "_fw", "log": "B" }
+	{ "out": "_fw", "log": "B" },
+	{ "in": "A", "service": "ftp", "log": "emerg" },
+	{ "in": "A", "service": "irc", "log": "info" }
     ],
     "filter": { "in": "_fw", "log": "ulog", "action": "pass" }
 }

@@ -182,6 +182,12 @@ Log _default  {"limit":1}
 Log dual      {"mirror":"fc00::1","mode":"log"}
 (log)         
 
+Log emerg     {"level":"emerg"}
+(log)         
+
+Log info      {"level":6,"mode":"log"}
+(log)         
+
 Log mirror    {"mirror":["10.0.0.1","10.0.0.2","fc00::2"]}
 (log)         
 
@@ -236,34 +242,48 @@ No-track 3              {"out":"_fw"}
   inet6/raw/PREROUTING  -m addrtype --dst-type LOCAL -j CT --notrack
 
 
-Packet-log 1          {"out":"_fw"}
-(log)                 
-  inet/filter/INPUT   -m limit --limit 1/second -j LOG
-  inet6/filter/INPUT  -m limit --limit 1/second -j LOG
+Packet-log 1            {"out":"_fw"}
+(log)                   
+  inet/filter/INPUT     -m limit --limit 1/second -j LOG
+  inet6/filter/INPUT    -m limit --limit 1/second -j LOG
 
-Packet-log 2          {"log":"mirror","out":"_fw"}
-(log)                 
-  inet/filter/INPUT   -j TEE --gateway 10.0.0.1
-  inet/filter/INPUT   -j TEE --gateway 10.0.0.2
-  inet6/filter/INPUT  -j TEE --gateway fc00::2
+Packet-log 2            {"log":"mirror","out":"_fw"}
+(log)                   
+  inet/filter/INPUT     -j TEE --gateway 10.0.0.1
+  inet/filter/INPUT     -j TEE --gateway 10.0.0.2
+  inet6/filter/INPUT    -j TEE --gateway fc00::2
 
-Packet-log 3          {"log":"nflog","out":"_fw"}
-(log)                 
-  inet/filter/INPUT   -j NFLOG --nflog-group 1 --nflog-size 128
-  inet6/filter/INPUT  -j NFLOG --nflog-group 1 --nflog-size 128
+Packet-log 3            {"log":"nflog","out":"_fw"}
+(log)                   
+  inet/filter/INPUT     -j NFLOG --nflog-group 1 --nflog-size 128
+  inet6/filter/INPUT    -j NFLOG --nflog-group 1 --nflog-size 128
 
-Packet-log 4          {"log":"ulog","out":"_fw"}
-(log)                 
-  inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
+Packet-log 4            {"log":"ulog","out":"_fw"}
+(log)                   
+  inet/filter/INPUT     -m limit --limit 12/minute -j ULOG
 
-Packet-log 5          {"log":"A","out":"_fw"}
-(log)                 
-  inet/filter/INPUT   -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
-  inet6/filter/INPUT  -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
+Packet-log 5            {"log":"A","out":"_fw"}
+(log)                   
+  inet/filter/INPUT     -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
+  inet6/filter/INPUT    -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
 
-Packet-log 6          {"log":"B","out":"_fw"}
-(log)                 
-  inet/filter/INPUT   -m statistic --mode random --probability 0.2 -j ULOG --ulog-qthreshold 10
+Packet-log 6            {"log":"B","out":"_fw"}
+(log)                   
+  inet/filter/INPUT     -m statistic --mode random --probability 0.2 -j ULOG --ulog-qthreshold 10
+
+Packet-log 7            {"in":"A","log":"emerg","service":"ftp"}
+(log)                   
+  inet/filter/FORWARD   -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
+  inet/filter/INPUT     -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
+  inet6/filter/FORWARD  -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
+  inet6/filter/INPUT    -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
+
+Packet-log 8            {"in":"A","log":"info","service":"irc"}
+(log)                   
+  inet/filter/FORWARD   -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
+  inet/filter/INPUT     -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
+  inet6/filter/FORWARD  -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
+  inet6/filter/INPUT    -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
 
 
 Service A               {"proto":123}
@@ -514,6 +534,8 @@ hash:net family inet
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
+-A FORWARD -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
+-A FORWARD -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -p 123 -j ACCEPT
@@ -571,6 +593,8 @@ hash:net family inet
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmp -j icmp-routing
+-A INPUT -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
+-A INPUT -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
 -A INPUT -m statistic --mode random --probability 0.2 -j ULOG --ulog-qthreshold 10
 -A INPUT -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
 -A INPUT -m limit --limit 12/minute -j ULOG
@@ -648,6 +672,8 @@ COMMIT
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
+-A FORWARD -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
+-A FORWARD -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -p 123 -j ACCEPT
@@ -681,6 +707,8 @@ COMMIT
 -A FORWARD -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
 -A FORWARD -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 -A FORWARD -p icmpv6 -j icmp-routing
+-A INPUT -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
+-A INPUT -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
 -A INPUT -m statistic --mode nth --every 5 --packet 0 -j NFLOG --nflog-prefix "FOO " --nflog-threshold 3
 -A INPUT -j NFLOG --nflog-group 1 --nflog-size 128
 -A INPUT -j TEE --gateway fc00::2
