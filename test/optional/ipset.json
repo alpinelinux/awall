@@ -1,7 +1,9 @@
 {
     "ipset": {
 	"foo": { "type": "hash:net,iface", "family": "inet" },
-	"bar": { "type": "hash:net", "family": "inet6" }
+	"bar": { "type": "hash:net", "family": "inet6" },
+	"baz": { "type": "bitmap:ip", "range": "10.2.3.4-10.2.3.56" },
+	"quux": { "type": "bitmap:ip", "range": "10.2.3.0/20" }
     },
     "filter": {
 	"in": "A",

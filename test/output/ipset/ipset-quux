@@ -1,0 +1,2 @@
+# ipset quux
+bitmap:ip range 1.2.3.0/20
