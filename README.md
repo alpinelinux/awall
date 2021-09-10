@@ -640,12 +640,13 @@ Customized chains can be defined in the top-level dictionary named
 packets can be sent to the chain by defining the value of the
 **action** attribute of an awall rule as this identifier prefixed by
 **custom:**. The values of the dictionary are lists of objects. Each
-object maps to a single rule in the custom iptables chain, defined
-using two attributes: **match** for match options and **target** for
-the target with its options. The target can also refer to another
-customized chain, using the **custom:** prefix. It is also possible to
-constrain each rule to IPv4 or IPv6 only by defining the **family**
-attribute as **inet** or **inet6**, respectively.
+object maps to a single rule in the custom iptables chain, typically
+defined using two attributes: **match** for match options and
+**target** for the target with its options. The target can also refer
+to another customized chain, using the **custom:** prefix. If
+**match** is left unspecified, the rule will match all packets. It is
+also possible to constrain each rule to IPv4 or IPv6 only by defining
+the **family** attribute as **inet** or **inet6**, respectively.
 
 ## <a name="dedicated"></a>Co-Existence with Other Firewall Management Tools
 
