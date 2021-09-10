@@ -249,43 +249,46 @@ if not call(
 	       if level == 0 then io.write(capitalize(cls)..'s:\n') end
 
 	       local clsdata = input.data[cls]
-	       local items = {}
 
-	       for _, key in sortedkeys(clsdata) do
-		  local exp = expinput[cls][key]
-		  local expj = json.encode(exp)
-		  local src = input.source[cls][key]
+	       if next(clsdata) then
+	          local items = {}
 
-		  if level == 0 then table.insert(items, {key, expj, src})
+	          for _, key in sortedkeys(clsdata) do
+		     local exp = expinput[cls][key]
+		     local expj = json.encode(exp)
+		     local src = input.source[cls][key]
 
-		  else
-		     local value = clsdata[key]
-		     local data = {
-			{capitalize(cls)..' '..key, json.encode(value)},
-			{
-			   '('..src..')',
-			   util.compare(exp, value) and '' or '-> '..expj
-			}
-		     }
+		     if level == 0 then table.insert(items, {key, expj, src})
 
-		     if level > 3 then
-			local obj = config.objects[cls][key]
-			if type(obj) == 'table' and obj.info then
-			   util.extend(data, obj:info())
-			end
-		     end
+		     else
+		        local value = clsdata[key]
+		        local data = {
+			   {capitalize(cls)..' '..key, json.encode(value)},
+			   {
+			      '('..src..')',
+			      util.compare(exp, value) and '' or '-> '..expj
+			   }
+		        }
+
+		        if level > 3 then
+			   local obj = config.objects[cls][key]
+			   if type(obj) == 'table' and obj.info then
+			      util.extend(data, obj:info())
+			   end
+		        end
 	       
-		     table.insert(items, {key, data})
-		  end
-	       end
-	       table.sort(items, function(a, b) return a[1] < b[1] end)
+		        table.insert(items, {key, data})
+		     end
+	          end
+	          table.sort(items, function(a, b) return a[1] < b[1] end)
 
-	       if level == 0 then printtabular(items)
-	       else
-		  util.printtabulars(
-		     util.map(items, function(x) return x[2] end)
-		  )
-		  io.write('\n')
+	          if level == 0 then printtabular(items)
+	          else
+		     util.printtabulars(
+		        util.map(items, function(x) return x[2] end)
+		     )
+		     io.write('\n')
+	          end
 	       end
 	    end
 	 end

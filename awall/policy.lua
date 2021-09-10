@@ -15,7 +15,6 @@ local util = require('awall.util')
 local contains = util.contains
 local listpairs = util.listpairs
 local printmsg = util.printmsg
-local setdefault = util.setdefault
 
 
 local posix = require('posix')
@@ -41,21 +40,24 @@ function PolicyConfig:init(policies, modpath)
    end
 
    self.model = loader(modpath)
-   self.data = {}
-   self.source = {}
-   self.index = {}
+
+   local function initdata(attr)
+      for _, tbl in ipairs{'data', 'source', 'index'} do
+         util.setdefault(self, tbl, {})[attr] = {}
+      end
+   end
+   initdata('variable')
+   for _, attr in self.model:stages() do
+      if self.model:schema(attr) then initdata(attr) end
+   end
 
    for _, name in ipairs(order) do
       for attr, objs in pairs(policies[name]) do
-	 if attr == 'variable' or not policyattrs[attr] then
+	 if self.data[attr] then
 
 	    if type(objs) ~= 'table' then
 	       _raise(name, 'Top-level attribute '..attr..' must be a table')
 	    end
-
-	    setdefault(self.data, attr, {})
-	    setdefault(self.source, attr, {})
-	    setdefault(self.index, attr, {})
 
 	    local cls = self.model:loadclass(attr)
 
@@ -79,6 +81,9 @@ function PolicyConfig:init(policies, modpath)
 		  self.index[attr][k] = k
 	       end
 	    end
+
+	 elseif not policyattrs[attr] then
+	    _raise(name, 'Unknown top-level attribute: '..attr)
 	 end
       end
    end
@@ -123,13 +128,9 @@ function PolicyConfig:expand()
 	    local src = self.source[attr][k]
 	    local index = self.index[attr][k]
 
-	    local sch = self.model:schema(attr)
-	    if not sch then
-	       _raise(src, 'Unknown top-level attribute: '..attr)
-	    end
-
 	    local err = schema.check(
-	       {[attr]={[index]=v}}, schema.Collection(schema.Collection(sch))
+	       {[attr]={[index]=v}},
+	       schema.Collection(schema.Collection(self.model:schema(attr)))
 	    )
 	    if err then _raise(src, err) end
 
