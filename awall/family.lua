@@ -1,14 +1,10 @@
 --[[
 Address family module for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
-local M = {
-   ACTIVE={},
-   ALL={},
-   PATTERNS={domain='[%a-][%.%w-]*', inet='%d[%.%d/-]+', inet6='[:%x/-]+'}
-}
+local M = {ACTIVE={}, ALL={}, DOMAIN_PATTERN='[%.%w-]+'}
 
 local stat = require('posix').stat
 
@@ -18,8 +14,10 @@ for family, procfile in pairs{inet='raw', inet6='raw6'} do
 end
 
 function M.identify(addr, context)
-   for k, v in pairs(M.PATTERNS) do
-      if addr:match('^'..v..'$') then return k end
+   for _, pattern in ipairs{
+      {'inet', '[%.%d/-]+'}, {'domain', M.DOMAIN_PATTERN}, {'inet6', '[:%x/-]+'}
+   } do
+      if addr:match('^'..pattern[2]..'$') then return pattern[1] end
    end
    context:error('Malformed host specification: '..addr)
 end
