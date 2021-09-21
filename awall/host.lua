@@ -1,6 +1,6 @@
 --[[
 Host address resolver for Alpine Wall
-Copyright (C) 2012-2020 Kaarle Ritvanen
+Copyright (C) 2012-2021 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -33,7 +33,7 @@ function M.resolve(list, context, allow)
 		  if answer then
 		     if rec == '' then break end
 		     local addr = rec:match(
-			'^'..family.PATTERNS.domain..'%s+%d+%s+IN%s+'..rtype..
+			'^'..family.DOMAIN_PATTERN..'%s+%d+%s+IN%s+'..rtype..
 			   '%s+(.+)'
 		     )
 		     if addr then
