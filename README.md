@@ -64,6 +64,13 @@ located in different directories. It is allowed to import optional
 policies that are not explicitly enabled by the user. Such policies
 show up with the `required` status in the output of `awall list`.
 
+Historically, awall has ignored superfluous attributes in JSON
+objects. This behavior is about to change. In order to enforce
+future-proof strict schema checking, one can set the
+**awall_schema_check** variable to **true**. Setting it to **false**
+will revert to the old behavior and suppress any warnings on schema
+violations.
+
 ## List Parameters
 
 Several awall parameters are defined as lists of values. In order to

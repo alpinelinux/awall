@@ -15,6 +15,7 @@ local util = require('awall.util')
 local contains = util.contains
 local listpairs = util.listpairs
 local printmsg = util.printmsg
+local setdefault = util.setdefault
 
 
 local posix = require('posix')
@@ -43,7 +44,7 @@ function PolicyConfig:init(policies, modpath)
 
    local function initdata(attr)
       for _, tbl in ipairs{'data', 'source', 'index'} do
-         util.setdefault(self, tbl, {})[attr] = {}
+         setdefault(self, tbl, {})[attr] = {}
       end
    end
    initdata('variable')
@@ -122,6 +123,7 @@ function PolicyConfig:expand()
    end
 
    local res = expand(self.data)
+   local errors = {}
    for attr, objs in pairs(res) do
       if attr ~= 'variable' then
          for k, v in pairs(objs) do
@@ -132,7 +134,7 @@ function PolicyConfig:expand()
 	       {[attr]={[index]=v}},
 	       schema.Collection(schema.Collection(self.model:schema(attr)))
 	    )
-	    if err then _raise(src, err) end
+	    if err then errors[src] = setdefault(errors, src, '')..err end
 
 	    if type(v) == 'table' then
 	       setmetatable(v, {location=src..': '..attr..'.'..index})
@@ -140,6 +142,22 @@ function PolicyConfig:expand()
 	 end
       end
    end
+
+   if next(errors) then
+      local check = res.variable.awall_schema_check
+      if check ~= false then
+         local msg = ''
+         for src, err in pairs(errors) do
+            msg = msg..(msg == '' and '' or '\n')..src..':'..err
+         end
+         if check then raise(msg)
+         else
+            printmsg('Warning: Some policies did not pass schema check')
+            printmsg(msg)
+         end
+      end
+   end
+
    return res
 end
 
