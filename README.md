@@ -837,7 +837,11 @@ automatically enables some of the policies and generates an initial
 ### Variables
 
 <table>
-  <thead><tr><th>Name</th><th>Used by</th><th>Description</th></tr></thead>
+  <thead>
+    <tr>
+      <th>Name</th><th>Used by</th><th>Description</th><th>Default value</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
       <td><strong>adp_dhcp_zones</strong></td>
@@ -863,22 +867,20 @@ automatically enables some of the policies and generates an initial
     <tr>
       <td><strong>adp_local_policy</strong></td>
       <td><strong>adp-local-outbound</strong></td>
-      <td>
-        Policy for local outbound traffic, defaults to <strong>reject</strong>
-      </td>
+      <td>Policy for local outbound traffic</td>
+      <td><strong>reject</strong></td>
     </tr>
     <tr>
       <td><strong>adp_router_policy</strong></td>
       <td><strong>adp-router</strong></td>
       <td>Routing policy from LAN to WAN</td>
+      <td><strong>accept</strong></td>
     </tr>
     <tr>
       <td><strong>adp_web_client_zones</strong></td>
       <td><strong>adp-web-client</strong></th>
-      <td>
-        Zones on which web clients are allowed, defaults to the
-        firewall host only
-      </td>
+      <td>Zones on which web clients are allowed</td>
+      <td><strong>_fw</strong> (firewall host only)</td>
     </tr>
   </tbody>
 </table>
