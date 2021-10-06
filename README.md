@@ -78,12 +78,14 @@ facilitate manual editing of policy files, awall also accepts single
 values in place of lists. Such values are semantically equivalent to
 lists containing one element.
 
-## <a name="variable"></a>Variable Expansion
+## <a name="variable"></a>Variables
 
 Awall allows variable definitions in policy files. The top-level
 attribute **variable** is a dictionary containing the definitions. The
 value of a variable can be of any type (string, integer, list, or
 dictionary).
+
+### Variable Expansion
 
 A variable is referenced in policy files by a string which equals the
 variable name prepended with the **$** character. If the value of the
@@ -105,6 +107,39 @@ If defined as an empty string, all non-embedded references to a
 variable evaluate as if the attribute in question was not present in
 the configuration. This is also the case when a string containing
 embedded variable references finally evaluates to an empty string.
+
+### Control Variables
+
+Variables controlling the awall behavior are prefixed with **awall_**.
+
+<table>
+  <thead>
+    <tr><th>Variable</th><th>Description</th><th>Default value</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>awall_dedicated_chains</strong></td>
+      <td>Install rules to <a href="#dedicated">dedicated chains</a></td>
+      <td><strong>false</strong></td>
+    </tr>
+    <tr>
+      <td><strong>awall_schema_check</strong></td>
+      <td>
+        Disable (<strong>false</strong>), enable
+        (<strong>null</strong>), or enforce (<strong>true</strong>)
+        schema check for <a href="#processing">policy files</a>
+      </td>
+      <td><strong>null</strong></td>
+    </tr>
+    <tr>
+      <td><strong>awall_tproxy_mark</strong></td>
+      <td>
+        Mark for packets diverted to a <a href="#tproxy">transparent proxy</a>
+      </td>
+      <td><strong>1</strong></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Configuration Objects
 
@@ -580,7 +615,7 @@ is decremented accordingly. The TTL value can be incremented by a
 constant by setting the attribute value to a string representing a
 positive integer, prepended with the plus sign (**+**).
 
-#### Transparent Proxy Rules
+#### <a name="tproxy"></a>Transparent Proxy Rules
 
 Transparent proxy rules divert the matching packets to a local proxy
 process without altering their headers. Such rules are contained in
