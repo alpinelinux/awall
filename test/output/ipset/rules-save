@@ -8,6 +8,7 @@
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -i eth0 -m set --match-set foo src,dst -p tcp --dport 22 -j logdrop-ssh-0
+-A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -67,6 +68,7 @@
 -A INPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -i eth0 -m set --match-set foo src,dst -p tcp --dport 22 -j logdrop-ssh-0
+-A INPUT -p 123 -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -74,6 +76,7 @@
 -A OUTPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -m limit --limit 12/minute -j ULOG
+-A OUTPUT -p 123 -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing

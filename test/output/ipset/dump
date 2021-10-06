@@ -27,7 +27,16 @@ Filter 2                      {"action":"pass","in":"_fw","log":"ulog"}
 (log)                         
   inet/filter/OUTPUT          -m limit --limit 12/minute -j ULOG
 
-Filter 3                      {"in":["_fw","A"]}
+Filter 3                      {"service":"A"}
+(service)                     
+  inet/filter/FORWARD         -p 123 -j ACCEPT
+  inet/filter/INPUT           -p 123 -j ACCEPT
+  inet/filter/OUTPUT          -p 123 -j ACCEPT
+  inet6/filter/FORWARD        -p 123 -j ACCEPT
+  inet6/filter/INPUT          -p 123 -j ACCEPT
+  inet6/filter/OUTPUT         -p 123 -j ACCEPT
+
+Filter 4                      {"in":["_fw","A"]}
 (zone)                        
   inet/filter/FORWARD         -i eth0 -j ACCEPT
   inet/filter/INPUT           -i eth0 -j ACCEPT
@@ -36,12 +45,12 @@ Filter 3                      {"in":["_fw","A"]}
   inet6/filter/INPUT          -i eth0 -j ACCEPT
   inet6/filter/OUTPUT         -j ACCEPT
 
-Filter 4                      {"in":"B","out":"C"}
+Filter 5                      {"in":"B","out":"C"}
 (zone)                        
   inet/filter/FORWARD         -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD         -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 5                      {"out":["_fw","B"]}
+Filter 6                      {"out":["_fw","B"]}
 (zone)                        
   inet/filter/FORWARD         -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/INPUT           -j ACCEPT
@@ -50,7 +59,7 @@ Filter 5                      {"out":["_fw","B"]}
   inet6/filter/INPUT          -j ACCEPT
   inet6/filter/OUTPUT         -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 6                      {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 7                      {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                        
   inet/filter/FORWARD         -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/FORWARD         -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
@@ -222,6 +231,9 @@ Packet-log 4          {"log":"ulog","out":"_fw"}
 (log)                 
   inet/filter/INPUT   -m limit --limit 12/minute -j ULOG
 
+
+Service A               {"proto":123}
+(service)               
 
 Service babel           {"port":6697,"proto":"tcp"}
 (services)              
@@ -478,6 +490,7 @@ hash:net,iface family inet
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -i eth0 -m set --match-set foo src,dst -p tcp --dport 22 -j logdrop-ssh-0
+-A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -537,6 +550,7 @@ hash:net,iface family inet
 -A INPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -i eth0 -m set --match-set foo src,dst -p tcp --dport 22 -j logdrop-ssh-0
+-A INPUT -p 123 -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -544,6 +558,7 @@ hash:net,iface family inet
 -A OUTPUT -p icmp -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -m limit --limit 12/minute -j ULOG
+-A OUTPUT -p 123 -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing
@@ -600,6 +615,7 @@ COMMIT
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A FORWARD -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A FORWARD -i eth0 -m set --match-set bar src -p tcp --dport 22 -j logdrop-ssh-0
+-A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -633,12 +649,14 @@ COMMIT
 -A INPUT -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A INPUT -i lo -j ACCEPT
 -A INPUT -i eth0 -m set --match-set bar src -p tcp --dport 22 -j logdrop-ssh-0
+-A INPUT -p 123 -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
 -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A OUTPUT -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -p 123 -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT

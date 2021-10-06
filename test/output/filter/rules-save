@@ -16,6 +16,7 @@
 -A FORWARD 
 -A FORWARD -j logreject-0
 -A FORWARD -j logtarpit-0
+-A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -80,6 +81,7 @@
 -A INPUT 
 -A INPUT -j logreject-0
 -A INPUT -j logtarpit-0
+-A INPUT -p 123 -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -93,6 +95,7 @@
 -A OUTPUT -j logreject-0
 -A OUTPUT -j logtarpit-0
 -A OUTPUT -m limit --limit 12/minute -j ULOG
+-A OUTPUT -p 123 -j ACCEPT
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing

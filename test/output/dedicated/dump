@@ -16,7 +16,16 @@ Filter 1                      {"action":"pass","in":"_fw","log":"ulog"}
 (log)                         
   inet/filter/awall-OUTPUT    -m limit --limit 12/minute -j ULOG
 
-Filter 2                      {"in":["_fw","A"]}
+Filter 2                      {"service":"A"}
+(service)                     
+  inet/filter/awall-FORWARD   -p 123 -j ACCEPT
+  inet/filter/awall-INPUT     -p 123 -j ACCEPT
+  inet/filter/awall-OUTPUT    -p 123 -j ACCEPT
+  inet6/filter/awall-FORWARD  -p 123 -j ACCEPT
+  inet6/filter/awall-INPUT    -p 123 -j ACCEPT
+  inet6/filter/awall-OUTPUT   -p 123 -j ACCEPT
+
+Filter 3                      {"in":["_fw","A"]}
 (zone)                        
   inet/filter/awall-FORWARD   -i eth0 -j ACCEPT
   inet/filter/awall-INPUT     -i eth0 -j ACCEPT
@@ -25,12 +34,12 @@ Filter 2                      {"in":["_fw","A"]}
   inet6/filter/awall-INPUT    -i eth0 -j ACCEPT
   inet6/filter/awall-OUTPUT   -j ACCEPT
 
-Filter 3                      {"in":"B","out":"C"}
+Filter 4                      {"in":"B","out":"C"}
 (zone)                        
   inet/filter/awall-FORWARD   -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/awall-FORWARD   -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 4                      {"out":["_fw","B"]}
+Filter 5                      {"out":["_fw","B"]}
 (zone)                        
   inet/filter/awall-FORWARD   -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/awall-INPUT     -j ACCEPT
@@ -39,7 +48,7 @@ Filter 4                      {"out":["_fw","B"]}
   inet6/filter/awall-INPUT    -j ACCEPT
   inet6/filter/awall-OUTPUT   -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 5                      {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 6                      {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                        
   inet/filter/awall-FORWARD   -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/awall-FORWARD   -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
@@ -205,6 +214,9 @@ Packet-log 4                {"log":"ulog","out":"_fw"}
 (log)                       
   inet/filter/awall-INPUT   -m limit --limit 12/minute -j ULOG
 
+
+Service A               {"proto":123}
+(service)               
 
 Service babel           {"port":6697,"proto":"tcp"}
 (services)              
@@ -459,6 +471,7 @@ hash:net family inet
 -A OUTPUT -j awall-OUTPUT
 -A awall-FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-FORWARD -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
+-A awall-FORWARD -p 123 -j ACCEPT
 -A awall-FORWARD -i eth0 -j ACCEPT
 -A awall-FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A awall-FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -517,6 +530,7 @@ hash:net family inet
 -A awall-INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-INPUT -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-INPUT -i lo -j ACCEPT
+-A awall-INPUT -p 123 -j ACCEPT
 -A awall-INPUT -i eth0 -j ACCEPT
 -A awall-INPUT -j ACCEPT
 -A awall-INPUT -p icmp -j awall-icmp-routing
@@ -524,6 +538,7 @@ hash:net family inet
 -A awall-OUTPUT -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-OUTPUT -o lo -j ACCEPT
 -A awall-OUTPUT -m limit --limit 12/minute -j ULOG
+-A awall-OUTPUT -p 123 -j ACCEPT
 -A awall-OUTPUT -j ACCEPT
 -A awall-OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A awall-OUTPUT -p icmp -j awall-icmp-routing
@@ -604,6 +619,7 @@ COMMIT
 -A OUTPUT -j awall-OUTPUT
 -A awall-FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-FORWARD -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
+-A awall-FORWARD -p 123 -j ACCEPT
 -A awall-FORWARD -i eth0 -j ACCEPT
 -A awall-FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A awall-FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -636,12 +652,14 @@ COMMIT
 -A awall-INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-INPUT -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-INPUT -i lo -j ACCEPT
+-A awall-INPUT -p 123 -j ACCEPT
 -A awall-INPUT -i eth0 -j ACCEPT
 -A awall-INPUT -j ACCEPT
 -A awall-INPUT -p icmpv6 -j ACCEPT
 -A awall-OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-OUTPUT -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-OUTPUT -o lo -j ACCEPT
+-A awall-OUTPUT -p 123 -j ACCEPT
 -A awall-OUTPUT -j ACCEPT
 -A awall-OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A awall-OUTPUT -p icmpv6 -j ACCEPT
