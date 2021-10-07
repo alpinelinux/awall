@@ -13,6 +13,7 @@
 -A FORWARD -m string --string "bar" --algo bm --from 100 -j ACCEPT
 -A FORWARD -m string --string "baz" --algo bm --from 200 --to 300 -j ACCEPT
 -A FORWARD -m string --string "quux quuux" --algo kmp -p tcp --dport 80 -j ACCEPT
+-A FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -80,6 +81,7 @@
 -A INPUT -m string --string "bar" --algo bm --from 100 -j ACCEPT
 -A INPUT -m string --string "baz" --algo bm --from 200 --to 300 -j ACCEPT
 -A INPUT -m string --string "quux quuux" --algo kmp -p tcp --dport 80 -j ACCEPT
+-A INPUT -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing

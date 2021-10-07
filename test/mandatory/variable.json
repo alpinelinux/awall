@@ -1,0 +1,7 @@
+{
+    "variable": {
+        "foo": "ppp0", "bar": "open", "baz": "bar is $bar", "quux": ""
+    },
+    "zone": { "foo": { "iface": "$foo" } },
+    "filter": { "in": "foo", "out": "$quux", "string": "$baz" }
+}

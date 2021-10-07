@@ -15,6 +15,7 @@
 -A awall-FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-FORWARD -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-FORWARD -p 123 -j ACCEPT
+-A awall-FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A awall-FORWARD -i eth0 -j ACCEPT
 -A awall-FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A awall-FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -78,6 +79,7 @@
 -A awall-INPUT -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-INPUT -i lo -j ACCEPT
 -A awall-INPUT -p 123 -j ACCEPT
+-A awall-INPUT -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A awall-INPUT -i eth0 -j ACCEPT
 -A awall-INPUT -j ACCEPT
 -A awall-INPUT -p icmp -j awall-icmp-routing

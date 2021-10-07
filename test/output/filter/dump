@@ -95,7 +95,14 @@ Filter 8                    {"service":"A"}
   inet6/filter/INPUT        -p 123 -j ACCEPT
   inet6/filter/OUTPUT       -p 123 -j ACCEPT
 
-Filter 9                    {"in":["_fw","A"]}
+Filter 9                    {"in":"foo","out":"$quux","string":"$baz"}
+(variable)                  -> {"in":"foo","string":"bar is open"}
+  inet/filter/FORWARD       -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+  inet/filter/INPUT         -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+  inet6/filter/FORWARD      -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+  inet6/filter/INPUT        -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+
+Filter 10                   {"in":["_fw","A"]}
 (zone)                      
   inet/filter/FORWARD       -i eth0 -j ACCEPT
   inet/filter/INPUT         -i eth0 -j ACCEPT
@@ -104,12 +111,12 @@ Filter 9                    {"in":["_fw","A"]}
   inet6/filter/INPUT        -i eth0 -j ACCEPT
   inet6/filter/OUTPUT       -j ACCEPT
 
-Filter 10                   {"in":"B","out":"C"}
+Filter 11                   {"in":"B","out":"C"}
 (zone)                      
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 11                   {"out":["_fw","B"]}
+Filter 12                   {"out":["_fw","B"]}
 (zone)                      
   inet/filter/FORWARD       -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/INPUT         -j ACCEPT
@@ -118,7 +125,7 @@ Filter 11                   {"out":["_fw","B"]}
   inet6/filter/INPUT        -j ACCEPT
   inet6/filter/OUTPUT       -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 12                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 13                   {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                      
   inet/filter/FORWARD       -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/FORWARD       -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
@@ -541,21 +548,36 @@ Variable awall_dedicated_chains  false
 Variable awall_tproxy_mark       1
 (defaults)                       
 
+Variable bar                     "open"
+(variable)                       
 
-Zone A  {"iface":"eth0"}
-(zone)  
+Variable baz                     "bar is $bar"
+(variable)                       -> "bar is open"
 
-Zone B  {"addr":["10.0.0.0\/12","fc00::\/7"],"iface":"eth1"}
-(zone)  
+Variable foo                     "ppp0"
+(variable)                       
 
-Zone C  {"addr":"10.1.0.0\/12","iface":["eth2","eth3"]}
-(zone)  
+Variable quux                    ""
+(variable)                       -> null
 
-Zone D  {"iface":["eth4","eth5"],"route-back":true}
-(zone)  
 
-Zone E  {"ipsec":true}
-(zone)  
+Zone A      {"iface":"eth0"}
+(zone)      
+
+Zone B      {"addr":["10.0.0.0\/12","fc00::\/7"],"iface":"eth1"}
+(zone)      
+
+Zone C      {"addr":"10.1.0.0\/12","iface":["eth2","eth3"]}
+(zone)      
+
+Zone D      {"iface":["eth4","eth5"],"route-back":true}
+(zone)      
+
+Zone E      {"ipsec":true}
+(zone)      
+
+Zone foo    {"iface":"$foo"}
+(variable)  -> {"iface":"ppp0"}
 
 
 # ipset awall-masquerade
@@ -583,6 +605,7 @@ hash:net family inet
 -A FORWARD -j logreject-0
 -A FORWARD -j logtarpit-0
 -A FORWARD -p 123 -j ACCEPT
+-A FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -652,6 +675,7 @@ hash:net family inet
 -A INPUT -j logreject-0
 -A INPUT -j logtarpit-0
 -A INPUT -p 123 -j ACCEPT
+-A INPUT -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -741,6 +765,7 @@ COMMIT
 -A FORWARD -j logreject-0
 -A FORWARD -j logtarpit-0
 -A FORWARD -p 123 -j ACCEPT
+-A FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -783,6 +808,7 @@ COMMIT
 -A INPUT -j logreject-0
 -A INPUT -j logtarpit-0
 -A INPUT -p 123 -j ACCEPT
+-A INPUT -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT

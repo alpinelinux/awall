@@ -25,7 +25,14 @@ Filter 2                      {"service":"A"}
   inet6/filter/awall-INPUT    -p 123 -j ACCEPT
   inet6/filter/awall-OUTPUT   -p 123 -j ACCEPT
 
-Filter 3                      {"in":["_fw","A"]}
+Filter 3                      {"in":"foo","out":"$quux","string":"$baz"}
+(variable)                    -> {"in":"foo","string":"bar is open"}
+  inet/filter/awall-FORWARD   -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+  inet/filter/awall-INPUT     -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+  inet6/filter/awall-FORWARD  -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+  inet6/filter/awall-INPUT    -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
+
+Filter 4                      {"in":["_fw","A"]}
 (zone)                        
   inet/filter/awall-FORWARD   -i eth0 -j ACCEPT
   inet/filter/awall-INPUT     -i eth0 -j ACCEPT
@@ -34,12 +41,12 @@ Filter 3                      {"in":["_fw","A"]}
   inet6/filter/awall-INPUT    -i eth0 -j ACCEPT
   inet6/filter/awall-OUTPUT   -j ACCEPT
 
-Filter 4                      {"in":"B","out":"C"}
+Filter 5                      {"in":"B","out":"C"}
 (zone)                        
   inet/filter/awall-FORWARD   -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
   inet/filter/awall-FORWARD   -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 5                      {"out":["_fw","B"]}
+Filter 6                      {"out":["_fw","B"]}
 (zone)                        
   inet/filter/awall-FORWARD   -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/awall-INPUT     -j ACCEPT
@@ -48,7 +55,7 @@ Filter 5                      {"out":["_fw","B"]}
   inet6/filter/awall-INPUT    -j ACCEPT
   inet6/filter/awall-OUTPUT   -o eth1 -d fc00::/7 -j ACCEPT
 
-Filter 6                      {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+Filter 7                      {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
 (zone)                        
   inet/filter/awall-FORWARD   -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
   inet/filter/awall-FORWARD   -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
@@ -471,21 +478,36 @@ Variable awall_dedicated_chains  true
 Variable awall_tproxy_mark       1
 (defaults)                       
 
+Variable bar                     "open"
+(variable)                       
 
-Zone A  {"iface":"eth0"}
-(zone)  
+Variable baz                     "bar is $bar"
+(variable)                       -> "bar is open"
 
-Zone B  {"addr":["10.0.0.0\/12","fc00::\/7"],"iface":"eth1"}
-(zone)  
+Variable foo                     "ppp0"
+(variable)                       
 
-Zone C  {"addr":"10.1.0.0\/12","iface":["eth2","eth3"]}
-(zone)  
+Variable quux                    ""
+(variable)                       -> null
 
-Zone D  {"iface":["eth4","eth5"],"route-back":true}
-(zone)  
 
-Zone E  {"ipsec":true}
-(zone)  
+Zone A      {"iface":"eth0"}
+(zone)      
+
+Zone B      {"addr":["10.0.0.0\/12","fc00::\/7"],"iface":"eth1"}
+(zone)      
+
+Zone C      {"addr":"10.1.0.0\/12","iface":["eth2","eth3"]}
+(zone)      
+
+Zone D      {"iface":["eth4","eth5"],"route-back":true}
+(zone)      
+
+Zone E      {"ipsec":true}
+(zone)      
+
+Zone foo    {"iface":"$foo"}
+(variable)  -> {"iface":"ppp0"}
 
 
 # ipset awall-masquerade
@@ -509,6 +531,7 @@ hash:net family inet
 -A awall-FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-FORWARD -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-FORWARD -p 123 -j ACCEPT
+-A awall-FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A awall-FORWARD -i eth0 -j ACCEPT
 -A awall-FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A awall-FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -572,6 +595,7 @@ hash:net family inet
 -A awall-INPUT -p icmp -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-INPUT -i lo -j ACCEPT
 -A awall-INPUT -p 123 -j ACCEPT
+-A awall-INPUT -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A awall-INPUT -i eth0 -j ACCEPT
 -A awall-INPUT -j ACCEPT
 -A awall-INPUT -p icmp -j awall-icmp-routing
@@ -663,6 +687,7 @@ COMMIT
 -A awall-FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
 -A awall-FORWARD -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-FORWARD -p 123 -j ACCEPT
+-A awall-FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A awall-FORWARD -i eth0 -j ACCEPT
 -A awall-FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A awall-FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -699,6 +724,7 @@ COMMIT
 -A awall-INPUT -p icmpv6 -m conntrack --ctstate RELATED -j awall-icmp-routing
 -A awall-INPUT -i lo -j ACCEPT
 -A awall-INPUT -p 123 -j ACCEPT
+-A awall-INPUT -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A awall-INPUT -i eth0 -j ACCEPT
 -A awall-INPUT -j ACCEPT
 -A awall-INPUT -p icmpv6 -j ACCEPT

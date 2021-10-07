@@ -1,0 +1,4 @@
+{
+    "import": "variable",
+    "variable": { "foo": [ "ppp1", "ppp2" ], "bar": "closed" }
+}

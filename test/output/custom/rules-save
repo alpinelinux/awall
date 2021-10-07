@@ -12,6 +12,7 @@
 -A FORWARD -o eth0 -m owner --uid-owner 0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -j custom:foo
 -A FORWARD -p 123 -j ACCEPT
+-A FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -76,6 +77,7 @@
 -A INPUT -i lo -j ACCEPT
 -A INPUT -i eth1 -s 10.0.0.0/12 -j custom:foo
 -A INPUT -p 123 -j ACCEPT
+-A INPUT -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
