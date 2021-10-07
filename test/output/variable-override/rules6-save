@@ -4,6 +4,8 @@
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
+:limit-0 - [0:0]
+:logdrop-0 - [0:0]
 -A FORWARD -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
 -A FORWARD -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
@@ -11,6 +13,7 @@
 -A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
 -A FORWARD -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+-A FORWARD -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -49,6 +52,7 @@
 -A INPUT -p 123 -j ACCEPT
 -A INPUT -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
 -A INPUT -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+-A INPUT -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -56,6 +60,7 @@
 -A OUTPUT -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -p 123 -j ACCEPT
+-A OUTPUT -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -63,6 +68,10 @@
 -A icmp-routing -p icmpv6 --icmpv6-type 2 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 3 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 4 -j ACCEPT
+-A limit-0 -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 2 --seconds 1 -j logdrop-0
+-A limit-0 -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A logdrop-0 -m limit --limit 1/second -j LOG
+-A logdrop-0 -j DROP
 COMMIT
 *mangle
 :INPUT ACCEPT [0:0]

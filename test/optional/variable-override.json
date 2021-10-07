@@ -1,4 +1,13 @@
 {
     "import": "variable",
-    "variable": { "foo": [ "ppp1", "ppp2" ], "bar": "closed" }
+    "variable": {
+        "foo": [ "ppp1", "ppp$quuux" ],
+        "bar": "closed",
+        "quuux": 2,
+        "quuuux": "1$quuux p.m."
+    },
+    "filter": {
+        "string": "$quuux bars are $bar between $quuux a.m. and $quuuux",
+        "conn-limit": "$quuux"
+    }
 }

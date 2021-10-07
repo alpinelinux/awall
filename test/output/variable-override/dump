@@ -12,123 +12,140 @@ Dnat 2                 {"in":"B"}
   inet/nat/PREROUTING  -i eth1 -s 10.0.0.0/12 -j REDIRECT
 
 
-Filter 1                {"action":"pass","in":"_fw","log":"ulog"}
-(log)                   
-  inet/filter/OUTPUT    -m limit --limit 12/minute -j ULOG
+Filter 1                  {"action":"pass","in":"_fw","log":"ulog"}
+(log)                     
+  inet/filter/OUTPUT      -m limit --limit 12/minute -j ULOG
 
-Filter 2                {"service":"A"}
-(service)               
-  inet/filter/FORWARD   -p 123 -j ACCEPT
-  inet/filter/INPUT     -p 123 -j ACCEPT
-  inet/filter/OUTPUT    -p 123 -j ACCEPT
-  inet6/filter/FORWARD  -p 123 -j ACCEPT
-  inet6/filter/INPUT    -p 123 -j ACCEPT
-  inet6/filter/OUTPUT   -p 123 -j ACCEPT
+Filter 2                  {"service":"A"}
+(service)                 
+  inet/filter/FORWARD     -p 123 -j ACCEPT
+  inet/filter/INPUT       -p 123 -j ACCEPT
+  inet/filter/OUTPUT      -p 123 -j ACCEPT
+  inet6/filter/FORWARD    -p 123 -j ACCEPT
+  inet6/filter/INPUT      -p 123 -j ACCEPT
+  inet6/filter/OUTPUT     -p 123 -j ACCEPT
 
-Filter 3                {"in":"foo","out":"$quux","string":"$baz"}
-(variable)              -> {"in":"foo","string":"bar is closed"}
-  inet/filter/FORWARD   -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
-  inet/filter/FORWARD   -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
-  inet/filter/INPUT     -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
-  inet/filter/INPUT     -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
-  inet6/filter/FORWARD  -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
-  inet6/filter/FORWARD  -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
-  inet6/filter/INPUT    -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
-  inet6/filter/INPUT    -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+Filter 3                  {"in":"foo","out":"$quux","string":"$baz"}
+(variable)                -> {"in":"foo","string":"bar is closed"}
+  inet/filter/FORWARD     -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
+  inet/filter/FORWARD     -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+  inet/filter/INPUT       -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
+  inet/filter/INPUT       -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+  inet6/filter/FORWARD    -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
+  inet6/filter/FORWARD    -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+  inet6/filter/INPUT      -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
+  inet6/filter/INPUT      -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
 
-Filter 4                {"in":["_fw","A"]}
-(zone)                  
-  inet/filter/FORWARD   -i eth0 -j ACCEPT
-  inet/filter/INPUT     -i eth0 -j ACCEPT
-  inet/filter/OUTPUT    -j ACCEPT
-  inet6/filter/FORWARD  -i eth0 -j ACCEPT
-  inet6/filter/INPUT    -i eth0 -j ACCEPT
-  inet6/filter/OUTPUT   -j ACCEPT
+Filter 4                  {"conn-limit":"$quuux","string":"$quuux bars are $bar between $quuux a.m. and $quuuux"}
+(variable-override)       -> {"conn-limit":2,"string":"2 bars are closed between 2 a.m. and 12 p.m."}
+  inet/filter/FORWARD     -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
+  inet/filter/INPUT       -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
+  inet/filter/OUTPUT      -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
+  inet/filter/limit-0     -m recent --name limit-0 --rsource --mask 255.255.255.255 --update --hitcount 2 --seconds 1 -j logdrop-0
+  inet/filter/limit-0     -m recent --name limit-0 --rsource --mask 255.255.255.255 --set -j ACCEPT
+  inet/filter/logdrop-0   -m limit --limit 1/second -j LOG
+  inet/filter/logdrop-0   -j DROP
+  inet6/filter/FORWARD    -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
+  inet6/filter/INPUT      -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
+  inet6/filter/OUTPUT     -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
+  inet6/filter/limit-0    -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 2 --seconds 1 -j logdrop-0
+  inet6/filter/limit-0    -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+  inet6/filter/logdrop-0  -m limit --limit 1/second -j LOG
+  inet6/filter/logdrop-0  -j DROP
 
-Filter 5                {"in":"B","out":"C"}
-(zone)                  
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+Filter 5                  {"in":["_fw","A"]}
+(zone)                    
+  inet/filter/FORWARD     -i eth0 -j ACCEPT
+  inet/filter/INPUT       -i eth0 -j ACCEPT
+  inet/filter/OUTPUT      -j ACCEPT
+  inet6/filter/FORWARD    -i eth0 -j ACCEPT
+  inet6/filter/INPUT      -i eth0 -j ACCEPT
+  inet6/filter/OUTPUT     -j ACCEPT
 
-Filter 6                {"out":["_fw","B"]}
-(zone)                  
-  inet/filter/FORWARD   -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet/filter/INPUT     -j ACCEPT
-  inet/filter/OUTPUT    -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet6/filter/FORWARD  -o eth1 -d fc00::/7 -j ACCEPT
-  inet6/filter/INPUT    -j ACCEPT
-  inet6/filter/OUTPUT   -o eth1 -d fc00::/7 -j ACCEPT
+Filter 6                  {"in":"B","out":"C"}
+(zone)                    
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
 
-Filter 7                {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
-(zone)                  
-  inet/filter/FORWARD   -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth0 -o eth4 -j ACCEPT
-  inet/filter/FORWARD   -i eth0 -o eth5 -j ACCEPT
-  inet/filter/FORWARD   -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
-  inet/filter/FORWARD   -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
-  inet/filter/FORWARD   -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
-  inet/filter/FORWARD   -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
-  inet/filter/FORWARD   -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth2 -s 10.1.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth3 -s 10.1.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth2 -s 10.1.0.0/12 -o eth4 -j ACCEPT
-  inet/filter/FORWARD   -i eth2 -s 10.1.0.0/12 -o eth5 -j ACCEPT
-  inet/filter/FORWARD   -i eth3 -s 10.1.0.0/12 -o eth4 -j ACCEPT
-  inet/filter/FORWARD   -i eth3 -s 10.1.0.0/12 -o eth5 -j ACCEPT
-  inet/filter/FORWARD   -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
-  inet/filter/FORWARD   -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
-  inet/filter/FORWARD   -i eth4 -o eth0 -j ACCEPT
-  inet/filter/FORWARD   -i eth5 -o eth0 -j ACCEPT
-  inet/filter/FORWARD   -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -i eth4 -o eth4 -j ACCEPT
-  inet/filter/FORWARD   -i eth4 -o eth5 -j ACCEPT
-  inet/filter/FORWARD   -i eth5 -o eth4 -j ACCEPT
-  inet/filter/FORWARD   -i eth5 -o eth5 -j ACCEPT
-  inet/filter/FORWARD   -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
-  inet/filter/FORWARD   -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
-  inet/filter/FORWARD   -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
-  inet/filter/FORWARD   -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
-  inet/filter/FORWARD   -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
-  inet/filter/FORWARD   -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
-  inet/filter/FORWARD   -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD  -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
-  inet6/filter/FORWARD  -i eth0 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD  -i eth0 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD  -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD  -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD  -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD  -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD  -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD  -i eth4 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD  -i eth5 -o eth0 -j ACCEPT
-  inet6/filter/FORWARD  -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
-  inet6/filter/FORWARD  -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
-  inet6/filter/FORWARD  -i eth4 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD  -i eth4 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD  -i eth5 -o eth4 -j ACCEPT
-  inet6/filter/FORWARD  -i eth5 -o eth5 -j ACCEPT
-  inet6/filter/FORWARD  -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD  -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
-  inet6/filter/FORWARD  -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
-  inet6/filter/FORWARD  -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
-  inet6/filter/FORWARD  -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
-  inet6/filter/FORWARD  -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
-  inet6/filter/FORWARD  -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+Filter 7                  {"out":["_fw","B"]}
+(zone)                    
+  inet/filter/FORWARD     -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/INPUT       -j ACCEPT
+  inet/filter/OUTPUT      -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet6/filter/FORWARD    -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/INPUT      -j ACCEPT
+  inet6/filter/OUTPUT     -o eth1 -d fc00::/7 -j ACCEPT
+
+Filter 8                  {"in":["A","B","C","D","E"],"out":["A","B","C","D","E"]}
+(zone)                    
+  inet/filter/FORWARD     -i eth0 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth0 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth0 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth0 -o eth4 -j ACCEPT
+  inet/filter/FORWARD     -i eth0 -o eth5 -j ACCEPT
+  inet/filter/FORWARD     -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD     -i eth1 -s 10.0.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD     -i eth2 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD     -i eth3 -s 10.1.0.0/12 -o eth0 -j ACCEPT
+  inet/filter/FORWARD     -i eth2 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth3 -s 10.1.0.0/12 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth2 -s 10.1.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth3 -s 10.1.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth2 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD     -i eth2 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD     -i eth3 -s 10.1.0.0/12 -o eth4 -j ACCEPT
+  inet/filter/FORWARD     -i eth3 -s 10.1.0.0/12 -o eth5 -j ACCEPT
+  inet/filter/FORWARD     -i eth2 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD     -i eth3 -s 10.1.0.0/12 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD     -i eth4 -o eth0 -j ACCEPT
+  inet/filter/FORWARD     -i eth5 -o eth0 -j ACCEPT
+  inet/filter/FORWARD     -i eth4 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth5 -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth4 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth4 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth5 -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth5 -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -i eth4 -o eth4 -j ACCEPT
+  inet/filter/FORWARD     -i eth4 -o eth5 -j ACCEPT
+  inet/filter/FORWARD     -i eth5 -o eth4 -j ACCEPT
+  inet/filter/FORWARD     -i eth5 -o eth5 -j ACCEPT
+  inet/filter/FORWARD     -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD     -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet/filter/FORWARD     -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet/filter/FORWARD     -m policy --dir in --pol ipsec -o eth1 -d 10.0.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -m policy --dir in --pol ipsec -o eth2 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -m policy --dir in --pol ipsec -o eth3 -d 10.1.0.0/12 -j ACCEPT
+  inet/filter/FORWARD     -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet/filter/FORWARD     -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+  inet/filter/FORWARD     -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD    -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD    -i eth0 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD    -i eth0 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD    -i eth0 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD    -i eth1 -s fc00::/7 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD    -i eth1 -s fc00::/7 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD    -i eth1 -s fc00::/7 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD    -i eth1 -s fc00::/7 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD    -i eth4 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD    -i eth5 -o eth0 -j ACCEPT
+  inet6/filter/FORWARD    -i eth4 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD    -i eth5 -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD    -i eth4 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD    -i eth4 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD    -i eth5 -o eth4 -j ACCEPT
+  inet6/filter/FORWARD    -i eth5 -o eth5 -j ACCEPT
+  inet6/filter/FORWARD    -i eth4 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD    -i eth5 -m policy --dir out --pol ipsec -j ACCEPT
+  inet6/filter/FORWARD    -m policy --dir in --pol ipsec -o eth0 -j ACCEPT
+  inet6/filter/FORWARD    -m policy --dir in --pol ipsec -o eth1 -d fc00::/7 -j ACCEPT
+  inet6/filter/FORWARD    -m policy --dir in --pol ipsec -o eth4 -j ACCEPT
+  inet6/filter/FORWARD    -m policy --dir in --pol ipsec -o eth5 -j ACCEPT
+  inet6/filter/FORWARD    -m policy --dir in --pol ipsec -m policy --dir out --pol ipsec -j ACCEPT
 
 
 Ipset awall-masquerade  {"family":"inet","type":"hash:net"}
@@ -488,7 +505,13 @@ Variable bar                     "closed"
 Variable baz                     "bar is $bar"
 (variable)                       -> "bar is closed"
 
-Variable foo                     ["ppp1","ppp2"]
+Variable foo                     ["ppp1","ppp$quuux"]
+(variable-override)              -> ["ppp1","ppp2"]
+
+Variable quuuux                  "1$quuux p.m."
+(variable-override)              -> "12 p.m."
+
+Variable quuux                   2
 (variable-override)              
 
 Variable quux                    ""
@@ -524,6 +547,8 @@ hash:net family inet
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
+:limit-0 - [0:0]
+:logdrop-0 - [0:0]
 -A FORWARD -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
 -A FORWARD -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
@@ -531,6 +556,7 @@ hash:net family inet
 -A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
 -A FORWARD -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+-A FORWARD -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth2 -d 10.1.0.0/12 -j ACCEPT
 -A FORWARD -i eth1 -s 10.0.0.0/12 -o eth3 -d 10.1.0.0/12 -j ACCEPT
@@ -596,6 +622,7 @@ hash:net family inet
 -A INPUT -p 123 -j ACCEPT
 -A INPUT -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
 -A INPUT -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+-A INPUT -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmp -j icmp-routing
@@ -604,12 +631,17 @@ hash:net family inet
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -m limit --limit 12/minute -j ULOG
 -A OUTPUT -p 123 -j ACCEPT
+-A OUTPUT -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing
 -A icmp-routing -p icmp --icmp-type 3 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 11 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 12 -j ACCEPT
+-A limit-0 -m recent --name limit-0 --rsource --mask 255.255.255.255 --update --hitcount 2 --seconds 1 -j logdrop-0
+-A limit-0 -m recent --name limit-0 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A logdrop-0 -m limit --limit 1/second -j LOG
+-A logdrop-0 -j DROP
 COMMIT
 *mangle
 :FORWARD ACCEPT [0:0]
@@ -654,6 +686,8 @@ COMMIT
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
 :icmp-routing - [0:0]
+:limit-0 - [0:0]
+:logdrop-0 - [0:0]
 -A FORWARD -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
 -A FORWARD -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
 -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
@@ -661,6 +695,7 @@ COMMIT
 -A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
 -A FORWARD -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+-A FORWARD -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A FORWARD -i eth0 -j ACCEPT
 -A FORWARD -o eth1 -d fc00::/7 -j ACCEPT
 -A FORWARD -i eth0 -o eth1 -d fc00::/7 -j ACCEPT
@@ -699,6 +734,7 @@ COMMIT
 -A INPUT -p 123 -j ACCEPT
 -A INPUT -i ppp1 -m string --string "bar is closed" --algo bm -j ACCEPT
 -A INPUT -i ppp2 -m string --string "bar is closed" --algo bm -j ACCEPT
+-A INPUT -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A INPUT -i eth0 -j ACCEPT
 -A INPUT -j ACCEPT
 -A INPUT -p icmpv6 -j ACCEPT
@@ -706,6 +742,7 @@ COMMIT
 -A OUTPUT -p icmpv6 -m conntrack --ctstate RELATED -j icmp-routing
 -A OUTPUT -o lo -j ACCEPT
 -A OUTPUT -p 123 -j ACCEPT
+-A OUTPUT -m string --string "2 bars are closed between 2 a.m. and 12 p.m." --algo bm -j limit-0
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d fc00::/7 -j ACCEPT
 -A OUTPUT -p icmpv6 -j ACCEPT
@@ -713,6 +750,10 @@ COMMIT
 -A icmp-routing -p icmpv6 --icmpv6-type 2 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 3 -j ACCEPT
 -A icmp-routing -p icmpv6 --icmpv6-type 4 -j ACCEPT
+-A limit-0 -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --update --hitcount 2 --seconds 1 -j logdrop-0
+-A limit-0 -m recent --name limit-0 --rsource --mask ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff --set -j ACCEPT
+-A logdrop-0 -m limit --limit 1/second -j LOG
+-A logdrop-0 -j DROP
 COMMIT
 *mangle
 :INPUT ACCEPT [0:0]

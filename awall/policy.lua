@@ -92,37 +92,34 @@ end
 
 function PolicyConfig:expand()
 
-   local function expand(value)
-      if type(value) == 'table' then return util.map(value, expand) end
-
-      local visited = {}
-      local pattern = '%$(%a[%w_]*)'
-      
-      while type(value) == 'string' do
-	 local si, ei, name = value:find(pattern)
-	 if not si then break end
-	 
-	 if contains(visited, name) then
-	    raise('Circular variable definition: '..name)
-	 end
-	 table.insert(visited, name)
-	 
-	 local var = self.data.variable[name]
-	 if var == nil then raise('Invalid variable reference: '..name) end
-	 
-	 if si == 1 and ei == value:len() then value = util.copy(var)
-	 elseif contains({'number', 'string'}, type(var)) then
-	    value = value:sub(1, si - 1)..var..value:sub(ei + 1, -1)
-	 else
-	    raise('Attempted to concatenate complex variable: '..name)
-	 end
+   local function expand(value, visited)
+      if type(value) == 'table' then
+         return util.map(value, function(v) return expand(v, visited) end)
       end
+      if type(value) ~= 'string' then return value end
 
-      if value == '' then return end
-      return value
+      while true do
+         local si, ei, name = value:find('%$(%a[%w_]*)')
+         if not si then
+            if value == '' then return end
+            return value
+         end
+
+         if visited[name] then raise('Circular variable definition: '..name) end
+
+         local var = self.data.variable[name]
+         if var == nil then raise('Invalid variable reference: '..name) end
+         var = expand(var, util.update({name=true}, visited))
+
+         if si == 1 and ei == value:len() then return var end
+         if not contains({'number', 'string'}, type(var)) then
+            raise('Attempted to concatenate complex variable: '..name)
+         end
+         value = value:sub(1, si - 1)..var..value:sub(ei + 1, -1)
+      end
    end
 
-   local res = expand(self.data)
+   local res = expand(self.data, {})
    local errors = {}
    for attr, objs in pairs(res) do
       if attr ~= 'variable' then
