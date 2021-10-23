@@ -7,45 +7,47 @@ See LICENSE file for license details
 local Object
 
 local function class(base)
-   local cls = {}
+	local cls = {}
 
-   function cls.super(obj)
-      return setmetatable(
-	 {},
-	 {
-	    __index=function(t, k)
-	       local v = base[k]
-	       if type(v) ~= 'function' then return v end
-	       return function(...)
-		  local arg = {...}
-		  arg[1] = obj
-		  return v(table.unpack(arg))
-	       end
-	    end
-	 }
-      )
-   end
+	function cls.super(obj)
+		return setmetatable(
+			{},
+			{
+				__index=function(t, k)
+					local v = base[k]
+					if type(v) ~= 'function' then return v end
+					return function(...)
+						local arg = {...}
+						arg[1] = obj
+						return v(table.unpack(arg))
+					end
+				end
+			}
+		)
+	end
 
-   function cls:morph(...)
-      local mt = getmetatable(self)
-      if not mt then
-         mt = {}
-         setmetatable(self, mt)
-      end
-      mt.__index = cls
-      self:init(...)
-      return self
-   end
+	function cls:morph(...)
+		local mt = getmetatable(self)
+		if not mt then
+			mt = {}
+			setmetatable(self, mt)
+		end
+		mt.__index = cls
+		self:init(...)
+		return self
+	end
 
-   local mt = {__call=function(self, ...) return cls.morph({}, ...) end}
+	local mt = {__call=function(self, ...) return cls.morph({}, ...) end}
 
-   if not base and Object then base = Object end
-   if base then mt.__index = base end
+	if not base and Object then base = Object end
+	if base then mt.__index = base end
 
-   return setmetatable(cls, mt)
+	return setmetatable(cls, mt)
 end
 
 Object = class()
 function Object:init(...) end
 
 return class
+
+-- vim: ts=4

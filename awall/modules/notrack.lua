@@ -14,8 +14,10 @@ local NoTrackRule = model.class(model.Rule)
 function NoTrackRule:table() return 'raw' end
 
 function NoTrackRule:target()
-   return NoTrackRule.super(self):target() or 'CT --notrack'
+	return NoTrackRule.super(self):target() or 'CT --notrack'
 end
 
 
 return {export={['no-track']={schema=schema.Rule(), class=NoTrackRule}}}
+
+-- vim: ts=4

@@ -13,26 +13,28 @@ local extend = require('awall.util').extend
 local ClassificationRule = model.class(model.Rule)
 
 function ClassificationRule:init(...)
-   ClassificationRule.super(self):init(...)
-   if not self.class then self:error('Class not specified') end
+	ClassificationRule.super(self):init(...)
+	if not self.class then self:error('Class not specified') end
 end
 
 function ClassificationRule:table() return 'mangle' end
 
 function ClassificationRule:target()
-   return 'DSCP --set-dscp-class '..self.class
+	return 'DSCP --set-dscp-class '..self.class
 end
 
 function ClassificationRule:extratrules(rules)
-   return not self.reverse and self:extrarules(
-      'reply', 'classify', {attrs='class', update={reverse=true}}
-   )
+	return not self.reverse and self:extrarules(
+		'reply', 'classify', {attrs='class', update={reverse=true}}
+	)
 end
 
 return {
-   export={
-      classify={
-         schema=schema.Rule{class=schema.UInt(6)}, class=ClassificationRule
-      }
-   }
+	export={
+		classify={
+			schema=schema.Rule{class=schema.UInt(6)}, class=ClassificationRule
+		}
+	}
 }
+
+-- vim: ts=4
