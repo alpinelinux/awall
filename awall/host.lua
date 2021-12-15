@@ -75,7 +75,7 @@ end
 
 function M.resolveunique(list, families, context)
 	local res = {}
-	for _, addr in M.resolve(list, self, {range=true}) do
+	for _, addr in M.resolve(list, context, {range=true}) do
 		local family = addr[1]
 		if util.contains(families, family) then
 			if res[family] then context:error('Address must be unique') end
