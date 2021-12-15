@@ -46,7 +46,7 @@ function M.resolve(list, context, allow)
 					end
 				end
 				if not dnscache[host][1] then
-					context:error('Invalid host name: '..host)
+					context:error('Cannot resolve host name: '..host)
 				end
 				table.sort(
 					dnscache[host], function(a, b) return a[2] < b[2] end
