@@ -1,2 +1,2 @@
 # ipset bar
-hash:net family inet6
+hash:net family inet6 timeout 456

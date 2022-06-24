@@ -1,6 +1,6 @@
 --[[
 Policy schema checker for Alpine Wall
-Copyright (C) 2012-2021 Kaarle Ritvanen
+Copyright (C) 2012-2022 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -20,10 +20,12 @@ local Record = schema.Record
 local String = schema.String
 
 local M = {
+	AllOf=AllOf,
 	Boolean=Boolean,
 	Collection=schema.Collection,
 	Error=Error,
 	Family=OneOf(table.unpack(FAMILIES)),
+	Integer=Integer,
 	Nil=schema.Nil,
 	NumberFrom=NumberFrom,
 	OneOf=OneOf,

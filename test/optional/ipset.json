@@ -1,9 +1,16 @@
 {
     "ipset": {
-	"foo": { "type": "hash:net,iface", "family": "inet" },
-	"bar": { "type": "hash:net", "family": "inet6" },
+	"foo": { "type": "hash:net,iface", "family": "inet", "size": 123 },
+	"bar": { "type": "hash:net", "family": "inet6", "timeout": 456 },
 	"baz": { "type": "bitmap:ip", "range": "10.2.3.4-10.2.3.56" },
-	"quux": { "type": "bitmap:ip", "range": "10.2.3.0/20" }
+	"quux": { "type": "bitmap:ip", "range": "10.2.3.0/20" },
+	"quuux": {
+		"type": "hash:ip",
+		"family": "inet",
+		"size": 789,
+		"timeout": true
+	},
+	"quuuux": { "type": "hash:ip", "family": "inet6", "timeout": false }
     },
     "filter": {
 	"in": "A",

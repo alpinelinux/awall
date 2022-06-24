@@ -1,0 +1,2 @@
+# ipset quuux
+hash:ip family inet maxelem 789 timeout 0

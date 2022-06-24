@@ -1,2 +1,2 @@
 # ipset foo
-hash:net,iface family inet
+hash:net,iface family inet maxelem 123

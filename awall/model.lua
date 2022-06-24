@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2021 Kaarle Ritvanen
+Copyright (C) 2012-2022 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -178,10 +178,20 @@ function IPSet:init(...)
 	elseif startswith(self.type, 'hash:') then
 		if not self.family then self:error('Family not defined') end
 		self.options = {self.type, 'family', self.family}
+		if self.size then
+			extend(self.options, {'maxelem', self.size})
+		end
 
 	elseif self.type == 'list:set' then self.options = {self.type}
 
 	else self:error('Invalid type: '..self.type) end
+
+	if self.timeout then
+		extend(
+			self.options,
+			{'timeout', self.timeout == true and 0 or self.timeout}
+		)
+	end
 end
 
 
@@ -865,6 +875,21 @@ M.export = {
 		schema=schema.Record{
 			family=schema.Optional(schema.Family),
 			range=schema.Optional(schema.String),
+			size=schema.Optional(schema.NonNegativeInteger(2^16)),
+			timeout=schema.Optional(
+				schema.MultiType(
+					{
+						boolean=schema.Boolean,
+						number=schema.AllOf(
+							schema.Integer,
+							schema.NumberFrom(
+								1, 2147483
+							)
+						)
+					},
+					'must be a boolean or an integer specifying the default timeout'
+				)
+			),
 			type=schema.String
 		},
 		class=IPSet,

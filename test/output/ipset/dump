@@ -141,13 +141,19 @@ Filter 8                      {"in":["A","B","C","D","E"],"out":["A","B","C","D"
 Ipset awall-masquerade  {"family":"inet","type":"hash:net"}
 (masquerade)            
 
-Ipset bar               {"family":"inet6","type":"hash:net"}
+Ipset bar               {"family":"inet6","timeout":456,"type":"hash:net"}
 (ipset)                 
 
 Ipset baz               {"range":"10.2.3.4-10.2.3.56","type":"bitmap:ip"}
 (ipset)                 
 
-Ipset foo               {"family":"inet","type":"hash:net,iface"}
+Ipset foo               {"family":"inet","size":123,"type":"hash:net,iface"}
+(ipset)                 
+
+Ipset quuuux            {"family":"inet6","timeout":false,"type":"hash:ip"}
+(ipset)                 
+
+Ipset quuux             {"family":"inet","size":789,"timeout":true,"type":"hash:ip"}
 (ipset)                 
 
 Ipset quux              {"range":"10.2.3.0\/20","type":"bitmap:ip"}
@@ -540,13 +546,19 @@ Zone foo    {"iface":"$foo"}
 hash:net family inet
 
 # ipset bar
-hash:net family inet6
+hash:net family inet6 timeout 456
 
 # ipset baz
 bitmap:ip range 10.2.3.4-10.2.3.56
 
 # ipset foo
-hash:net,iface family inet
+hash:net,iface family inet maxelem 123
+
+# ipset quuuux
+hash:ip family inet6
+
+# ipset quuux
+hash:ip family inet maxelem 789 timeout 0
 
 # ipset quux
 bitmap:ip range 10.2.3.0/20

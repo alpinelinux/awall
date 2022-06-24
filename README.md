@@ -661,11 +661,20 @@ command. **family** specifies whether the set is for IPv4 or IPv6
 addresses, and the possible values are **inet** and **inet6**,
 correspondingly.
 
+If the **timeout** attribute is set to **true**, entries added to the
+IP set may be assigned a timeout, after which they are automatically
+deleted from the set. If set to an integer, the timeout functionality
+is enabled for the set and all entries are by default assinged a
+timeout corresponding to the value in seconds.
+
 For bitmap-type IP sets, the **range** attribute specifies the range
 of allowed IPv4 addresses. It may be given as a network address or two
 addresses separated by the **-** character. It is not necessary to
 specify **family** for bitmaps, since the kernel supports only IPv4
 bitmaps.
+
+The maximum size of hash-type IP sets may be limited with the **size**
+attribute.
 
 ## Customizing iptables Rules
 
