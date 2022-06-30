@@ -1,6 +1,6 @@
 --[[
 Ipset file dumper for Alpine Wall
-Copyright (C) 2012-2021 Kaarle Ritvanen
+Copyright (C) 2012-2022 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -43,7 +43,7 @@ function IPSet:dump(prefix)
 			file = io.open(fname, 'w')
 			self:dumpfile(name, file)
 		end
-	file:close()
+		file:close()
 	end
 end
 
