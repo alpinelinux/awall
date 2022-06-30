@@ -303,6 +303,9 @@ Service bgp             {"port":179,"proto":"tcp"}
 Service dhcp            {"family":"inet","port":[67,68],"proto":"udp"}
 (services)              
 
+Service dhcpv6          {"family":"inet6","port":[546,547],"proto":"udp"}
+(services)              
+
 Service discard         [{"port":9,"proto":"tcp"},{"port":9,"proto":"udp"}]
 (services)              
 
