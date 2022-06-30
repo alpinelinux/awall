@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # Alpine Wall test script
-# Copyright (C) 2012-2017 Kaarle Ritvanen
+# Copyright (C) 2012-2022 Kaarle Ritvanen
 # See LICENSE file for license details
 
 
@@ -29,6 +29,8 @@ POLICIES=$(ls test/optional/*.json | sed -E 's:^.*/([^/]+).json$:\1:')
 for pol in $POLICIES; do
     $AWALL disable $pol 2>/dev/null
 done
+
+[ "$1" = translate ] && rm -f test/output/*/ipset-*
 
 RC=0
 for pol in $POLICIES; do
