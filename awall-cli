@@ -318,7 +318,7 @@ if not call(
 			end
 
 			local pid, stdin, stdout = lpc.run(
-				'diff', '-w', '--', dumpfile, '/proc/self/fd/0'
+				'diff', '-w', '-U3', '--', dumpfile, '/proc/self/fd/0'
 			)
 
 			filedump(stdin)
