@@ -1,6 +1,6 @@
 --[[
 Base data model for Alpine Wall
-Copyright (C) 2012-2022 Kaarle Ritvanen
+Copyright (C) 2012-2023 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -875,7 +875,7 @@ M.export = {
 		schema=schema.Record{
 			family=schema.Optional(schema.Family),
 			range=schema.Optional(schema.String),
-			size=schema.Optional(schema.NonNegativeInteger(2^16)),
+			size=schema.Optional(schema.NonNegativeInteger()),
 			timeout=schema.Optional(
 				schema.MultiType(
 					{
