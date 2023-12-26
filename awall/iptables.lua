@@ -23,12 +23,10 @@ local M = {}
 
 local families = {
 	inet={
-		cmd='iptables', file='rules-save', procfile='/proc/net/ip_tables_names'
+		cmd='iptables', file='rules-save'
 	},
 	inet6={
-		cmd='ip6tables',
-		file='rules6-save',
-		procfile='/proc/net/ip6_tables_names'
+		cmd='ip6tables', file='rules6-save'
 	}
 }
 
@@ -42,13 +40,31 @@ local builtin = {
 
 local backupdir = '/var/run/awall'
 
+local _acttables = {}
+local function acttables(family)
+	if not _acttables[family] then
+		_acttables[family] = {}
+		local pid, stdin, stdout = lpc.run(families[family].cmd..'-save')
+		stdin:close()
+		for line in stdout:lines() do
+			local tbl = string.match(line, "^%*(.*)")
+			if tbl then
+				table.insert(_acttables[family], tbl)
+			end
+		end
+		stdout:close()
+		assert(lpc.wait(pid) == 0)
+	end
+	return _acttables[family]
+end
+
 
 local _actfamilies
 local function actfamilies()
 	if _actfamilies then return _actfamilies end
 	_actfamilies = {}
 	for _, family in ipairs(ACTIVE) do
-		if posix.stat(families[family].procfile) then
+		if #acttables(family) > 0 then
 			table.insert(_actfamilies, family)
 		else printmsg('Warning: firewall not enabled for '..family) end
 	end
@@ -172,7 +188,7 @@ end
 function M.PartialIPTables:flush()
 	for _, family in ipairs(actfamilies()) do
 		local cmd = families[family].cmd
-		for tbl in io.lines(families[family].procfile) do
+		for _, tbl in ipairs(acttables(family)) do
 			if builtin[tbl] then
 				local pid, stdin, stdout = lpc.run(cmd, '-t', tbl, '-S')
 				stdin:close()
@@ -238,7 +254,7 @@ function M.revert() Backup():activate() end
 function M.flush()
 	local empty = M.IPTables()
 	for _, family in pairs(actfamilies()) do
-		for tbl in io.lines(families[family].procfile) do
+		for _, tbl in ipairs(acttables(family)) do
 			if builtin[tbl] then
 				for _, chain in ipairs(builtin[tbl]) do
 					empty.config[family][tbl][chain] = {}
