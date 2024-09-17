@@ -729,11 +729,13 @@ default, awall generates the configuration to `/etc/iptables` and
 
  **awall activate** \[**-f** | **--force**\]
 
-This command genereates firewall configuration from the policy files
-and enables it. If the user confirms the new configuration by hitting
-the Return key within 10 seconds or the `--force` option is used, the
-configuration is saved to the files. Otherwise, the old configuration
-is restored.
+This command generates firewall configuration from the policy files,
+superseding the currently active configuration. If the user confirms the new
+configuration by hitting the Return key within 10 seconds or the `--force`
+option is used, the configuration is saved to the files. Otherwise, the old
+configuration is restored.
+
+The firewall must already be active when this command is run.
 
  **awall flush** \[**-a** | **--all**\]
 
@@ -866,6 +868,7 @@ automatically enables some of the policies and generates an initial
       <td><strong>adp-wan</strong></td>
       <td>
         <strong>adp-clamp-mss</strong><br>
+        <strong>adp-ntp-client</strong><br>
         <strong>adp-ping</strong><br>
         <strong>adp-router</strong><br>
         <strong>adp-ssh-server</strong><br>
@@ -902,6 +905,7 @@ automatically enables some of the policies and generates an initial
       <td><strong>adp-router</strong></td>
       <td>LAN interfaces</td>
     </tr>
+    <tr>
       <td><strong>adp_lan_private_addrs</strong></td>
       <td><strong>adp-router</strong></td>
       <td>
