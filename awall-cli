@@ -417,27 +417,29 @@ if not call(
 
 			if call(config.activate, config) then
 
-			if not force then
-				printmsg('New firewall configuration activated')
-				io.stderr:write('Press RETURN to commit changes permanently: ')
-				interrupted = not io.read()
-
-				kill()
-
-				if interrupted then
-					printmsg(
-						'\nActivation canceled, reverting to the old configuration'
+				if not force then
+					printmsg('New firewall configuration activated')
+					io.stderr:write(
+						'Press RETURN to commit changes permanently: '
 					)
-					revert()
+					interrupted = not io.read()
+
+					kill()
+
+					if interrupted then
+						printmsg(
+							'\nActivation canceled, reverting to the old configuration'
+						)
+						revert()
+					end
 				end
+
+				translate()
+
+			else
+				if not force then kill() end
+				revert()
 			end
-
-			translate()
-
-		else
-			if not force then kill() end
-			revert()
-		end
 
 
 		elseif mode == 'flush' then
