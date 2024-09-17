@@ -1,5 +1,8 @@
 {
 	"description": "Allow DHCP",
+	"zone": {
+		"adp-lan-ifaces": { "iface": "$adp_lan_ifaces" }
+	},
 	"filter": [
 		{ "in": "$adp_dhcp_zones", "out": "_fw", "service": "dhcp" },
 		{ "in": "_fw", "out": "$adp_dhcp_zones", "service": "dhcp" }

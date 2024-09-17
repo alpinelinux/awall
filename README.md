@@ -865,6 +865,14 @@ automatically enables some of the policies and generates an initial
       </td>
     </tr>
     <tr>
+      <td><strong>adp-lan-ifaces</strong></td>
+      <td></td>
+      <td>
+        LAN interfaces, defined by variable <strong>adp_lan_ifaces</strong> and
+        intended to be included in <strong>adp_dhcp_zones</strong>
+      </td>
+    </tr>
+    <tr>
       <td><strong>adp-wan</strong></td>
       <td>
         <strong>adp-clamp-mss</strong><br>
@@ -902,7 +910,10 @@ automatically enables some of the policies and generates an initial
     </tr>
     <tr>
       <td><strong>adp_lan_ifaces</strong></td>
-      <td><strong>adp-router</strong></td>
+      <td>
+        <strong>adp-dhcp</strong><br>
+        <strong>adp-router</strong>
+      </td>
       <td>LAN interfaces</td>
     </tr>
     <tr>
