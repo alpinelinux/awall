@@ -1,6 +1,6 @@
 --[[
 Iptables file dumper for Alpine Wall
-Copyright (C) 2012-2021 Kaarle Ritvanen
+Copyright (C) 2012-2024 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -87,7 +87,9 @@ end
 
 function BaseIPTables:dump(dir)
 	for family, tbls in pairs(families) do
-		local file = io.open(dir..'/'..families[family].file, 'w')
+		local name = dir..'/'..families[family].file
+		local file = io.open(name, 'w')
+		if not file then raise('Cannot write to '..name) end
 		self:dumpfile(family, file)
 		file:close()
 	end
