@@ -25,15 +25,15 @@ function M.Config:init(policyconfig)
 	self.model = policyconfig.model
 
 	local dedicated = self.objects.variable.awall_dedicated_chains
-	self.iptables = dedicated and iptables.PartialIPTables() or
-		iptables.IPTables()
+	self.ruleset = dedicated and iptables.PartialIPTablesRuleset() or
+		iptables.IPTablesRuleset()
 	self.prefix = dedicated and 'awall-' or ''
 
 	local actions = {}
 
 	local function insertrules(trules, obj)
 		for _, trule in ipairs(trules) do
-			local t = self.iptables.rules[trule.family][trule.table][
+			local t = self.ruleset.rules[trule.family][trule.table][
 				self.prefix..trule.chain
 			]
 			local opts = self:ofragcmd(trule)
@@ -116,25 +116,25 @@ end
 function M.Config:print()
 	self.ipset:print()
 	io.write('\n')
-	self.iptables:print()
+	self.ruleset:print()
 end
 
 function M.Config:dump(dir)
 	self.ipset:dump(dir and dir..'/ipset-' or '/etc/ipset.d/')
-	self.iptables:dump(dir or '/etc/iptables')
+	self.ruleset:dump(dir or '/etc/iptables')
 end
 
 function M.Config:test()
 	self.ipset:create()
-	self.iptables:test()
+	self.ruleset:test()
 end
 
 function M.Config:activate()
 	self:test()
-	self.iptables:activate()
+	self.ruleset:activate()
 end
 
-function M.Config:flush() self.iptables:flush() end
+function M.Config:flush() self.ruleset:flush() end
 
 
 return M
