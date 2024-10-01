@@ -362,9 +362,7 @@ if not call(
 					)
 					if io.read() then
 						translate()
-						for _, family in ipairs(
-							require('awall.family').ACTIVE
-						) do
+						for _, family in ipairs(config:usablefamilies()) do
 							os.execute(
 								INIT..' '..(
 									{inet='iptables', inet6='ip6tables'}

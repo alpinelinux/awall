@@ -6,7 +6,7 @@ See LICENSE file for license details
 
 
 local class = require('awall.class')
-local ACTIVE = require('awall.family').ACTIVE
+local family = require('awall.family')
 local raise = require('awall.uerror').raise
 
 local util = require('awall.util')
@@ -217,6 +217,18 @@ M.IPTables = class()
 
 function M.IPTables:init() self._acttables = {} end
 
+function M.IPTables:usablefamilies()
+	if not self._usablefamilies then
+		self._usablefamilies = {}
+		for _, fam in util.listpairs(family.ALL) do
+			if family.isactive(fam) then
+				table.insert(self._usablefamilies, fam)
+			end
+		end
+	end
+	return self._usablefamilies
+end
+
 function M.IPTables:acttables(family)
 	if not self._acttables[family] then
 		self._acttables[family] = {}
@@ -235,7 +247,7 @@ end
 function M.IPTables:actfamilies()
 	if not self._actfamilies then
 		self._actfamilies = {}
-		for _, family in ipairs(ACTIVE) do
+		for _, family in ipairs(self:usablefamilies()) do
 			if #self:acttables(family) > 0 then
 				table.insert(self._actfamilies, family)
 			else printmsg('Warning: firewall not enabled for '..family) end

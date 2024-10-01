@@ -138,6 +138,7 @@ function M.Config:activate()
 end
 
 function M.Config:fwenabled() return self.iptables:isenabled() end
+function M.Config:usablefamilies() return self.iptables:usablefamilies() end
 function M.Config:backup() self.iptables:backup() end
 function M.Config:revert() self.iptables:revert() end
 function M.Config:flush() self.ruleset:flush() end

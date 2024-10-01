@@ -4,18 +4,17 @@ Copyright (C) 2012-2024 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
-local M = {ACTIVE={}, ALL={}, DOMAIN_PATTERN='[%.%w-]+'}
+local M = {DOMAIN_PATTERN='[%.%w-]+'}
 
-local sortedkeys = require('awall.util').sortedkeys
+local keys = require('awall.util').keys
 local stat = require('posix').stat
 
 local procfiles = {inet='raw', inet6='raw6'}
-for _, family in sortedkeys(procfiles) do
-	table.insert(M.ALL, family)
-	if stat('/proc/net/'..procfiles[family]) then
-		table.insert(M.ACTIVE, family)
-	end
-end
+
+M.ALL = keys(procfiles)
+table.sort(M.ALL)
+
+function M.isactive(family) return stat('/proc/net/'..procfiles[family]) end
 
 function M.identify(addr, context)
 	for _, pattern in ipairs{
