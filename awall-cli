@@ -211,8 +211,6 @@ if not call(
 		end
 
 
-		local iptables = require('awall.iptables').IPTables()
-
 		if mode == 'fallback' then
 
 			for _, sig in ipairs{'HUP', 'INT', 'PIPE'} do
@@ -222,7 +220,7 @@ if not call(
 			posix.sleep(10)
 
 			printmsg('\nTimeout, reverting to the old configuration')
-			iptables:revert()
+			require('awall.iptables').IPTables():revert()
 			os.exit()
 		end
 
@@ -230,9 +228,7 @@ if not call(
 		if mode == 'dump' then level = 0 + (arg[opind] or 0) end
 
 		local input = policyset:load(basedir)
-		local config = (mode ~= 'dump' or level > 3) and awall.Config(
-			iptables, input
-		)
+		local config = (mode ~= 'dump' or level > 3) and awall.Config(input)
 
 
 		local function dump(level)
@@ -357,7 +353,7 @@ if not call(
 				end
 			end
 
-			if not iptables:isenabled() then
+			if not config:fwenabled() then
 				local INIT = '/usr/libexec/awall-init'
 				if not force and stat(INIT) then
 					printmsg('Firewall is not active')
@@ -384,7 +380,7 @@ if not call(
 				raise('Firewall not enabled in kernel')
 			end
 
-			iptables:backup()
+			config:backup()
 
 			local pid
 
@@ -405,7 +401,7 @@ if not call(
 			end
 
 			local function revert()
-				iptables:revert()
+				config:revert()
 				os.exit(2)
 			end
 
@@ -437,7 +433,7 @@ if not call(
 
 
 		elseif mode == 'flush' then
-			if all then iptables:flush()
+			if all then config:flushall()
 			else config:flush() end
 
 		else assert(false) end
