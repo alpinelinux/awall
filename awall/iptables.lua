@@ -44,14 +44,14 @@ local BaseIPTablesRuleset = class()
 function BaseIPTablesRuleset:init(context) self.context = context end
 
 function BaseIPTablesRuleset:print()
-	for _, family in sortedkeys(families) do
+	for _, family in ipairs(self.context:conffamilies()) do
 		self:dumpfile(family, io.output())
 		io.write('\n')
 	end
 end
 
 function BaseIPTablesRuleset:dump(dir)
-	for family, tbls in pairs(families) do
+	for _, family in ipairs(self.context:conffamilies()) do
 		local name = dir..'/'..families[family].file
 		local file = io.open(name, 'w')
 		if not file then raise('Cannot write to '..name) end
@@ -215,14 +215,30 @@ end
 
 M.IPTables = class()
 
-function M.IPTables:init() self._acttables = {} end
+function M.IPTables:init(famlist)
+	if famlist then
+		for _, family in ipairs(famlist) do
+			if not families[family] then
+				raise('Unknown address family configured: '..family)
+			end
+		end
+		self.families = famlist
+	end
+
+	self._acttables = {}
+end
+
+function M.IPTables:conffamilies() return self.families or family.ALL end
 
 function M.IPTables:usablefamilies()
 	if not self._usablefamilies then
 		self._usablefamilies = {}
-		for _, fam in util.listpairs(family.ALL) do
-			if family.isactive(fam) then
-				table.insert(self._usablefamilies, fam)
+		for _, fam in util.listpairs(self:conffamilies()) do
+			if family.isactive(fam) then table.insert(self._usablefamilies, fam)
+			elseif self.families then
+				printmsg(
+					'Warning: address family not supported by kernel: '..fam
+				)
 			end
 		end
 	end

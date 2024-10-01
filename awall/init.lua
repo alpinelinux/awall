@@ -12,7 +12,9 @@ local IPSet = require('awall.ipset')
 local iptables = require('awall.iptables')
 local combinations = require('awall.optfrag').combinations
 M.PolicySet = require('awall.policy')
+
 local util = require('awall.util')
+local list = util.list
 
 local startswith = require('stringy').startswith
 
@@ -24,8 +26,12 @@ function M.Config:init(policyconfig)
 	self.objects = policyconfig:expand()
 	self.model = policyconfig.model
 
-	local dedicated = self.objects.variable.awall_dedicated_chains
-	self.iptables = iptables.IPTables()
+	local vars = self.objects.variable
+
+	local families = vars.awall_families
+	self.iptables = iptables.IPTables(families and list(families))
+
+	local dedicated = vars.awall_dedicated_chains
 	self.ruleset = (
 		dedicated and iptables.PartialIPTablesRuleset or
 		iptables.IPTablesRuleset
@@ -56,9 +62,7 @@ function M.Config:init(policyconfig)
 						if not rules then
 							obj:error('Invalid custom chain: '..name)
 						end
-						insertrules(
-							combinations(util.list(rules), {acfrag}), rules
-						)
+						insertrules(combinations(list(rules), {acfrag}), rules)
 					else
 						insertrules(combinations(self.model.actions, {acfrag}))
 					end

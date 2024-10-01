@@ -123,6 +123,14 @@ Variables controlling the awall behavior are prefixed with **awall_**.
       <td><strong>false</strong></td>
     </tr>
     <tr>
+      <td><strong>awall_families</strong></td>
+      <td>
+        List of address families (<strong>inet</strong> and
+        <strong>inet6</strong>) for which to configure the firewall
+      </td>
+      <td>Auto-detected</td>
+    </tr>
+    <tr>
       <td><strong>awall_schema_check</strong></td>
       <td>
         Disable (<strong>false</strong>), enable
