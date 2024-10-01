@@ -19,14 +19,16 @@ local startswith = require('stringy').startswith
 
 M.Config = class()
 
-function M.Config:init(policyconfig)
+function M.Config:init(context, policyconfig)
 
 	self.objects = policyconfig:expand()
 	self.model = policyconfig.model
 
 	local dedicated = self.objects.variable.awall_dedicated_chains
-	self.ruleset = dedicated and iptables.PartialIPTablesRuleset() or
-		iptables.IPTablesRuleset()
+	self.ruleset = (
+		dedicated and iptables.PartialIPTablesRuleset or
+		iptables.IPTablesRuleset
+	)(context)
 	self.prefix = dedicated and 'awall-' or ''
 
 	local actions = {}

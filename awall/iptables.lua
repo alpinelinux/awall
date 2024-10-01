@@ -41,6 +41,8 @@ function M.isbuiltin(tbl, chain) return util.contains(builtin[tbl], chain) end
 
 local BaseIPTablesRuleset = class()
 
+function BaseIPTablesRuleset:init(context) self.context = context end
+
 function BaseIPTablesRuleset:print()
 	for _, family in sortedkeys(families) do
 		self:dumpfile(family, io.output())
@@ -65,7 +67,7 @@ function BaseIPTablesRuleset:restorecmd(family, test)
 end
 
 function BaseIPTablesRuleset:restore(test)
-	for _, family in ipairs(actfamilies()) do
+	for _, family in ipairs(self.context:actfamilies()) do
 		local pid, stdin, stdout = lpc.run(self:restorecmd(family, test))
 		stdout:close()
 		self:dumpfile(family, stdin)
@@ -81,12 +83,14 @@ end
 
 function BaseIPTablesRuleset:test() self:restore(true) end
 
-function BaseIPTablesRuleset:flush() M.flush() end
+function BaseIPTablesRuleset:flush() self.context:flush() end
 
 
 M.IPTablesRuleset = class(BaseIPTablesRuleset)
 
-function M.IPTablesRuleset:init()
+function M.IPTablesRuleset:init(context)
+	M.IPTablesRuleset.super(self):init(context)
+
 	local function nestedtable(levels)
 		return levels > 0 and setmetatable(
 			{},
@@ -151,9 +155,9 @@ function M.PartialIPTablesRuleset:dumpfile(family, iptfile)
 end
 
 function M.PartialIPTablesRuleset:flush()
-	for _, family in ipairs(actfamilies()) do
+	for _, family in ipairs(self.context:actfamilies()) do
 		local cmd = families[family].cmd
-		for _, tbl in ipairs(acttables(family)) do
+		for _, tbl in ipairs(self.context:acttables(family)) do
 			if builtin[tbl] then
 				local pid, stdin, stdout = lpc.run(cmd, '-t', tbl, '-S')
 				stdin:close()
@@ -209,47 +213,50 @@ function BackupRuleset:dumpfile(family, iptfile)
 end
 
 
-local _acttables = {}
-local function acttables(family)
-	if not _acttables[family] then
-		_acttables[family] = {}
+M.IPTables = class()
+
+function M.IPTables:init() self._acttables = {} end
+
+function M.IPTables:acttables(family)
+	if not self._acttables[family] then
+		self._acttables[family] = {}
 		local pid, stdin, stdout = lpc.run(families[family].cmd..'-save')
 		stdin:close()
 		for line in stdout:lines() do
 			local tbl = string.match(line, "^%*(.*)")
-			if tbl then table.insert(_acttables[family], tbl) end
+			if tbl then table.insert(self._acttables[family], tbl) end
 		end
 		stdout:close()
 		assert(lpc.wait(pid) == 0)
 	end
-	return _acttables[family]
+	return self._acttables[family]
 end
 
-
-local _actfamilies
-local function actfamilies()
-	if _actfamilies then return _actfamilies end
-	_actfamilies = {}
-	for _, family in ipairs(ACTIVE) do
-		if #acttables(family) > 0 then table.insert(_actfamilies, family)
-		else printmsg('Warning: firewall not enabled for '..family) end
+function M.IPTables:actfamilies()
+	if not self._actfamilies then
+		self._actfamilies = {}
+		for _, family in ipairs(ACTIVE) do
+			if #self:acttables(family) > 0 then
+				table.insert(self._actfamilies, family)
+			else printmsg('Warning: firewall not enabled for '..family) end
+		end
 	end
-	return _actfamilies
+	return self._actfamilies
 end
 
-function M.isenabled() return #actfamilies() > 0 end
+function M.IPTables:isenabled() return #self:actfamilies() > 0 end
 
-function M.backup()
+function M.IPTables:backup()
 	posix.mkdir(backupdir)
-	CurrentRuleset():dump(backupdir)
+	CurrentRuleset(self):dump(backupdir)
 end
 
-function M.revert() BackupRuleset():activate() end
+function M.IPTables:revert() BackupRuleset(self):activate() end
 
-function M.flush()
-	local empty = M.IPTablesRuleset()
-	for _, family in pairs(actfamilies()) do
-		for _, tbl in ipairs(acttables(family)) do
+function M.IPTables:flush()
+	local empty = M.IPTablesRuleset(self)
+	for _, family in pairs(self:actfamilies()) do
+		for _, tbl in ipairs(self:acttables(family)) do
 			if builtin[tbl] then
 				for _, chain in ipairs(builtin[tbl]) do
 					empty.rules[family][tbl][chain] = {}
@@ -259,6 +266,7 @@ function M.flush()
 	end
 	empty:restore(false)
 end
+
 
 return M
 
