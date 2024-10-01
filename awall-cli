@@ -218,9 +218,15 @@ if not call(
 			end
 
 			posix.sleep(10)
-
 			printmsg('\nTimeout, reverting to the old configuration')
-			require('awall.iptables').IPTables():revert()
+
+			local families = {}
+			while opind <= #arg do
+				table.insert(families, arg[opind])
+				opind = opind + 1
+			end
+			require('awall.iptables').IPTables(families):revert()
+
 			os.exit()
 		end
 
@@ -389,7 +395,9 @@ if not call(
 						if pid and lpc.wait(pid, 1) then os.exit(1) end
 					end
 				)
-				pid = util.run(arg[0], 'fallback')
+				pid = util.run(
+					arg[0], 'fallback', table.unpack(config:actfamilies())
+				)
 			end
 
 			local function kill()
