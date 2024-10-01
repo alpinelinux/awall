@@ -21,7 +21,7 @@ local startswith = require('stringy').startswith
 
 M.Config = class()
 
-function M.Config:init(policyconfig)
+function M.Config:init(policyconfig, checkactive)
 
 	self.objects = policyconfig:expand()
 	self.model = policyconfig.model
@@ -29,7 +29,7 @@ function M.Config:init(policyconfig)
 	local vars = self.objects.variable
 
 	local families = vars.awall_families
-	self.iptables = iptables.IPTables(families and list(families))
+	self.iptables = iptables.IPTables(families and list(families), checkactive)
 
 	local dedicated = vars.awall_dedicated_chains
 	self.ruleset = (

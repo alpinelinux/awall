@@ -215,7 +215,7 @@ end
 
 M.IPTables = class()
 
-function M.IPTables:init(famlist)
+function M.IPTables:init(famlist, checkactive)
 	if famlist then
 		for _, family in ipairs(famlist) do
 			if not families[family] then
@@ -225,6 +225,7 @@ function M.IPTables:init(famlist)
 		self.families = famlist
 	end
 
+	self.checkactive = checkactive
 	self._acttables = {}
 end
 
@@ -262,12 +263,14 @@ end
 
 function M.IPTables:actfamilies()
 	if not self._actfamilies then
-		self._actfamilies = {}
-		for _, family in ipairs(self:usablefamilies()) do
-			if #self:acttables(family) > 0 then
-				table.insert(self._actfamilies, family)
-			else printmsg('Warning: firewall not enabled for '..family) end
-		end
+		if self.checkactive then
+			self._actfamilies = {}
+			for _, family in ipairs(self:usablefamilies()) do
+				if #self:acttables(family) > 0 then
+					table.insert(self._actfamilies, family)
+				else printmsg('Warning: firewall not enabled for '..family) end
+			end
+		else self._actfamilies = self:usablefamilies() end
 	end
 	return self._actfamilies
 end

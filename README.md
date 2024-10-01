@@ -743,7 +743,8 @@ configuration by hitting the Return key within 10 seconds or the `--force`
 option is used, the configuration is saved to the files. Otherwise, the old
 configuration is restored.
 
-The firewall must already be active when this command is run.
+Unless the `--force` option is used, the firewall must already be active when
+this command is run.
 
  **awall flush** \[**-a** | **--all**\]
 
