@@ -1,6 +1,6 @@
 --[[
 Alpine Wall main module
-Copyright (C) 2012-2021 Kaarle Ritvanen
+Copyright (C) 2012-2024 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -33,7 +33,7 @@ function M.Config:init(policyconfig)
 
 	local function insertrules(trules, obj)
 		for _, trule in ipairs(trules) do
-			local t = self.iptables.config[trule.family][trule.table][
+			local t = self.iptables.rules[trule.family][trule.table][
 				self.prefix..trule.chain
 			]
 			local opts = self:ofragcmd(trule)
