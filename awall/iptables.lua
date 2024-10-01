@@ -21,13 +21,11 @@ local startswith = require('stringy').startswith
 
 local M = {}
 
+local backupdir = '/var/run/awall'
+
 local families = {
-	inet={
-		cmd='iptables', file='rules-save'
-	},
-	inet6={
-		cmd='ip6tables', file='rules6-save'
-	}
+	inet={cmd='iptables', file='rules-save'},
+	inet6={cmd='ip6tables', file='rules6-save'}
 }
 
 local builtin = {
@@ -37,41 +35,6 @@ local builtin = {
 	raw={'OUTPUT', 'PREROUTING'},
 	security={'FORWARD', 'INPUT', 'OUTPUT'}
 }
-
-local backupdir = '/var/run/awall'
-
-local _acttables = {}
-local function acttables(family)
-	if not _acttables[family] then
-		_acttables[family] = {}
-		local pid, stdin, stdout = lpc.run(families[family].cmd..'-save')
-		stdin:close()
-		for line in stdout:lines() do
-			local tbl = string.match(line, "^%*(.*)")
-			if tbl then
-				table.insert(_acttables[family], tbl)
-			end
-		end
-		stdout:close()
-		assert(lpc.wait(pid) == 0)
-	end
-	return _acttables[family]
-end
-
-
-local _actfamilies
-local function actfamilies()
-	if _actfamilies then return _actfamilies end
-	_actfamilies = {}
-	for _, family in ipairs(ACTIVE) do
-		if #acttables(family) > 0 then
-			table.insert(_actfamilies, family)
-		else printmsg('Warning: firewall not enabled for '..family) end
-	end
-	return _actfamilies
-end
-
-function M.isenabled() return #actfamilies() > 0 end
 
 function M.isbuiltin(tbl, chain) return util.contains(builtin[tbl], chain) end
 
@@ -245,6 +208,36 @@ function BackupRuleset:dumpfile(family, iptfile)
 	end
 end
 
+
+local _acttables = {}
+local function acttables(family)
+	if not _acttables[family] then
+		_acttables[family] = {}
+		local pid, stdin, stdout = lpc.run(families[family].cmd..'-save')
+		stdin:close()
+		for line in stdout:lines() do
+			local tbl = string.match(line, "^%*(.*)")
+			if tbl then table.insert(_acttables[family], tbl) end
+		end
+		stdout:close()
+		assert(lpc.wait(pid) == 0)
+	end
+	return _acttables[family]
+end
+
+
+local _actfamilies
+local function actfamilies()
+	if _actfamilies then return _actfamilies end
+	_actfamilies = {}
+	for _, family in ipairs(ACTIVE) do
+		if #acttables(family) > 0 then table.insert(_actfamilies, family)
+		else printmsg('Warning: firewall not enabled for '..family) end
+	end
+	return _actfamilies
+end
+
+function M.isenabled() return #actfamilies() > 0 end
 
 function M.backup()
 	posix.mkdir(backupdir)
