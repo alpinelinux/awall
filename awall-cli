@@ -349,17 +349,9 @@ if not call(
 				filedump(sysdumpfile)
 			end
 
-			local interrupted
-
 			if not force then
 				for _, sig in ipairs{'INT', 'TERM'} do
-					signal(
-						posix['SIG'..sig],
-						function()
-							interrupted = true
-							io.stdin:close()
-						end
-					)
+					signal(posix['SIG'..sig], function() io.stdin:close() end)
 				end
 			end
 
@@ -422,11 +414,11 @@ if not call(
 					io.stderr:write(
 						'Press RETURN to commit changes permanently: '
 					)
-					interrupted = not io.read()
+					local commit = io.read()
 
 					kill()
 
-					if interrupted then
+					if not commit then
 						printmsg(
 							'\nActivation canceled, reverting to the old configuration'
 						)
