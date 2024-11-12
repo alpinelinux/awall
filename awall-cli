@@ -361,27 +361,27 @@ if not call(
 
 			if not config:fwenabled() then
 				local INIT = '/usr/libexec/awall-init'
-				if not force and stat(INIT) then
-					printmsg('Firewall is not active')
-					io.stderr:write(
-						'Press RETURN to perform initial configuration and activation: '
-					)
-					if io.read() then
-						translate()
-						for _, family in ipairs(config:usablefamilies()) do
-							os.execute(
-								INIT..' '..(
-									{inet='iptables', inet6='ip6tables'}
-								)[family]
-							)
-						end
-						os.exit(0)
-					end
+				if force or not stat(INIT) then
+					raise('Firewall not enabled in kernel')
+				end
+
+				printmsg('Firewall is not active')
+				io.stderr:write(
+					'Press RETURN to perform initial configuration and activation: '
+				)
+				if not io.read() then
 					printmsg('\nCanceled')
 					os.exit(2)
 				end
 
-				raise('Firewall not enabled in kernel')
+				translate()
+				for _, family in ipairs(config:usablefamilies()) do
+					os.execute(
+						INIT..' '..
+						({inet='iptables', inet6='ip6tables'})[family]
+					)
+				end
+				os.exit(0)
 			end
 
 			config:backup()
