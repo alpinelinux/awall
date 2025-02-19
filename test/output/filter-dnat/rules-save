@@ -17,9 +17,9 @@
 -A FORWARD -i eth0 -p tcp --dport 8080 -d 10.0.0.2 -m conntrack --ctstate DNAT -j ACCEPT
 -A FORWARD -i eth0 -p tcp --dport 8022:8033 -d 10.0.0.3 -m conntrack --ctstate DNAT -j ACCEPT
 -A FORWARD -i eth0 -p tcp --dport 443 -d 10.0.0.4 -m conntrack --ctstate DNAT -j limit-https-0
--A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 143 -m conntrack --ctstate DNAT -j address-imap-0
--A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
--A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p udp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 143 -j address-imap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 389 -j address-ldap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p udp --dport 389 -j address-ldap-0
 -A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT

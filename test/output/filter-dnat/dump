@@ -50,14 +50,14 @@ Filter 4                        {"conn-limit":2,"dnat":"10.0.0.4","in":"A","serv
 
 Filter 5                        {"dest":"192.168.0.3","dnat":"10.0.0.5","in":"A","out":"B","service":"imap"}
 (filter-dnat)                   
-  inet/filter/FORWARD           -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 143 -m conntrack --ctstate DNAT -j address-imap-0
+  inet/filter/FORWARD           -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 143 -j address-imap-0
   inet/filter/address-imap-0    -d 10.0.0.5 -m conntrack --ctstate DNAT -j ACCEPT
   inet/nat/PREROUTING           -i eth0 -p tcp --dport 143 -d 192.168.0.3 -j DNAT --to-destination 10.0.0.5
 
 Filter 6                        {"conn-limit":50,"dest":"192.168.0.4","dnat":"10.0.0.6","in":"A","out":"B","service":"ldap"}
 (filter-dnat)                   
-  inet/filter/FORWARD           -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
-  inet/filter/FORWARD           -i eth0 -o eth1 -d 10.0.0.0/12 -p udp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
+  inet/filter/FORWARD           -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 389 -j address-ldap-0
+  inet/filter/FORWARD           -i eth0 -o eth1 -d 10.0.0.0/12 -p udp --dport 389 -j address-ldap-0
   inet/filter/address-ldap-0    -d 10.0.0.6 -m conntrack --ctstate DNAT -j limit-ldap-0
   inet/filter/limit-ldap-0      -m hashlimit --hashlimit-upto 50/second --hashlimit-burst 50 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-ldap-0 -j ACCEPT
   inet/filter/limit-ldap-0      -m limit --limit 1/second -j LOG
@@ -589,9 +589,9 @@ hash:net family inet
 -A FORWARD -i eth0 -p tcp --dport 8080 -d 10.0.0.2 -m conntrack --ctstate DNAT -j ACCEPT
 -A FORWARD -i eth0 -p tcp --dport 8022:8033 -d 10.0.0.3 -m conntrack --ctstate DNAT -j ACCEPT
 -A FORWARD -i eth0 -p tcp --dport 443 -d 10.0.0.4 -m conntrack --ctstate DNAT -j limit-https-0
--A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 143 -m conntrack --ctstate DNAT -j address-imap-0
--A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
--A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p udp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 143 -j address-imap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 389 -j address-ldap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p udp --dport 389 -j address-ldap-0
 -A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT

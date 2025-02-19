@@ -1,6 +1,6 @@
 --[[
 Filter module for Alpine Wall
-Copyright (C) 2012-2021 Kaarle Ritvanen
+Copyright (C) 2012-2025 Kaarle Ritvanen
 See LICENSE file for license details
 ]]--
 
@@ -116,16 +116,20 @@ function TranslatingRule:init(...)
 	end
 end
 
+function TranslatingRule:dnatoptfrag()
+	local ofrag = self:create(
+		model.Zone, {addr=self.dnat.addr}
+	):optfrags(self:direction('out'))
+	assert(#ofrag == 1)
+	return ofrag[1]
+end
+
 function TranslatingRule:destoptfrags()
 	local ofrags = TranslatingRule.super(self):destoptfrags()
 	if not self.dnat then return ofrags end
 
 	ofrags = expandfamilies(ofrags, 'inet6')
-	local natof = self:create(
-		model.Zone, {addr=self.dnat.addr}
-	):optfrags(self:direction('out'))
-	assert(#natof == 1)
-	table.insert(ofrags, natof[1])
+	table.insert(ofrags, self:dnatoptfrag())
 	return ofrags
 end
 
@@ -334,6 +338,15 @@ function Filter:extratrules()
 	return res
 end
 
+function Filter:dnatoptfrag()
+	local ofrag = combinations(
+		{Filter.super(self):dnatoptfrag()},
+		{{match='-m conntrack --ctstate DNAT'}}
+	)
+	assert(#ofrag == 1)
+	return ofrag[1]
+end
+
 function Filter:limit()
 	local res
 	for i, limit in ipairs({'conn-limit', 'flow-limit'}) do
@@ -369,16 +382,6 @@ function Filter:target()
 end
 
 function Filter:mangleoptfrags(ofrags)
-	if self.dnat then
-		ofrags = combinations(
-			ofrags,
-			{
-				{family='inet', match='-m conntrack --ctstate DNAT'},
-				{family='inet6'}
-			}
-		)
-	end
-
 	local limit = self:limit()
 	local ul = self:updatelimit()
 
