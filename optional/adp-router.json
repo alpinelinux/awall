@@ -1,10 +1,14 @@
 {
 	"description": "Router",
 	"before": "adp-config",
-	"variable": { "adp_router_policy": "accept" },
+	"variable": {
+		"adp_lan_route_back": false, "adp_router_policy": "accept"
+	},
 	"zone": {
 		"adp-lan": {
-			"iface": "$adp_lan_ifaces", "addr": "$adp_lan_addrs"
+			"iface": "$adp_lan_ifaces",
+			"addr": "$adp_lan_addrs",
+			"route-back": "$adp_lan_route_back"
 		}
 	},
 	"filter": [
