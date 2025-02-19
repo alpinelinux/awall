@@ -3,8 +3,11 @@
 :FORWARD DROP [0:0]
 :INPUT DROP [0:0]
 :OUTPUT DROP [0:0]
+:address-imap-0 - [0:0]
+:address-ldap-0 - [0:0]
 :icmp-routing - [0:0]
 :limit-https-0 - [0:0]
+:limit-ldap-0 - [0:0]
 :logdrop-https-0 - [0:0]
 -A FORWARD -i eth0 -p tcp --dport 6667 -j LOG --log-level 6
 -A FORWARD -i eth0 -p tcp --dport 21 -j LOG --log-level emerg
@@ -14,6 +17,9 @@
 -A FORWARD -i eth0 -p tcp --dport 8080 -d 10.0.0.2 -m conntrack --ctstate DNAT -j ACCEPT
 -A FORWARD -i eth0 -p tcp --dport 8022:8033 -d 10.0.0.3 -m conntrack --ctstate DNAT -j ACCEPT
 -A FORWARD -i eth0 -p tcp --dport 443 -d 10.0.0.4 -m conntrack --ctstate DNAT -j limit-https-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 143 -m conntrack --ctstate DNAT -j address-imap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p tcp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
+-A FORWARD -i eth0 -o eth1 -d 10.0.0.0/12 -p udp --dport 389 -m conntrack --ctstate DNAT -j address-ldap-0
 -A FORWARD -p 123 -j ACCEPT
 -A FORWARD -i ppp0 -m string --string "bar is open" --algo bm -j ACCEPT
 -A FORWARD -i eth0 -j ACCEPT
@@ -95,11 +101,16 @@
 -A OUTPUT -j ACCEPT
 -A OUTPUT -o eth1 -d 10.0.0.0/12 -j ACCEPT
 -A OUTPUT -p icmp -j icmp-routing
+-A address-imap-0 -d 10.0.0.5 -m conntrack --ctstate DNAT -j ACCEPT
+-A address-ldap-0 -d 10.0.0.6 -m conntrack --ctstate DNAT -j limit-ldap-0
 -A icmp-routing -p icmp --icmp-type 3 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 11 -j ACCEPT
 -A icmp-routing -p icmp --icmp-type 12 -j ACCEPT
 -A limit-https-0 -m recent --name limit-https-0 --rsource --mask 255.255.255.255 --update --hitcount 2 --seconds 1 -j logdrop-https-0
 -A limit-https-0 -m recent --name limit-https-0 --rsource --mask 255.255.255.255 --set -j ACCEPT
+-A limit-ldap-0 -m hashlimit --hashlimit-upto 50/second --hashlimit-burst 50 --hashlimit-mode srcip --hashlimit-srcmask 32 --hashlimit-name limit-ldap-0 -j ACCEPT
+-A limit-ldap-0 -m limit --limit 1/second -j LOG
+-A limit-ldap-0 -j DROP
 -A logdrop-https-0 -m limit --limit 1/second -j LOG
 -A logdrop-https-0 -j DROP
 COMMIT
@@ -131,6 +142,9 @@ COMMIT
 -A PREROUTING -i eth0 -p tcp --dport 80 -d 192.168.0.2 -j DNAT --to-destination 10.0.0.2:8080
 -A PREROUTING -i eth0 -p tcp --dport 22 -j DNAT --to-destination 10.0.0.3:8022-8033
 -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to-destination 10.0.0.4
+-A PREROUTING -i eth0 -p tcp --dport 143 -d 192.168.0.3 -j DNAT --to-destination 10.0.0.5
+-A PREROUTING -i eth0 -p tcp --dport 389 -d 192.168.0.4 -j DNAT --to-destination 10.0.0.6
+-A PREROUTING -i eth0 -p udp --dport 389 -d 192.168.0.4 -j DNAT --to-destination 10.0.0.6
 -A PREROUTING -i eth0 -j REDIRECT
 -A PREROUTING -i eth1 -s 10.0.0.0/12 -j REDIRECT
 -A masquerade -m set ! --match-set awall-masquerade dst -j MASQUERADE
